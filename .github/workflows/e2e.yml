@@ -35,9 +35,10 @@ jobs:
 
       - name: Install dfx
         run: |
-          wget -O dfx.sh https://sdk.dfinity.org/install.sh
-          DFX_VERSION=0.26.1 sh dfx.sh
-          echo "/home/runner/bin" >> $GITHUB_PATH
+          wget -q https://github.com/dfinity/sdk/releases/download/0.26.1/dfx-0.26.1-x86_64-linux.tar.gz
+          tar -xzf dfx-0.26.1-x86_64-linux.tar.gz
+          sudo mv dfx /usr/local/bin
+          rm dfx-0.26.1-x86_64-linux.tar.gz
 
       - run: npm run ci
         env:
