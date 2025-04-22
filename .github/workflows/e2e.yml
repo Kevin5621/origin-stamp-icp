@@ -34,11 +34,7 @@ jobs:
       - run: npm install
 
       - name: Install dfx
-        run: |
-          wget -q https://github.com/dfinity/sdk/releases/download/0.26.1/dfx-0.26.1-x86_64-linux.tar.gz
-          tar -xzf dfx-0.26.1-x86_64-linux.tar.gz
-          sudo mv dfx /usr/local/bin
-          rm dfx-0.26.1-x86_64-linux.tar.gz
+        uses: dfinity/setup-dfx@main
 
       - run: npm run ci
         env:
