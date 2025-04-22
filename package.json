@@ -6,6 +6,7 @@
   "scripts": {
     "test": "vitest",
     "ci": "vitest run",
+    "generate-candid": "./scripts/generate-candid.sh",
     "preci": "dfx stop; dfx start --background --clean; dfx deploy; dfx generate"
   },
   "keywords": [],
