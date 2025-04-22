@@ -1,0 +1,38 @@
+name: End to End
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04]
+        ghc: ['8.8.4']
+        spec:
+          - '0.16.1'
+        node:
+          - 16
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - run: npm install
+
+      - run: echo y | sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+
+      - run: npm run ci
+        env:
+          CI: true
+          REPLICA_PORT: 8000

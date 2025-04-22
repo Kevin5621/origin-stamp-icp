@@ -1,0 +1,17 @@
+{
+  "canisters": {
+    "vibe_coding_template_backend": {
+      "candid": "src/vibe_coding_template_backend/vibe_coding_template_backend.did",
+      "package": "vibe_coding_template_backend",
+      "type": "rust"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
