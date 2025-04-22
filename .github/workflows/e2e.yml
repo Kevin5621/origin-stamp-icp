@@ -22,7 +22,7 @@ jobs:
         spec:
           - '0.16.1'
         node:
-          - 16
+          - 20
 
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +33,11 @@ jobs:
 
       - run: npm install
 
-      - run: echo y | sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+      - name: Install dfx
+        run: |
+          wget -O dfx.sh https://sdk.dfinity.org/install.sh
+          DFX_VERSION=0.26.1 sh dfx.sh
+          echo "/home/runner/bin" >> $GITHUB_PATH
 
       - run: npm run ci
         env:
