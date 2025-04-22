@@ -22,7 +22,9 @@ test("Should contain a candid interface", async () => {
   expect(Array.isArray(canisterStatus.get("controllers"))).toBeTruthy();
   expect(canisterStatus.get("candid")).toMatchInlineSnapshot(`
     "service : {
-        greet: (text) -> (text) query;
+      get_count : () -> (nat64) query;
+      greet : (text) -> (text) query;
+      increment : () -> (nat64);
     }
     "
   `);
