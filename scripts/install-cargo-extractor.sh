@@ -14,13 +14,3 @@ if ! command -v candid-extractor &> /dev/null; then
 else
     echo "candid-extractor is already installed"
 fi
-
-CANISTER_NAME="vibe_coding_template"
-
-# Build the Wasm module
-cargo build --release --target wasm32-unknown-unknown --package "${CANISTER_NAME}_backend"
-
-# Extract the Candid interface
-candid-extractor "target/wasm32-unknown-unknown/release/${CANISTER_NAME}_backend.wasm" > "src/${CANISTER_NAME}_backend/${CANISTER_NAME}_backend.did"
-
-echo "Candid interface generated successfully for ${CANISTER_NAME}"

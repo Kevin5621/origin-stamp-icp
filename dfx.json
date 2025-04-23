@@ -3,13 +3,20 @@
     "vibe_coding_template_backend": {
       "candid": "src/vibe_coding_template_backend/vibe_coding_template_backend.did",
       "package": "vibe_coding_template_backend",
-      "type": "rust"
-    }
-  },
-  "defaults": {
-    "build": {
-      "args": "",
-      "packtool": ""
+      "type": "custom",
+      "shrink": true,
+      "gzip": true,
+      "wasm": "target/wasm32-unknown-unknown/release/vibe_coding_template_backend.wasm",
+      "build": [
+        "bash ./scripts/install-cargo-extractor.sh",
+        "cargo build --target wasm32-unknown-unknown --release --package vibe_coding_template_backend",
+        "candid-extractor target/wasm32-unknown-unknown/release/vibe_coding_template_backend.wasm > src/vibe_coding_template_backend/vibe_coding_template_backend.did"
+      ],
+      "metadata": [
+        {
+          "name": "candid:service"
+        }
+      ]
     }
   },
   "output_env_file": ".env",

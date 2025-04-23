@@ -1,5 +1,0 @@
-service : {
-  get_count : () -> (nat64) query;
-  greet : (text) -> (text) query;
-  increment : () -> (nat64);
-}
