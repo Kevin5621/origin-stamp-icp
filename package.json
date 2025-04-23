@@ -1,26 +1,21 @@
 {
-  "name": "bun-test",
+  "name": "vibe-test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "vitest",
-    "ci": "vitest run",
     "generate-candid": "./scripts/generate-candid.sh",
-    "preci": "dfx stop; dfx start --background --clean; dfx deploy; dfx generate"
+    "test": "vitest -c tests/vitest.config.ts --root .",
+    "preci": "dfx generate && cargo build --target wasm32-unknown-unknown --release --workspace",
+    "ci": "vitest run -c tests/vitest.config.ts --root ."
+    
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@dfinity/agent": "^0.12.0",
-    "@dfinity/identity": "^0.12.0",
-    "@dfinity/principal": "^0.12.0",
-    "bip39": "^3.0.4",
-    "hdkey": "^2.0.1",
-    "isomorphic-fetch": "^3.0.0"
-  },
   "devDependencies": {
-    "vitest": "^0.17.1"
+    "@dfinity/pic": "^0.12.0",
+    "@types/node": "^22.14.1",
+    "vitest": "^3.1.2"
   }
 }
