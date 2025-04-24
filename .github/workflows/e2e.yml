@@ -44,9 +44,10 @@ jobs:
       - name: Install dfx
         uses: dfinity/setup-dfx@main
 
-      - name: Start dfx
+      - name: Setup dfx
         run: |
           dfx start --background
+          dfx stop
 
       - run: npm run ci
         env:
