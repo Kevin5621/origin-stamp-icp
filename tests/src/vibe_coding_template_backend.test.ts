@@ -1,25 +1,28 @@
-import { describe, beforeEach, afterEach, it, expect, inject } from 'vitest';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { PocketIc, type Actor } from '@dfinity/pic';
-import { Principal } from '@dfinity/principal';
+import { describe, beforeEach, afterEach, it, expect, inject } from "vitest";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+import { PocketIc, type Actor } from "@dfinity/pic";
+import { Principal } from "@dfinity/principal";
 
 // Import generated types for your canister
-import { type _SERVICE, idlFactory } from '../../src/declarations/vibe_coding_template_backend/vibe_coding_template_backend.did.js';
+import {
+  type _SERVICE,
+  idlFactory,
+} from "../../src/declarations/vibe_coding_template_backend/vibe_coding_template_backend.did.js";
 
 // Define the path to your canister's WASM file
 export const WASM_PATH = resolve(
   dirname(fileURLToPath(import.meta.url)),
-  '..',
-  '..',
-  'target',
-  'wasm32-unknown-unknown',
-  'release',
-  'vibe_coding_template_backend.wasm',
+  "..",
+  "..",
+  "target",
+  "wasm32-unknown-unknown",
+  "release",
+  "vibe_coding_template_backend.wasm"
 );
 
 // The `describe` function is used to group tests together
-describe('Vibe Coding Template Backend', () => {
+describe("Vibe Coding Template Backend", () => {
   // Define variables to hold our PocketIC instance, canister ID,
   // and an actor to interact with our canister.
   let pic: PocketIc;
@@ -29,7 +32,7 @@ describe('Vibe Coding Template Backend', () => {
   // The `beforeEach` hook runs before each test.
   beforeEach(async () => {
     // create a new PocketIC instance
-    pic = await PocketIc.create(inject('PIC_URL'));
+    pic = await PocketIc.create(inject("PIC_URL"));
 
     // Setup the canister and actor
     const fixture = await pic.setupCanister<_SERVICE>({
@@ -49,19 +52,27 @@ describe('Vibe Coding Template Backend', () => {
   });
 
   // The `it` function is used to define individual tests
-  it('should greet with the provided name', async () => {
-    const response = await actor.greet('World');
-    expect(response).toEqual('Hello, World!');
+  it("should greet with the provided name", async () => {
+    const response = await actor.greet("World");
+    expect(response).toEqual("Hello, World!");
   });
 
-  it('should increment counter and return new value', async () => {
+  it("should increment counter and return new value", async () => {
     const initialCount = await actor.get_count();
     const newCount = await actor.increment();
     expect(newCount).toEqual(initialCount + BigInt(1));
   });
 
-  it('should get current counter value', async () => {
+  it("should get current counter value", async () => {
     const count = await actor.get_count();
-    expect(typeof count).toBe('bigint');
+    expect(typeof count).toBe("bigint");
+  });
+
+  it("should set counter to specified value", async () => {
+    const newValue = BigInt(42);
+    const result = await actor.set_count(newValue);
+    expect(result).toEqual(newValue);
+    const currentCount = await actor.get_count();
+    expect(currentCount).toEqual(newValue);
   });
 });

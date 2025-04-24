@@ -91,6 +91,34 @@ The GitHub workflows automatically:
 
 This ensures code quality is maintained throughout development.
 
+## GitHub Copilot Integration
+
+This project includes custom instructions for GitHub Copilot to enhance development productivity. When using GitHub Copilot with this repository, it will automatically:
+
+- **Generate Tests** for new canister functions following our testing patterns
+- **Update the Changelog** with entries for new features in the proper format
+- **Follow ICP Best Practices** when suggesting code for canister development
+
+### How It Works
+
+The repository contains a `.github/copilot-instructions.md` file that provides Copilot with context about:
+
+1. **Canister Function Implementation**: Proper annotations for query and update functions
+2. **Test Structure**: PocketIC testing patterns with proper setup/teardown hooks
+3. **Changelog Format**: Keep a Changelog format for documenting changes
+
+This ensures consistent code quality and documentation across the project without having to manually remind contributors of these standards.
+
+### Example
+
+When you write a new function in `lib.rs`, Copilot will suggest:
+
+- Appropriate test cases in the test files
+- Changelog entries in the correct format
+- Proper Rust annotations and patterns for ICP development
+
+No additional configuration is needed - these instructions are automatically applied whenever you use Copilot within this repository.
+
 ## Learning Resources
 
 This template serves as a learning resource for:
@@ -100,9 +128,41 @@ This template serves as a learning resource for:
 - CI/CD integration
 - Project structure best practices
 
+### Testing GitHub Copilot Integration
+
+You can test the GitHub Copilot integration by asking it to implement a new function in the counter example. Here's how:
+
+1. Open the `src/vibe_coding_template_backend/src/lib.rs` file
+2. Position your cursor at the end of the file, before the `export_candid!();` line
+3. Type a comment prompting Copilot to create the function:
+   ```rust
+   // Add a function to decrease the counter value
+   ```
+4. Wait for Copilot to suggest the implementation or press Ctrl+Enter to invoke suggestions
+5. Accept the suggestion, which should look similar to:
+   ```rust
+   #[ic_cdk::update]
+   fn decrease() -> u64 {
+       COUNTER.with(|counter| {
+           let val = counter.borrow().saturating_sub(1);
+           *counter.borrow_mut() = val;
+           val
+       })
+   }
+   ```
+6. Copilot will also help you:
+   - Generate appropriate tests in `tests/src/vibe_coding_template_backend.test.ts`
+   - Create a changelog entry in `CHANGELOG.md`
+
+This simple example demonstrates how Copilot understands the project structure, coding patterns, and documentation requirements.
+
 ## Status
 
 This template is actively maintained and expanded. Contributions and suggestions are welcome!
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of all changes and releases.
 
 ## License
 

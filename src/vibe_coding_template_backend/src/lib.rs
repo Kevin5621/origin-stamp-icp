@@ -24,4 +24,12 @@ fn get_count() -> u64 {
     COUNTER.with(|counter| *counter.borrow())
 }
 
+#[ic_cdk::update]
+fn set_count(value: u64) -> u64 {
+    COUNTER.with(|counter| {
+        *counter.borrow_mut() = value;
+        value
+    })
+}
+
 export_candid!();
