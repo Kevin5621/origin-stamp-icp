@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "generate-candid": "bash ./scripts/install-cargo-extractor.sh && cargo build --target wasm32-unknown-unknown --release --package vibe_coding_template_backend && candid-extractor target/wasm32-unknown-unknown/release/vibe_coding_template_backend.wasm > src/vibe_coding_template_backend/vibe_coding_template_backend.did",
+    "generate-candid": "bash ./scripts/generate-candid.sh",
+    "generate-candid:canister": "bash ./scripts/generate-candid.sh",
     "test": "vitest -c tests/vitest.config.ts --root .",
     "preci": "dfx generate && cargo build --target wasm32-unknown-unknown --release --workspace",
     "ci": "vitest run -c tests/vitest.config.ts --root ."
-    
   },
   "keywords": [],
   "author": "",
