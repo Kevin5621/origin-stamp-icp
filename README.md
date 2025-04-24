@@ -24,14 +24,20 @@ git clone https://github.com/pt-icp-hub/ICP-Bootcamp-Vibe-Coding.git
 # Install dependencies
 npm install
 
-# Start the local replica (required for development)
-dfx start --background --clean
+# Generate type declarations for canisters
+dfx generate
 
-# Build the canisters
-dfx build
+# Build target files
+cargo build --target wasm32-unknown-unknown --release --package vibe_coding_template_backend
 
 # Run tests
 npm test
+
+# Start the local replica (required for development)
+dfx start --background --clean
+
+# Deploy the canisters locally
+dfx deploy
 ```
 
 ## Project Structure
