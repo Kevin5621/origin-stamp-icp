@@ -29,7 +29,7 @@ fn get_user_data(user_id: String) -> Option<UserData> {
 
 After adding a new function, always run the following command in the terminal:
 
-```
+```bash
 npm run generate-candid <CANISTER_NAME> && dfx generate
 ```
 
@@ -56,6 +56,12 @@ it("should correctly handle [specific scenario]", async () => {
   // Assert
   expect(result).toEqual(expectedResult);
 });
+```
+
+After writing the tests please check they are all passing by executing:
+
+```bash
+npm test -- --run
 ```
 
 ### Updating the Changelog
