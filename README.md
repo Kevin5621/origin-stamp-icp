@@ -6,6 +6,18 @@ Whether you're building your first ICP project or want a fast way to set up a ma
 
 ---
 
+## 📜 Table of Contents
+- [✨ Features](#-features)
+- [🚀 Getting Started](#-getting-started)
+- [📁 Project Structure](#-project-structure)
+- [✅ Testing Patterns](#-testing-patterns)
+- [🔄 CI/CD Workflow](#-cicd-workflow)
+- [🧠 GitHub Copilot Integration](#-github-copilot-integration)
+- [🔗 Resources & Documentation](#-learning-resources)
+- [📩 Submit Your Project!](#-submit-your-project)
+
+---
+
 ## ✨ Features
 
 - 🦀 **Rust-based Canister Template**
@@ -102,7 +114,6 @@ This template demonstrates ICP testing best practices:
 - **Query Function Testing**: Fast, read-only
 - **Update Function Testing**: State-changing logic
 - **Error Handling**: Expected failure validation
-- **Lifecycle**: Upgrade, reinstall, and canister setup (TODO)
 
 Run with:
 ```bash
