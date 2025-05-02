@@ -1,167 +1,174 @@
-# VIBE Coding Template
+# 🧪🔥 IC Vibe Coding Bootcamp - Rust Edition
 
-A streamlined template for Internet Computer Protocol (ICP) Rust development following best practices. This template is designed to help developers quickly set up a well-structured ICP project with proper testing infrastructure.
+Welcome to the **IC Vibe Coding Bootcamp (Rust Edition)**! This repository provides a high-quality, production-style template to help you kickstart Internet Computer (ICP) backend development using **Rust**, with best practices in testing, CI/CD, and developer experience.
 
-## Features
+Whether you're building your first ICP project or want a fast way to set up a maintainable Rust canister architecture, this template is your launchpad. 🚀
 
-- **Rust Backend**: Ready-to-use Rust canister setup optimized for ICP development
-- **Testing Infrastructure**: Comprehensive testing setup using:
-  - PocketIC for local canister simulation
-  - Vitest as the test runner for fast, parallel tests
-  - End-to-end test examples for both query and update calls
-- **CI/CD Pipeline**: GitHub Workflows for continuous integration that automatically:
-  - Build canisters
-  - Run tests
-  - Validate code quality
-- **DFX Configuration**: Properly configured dfx.json with custom build steps for Rust canisters
+---
 
-## Getting Started
+## ✨ Features
+
+- 🦀 **Rust-based Canister Template**
+- 🧪 **Test Suite**: Powered by Vitest + PocketIC for realistic canister simulation
+- 🔁 **CI/CD**: GitHub Actions to automate builds, tests, and code quality checks
+- 📦 **DFX Config**: Pre-configured with best practices for Rust
+- 🤖 **Copilot Integration**: Automatically generate structured tests & changelogs
+
+---
+
+## 🚀 Getting Started
+
+### 🧑‍💻 Codespace Ready
+
+A **devcontainer** is preconfigured for you to start coding instantly!
+
+- Fork this repository and click "Code → Open with Codespaces"
+- Once the codespace is created, you can open it in the browser or in VS Code
+- Everything is pre-installed and ready for you to run the following commands
+
+Or, if you'd like to set it up locally:
+
+### 1. Clone the Repo
 
 ```bash
-# Clone the repository
 git clone https://github.com/pt-icp-hub/ICP-Bootcamp-Vibe-Coding.git
+cd ICP-Bootcamp-Vibe-Coding
+```
 
-# Install dependencies
+### 2. Install Dependencies
+
+```bash
 npm install
+```
 
-# Generate type declarations for canisters
+### 3. Build Canisters
+
+```bash
 dfx generate
-
-# Build target files
 cargo build --target wasm32-unknown-unknown --release --package vibe_coding_template_backend
+```
 
-# Run tests
-npm test
+### 4. Start Local Environment
 
-# Start the local replica (required for development)
+```bash
 dfx start --background --clean
+```
 
-# Deploy the canisters locally
+### 5. Deploy Locally
+
+```bash
 dfx deploy
 ```
 
-## Project Structure
-
-```
-├── src/                          # Source code
-│   ├── vibe_coding_template_backend/  # Backend canister
-│   │   ├── src/                  # Rust source files
-│   │   └── Cargo.toml            # Rust dependencies
-│   └── declarations/             # Auto-generated canister interfaces
-├── tests/                        # Test files
-│   ├── src/                      # Test source files
-│   ├── global-setup.ts           # PocketIC setup for tests
-│   └── vitest.config.ts          # Vitest configuration
-├── dfx.json                      # Internet Computer configuration
-├── Cargo.toml                    # Workspace configuration
-└── .github/workflows/            # CI/CD configurations
-```
-
-## Testing
-
-The template demonstrates testing best practices for ICP development:
+### 6. Run Tests
 
 ```bash
-# Run all tests
 npm test
-
-# Run tests in watch mode during development
-npm test -- --watch
-
-# Run specific tests
-npm test -- tests/src/specific-test.ts
 ```
 
-### Testing Patterns
+You can also run:
+```bash
+npm test -- --watch                # watch mode
+npm test -- tests/src/myfile.ts    # individual test
+```
 
-This template showcases several key testing patterns:
+---
 
-1. **Canister lifecycle testing**: Setup, upgrade, and reinstall scenarios TODO
-2. **Query function testing**: Fast, read-only operations
-3. **Update function testing**: State-changing operations
-4. **Error handling testing**: Proper error conditions verification
+## 📁 Project Structure
 
-## CI/CD
+```
+ICP-Bootcamp-Vibe-Coding/
+├── src/
+│   ├── vibe_coding_template_backend/     # Rust backend canister
+│   │   ├── src/                          # Rust source files
+│   │   └── Cargo.toml                    # Rust dependencies
+│   └── declarations/                     # Auto-generated canister interfaces
+├── tests/
+│   ├── src/                              # Test files
+│   ├── global-setup.ts                   # PocketIC instance
+│   └── vitest.config.ts                  # Vitest configuration
+├── dfx.json                              # ICP config
+├── Cargo.toml                            # Root Rust workspace config
+├── .github/workflows/                   # GitHub CI/CD pipelines
+└── CHANGELOG.md
+```
 
-The GitHub workflows automatically:
+---
 
-- Build all canisters
-- Run the test suite
-- Provide feedback on pull requests
+## ✅ Testing Patterns
 
-This ensures code quality is maintained throughout development.
+This template demonstrates ICP testing best practices:
 
-## GitHub Copilot Integration
+- **Query Function Testing**: Fast, read-only
+- **Update Function Testing**: State-changing logic
+- **Error Handling**: Expected failure validation
+- **Lifecycle**: Upgrade, reinstall, and canister setup (TODO)
 
-This project includes custom instructions for GitHub Copilot to enhance development productivity. When using GitHub Copilot with this repository, it will automatically:
+Run with:
+```bash
+npm test
+```
 
-- **Generate Tests** for new canister functions following our testing patterns
-- **Update the Changelog** with entries for new features in the proper format
-- **Follow ICP Best Practices** when suggesting code for canister development
+---
 
-### How It Works
+## 🔄 CI/CD Workflow
 
-The repository contains a `.github/copilot-instructions.md` file that provides Copilot with context about:
+Located under `.github/workflows/`, this includes:
 
-1. **Canister Function Implementation**: Proper annotations for query and update functions
-2. **Test Structure**: PocketIC testing patterns with proper setup/teardown hooks
-3. **Changelog Format**: Keep a Changelog format for documenting changes
+- ✅ Canister build validation
+- 🧪 Automated test runs
+- 🧹 Code quality feedback on PRs
 
-This ensures consistent code quality and documentation across the project without having to manually remind contributors of these standards.
+---
 
-### Example
+## 🧠 GitHub Copilot Integration
 
-When you write a new function in `lib.rs`, Copilot will suggest:
+This project includes a `.github/copilot-instructions.md` file that helps Copilot:
 
-- Appropriate test cases in the test files
-- Changelog entries in the correct format
-- Proper Rust annotations and patterns for ICP development
+- Generate test cases for each new function
+- Suggest changelog entries
+- Follow best practices for query/update annotations
 
-No additional configuration is needed - these instructions are automatically applied whenever you use Copilot within this repository.
+### ✨ Example Prompt
+```rust
+// Add a function to decrease the counter value
+```
+Copilot will suggest:
+```rust
+#[ic_cdk::update]
+fn decrease() -> u64 {
+    COUNTER.with(|counter| {
+        let val = counter.borrow().saturating_sub(1);
+        *counter.borrow_mut() = val;
+        val
+    })
+}
+```
+It will also:
+- Create a matching test in `tests/src/`
+- Update the `CHANGELOG.md`
 
-## Learning Resources
+---
 
-This template serves as a learning resource for:
+## 📚 Learning Resources
 
-- Rust canister development on ICP
-- Proper testing patterns
-- CI/CD integration
-- Project structure best practices
+- [ICP Dev Docs](https://internetcomputer.org/docs)
+- [Rust CDK](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
+- [PicJS Doc](https://dfinity.github.io/pic-js/)
+- [Vitest Testing Framework](https://vitest.dev/)
 
-### Testing GitHub Copilot Integration
+---
 
-You can test the GitHub Copilot integration by asking it to implement a new function in the counter example. Here's how:
+## 📌 Status
 
-1. Prompt Copilot to create the function:
-   ```rust
-   // Add a function to decrease the counter value
-   ```
-2. Wait for Copilot to suggest the implementation or press Ctrl+Enter to invoke suggestions
-3. Accept the suggestion, which should look similar to:
-   ```rust
-   #[ic_cdk::update]
-   fn decrease() -> u64 {
-       COUNTER.with(|counter| {
-           let val = counter.borrow().saturating_sub(1);
-           *counter.borrow_mut() = val;
-           val
-       })
-   }
-   ```
-4. Copilot will also help you:
-   - Generate appropriate tests in `tests/src/vibe_coding_template_backend.test.ts`
-   - Create a changelog entry in `CHANGELOG.md`
+This template is **actively maintained**. Contributions are welcome!
 
-This simple example demonstrates how Copilot understands the project structure, coding patterns, and documentation requirements.
+---
 
-## Status
-
-This template is actively maintained and expanded. Contributions and suggestions are welcome!
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a list of all changes and releases.
-
-## License
+## 📜 License
 
 [MIT](LICENSE)
+
+---
+
+**Now go build something fast, tested, and production-ready 🚀🦀**
