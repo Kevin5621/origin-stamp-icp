@@ -180,10 +180,4 @@ It will also:
 
 ---
 
-## 📜 License
-
-[MIT](LICENSE)
-
----
-
 **Now go build something fast, tested, and production-ready 🚀🦀**
