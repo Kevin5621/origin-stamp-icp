@@ -159,9 +159,13 @@ It will also:
 
 ---
 
-## 📌 Status
+## 📩 Submit Your Project!
 
-This template is **actively maintained**. Contributions are welcome!
+🎯 **Completed your challenge? Submit your project here:**  
+📢 [Submission Form](TODO)  
+
+📌 **Want to explore more challenges? Return to the index:**  
+🔗 [ICP Bootcamp Index](https://github.com/pt-icp-hub/ICP-Bootcamp-Vibe-Coding-Index) 
 
 ---
 
