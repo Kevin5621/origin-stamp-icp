@@ -30,22 +30,14 @@ Whether you're building your first ICP project or want a fast way to set up a ma
 
 ## 🚀 Getting Started
 
-### 🧑‍💻 Codespace Ready
+### 🧑‍💻 1. Get Codespace Ready
 
 A **devcontainer** is preconfigured for you to start coding instantly!
 
-- Fork this repository and click "Code → Open with Codespaces"
-- Once the codespace is created, you can open it in the browser or in VS Code
+- Click on "Use this Template" → "Create a new repository".
+- Click "Code → Open with Codespaces"
+- Once the codespace is created, you can open it in VS Code Local
 - Everything is pre-installed and ready for you to run the following commands
-
-Or, if you'd like to set it up locally:
-
-### 1. Clone the Repo
-
-```bash
-git clone https://github.com/pt-icp-hub/ICP-Bootcamp-Vibe-Coding.git
-cd ICP-Bootcamp-Vibe-Coding
-```
 
 ### 2. Install Dependencies
 
@@ -54,34 +46,35 @@ npm install
 ```
 
 ### 3. Build Canisters
-
+<!-- TODO: Check if needed. Maybe dfx build or the dfx deploy are already doing this? -->
 ```bash
 dfx generate
 cargo build --target wasm32-unknown-unknown --release --package vibe_coding_template_backend
 ```
 
-### 4. Start Local Environment
+### 4. Start Local Blockchain Environment
 
 ```bash
-dfx start --background --clean
+dfx start --clean
 ```
+Keep this tab open for reading logs.
 
 ### 5. Deploy Locally
 
+Open a new tab, then:
 ```bash
 dfx deploy
 ```
 
 ### 6. Run Tests
-
+<!-- TODO: There is a yellow warning about Vite's Node API being deprecated. Consider fixing. -->
 ```bash
 npm test
 ```
 
 You can also run:
 ```bash
-npm test -- --watch                # watch mode
-npm test -- tests/src/myfile.ts    # individual test
+npm test tests/src/vibe_coding_template_backend.test.ts    # individual test
 ```
 
 ---
@@ -101,7 +94,8 @@ ICP-Bootcamp-Vibe-Coding/
 │   └── vitest.config.ts                  # Vitest configuration
 ├── dfx.json                              # ICP config
 ├── Cargo.toml                            # Root Rust workspace config
-├── .github/workflows/                   # GitHub CI/CD pipelines
+├── .github/workflows/                    # GitHub CI/CD pipelines
+├── .github/copilot-instructions.md       # Copilot Feature-Test Loop Instructions
 └── CHANGELOG.md
 ```
 
@@ -110,15 +104,10 @@ ICP-Bootcamp-Vibe-Coding/
 ## ✅ Testing Patterns
 
 This template demonstrates ICP testing best practices:
-
+<!-- TODO: As it is, it's useless. Consider refactor or removal -->
 - **Query Function Testing**: Fast, read-only
 - **Update Function Testing**: State-changing logic
 - **Error Handling**: Expected failure validation
-
-Run with:
-```bash
-npm test
-```
 
 ---
 
@@ -126,9 +115,13 @@ npm test
 
 Located under `.github/workflows/`, this includes:
 
-- ✅ Canister build validation
-- 🧪 Automated test runs
-- 🧹 Code quality feedback on PRs
+- 🧪 Automated end-2-end test runs
+
+It could be extended to:
+- check for format;
+- check for security updates (audit);
+- test coverage;
+- code quality.
 
 ---
 
@@ -176,7 +169,7 @@ It will also:
 📢 [Submission Form](TODO)  
 
 📌 **Want to explore more challenges? Return to the index:**  
-🔗 [ICP Bootcamp Index](https://github.com/pt-icp-hub/ICP-Bootcamp-Vibe-Coding-Index) 
+🔗 [IC Vibe Coding Bootcamp Index](https://github.com/pt-icp-hub/IC-Vibe-Coding-Bootcamp-Index) 
 
 ---
 

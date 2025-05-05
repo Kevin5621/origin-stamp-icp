@@ -6,9 +6,7 @@
   "scripts": {
     "generate-candid": "bash ./scripts/generate-candid.sh",
     "generate-candid:canister": "bash ./scripts/generate-candid.sh",
-    "test": "vitest -c tests/vitest.config.ts --root .",
-    "preci": "dfx generate && cargo build --target wasm32-unknown-unknown --release --workspace",
-    "ci": "vitest run -c tests/vitest.config.ts --root ."
+    "test": "vitest run -c tests/vitest.config.ts --root ."
   },
   "keywords": [],
   "author": "",

@@ -49,7 +49,9 @@ jobs:
           dfx start --background
           dfx stop
 
-      - run: npm run ci
+      - run: |
+          dfx generate && cargo build --target wasm32-unknown-unknown --release --workspace
+          npm run test
         env:
           CI: true
           REPLICA_PORT: 8000
