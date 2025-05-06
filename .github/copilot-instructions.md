@@ -46,7 +46,7 @@ When writing tests for canister functions:
 Example test structure:
 
 ```typescript
-it("should correctly handle [specific scenario]", async () => {
+it("should [expected consequence]", async () => {
   // Setup
   const testData = { key: "value" };
 
@@ -61,7 +61,7 @@ it("should correctly handle [specific scenario]", async () => {
 After writing the tests please check they are all passing by executing:
 
 ```bash
-npm test -- --run
+npm test <file relative path>
 ```
 
 ### Updating the Changelog
