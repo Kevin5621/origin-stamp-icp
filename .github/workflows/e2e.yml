@@ -27,31 +27,34 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup Rust
+      - name: Setup rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           target: wasm32-unknown-unknown
           override: true
 
-      - name: Use Node.js ${{ matrix.node }}
+      - name: Setup node v${{ matrix.node }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
 
-      - run: npm install
-
-      - name: Install dfx
-        uses: dfinity/setup-dfx@main
+      - name: NPM install
+        run: npm install
 
       - name: Setup dfx
+        uses: dfinity/setup-dfx@main
+
+      - name: Install dfx
         run: |
           dfx start --background
           dfx stop
 
-      - run: |
-          dfx generate && cargo build --target wasm32-unknown-unknown --release --workspace
-          npm run test
+      - name: Cargo build
+        run: dfx generate && cargo build --target wasm32-unknown-unknown --release --workspace
+      
+      - name: Run tests
+        run: npm run test
         env:
           CI: true
           REPLICA_PORT: 8000
