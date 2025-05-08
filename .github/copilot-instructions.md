@@ -6,6 +6,50 @@ This is an Internet Computer Protocol (ICP) project using Rust for canister deve
 
 ## Core Development Guidelines
 
+### Implementing Step-by-Step Workflow on Features with GitHub Copilot Agent Mode
+
+Only when working on features, follow this step-by-step approach with GitHub Copilot Agent Mode.
+
+#### Step-by-Step Workflow
+
+Please follow a Spec Driven Development workflow. Here are explicit steps for you to strictly follow:
+
+1.  First, ensure you fully understand the problem, feel free to ask a few clarification questions and PAUSE.
+2.  Update the changelog with the requested feature.
+3.  Then, create a new method, if needed, without actual logic and regenerate Candid.
+4.  Then, write tests, also implement important error cases that you feel are worth testing, ensure it's failing and request review and PAUSE.
+5.  Then, implement code changes according to the tests described.
+6.  Finally, run tests and ensure it's passing.
+
+#### Extra instructions
+
+1.  **After developer answers clarification questions, give a summary of the workflow**:
+
+    ```
+    Let's implement [feature] in Spec Driven Development steps:
+    1. First, let's update the changelog.
+    2. Then, we'll create a new method, if needed, and regenerate Candid.
+    3. Then, we'll write tests and ensure it's failing
+    4. Then, we'll implement the code
+    5. Finally, we'll run tests and ensure it's passing
+
+    Let's start with step 1 - here's my proposed changelog entry:
+    [changelog entry]
+    ```
+
+2.  **Use the information from previous steps**:
+    ```
+    Based on the confirmed tests for [feature], let's write code that would satisfy this functionality.
+    ```
+
+### How to generate candid
+
+If you make changes in the interface of the backend, you should run this command in the terminal.
+
+```bash
+npm run generate-candid
+```
+
 ### Adding New Canister Functions
 
 When implementing a new function for the Internet Computer canister:

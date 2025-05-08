@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "generate-candid": "bash ./scripts/generate-candid.sh",
-    "generate-candid:canister": "bash ./scripts/generate-candid.sh",
-    "test": "vitest run -c tests/vitest.config.ts --root ."
+    "test": "dfx build & vitest run -c tests/vitest.config.ts --root ."
   },
   "keywords": [],
   "author": "",
