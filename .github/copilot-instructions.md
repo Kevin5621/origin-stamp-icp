@@ -46,10 +46,10 @@ cargo check
 
 ### How to check Typescript file
 
-If you make changes in Typescript files, you should self-check for errors by running the following command.
+If you make changes in Typescript test files, you should self-check for errors by running the following command.
 
 ```bash
-npx tsc --noEmit <file relative path>
+npx tsc -p tests/tsconfig.json
 ```
 
 ### Adding New Canister Functions
