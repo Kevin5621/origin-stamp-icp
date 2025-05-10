@@ -12,35 +12,21 @@ Only when working on features, follow this step-by-step approach with GitHub Cop
 
 #### Step-by-Step Workflow
 
+IMPORTANT: When you see "CRITICAL PAUSE POINT!" in these instructions, you MUST stop immediately and wait for human feedback before proceeding to the next step. Do not continue past any CRITICAL PAUSE POINT instruction without explicit approval.
+
 Please follow a Spec Driven Development workflow. Here are explicit steps for you to strictly follow:
 
-1.  First, ensure you fully understand the problem, feel free to ask a few clarification questions and PAUSE.
-2.  Update the changelog with the requested feature.
-3.  Then, create a new method, if needed, without actual logic and regenerate Candid.
-4.  Then, write tests, also implement important error cases that you feel are worth testing, ensure it's failing and request review and PAUSE.
-5.  Then, implement code changes according to the tests described.
-6.  Finally, run tests and ensure it's passing.
-
-#### Extra instructions
-
-1.  **After developer answers clarification questions, give a summary of the workflow**:
-
-    ```
-    Let's implement [feature] in Spec Driven Development steps:
-    1. First, let's update the changelog.
-    2. Then, we'll create a new method, if needed, and regenerate Candid.
-    3. Then, we'll write tests and ensure it's failing
-    4. Then, we'll implement the code
-    5. Finally, we'll run tests and ensure it's passing
-
-    Let's start with step 1 - here's my proposed changelog entry:
-    [changelog entry]
-    ```
-
-2.  **Use the information from previous steps**:
-    ```
-    Based on the confirmed tests for [feature], let's write code that would satisfy this functionality.
-    ```
+1.  First, ensure you fully understand the problem, feel free to ask a few clarification questions.
+2.  **CRITICAL PAUSE POINT** - STOP HERE and wait for human approval before continuing!
+3.  Update the changelog with the requested feature.
+4.  Then, if needed, create a new method without actual logic.
+5.  Regenerate Candid and Cargo check.
+6.  Then, write tests, also implement important error cases that you feel are worth testing.
+7.  Then check the file for any typescript error.
+8.  Then run tests and ensure it's failing. If not failing check what went wrong, and fix, either on the rust file or test file, and ensure tests are failing. If they don't fail, you aren't testing anything.
+9.  **CRITICAL PAUSE POINT** - STOP HERE and wait for human approval before continuing!
+10. Then, implement code changes according to the tests described.
+11. Finally, run tests and ensure it's passing.
 
 ### How to generate candid
 
@@ -48,6 +34,22 @@ If you make changes in the interface of the backend, you should run this command
 
 ```bash
 npm run generate-candid
+```
+
+### How to cargo check
+
+If you make changes in Rust files, you should self-check for errors by running the following command.
+
+```bash
+cargo check
+```
+
+### How to check Typescript file
+
+If you make changes in Typescript files, you should self-check for errors by running the following command.
+
+```bash
+npx tsc --noEmit <file relative path>
 ```
 
 ### Adding New Canister Functions

@@ -45,3 +45,6 @@ else
     generate_candid_for_canister "$canister"
   done
 fi
+
+# Always refresh the did files
+dfx generate
