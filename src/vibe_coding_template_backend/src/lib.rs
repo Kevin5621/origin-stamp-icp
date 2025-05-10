@@ -1,5 +1,5 @@
-use std::cell::RefCell;
 use ic_cdk::export_candid;
+use std::cell::RefCell;
 
 thread_local! {
     static COUNTER: RefCell<u64> = RefCell::new(0);
