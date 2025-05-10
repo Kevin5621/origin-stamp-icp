@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "generate-candid": "bash ./scripts/generate-candid.sh",
-    "test": "dfx build & vitest run -c tests/vitest.config.ts --root ."
+    "test": "dfx build & vitest run -c tests/vitest.config.ts"
   },
   "keywords": [],
   "author": "",
