@@ -4,6 +4,13 @@
 
 This is an Internet Computer Protocol (ICP) project using Rust for canister development with PocketIC and Vitest for testing.
 
+### Project Formatter and Linter
+
+- Rust: We use `rust-lang.rust-analyzer` for formatting and linting.
+- TypeScript: Use `prettier` for formatting and linting.
+- For both Rust and Typescript, ensure to run `npm run lint` and `npm run format` before committing any changes.
+- For Rust only, run `cargo fmt` and `cargo clippy` before committing any changes.
+
 ## Core Development Guidelines
 
 ### Implementing Step-by-Step Workflow on Features with GitHub Copilot Agent Mode
@@ -76,7 +83,7 @@ fn get_user_data(user_id: String) -> Option<UserData> {
 After adding a new function, always run the following command in the terminal:
 
 ```bash
-npm run generate-candid <CANISTER_NAME> && dfx generate
+npm run generate-candid <CANISTER_NAME>
 ```
 
 ### Writing Tests for Canister Functions

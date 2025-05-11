@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "generate-candid": "bash ./scripts/generate-candid.sh",
+    "lint": "prettier --check . && cargo clippy --target wasm32-unknown-unknown",
+    "format": "prettier --write . && cargo fmt && cargo clippy --fix --target wasm32-unknown-unknown",
     "test": "dfx build & vitest run -c tests/vitest.config.ts"
   },
   "keywords": [],

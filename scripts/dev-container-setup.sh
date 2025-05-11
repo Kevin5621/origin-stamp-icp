@@ -10,3 +10,4 @@ apt-get update && apt-get install -y jq
 
 # set up tool for rust formatting
 rustup component add rustfmt
+rustup component add clippy

@@ -52,7 +52,10 @@ jobs:
 
       - name: Cargo build
         run: dfx generate && cargo build --target wasm32-unknown-unknown --release --workspace
-      
+
+      - name: Check Lint
+        run: npm run lint
+
       - name: Run tests
         run: npm run test
         env:

@@ -7,6 +7,7 @@ Whether you're building your first ICP project or want a fast way to set up a ma
 ---
 
 ## 📜 Table of Contents
+
 - [✨ Features](#-features)
 - [🚀 Getting Started](#-getting-started)
 - [📁 Project Structure](#-project-structure)
@@ -46,7 +47,9 @@ npm install
 ```
 
 ### 3. Build Canisters
+
 <!-- TODO: Check if needed. Maybe dfx build or the dfx deploy are already doing this? -->
+
 ```bash
 dfx generate
 cargo build --target wasm32-unknown-unknown --release --package vibe_coding_template_backend
@@ -57,22 +60,27 @@ cargo build --target wasm32-unknown-unknown --release --package vibe_coding_temp
 ```bash
 dfx start --clean
 ```
+
 Keep this tab open for reading logs.
 
 ### 5. Deploy Locally
 
 Open a new tab, then:
+
 ```bash
 dfx deploy
 ```
 
 ### 6. Run Tests
+
 <!-- TODO: There is a yellow warning about Vite's Node API being deprecated. Consider fixing. -->
+
 ```bash
 npm test
 ```
 
 You can also run:
+
 ```bash
 npm test tests/src/vibe_coding_template_backend.test.ts    # individual test
 ```
@@ -104,7 +112,9 @@ ICP-Bootcamp-Vibe-Coding/
 ## ✅ Testing Patterns
 
 This template demonstrates ICP testing best practices:
+
 <!-- TODO: As it is, it's useless. Consider refactor or removal -->
+
 - **Query Function Testing**: Fast, read-only
 - **Update Function Testing**: State-changing logic
 - **Error Handling**: Expected failure validation
@@ -118,6 +128,7 @@ Located under `.github/workflows/`, this includes:
 - 🧪 Automated end-2-end test runs
 
 It could be extended to:
+
 - check for format;
 - check for security updates (audit);
 - test coverage;
@@ -134,10 +145,13 @@ This project includes a `.github/copilot-instructions.md` file that helps Copilo
 - Follow best practices for query/update annotations
 
 ### ✨ Example Prompt
+
 ```rust
 // Add a function to decrease the counter value
 ```
+
 Copilot will suggest:
+
 ```rust
 #[ic_cdk::update]
 fn decrease() -> u64 {
@@ -148,7 +162,9 @@ fn decrease() -> u64 {
     })
 }
 ```
+
 It will also:
+
 - Create a matching test in `tests/src/`
 - Update the `CHANGELOG.md`
 
@@ -166,10 +182,10 @@ It will also:
 ## 📩 Submit Your Project!
 
 🎯 **Completed your challenge? Submit your project here:**  
-📢 [Submission Form](https://forms.gle/Sgmm1y2bLXYY7mwC6)  
+📢 [Submission Form](https://forms.gle/Sgmm1y2bLXYY7mwC6)
 
 📌 **Want to explore more challenges? Return to the index:**  
-🔗 [IC Vibe Coding Bootcamp Index](https://github.com/pt-icp-hub/IC-Vibe-Coding-Bootcamp-Index) 
+🔗 [IC Vibe Coding Bootcamp Index](https://github.com/pt-icp-hub/IC-Vibe-Coding-Bootcamp-Index)
 
 ---
 
