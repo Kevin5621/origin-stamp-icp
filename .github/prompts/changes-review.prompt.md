@@ -19,7 +19,8 @@ To help the developer:
 
 Perform a current changes review:
 
-- Read the uncommitted changes, especially those on changelog, tests and src.
+- Read the uncommitted changes.
+- **Important:** Read the files affected for extra context, and any other connected files, especially inside tests and src folder.
 - Write a 3 section review:
   - **Business Logic Risks**: Does the code behave as expected? Try to find unwanted edge cases.
   - **Code Quality Risks**: Is the code well written? Are there any anti-patterns? Try to find any relevant refactor to consider.
@@ -38,16 +39,8 @@ Perform a current changes review:
 
 ### How to read uncommitted changes
 
-You can run the following command to know the changed files:
+You can run the following command:
 
 ```bash
-git status
+git diff | cat && git diff --staged | cat
 ```
-
-Then check the changes themselves with:
-
-```bash
-git diff | cat
-```
-
-Don't run other `git diff` commands or worry about untracked files.
