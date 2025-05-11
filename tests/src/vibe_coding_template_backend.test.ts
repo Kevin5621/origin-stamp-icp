@@ -2,6 +2,7 @@ import { describe, beforeEach, afterEach, it, expect, inject } from "vitest";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { PocketIc, type Actor } from "@dfinity/pic";
+import { Principal } from "@dfinity/principal";
 
 // Import generated types for your canister
 import {
@@ -25,6 +26,8 @@ describe("Vibe Coding Template Backend", () => {
   // Define variables to hold our PocketIC instance, canister ID,
   // and an actor to interact with our canister.
   let pic: PocketIc;
+  // @ts-ignore - This variable is used in the setup / framework
+  let canisterId: Principal;
   let actor: Actor<_SERVICE>;
 
   // The `beforeEach` hook runs before each test.
@@ -40,6 +43,7 @@ describe("Vibe Coding Template Backend", () => {
 
     // Save the actor and canister ID for use in tests
     actor = fixture.actor;
+    canisterId = fixture.canisterId;
   });
 
   // The `afterEach` hook runs after each test.
