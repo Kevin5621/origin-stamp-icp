@@ -46,16 +46,7 @@ A **devcontainer** is preconfigured for you to start coding instantly!
 npm install
 ```
 
-### 3. Build Canisters
-
-<!-- TODO: Check if needed. Maybe dfx build or the dfx deploy are already doing this? -->
-
-```bash
-dfx generate
-cargo build --target wasm32-unknown-unknown --release --package vibe_coding_template_backend
-```
-
-### 4. Start Local Blockchain Environment
+### 3. Start Local Blockchain Environment
 
 ```bash
 dfx start --clean
@@ -63,7 +54,7 @@ dfx start --clean
 
 Keep this tab open for reading logs.
 
-### 5. Deploy Locally
+### 4. Deploy Locally
 
 Open a new tab, then:
 
@@ -71,9 +62,7 @@ Open a new tab, then:
 dfx deploy
 ```
 
-### 6. Run Tests
-
-<!-- TODO: There is a yellow warning about Vite's Node API being deprecated. Consider fixing. -->
+### 5. Run Tests
 
 ```bash
 npm test
