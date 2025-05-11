@@ -28,7 +28,12 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "[rust]": {
           "editor.defaultFormatter": "rust-lang.rust-analyzer"
-        }
+        },
+        "github.copilot.chat.testGeneration.instructions": [
+          {
+            "file": "test.instructions.md"
+          }
+        ]
       }
     }
   },
