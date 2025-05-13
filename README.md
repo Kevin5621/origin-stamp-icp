@@ -49,7 +49,7 @@ npm install
 ### 3. Start Local Blockchain Environment
 
 ```bash
-dfx start --clean
+dfx start
 ```
 
 Keep this tab open for reading logs.
@@ -89,24 +89,17 @@ ICP-Bootcamp-Vibe-Coding/
 │   ├── src/                              # Test files
 │   ├── global-setup.ts                   # PocketIC instance
 │   └── vitest.config.ts                  # Vitest configuration
+├── scripts/
+│   ├── dev-container-setup.sh            # Extra set up steps for codespace
+│   └── generate-candid.sh                # Useful one way script to build, generate candid and did files
 ├── dfx.json                              # ICP config
 ├── Cargo.toml                            # Root Rust workspace config
+├── .github/instructions/                 # Copilot general and language specific instructions
+├── .github/prompts/                      # Copilot Prompts, like add feature and changes review
 ├── .github/workflows/                    # GitHub CI/CD pipelines
-├── .github/copilot-instructions.md       # Copilot Feature-Test Loop Instructions
+├── .devcontainer/devcontainer.json       # Container config for running your own codespace
 └── CHANGELOG.md
 ```
-
----
-
-## ✅ Testing Patterns
-
-This template demonstrates ICP testing best practices:
-
-<!-- TODO: As it is, it's useless. Consider refactor or removal -->
-
-- **Query Function Testing**: Fast, read-only
-- **Update Function Testing**: State-changing logic
-- **Error Handling**: Expected failure validation
 
 ---
 
@@ -118,53 +111,118 @@ Located under `.github/workflows/`, this includes:
 
 It could be extended to:
 
-- check for format;
 - check for security updates (audit);
 - test coverage;
 - code quality.
 
 ---
 
-## 🧠 GitHub Copilot Integration
+## 🧠 **GitHub Copilot Integration**
 
-This project includes a `.github/copilot-instructions.md` file that helps Copilot:
+This project leverages two key customization folders:
 
-- Generate test cases for each new function
-- Suggest changelog entries
-- Follow best practices for query/update annotations
+- `.github/instructions/` – Provides essential context to guide AI responses.
+- `.github/prompts/` – Defines workflow prompts to effectively assist you.
 
-### ✨ Example Prompt
+Think of the AI as a super-fast junior developer, handling the heavy lifting while you focus on quality control. Instead of using PRs, you’re reviewing and refining code directly in the IDE through Copilot chat.
 
-```rust
-// Add a function to decrease the counter value
+### 📝 **About Instructions**
+
+Instructions provide "context" that applies to specific files using regex patterns defined in `applyTo`. They are ideal for project-wide or language-specific guidance.
+
+**Current Instructions:**
+
+- **general:** `applyTo: **`
+- **rust:** `applyTo: */*.rs`
+- **test:** `applyTo: tests/**`
+
+**Examples of Context You Can Define:**
+
+- This is an ICP project using Rust canisters.
+- For Rust, we follow Clippy and Rust FMT style guides and linting tools.
+- For tests, we use **Pocket IC** and maintain a specific test structure.
+
+### 🛠️ **About Prompts**
+
+Prompts define specific tasks and guide the AI through a structured workflow. They are especially useful for maintaining a consistent development process.
+
+---
+
+#### ✨ **Add Feature Prompt**
+
+```markdown
+/add-feature Add a function to decrease the counter value
 ```
 
-Copilot will suggest:
+In this workflow, Copilot follows a Spec Driven Workflow:
 
-```rust
-#[ic_cdk::update]
-fn decrease() -> u64 {
-    COUNTER.with(|counter| {
-        let val = counter.borrow().saturating_sub(1);
-        *counter.borrow_mut() = val;
-        val
-    })
-}
+1. Clarification Phase:
+   • Updates the changelog and asks for any necessary clarifications.
+2. Test First Approach:
+   • Generates a test case and ensures it fails, confirming that the test is effectively targeting the desired behavior.
+3. Human Confirmation:
+   • The AI pauses for a human to review and confirm the spec, ensuring alignment before proceeding.
+4. Implementation Phase:
+   • Implements the code, self-checks for errors, installs necessary libraries, lints, formats, and runs tests to confirm they pass.
+
+**✅ Key Takeaways**
+
+When you explore the prompt, please notice:
+
+- CRITICAL PAUSE POINTS
+  - Strategic pauses allow the human to verify the work in small, reviewable chunks and redirect if necessary.
+- Command Explanations
+  - The prompt can include specific commands or scripts, guiding the AI in self-checking, running scripts, or managing dependencies.
+- Task-Specific Advice
+  - The prompt is the place to add any specific guidance or notes relevant only to the particular task at hand.
+
+#### 🚧 **Changes Review Prompt**
+
+To run a review, simply call the prompt:
+
+```markdown
+/changes-review
 ```
 
-It will also:
+The AI will analyze the current git diffs, then reference other files in the repo for context. It will generate a comprehensive report for you to review before committing.
 
-- Create a matching test in `tests/src/`
-- Update the `CHANGELOG.md`
+#### ✅ **Focus Areas**
+
+1. **Business Logic:**
+
+   - Detects potential unwanted side effects or missing edge cases.
+
+2. **Code Quality:**
+
+   - Suggests improvements or refactor opportunities.
+
+3. **Security & Performance:**
+   - Identifies vulnerabilities or inefficiencies.
+
+#### 📌 **Why It Matters**
+
+- AI can handle the heavy lifting, but it's **your responsibility as the Senior** to validate the findings.
+- Double-check and ensure quality – small issues now can become big problems later. 😉
 
 ---
 
 ## 📚 Learning Resources
 
+- [Instruction and Prompt Files](https://code.visualstudio.com/docs/copilot/copilot-customization)
+- [Agent Mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode)
+- [Copilot Reference](https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features)
 - [ICP Dev Docs](https://internetcomputer.org/docs)
 - [Rust CDK](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
 - [PicJS Doc](https://dfinity.github.io/pic-js/)
 - [Vitest Testing Framework](https://vitest.dev/)
+
+---
+
+### 🤝 **Contributing**
+
+We welcome contributions! If you encounter a bug, have a feature request, or want to suggest improvements, please open an issue or submit a Pull Request.
+
+We especially welcome candidates of limits you face, consider using the **Limit Candidate Form Issue** – it helps us prioritize and address the most impactful limits effectively.
 
 ---
 
