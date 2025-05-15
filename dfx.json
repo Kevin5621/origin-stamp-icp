@@ -15,6 +15,11 @@
           "name": "candid:service"
         }
       ]
+    },
+    "frontend": {
+      "dependencies": ["vibe_coding_template_backend"],
+      "type": "assets",
+      "source": ["src/frontend/dist/"]
     }
   },
   "output_env_file": ".env",
