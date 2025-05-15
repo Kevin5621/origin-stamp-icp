@@ -71,7 +71,7 @@ npm test
 You can also run:
 
 ```bash
-npm test tests/src/vibe_coding_template_backend.test.ts    # individual test
+npm test tests/src/backend.test.ts    # individual test
 ```
 
 ---
@@ -81,7 +81,7 @@ npm test tests/src/vibe_coding_template_backend.test.ts    # individual test
 ```
 ICP-Bootcamp-Vibe-Coding/
 ├── src/
-│   ├── vibe_coding_template_backend/     # Rust backend canister
+│   ├── backend/     # Rust backend canister
 │   │   ├── src/                          # Rust source files
 │   │   └── Cargo.toml                    # Rust dependencies
 │   └── declarations/                     # Auto-generated canister interfaces

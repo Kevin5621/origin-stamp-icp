@@ -1,15 +1,13 @@
 {
   "canisters": {
-    "vibe_coding_template_backend": {
-      "candid": "src/vibe_coding_template_backend/vibe_coding_template_backend.did",
-      "package": "vibe_coding_template_backend",
+    "backend": {
+      "candid": "src/backend/backend.did",
+      "package": "backend",
       "type": "custom",
       "shrink": true,
       "gzip": true,
-      "wasm": "target/wasm32-unknown-unknown/release/vibe_coding_template_backend.wasm",
-      "build": [
-        "bash ./scripts/generate-candid.sh vibe_coding_template_backend"
-      ],
+      "wasm": "target/wasm32-unknown-unknown/release/backend.wasm",
+      "build": ["bash ./scripts/generate-candid.sh backend"],
       "metadata": [
         {
           "name": "candid:service"
@@ -17,7 +15,7 @@
       ]
     },
     "frontend": {
-      "dependencies": ["vibe_coding_template_backend"],
+      "dependencies": ["backend"],
       "type": "assets",
       "source": ["src/frontend/dist/"]
     }

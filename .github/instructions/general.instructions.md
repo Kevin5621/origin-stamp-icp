@@ -60,6 +60,6 @@ Example changelog entry:
 
 ## Important Files
 
-- Canister implementation: src/vibe_coding_template_backend/src/lib.rs
-- Test file: tests/src/vibe_coding_template_backend.test.ts
+- Canister implementation: src/backend/src/lib.rs
+- Test file: tests/src/backend.test.ts
 - Changelog: CHANGELOG.md

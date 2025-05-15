@@ -8,7 +8,7 @@ import { Principal } from "@dfinity/principal";
 import {
   type _SERVICE,
   idlFactory,
-} from "../../src/declarations/vibe_coding_template_backend/vibe_coding_template_backend.did.js";
+} from "../../src/declarations/backend/backend.did.js";
 
 // Define the path to your canister's WASM file
 export const WASM_PATH = resolve(
@@ -18,7 +18,7 @@ export const WASM_PATH = resolve(
   "target",
   "wasm32-unknown-unknown",
   "release",
-  "vibe_coding_template_backend.wasm",
+  "backend.wasm",
 );
 
 // The `describe` function is used to group tests together
