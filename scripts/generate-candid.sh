@@ -47,4 +47,10 @@ else
 fi
 
 # Always refresh the did files
-dfx generate
+if [ "$1" != "" ]; then
+  # Generate declarations for the specific canister
+  dfx generate "$1"
+else
+  # Generate declarations for all canisters
+  dfx generate
+fi
