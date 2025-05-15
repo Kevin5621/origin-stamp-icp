@@ -51,13 +51,13 @@ jobs:
           dfx stop
 
       - name: Cargo build
-        run: dfx generate && cargo build --target wasm32-unknown-unknown --release --workspace
+        run: dfx generate backend && cargo build --target wasm32-unknown-unknown --release --package $canister
 
       - name: Check Lint
         run: npm run lint
 
       - name: Run tests
-        run: npm run test
+        run: npm run test:backend
         env:
           CI: true
           REPLICA_PORT: 8000
