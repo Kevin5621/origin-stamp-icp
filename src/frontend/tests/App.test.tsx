@@ -5,8 +5,8 @@ import App from "../src/App";
 import { StrictMode } from "react";
 
 // Mock the backend canister
-vi.mock("../../declarations/vibe_coding_template_backend", () => ({
-  vibe_coding_template_backend: {
+vi.mock("../../declarations/backend", () => ({
+  backend: {
     greet: vi.fn().mockResolvedValue("Hello, Test!"),
     get_count: vi.fn().mockResolvedValue(BigInt(0)),
     increment: vi.fn().mockResolvedValue(BigInt(1)),

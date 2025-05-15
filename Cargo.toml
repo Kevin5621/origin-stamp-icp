@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "src/vibe_coding_template_backend"
+    "src/backend"
 ]
 resolver = "2"

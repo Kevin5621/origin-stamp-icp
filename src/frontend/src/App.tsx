@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import "./styles/App.scss";
 import ReactIcon from "../assets/React-icon.webp";
-import { vibe_coding_template_backend } from "../../declarations/vibe_coding_template_backend";
+import { backend } from "../../declarations/backend";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,7 @@ function App() {
     try {
       setLoading(true);
       setError(undefined);
-      const res = await vibe_coding_template_backend.greet(name || "World");
+      const res = await backend.greet(name || "World");
       setResponse(res);
     } catch (err) {
       console.error(err);
@@ -28,7 +28,7 @@ function App() {
     try {
       setLoading(true);
       setError(undefined);
-      const res = await vibe_coding_template_backend.get_count();
+      const res = await backend.get_count();
       setCount(res);
     } catch (err) {
       console.error(err);
@@ -42,7 +42,7 @@ function App() {
     try {
       setLoading(true);
       setError(undefined);
-      const res = await vibe_coding_template_backend.increment();
+      const res = await backend.increment();
       setCount(res);
     } catch (err) {
       console.error(err);
