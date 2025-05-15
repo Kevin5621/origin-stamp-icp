@@ -51,7 +51,7 @@ jobs:
           dfx stop
 
       - name: Cargo build
-        run: dfx generate backend && cargo build --target wasm32-unknown-unknown --release --package $canister
+        run: dfx generate backend && cargo build --target wasm32-unknown-unknown --release --package backend
 
       - name: Check Lint
         run: npm run lint
