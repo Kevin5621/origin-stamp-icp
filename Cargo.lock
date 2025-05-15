@@ -27,6 +27,7 @@ dependencies = [
  "candid",
  "ic-cdk",
  "ic-cdk-timers",
+ "ic-llm",
 ]
 
 [[package]]
@@ -311,6 +312,17 @@ dependencies = [
  "serde",
  "serde_bytes",
  "slotmap",
+]
+
+[[package]]
+name = "ic-llm"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "609b6a1e0a8ce2bd4661360e4219d07c972b917cd54eb2bfad1d347805eea8c4"
+dependencies = [
+ "candid",
+ "ic-cdk",
+ "serde",
 ]
 
 [[package]]
