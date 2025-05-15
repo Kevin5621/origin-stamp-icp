@@ -50,6 +50,38 @@
   font-weight: bold;
 }
 
+/* LLM Card Styles */
+.llm-card {
+  textarea {
+    width: 100%;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border-radius: 4px;
+    background-color: #1a1a1a;
+    border: 1px solid #3a3a3a;
+    color: #fff;
+    resize: vertical;
+  }
+
+  .llm-response {
+    margin-top: 1.5em;
+    padding: 1em;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    text-align: left;
+
+    h4 {
+      margin-top: 0;
+      color: #61dafb;
+    }
+
+    p {
+      margin-bottom: 0;
+      white-space: pre-wrap;
+    }
+  }
+}
+
 /* Loader animation */
 .loader {
   background: #888;

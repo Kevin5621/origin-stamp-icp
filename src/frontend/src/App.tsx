@@ -9,6 +9,9 @@ function App() {
   const [name, setName] = useState<string>("");
   const [response, setResponse] = useState<string>("");
   const [count, setCount] = useState<bigint>(BigInt(0));
+  const [prompt, setPrompt] = useState<string>("");
+  const [llmResponse, setLlmResponse] = useState<string>("");
+  const [llmLoading, setLlmLoading] = useState(false);
 
   const fetchGreeting = async () => {
     try {
@@ -53,12 +56,37 @@ function App() {
   };
 
   const handleChangeText = (
-    event: ChangeEvent<HTMLInputElement> | undefined
+    event: ChangeEvent<HTMLInputElement> | undefined,
   ): void => {
     if (!event?.target.value) {
       return;
     }
     setName(event.target.value);
+  };
+
+  const handleChangePrompt = (
+    event: ChangeEvent<HTMLTextAreaElement> | undefined,
+  ): void => {
+    if (!event?.target.value) {
+      return;
+    }
+    setPrompt(event.target.value);
+  };
+
+  const sendPrompt = async () => {
+    if (!prompt.trim()) return;
+
+    try {
+      setLlmLoading(true);
+      setError(undefined);
+      const res = await backend.prompt(prompt);
+      setLlmResponse(res);
+    } catch (err) {
+      console.error(err);
+      setError(String(err));
+    } finally {
+      setLlmLoading(false);
+    }
   };
 
   // Fetch the initial count when component mounts
@@ -98,6 +126,25 @@ function App() {
         <button onClick={fetchCount} disabled={loading}>
           Refresh Count
         </button>
+      </div>
+
+      <div className="card llm-card">
+        <h3>LLM Prompt</h3>
+        <textarea
+          rows={4}
+          onChange={handleChangePrompt}
+          value={prompt}
+          placeholder="Ask the LLM something..."
+        />
+        <button onClick={sendPrompt} disabled={llmLoading}>
+          {llmLoading ? "Thinking..." : "Send Prompt"}
+        </button>
+        {!!llmResponse && (
+          <div className="llm-response">
+            <h4>Response:</h4>
+            <p>{llmResponse}</p>
+          </div>
+        )}
       </div>
 
       {!!loading && !error && <div className="loader" />}
