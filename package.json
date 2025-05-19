@@ -9,6 +9,7 @@
     "lint": "prettier --check . && cargo clippy --target wasm32-unknown-unknown",
     "format": "prettier --write . && cargo fmt && cargo clippy --fix --target wasm32-unknown-unknown",
     "build": "tsc -p \"src/frontend/tsconfig.json\"  && vite build --config \"src/frontend/vite.config.ts\"",
+    "dev": "vite --config \"src/frontend/vite.config.ts\"",
     "test": "run-s test:backend test:frontend",
     "test:frontend": "vitest run --config \"src/frontend/vite.config.ts\"",
     "test:backend": "dfx build & vitest run -c tests/vitest.config.ts"

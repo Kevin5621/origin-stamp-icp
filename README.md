@@ -81,7 +81,17 @@ dfx deploy
 dfx deps deploy  # deploys the llm canister
 ```
 
-### 5. Run Tests
+### 5. Start the Development Server
+
+You can start the frontend development server with:
+
+```bash
+# Just the frontend development server
+npm run dev
+
+```
+
+### 6. Run Tests
 
 ```bash
 npm test
