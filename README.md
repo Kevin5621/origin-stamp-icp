@@ -46,20 +46,39 @@ A **devcontainer** is preconfigured for you to start coding instantly!
 npm install
 ```
 
-### 3. Start Local Blockchain Environment
+### 3. Running Ollama
+
+To be able to test the agent locally, you'll need a server for processing the agent's prompts. For that, we'll use `ollama`, which is a tool that can download and serve LLMs.
+See the documentation on the [Ollama website](https://ollama.com/) to install it. Once it's installed, run:
 
 ```bash
-dfx start
+ollama serve
+# Expected to start listening on port 11434
+```
+
+The above command will start the Ollama server, so that it can process requests by the agent. Additionally, and in a separate window, run the following command to download the LLM that will be used by the agent:
+
+```bash
+ollama run llama3.1:8b
+```
+
+The above command will download an 8B parameter model, which is around 4GiB. Once the command executes and the model is loaded, you can terminate it. You won't need to do this step again.
+
+### 4. Deployment
+
+Then, in one terminal window, run:
+
+```bash
+dfx start --clean
 ```
 
 Keep this tab open for reading logs.
 
-### 4. Deploy Locally
-
-Open a new tab, then:
+Then pull the dependency and deploy the canisters in another window:
 
 ```bash
 dfx deploy
+dfx deps deploy  # deploys the llm canister
 ```
 
 ### 5. Run Tests
