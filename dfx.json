@@ -1,30 +1,14 @@
 {
   "canisters": {
     "llm": {
-      "type": "custom",
-      "wasm": "https://github.com/dfinity/llm/releases/latest/download/llm-canister-ollama.wasm",
-      "candid": "https://github.com/dfinity/llm/releases/latest/download/llm-canister-ollama.did",
-      "specified_id": "w36hm-eqaaa-aaaal-qr76a-cai",
-      "remote": {
-        "id": {
-          "ic": "w36hm-eqaaa-aaaal-qr76a-cai"
-        }
-      }
+      "type": "pull",
+      "id": "w36hm-eqaaa-aaaal-qr76a-cai"
     },
     "backend": {
       "dependencies": ["llm"],
       "candid": "src/backend/backend.did",
       "package": "backend",
-      "type": "custom",
-      "shrink": true,
-      "gzip": true,
-      "wasm": "target/wasm32-unknown-unknown/release/backend.wasm",
-      "build": ["bash ./scripts/generate-candid.sh backend"],
-      "metadata": [
-        {
-          "name": "candid:service"
-        }
-      ]
+      "type": "rust"
     },
     "frontend": {
       "dependencies": ["backend"],
@@ -33,5 +17,6 @@
     }
   },
   "output_env_file": ".env",
-  "version": 1
+  "version": 1,
+  "dfx": "0.25.0"
 }
