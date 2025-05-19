@@ -1,7 +1,7 @@
 {
   "name": "ICP Vibe Coding Dev",
   "image": "ghcr.io/dfinity/icp-dev-env:latest",
-  "forwardPorts": [4943, 5173],
+  "forwardPorts": [4943, 5173, 11434],
   "portsAttributes": {
     "4943": {
       "label": "dfx",
@@ -10,6 +10,10 @@
     "5173": {
       "label": "vite",
       "onAutoForward": "openBrowser"
+    },
+    "11434": {
+      "label": "ollama",
+      "onAutoForward": "notify"
     }
   },
   "onCreateCommand": "chmod +x scripts/dev-container-setup.sh",

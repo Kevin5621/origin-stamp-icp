@@ -37,6 +37,7 @@ A **devcontainer** is preconfigured for you to start coding instantly!
 
 - Click on "Use this Template" → "Create a new repository".
 - Click "Code → Open with Codespaces"
+- Change machine type to 4-core 16GB RAM • 32GB
 - Once the codespace is created, you can open it in VS Code Local
 - Everything is pre-installed and ready for you to run the following commands
 
@@ -49,7 +50,7 @@ npm install
 ### 3. Running Ollama
 
 To be able to test the agent locally, you'll need a server for processing the agent's prompts. For that, we'll use `ollama`, which is a tool that can download and serve LLMs.
-See the documentation on the [Ollama website](https://ollama.com/) to install it. Once it's installed, run:
+See the documentation on the [Ollama website](https://ollama.com/). Run:
 
 ```bash
 ollama serve
@@ -62,7 +63,7 @@ The above command will start the Ollama server, so that it can process requests 
 ollama run llama3.1:8b
 ```
 
-The above command will download an 8B parameter model, which is around 4GiB. Once the command executes and the model is loaded, you can terminate it. You won't need to do this step again.
+Once the command executes and the model is loaded, you can terminate it by typing /bye. You won't need to do this step again.
 
 ### 4. Deployment
 
