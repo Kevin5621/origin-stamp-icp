@@ -1,8 +1,19 @@
-# 🧪🔥 IC Vibe Coding Bootcamp - Rust Edition
+# 🧪🔥 IC Vibe Coding Template
 
-Welcome to the **IC Vibe Coding Bootcamp (Rust Edition)**! This repository provides a high-quality, production-style template to help you kickstart Internet Computer (ICP) backend development using **Rust**, with best practices in testing, CI/CD, and developer experience.
+This template was built for the **IC Vibe Coding Bootcamp (Rust Edition)**. If you are interested, you are welcome to [join until end of May](https://lu.ma/kyvm8zyd?tk=2jZPsD).
 
-Whether you're building your first ICP project or want a fast way to set up a maintainable Rust canister architecture, this template is your launchpad. 🚀
+## Welcome! 👋
+
+This repository offers a high-quality, production-ready template to jumpstart your Internet Computer (ICP) development.
+
+It includes:
+
+- 🦀 **Rust** for backend canister
+- ⚛️ **React + Tailwind** for the frontend
+- 🤖 **IC LLM Canister** integration for Agent workflows
+- ✅ Best practices for testing, CI/CD, and developer experience
+
+Whether you're building full-stack dapps or agents, this template gives you a solid foundation to start fast and scale smoothly. 🚀
 
 ---
 
@@ -21,11 +32,13 @@ Whether you're building your first ICP project or want a fast way to set up a ma
 
 ## ✨ Features
 
-- 🦀 **Rust-based Canister Template**
-- 🧪 **Test Suite**: Powered by Vitest + PocketIC for realistic canister simulation
+- 🦀 **Rust-based Canister** backend.
+- ⚛️ **React + Tailwind + Typescript** in the frontend.
+- 🤖 **IC LLM Canister** for Agentic use cases.
+- 🧪 **Full Test Suite**: Powered by Vitest + PocketIC for backend, frontend and integration testing.
 - 🔁 **CI/CD**: GitHub Actions to automate builds, tests, and code quality checks
 - 📦 **DFX Config**: Pre-configured with best practices for Rust
-- 🤖 **Copilot Integration**: Automatically generate structured tests & changelogs
+- 🤖 **Copilot Integration**: Automatically generate structured tests, code & changelogs
 
 ---
 
@@ -78,7 +91,10 @@ Keep this tab open for reading logs.
 Then pull the dependency and deploy the canisters in another window:
 
 ```bash
-dfx deploy
+dfx deploy # deploys the backend and frontend canisters
+```
+
+```bash
 dfx deps pull
 dfx deps deploy  # deploys the llm canister
 ```

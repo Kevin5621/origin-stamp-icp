@@ -18,12 +18,12 @@ describe("App", () => {
     render(
       <StrictMode>
         <App />
-      </StrictMode>
+      </StrictMode>,
     );
 
     expect(screen.getByText("Vibe Coding Template")).toBeInTheDocument();
     expect(
-      screen.getByText("React + Rust + Internet Computer")
+      screen.getByText("React + Rust + Internet Computer"),
     ).toBeInTheDocument();
   });
 });
