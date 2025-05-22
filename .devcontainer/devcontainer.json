@@ -25,7 +25,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "tamasfe.even-better-toml",
-        "rust-lang.rust-analyzer"
+        "rust-lang.rust-analyzer",
+        "bradlc.vscode-tailwindcss"
       ],
       "settings": {
         "editor.formatOnSave": true,
@@ -37,7 +38,13 @@
           {
             "file": "test.instructions.md"
           }
-        ]
+        ],
+        "files.associations": {
+          "*.css": "tailwindcss"
+        },
+        "editor.quickSuggestions": {
+          "strings": "on"
+        }
       }
     }
   },
