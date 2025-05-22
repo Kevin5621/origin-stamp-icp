@@ -2,7 +2,7 @@
 applyTo: "**"
 ---
 
-# Vibe Coding Template Instructions
+# General Instructions
 
 ## Project Context
 

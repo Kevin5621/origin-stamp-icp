@@ -1,5 +1,5 @@
 ---
-applyTo: "tests/**"
+applyTo: "**/tests/**/*.ts"
 ---
 
 ### Writing Tests for Canister Functions

@@ -1,5 +1,5 @@
 ---
-applyTo: "src/frontend/tests/**"
+applyTo: "**/src/frontend/**"
 ---
 
 ### Writing Tests for Frontend Components

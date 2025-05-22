@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.ts,**/*.tsx"
+applyTo: "**/*.tsx"
 ---
 
 ### Frontend and Typescript Instructions
