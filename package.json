@@ -1,42 +1,34 @@
 {
-  "name": "vibe-test",
+  "name": "vibe-icp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Internet Computer Protocol (ICP) project using Rust and Typescript for canister development, with Vibe Coding workflows",
   "main": "index.js",
   "type": "module",
+  "workspaces": [
+    "src/frontend"
+  ],
   "scripts": {
     "generate-candid": "bash ./scripts/generate-candid.sh",
     "lint": "prettier --check . && cargo clippy --target wasm32-unknown-unknown",
     "format": "prettier --write . && cargo fmt && cargo clippy --fix --target wasm32-unknown-unknown",
-    "build": "tsc -p \"src/frontend/tsconfig.json\"  && vite build --config \"src/frontend/vite.config.ts\"",
-    "dev": "vite --config \"src/frontend/vite.config.ts\"",
+    "build": "npm run build --workspace=frontend",
+    "dev": "npm run dev --workspace=frontend",
     "test": "npm run test:backend && npm run test:frontend",
-    "test:frontend": "vitest run -c src/frontend/vite.config.ts",
+    "test:frontend": "npm test --workspace=frontend",
     "test:backend": "dfx build && vitest run -c tests/vitest.config.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
   "devDependencies": {
     "@dfinity/pic": "^0.13.1",
     "@types/node": "^22.14.1",
-    "@types/react": "^19.1.4",
-    "@types/react-dom": "^19.1.5",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@vitejs/plugin-react": "^4.0.1",
     "cross-fetch": "^3.1.6",
     "prettier": "^3.5.3",
-    "sass": "^1.63.6",
     "typescript": "^5.8.3",
     "vite": "^6.2.1",
     "vite-plugin-environment": "^1.1.3",
     "vitest": "^3.1.2",
-    "jsdom": "^22.1.0",
     "dotenv": "^16.3.1"
   }
 }
