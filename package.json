@@ -10,9 +10,9 @@
     "format": "prettier --write . && cargo fmt && cargo clippy --fix --target wasm32-unknown-unknown",
     "build": "tsc -p \"src/frontend/tsconfig.json\"  && vite build --config \"src/frontend/vite.config.ts\"",
     "dev": "vite --config \"src/frontend/vite.config.ts\"",
-    "test": "run-s test:backend test:frontend",
-    "test:frontend": "vitest run --config \"src/frontend/vite.config.ts\"",
-    "test:backend": "dfx build & vitest run -c tests/vitest.config.ts"
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:frontend": "vitest run -c src/frontend/vite.config.ts",
+    "test:backend": "dfx build && vitest run -c tests/vitest.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -29,7 +29,6 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@vitejs/plugin-react": "^4.0.1",
-    "npm-run-all": "^4.1.5",
     "cross-fetch": "^3.1.6",
     "prettier": "^3.5.3",
     "sass": "^1.63.6",
