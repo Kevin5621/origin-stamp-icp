@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import ReactIcon from "../assets/React-icon.webp";
 import { backend } from "../../declarations/backend";
-import "./styles/App.scss";
+import "./styles/App.css";
 
 function App() {
   const [loading, setLoading] = useState(false);

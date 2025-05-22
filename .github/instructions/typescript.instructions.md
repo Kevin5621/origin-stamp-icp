@@ -12,13 +12,13 @@ applyTo: "**/*.tsx"
 
 ## Useful Commands
 
-You can self check your frontend code using the following command:
+You can self check by opening the SimpleBrowser at `http://localhost:5173`.
+
+If server is not yet running, you can start it using the following command:
 
 ```bash
 npm run start
 ```
-
-And opening the SimpleBrowser at `http://localhost:5173`.
 
 ## Component Structure
 
