@@ -58,7 +58,8 @@
         },
         "editor.quickSuggestions": {
           "strings": "on"
-        }
+        },
+        "settingsSync.ignoredExtensions": ["*"]
       }
     }
   },
