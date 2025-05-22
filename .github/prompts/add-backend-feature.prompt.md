@@ -1,12 +1,12 @@
 ---
 mode: "agent"
 tools: ["changes", "codebase", "usages", "terminalLastCommand"]
-description: "Perform a current changes review"
+description: "Add a feature to the backend in Rust"
 ---
 
-## Add Feature Instructions
+## Add Backend Feature Instructions
 
-Only when working on features, follow this step-by-step approach with GitHub Copilot Agent Mode.
+Only when working on features for the backend, follow this step-by-step approach with GitHub Copilot Agent Mode.
 
 #### Step-by-Step Workflow
 

@@ -30,5 +30,5 @@ it("should [expected consequence]", async () => {
 After writing the tests please check they are all passing by executing:
 
 ```bash
-npm test <file relative path>
+npm test:backend <file relative path>
 ```
