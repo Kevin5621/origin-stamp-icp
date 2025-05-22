@@ -4,8 +4,9 @@ import { defineConfig } from "vite";
 import environment from "vite-plugin-environment";
 import dotenv from "dotenv";
 import tailwindcss from "@tailwindcss/vite";
+import { fileURLToPath, URL } from "url";
 
-dotenv.config();
+dotenv.config({ path: "../../.env" });
 
 export default defineConfig({
   root: __dirname,
@@ -35,6 +36,15 @@ export default defineConfig({
     environment("all", { prefix: "CANISTER_" }),
     environment("all", { prefix: "DFX_" }),
   ],
+  resolve: {
+    alias: [
+      {
+        find: "declarations",
+        replacement: fileURLToPath(new URL("../declarations", import.meta.url)),
+      },
+    ],
+    dedupe: ["@dfinity/agent"],
+  },
   test: {
     environment: "jsdom",
     setupFiles: "setupTests.ts",

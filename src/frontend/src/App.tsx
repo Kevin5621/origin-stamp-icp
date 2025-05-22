@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, useEffect } from "react";
-import "./styles/App.scss";
 import ReactIcon from "../assets/React-icon.webp";
 import { backend } from "../../declarations/backend";
+import "./styles/App.scss";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -111,8 +111,13 @@ function App() {
           onChange={handleChangeText}
           value={name}
           placeholder="Enter your name"
+          className="focus:border-blue-500 focus:outline-none"
         />
-        <button onClick={fetchGreeting} disabled={loading}>
+        <button
+          onClick={fetchGreeting}
+          disabled={loading}
+          className="hover:border-blue-400"
+        >
           Get Greeting
         </button>
         {!!response && <div className="response">{response}</div>}
@@ -120,10 +125,18 @@ function App() {
 
       <div className="card">
         <h3>Counter: {count.toString()}</h3>
-        <button onClick={incrementCounter} disabled={loading}>
+        <button
+          onClick={incrementCounter}
+          disabled={loading}
+          className="transition-colors hover:border-blue-400"
+        >
           Increment
         </button>
-        <button onClick={fetchCount} disabled={loading}>
+        <button
+          onClick={fetchCount}
+          disabled={loading}
+          className="transition-colors hover:border-blue-400"
+        >
           Refresh Count
         </button>
       </div>
@@ -135,8 +148,13 @@ function App() {
           onChange={handleChangePrompt}
           value={prompt}
           placeholder="Ask the LLM something..."
+          className="focus:border-blue-500 focus:outline-none"
         />
-        <button onClick={sendPrompt} disabled={llmLoading}>
+        <button
+          onClick={sendPrompt}
+          disabled={llmLoading}
+          className="transition-colors hover:border-blue-400"
+        >
           {llmLoading ? "Thinking..." : "Send Prompt"}
         </button>
         {!!llmResponse && (
@@ -148,9 +166,7 @@ function App() {
       </div>
 
       {!!loading && !error && <div className="loader" />}
-      {!!error && (
-        <pre style={{ textAlign: "left", color: "red" }}>{error}</pre>
-      )}
+      {!!error && <pre className="text-left text-red-500">{error}</pre>}
     </div>
   );
 }
