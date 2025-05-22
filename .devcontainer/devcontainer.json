@@ -34,9 +34,23 @@
         "[rust]": {
           "editor.defaultFormatter": "rust-lang.rust-analyzer"
         },
+        "github.copilot.chat.codeGeneration.instructions": [
+          {
+            "file": "general.instructions.md"
+          },
+          {
+            "file": "rust.instructions.md"
+          },
+          {
+            "file": "typescript.instructions.md"
+          }
+        ],
         "github.copilot.chat.testGeneration.instructions": [
           {
-            "file": "test.instructions.md"
+            "file": "backend-test.instructions.md"
+          },
+          {
+            "file": "frontend-test.instructions.md"
           }
         ],
         "files.associations": {

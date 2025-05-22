@@ -10,6 +10,16 @@ applyTo: "**/*.ts,**/*.tsx"
 - Always prefer Tailwind CSS utility classes over custom CSS.
 - Follow TypeScript best practices with proper type annotations.
 
+## Useful Commands
+
+You can self check your frontend code using the following command:
+
+```bash
+npm run start
+```
+
+And opening the SimpleBrowser at `http://localhost:5173`.
+
 ## Component Structure
 
 - Use functional components with React hooks
