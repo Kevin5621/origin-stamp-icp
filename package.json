@@ -22,6 +22,7 @@
   "license": "ISC",
   "devDependencies": {
     "@dfinity/pic": "^0.13.1",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22.14.1",
     "cross-fetch": "^3.1.6",
     "prettier": "^3.5.3",
