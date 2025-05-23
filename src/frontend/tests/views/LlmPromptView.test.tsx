@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import "@testing-library/jest-dom";
 import { LlmPromptView } from "../../src/views/LlmPromptView";
-import { act } from "react";
+import { act } from "@testing-library/react";
 
 // Mock the backendService
 vi.mock("../../src/services/backendService", () => ({
@@ -180,11 +180,9 @@ describe("LlmPromptView", () => {
       fireEvent.change(textArea, { target: { value: "Test loading state" } });
     });
 
-    let sendPromise: Promise<void>;
+    // Click the button and trigger the async action
     await act(async () => {
-      sendPromise = act(async () => {
-        fireEvent.click(screen.getByText("Send Prompt"));
-      });
+      fireEvent.click(screen.getByText("Send Prompt"));
     });
 
     // Assert loading state
@@ -194,7 +192,6 @@ describe("LlmPromptView", () => {
     // Resolve the promise
     await act(async () => {
       resolvePromise!("Response after loading");
-      await sendPromise;
     });
 
     // Assert final state

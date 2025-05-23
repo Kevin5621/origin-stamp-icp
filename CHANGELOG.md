@@ -10,8 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add set_count update method to allow setting the counter to a specific value
-- Add frontend development server scripts (`npm run dev`)
+- Add frontend development server scripts (`npm run start`)
 - Add LLM canister implementation
+
+### Changed
+
+- Update dependencies to latest versions
 
 ## [0.1.0] - 2025-04-24
 
