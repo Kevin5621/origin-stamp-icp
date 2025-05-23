@@ -57,7 +57,7 @@ jobs:
         run: npm run lint
 
       - name: Run tests
-        run: npm run test:backend
+        run: npm run test
         env:
           CI: true
           REPLICA_PORT: 8000
