@@ -1,7 +1,5 @@
-// filepath: /workspaces/IC-Vibe-Coding-Template/src/frontend/tests/views/CounterView.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import "@testing-library/jest-dom";
 import { CounterView } from "../../src/views/CounterView";
 import { act } from "@testing-library/react";
 

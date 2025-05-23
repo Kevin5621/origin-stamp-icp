@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import "@testing-library/jest-dom";
 import App from "../src/App";
 import { StrictMode } from "react";
 import { act } from "react";

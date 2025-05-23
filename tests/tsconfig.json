@@ -25,5 +25,5 @@
     "useUnknownInCatchVariables": true,
     "noPropertyAccessFromIndexSignature": true
   },
-  "include": ["./src/**/*.ts", "./global-setup.ts", "./types.d.ts"]
+  "include": ["./src/**/*.ts", "backend-test-setup.ts", "./types.d.ts"]
 }

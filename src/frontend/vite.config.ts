@@ -47,7 +47,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    setupFiles: "setupTests.ts",
+    setupFiles: "frontend-test-setup.ts",
     globals: true,
   },
 });

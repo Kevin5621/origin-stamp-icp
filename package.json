@@ -10,7 +10,7 @@
   "scripts": {
     "generate-candid": "bash ./scripts/generate-candid.sh",
     "lint": "prettier --check . && cargo clippy --target wasm32-unknown-unknown",
-    "format": "prettier --write . && cargo fmt && cargo clippy --fix --target wasm32-unknown-unknown",
+    "format": "prettier --write . && cargo fmt && cargo clippy --fix --allow-dirty --target wasm32-unknown-unknown",
     "build": "npm run build --workspace=frontend",
     "start": "npm start --workspaces --if-present",
     "test": "npm run test:backend && npm run test:frontend",

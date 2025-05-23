@@ -12,7 +12,7 @@ When writing tests for frontend components:
 - Test both happy path and edge cases
 - Use descriptive test names that explain the expected behavior
 - Use mocks for backend canister functions when testing frontend components
-- IMPORTANT: don't create component tests, only test at view level.
+- IMPORTANT: avoid creating tests on simple components, prefer to test them at view level.
 
 Example test structure:
 

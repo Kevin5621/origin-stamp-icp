@@ -128,13 +128,13 @@ npm test tests/src/backend.test.ts    # individual test
 ```
 ICP-Bootcamp-Vibe-Coding/
 ├── src/
-│   ├── backend/     # Rust backend canister
+│   ├── backend/                          # Rust backend canister
 │   │   ├── src/                          # Rust source files
 │   │   └── Cargo.toml                    # Rust dependencies
 │   └── declarations/                     # Auto-generated canister interfaces
 ├── tests/
 │   ├── src/                              # Test files
-│   ├── global-setup.ts                   # PocketIC instance
+│   ├── backend-test-setup.ts             # PocketIC instance
 │   └── vitest.config.ts                  # Vitest configuration
 ├── scripts/
 │   ├── dev-container-setup.sh            # Extra set up steps for codespace

@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import "@testing-library/jest-dom";
 import { LlmPromptView } from "../../src/views/LlmPromptView";
 import { act } from "@testing-library/react";
 
