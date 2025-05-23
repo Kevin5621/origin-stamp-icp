@@ -11,14 +11,18 @@ applyTo: "**/*.tsx"
 - Follow TypeScript best practices with proper type annotations.
 - Only create components that you expect to reuse, else define it within the view.
 
-## Useful Commands
+## Visually Self Review Changes
 
-You can self check by opening the SimpleBrowser at `http://localhost:5173`.
+IMPORTANT: If you made changes that could affect a view, you should ALWAYS self check by opening the SimpleBrowser at `http://localhost:5173`.
+Then ask human for confirmation that the changes are correct.
 
-If server is not yet running, you can start it using the following command:
+## Running the Development Server
+
+Always assume that the server is running.
+Only if you get an error, you should start it using the following command:
 
 ```bash
-npm run start
+npm start
 ```
 
 ## Component Structure
@@ -53,7 +57,7 @@ Instead, use directives in your SCSS files. This is a feature in Tailwind CSS v4
 
 Example:
 
-```scss
+```css
 @theme {
   --color-mint-500: oklch(0.72 0.11 178);
 }
