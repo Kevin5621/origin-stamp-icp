@@ -1,5 +1,2 @@
-import matchers from "@testing-library/jest-dom/matchers";
+import "@testing-library/jest-dom/vitest";
 import "cross-fetch/polyfill";
-import { expect } from "vitest";
-
-expect.extend(matchers);
