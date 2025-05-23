@@ -2,86 +2,27 @@
 applyTo: "**/*.tsx"
 ---
 
-### Frontend and Typescript Instructions
+# TypeScript Instructions
 
-- This project uses Vite, React, Typescript, and Tailwind CSS.
-- IMPORTANT: Tailwind CSS is v4, which is a major version upgrade from v3. Please refer to the [migration guide](https://tailwindcss.com/docs/upgrade-guide) for any breaking changes.
-- Please use the dedicated Vite Plugin for Tailwind CSS (`@tailwindcss/vite`) instead of PostCSS plugin.
-- Always prefer Tailwind CSS utility classes over custom CSS.
-- Follow TypeScript best practices with proper type annotations.
-- Only create components that you expect to reuse, else define it within the view.
+## Type Safety
 
-## Visually Self Review Changes
+- Follow TypeScript best practices with proper type annotations
+- Define interfaces for all props, state, and API responses
+- Avoid `any` type - use proper typing or `unknown` when necessary
 
-IMPORTANT: If you made changes that could affect a view, you should ALWAYS self check by opening the SimpleBrowser at `http://localhost:5173`.
-Then ask human for confirmation that the changes are correct.
+## Canister Integration Types
 
-## Running the Development Server
-
-Always assume that the server is running.
-Only if you get an error, you should start it using the following command:
-
-```bash
-npm start
-```
-
-## Component Structure
-
-- Use functional components with React hooks
-- Organize components with clear separation of concerns
-- Use TypeScript interfaces for props and state
-- Export components from barrel files for cleaner imports
-
-Example:
-
-```tsx
-interface UserProfileProps {
-  userId: string;
-  displayName: string;
-  onUpdate?: (userId: string) => void;
-}
-
-export function UserProfile({
-  userId,
-  displayName,
-  onUpdate,
-}: UserProfileProps) {
-  // Component implementation
-}
-```
-
-## Tailwind CSS Usage
-
-IMPORTANT: Please don't create a tailwind.config.js file to add custom classes.
-Instead, use directives in your SCSS files. This is a feature in Tailwind CSS v4 that allows you to create custom classes using existing utility classes.
-
-Example:
-
-```css
-@theme {
-  --color-mint-500: oklch(0.72 0.11 178);
-}
-```
-
-## State Management
-
-- Use React Context API for global state when appropriate
-- Prefer local component state when possible
-- Consider using custom hooks for reusable state logic
-
-## Internet Computer Integration
-
-- Import canister declarations from the declarations directory
-- Use async/await with proper loading state and error handling for canister calls
-- Create separate service layers to interact with canisters
-- Add type definitions for all canister responses
-
-Example:
+Define types for all canister interactions:
 
 ```typescript
-import { backend } from "../../declarations/backend";
+// Define response types
+interface UserData {
+  id: string;
+  name: string;
+  email?: string;
+}
 
-// Service function
+// Service function with proper typing
 export async function fetchUserData(userId: string): Promise<UserData> {
   try {
     return await backend.get_user_data(userId);

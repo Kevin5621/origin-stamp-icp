@@ -27,8 +27,14 @@ it("should [expected consequence]", async () => {
 });
 ```
 
-After writing the tests please check they are all passing by executing:
+After writing the tests, check if the file has any errors:
 
 ```bash
-npm test:backend <file relative path>
+npx tsc -p tests/tsconfig.json
+```
+
+Then check that they are all passing by executing:
+
+```bash
+npm test:backend
 ```

@@ -61,14 +61,14 @@ it("should interact with backend canister", async () => {
 });
 ```
 
-After writing the tests, check that they are all passing by executing:
+After writing the tests, check if the file has any errors:
+
+```bash
+npx tsc -p src/frontend/tsconfig.json
+```
+
+Then check that they are all passing by executing:
 
 ```bash
 npm run test:frontend
-```
-
-To run a specific test file:
-
-```bash
-npm run test:frontend -- src/frontend/tests/YourComponent.test.tsx
 ```

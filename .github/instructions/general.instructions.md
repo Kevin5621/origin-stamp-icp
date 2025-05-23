@@ -6,37 +6,89 @@ applyTo: "**"
 
 ## Project Context
 
-This is an Internet Computer Protocol (ICP) project using Rust for canister development with PocketIC and Vitest for testing.
+- This is an Internet Computer Protocol (ICP) project using Rust for canister development with PocketIC and Vitest for testing.
+- The frontend is built with Vite, React, and TypeScript, styled with Tailwind CSS v4.
 
-### Project Formatter and Linter
+## Frontend Stack
 
-- Rust: We use `rust-lang.rust-analyzer` for formatting and linting.
-- TypeScript: Use `prettier` for formatting and linting.
-- For both Rust and Typescript, ensure to run `npm run lint` and `npm run format` before committing any changes.
-- For Rust only, run `cargo fmt` and `cargo clippy` before committing any changes.
+- **Framework**: Vite + React + TypeScript
+- **Styling**: Tailwind CSS v4 (uses `@tailwindcss/vite` plugin)
+- **Development Server**: http://localhost:5173
 
-### How to generate candid
+## Code Quality & Formatting
 
-If you make changes in the interface of the backend, you should run this command in the terminal.
+- We use `rust-lang.rust-analyzer` for formatting and linting **Rust** code.
+- We use `prettier` for formatting and linting **TypeScript** code.
+- Run `npm run format` for formatting both typescript and rust code.
+
+## Development Commands
+
+### Backend Changes
 
 ```bash
+# Generate candid after interface changes
 npm run generate-candid
-```
 
-### How to cargo check
-
-If you make changes in Rust files, you should self-check for errors by running the following command.
-
-```bash
+# Check Rust code for errors
 cargo check
 ```
 
-### How to check Typescript file
-
-If you make changes in Typescript test files, you should self-check for errors by running the following command.
+### Frontend Changes
 
 ```bash
-npx tsc -p tests/tsconfig.json
+# Start development server (assume running unless error occurs)
+npm start
+
+# Check TypeScript code for errors
+npx tsc -p src/frontend/tsconfig.json
+```
+
+## Visual Review
+
+**IMPORTANT**: After UI changes, always self-check by opening SimpleBrowser at `http://localhost:5173` and confirm changes with the user.
+
+## Frontend Architecture
+
+### Component Guidelines
+
+- Use functional components with React hooks
+- Organize with clear separation of concerns
+- Create reusable components only when needed, otherwise define within views
+- Export components from barrel files for clean imports
+
+### Styling with Tailwind CSS v4
+
+- Prefer utility classes over custom CSS
+- Use directives in index.css instead of `tailwind.config.js` for custom classes
+
+Example custom theme:
+
+```css
+@theme {
+  --color-mint-500: oklch(0.72 0.11 178);
+}
+```
+
+### Internet Computer Integration
+
+- Import canister declarations from `declarations` directory
+- Use async/await with proper loading state and error handling
+- Create separate service layers for canister interactions
+- Add type definitions for all canister responses
+
+Example service:
+
+```typescript
+import { backend } from "../../declarations/backend";
+
+export async function fetchUserData(userId: string): Promise<UserData> {
+  try {
+    return await backend.get_user_data(userId);
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+    throw error;
+  }
+}
 ```
 
 ### Updating the Changelog
@@ -57,9 +109,3 @@ Example changelog entry:
 
 - Add user profile management with support for avatars and display names
 ```
-
-## Important Files
-
-- Canister implementation: src/backend/src/lib.rs
-- Test file: tests/src/backend.test.ts
-- Changelog: CHANGELOG.md
