@@ -31,7 +31,7 @@ function App() {
           }
         `}
       </style>
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gray-800 text-white">
         <div className="mx-auto w-full max-w-4xl space-y-8 p-8 text-center">
           <div className="mb-8">
             <a href="https://reactjs.org" target="_blank" rel="noreferrer">
