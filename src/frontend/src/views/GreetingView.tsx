@@ -42,7 +42,11 @@ export function GreetingView({ onError, setLoading }: GreetingViewProps) {
         placeholder="Enter your name"
       />
       <Button onClick={fetchGreeting}>Get Greeting</Button>
-      {!!response && <div className="response">{response}</div>}
+      {!!response && (
+        <div className={`mt-4 rounded bg-gray-700 p-4 font-bold`}>
+          {response}
+        </div>
+      )}
     </Card>
   );
 }

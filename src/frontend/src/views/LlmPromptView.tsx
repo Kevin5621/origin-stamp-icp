@@ -42,7 +42,7 @@ export function LlmPromptView({ onError, setLoading }: LlmPromptViewProps) {
   };
 
   return (
-    <Card title="LLM Prompt" className="llm-card">
+    <Card title="LLM Prompt">
       <TextArea
         value={prompt}
         onChange={handleChangePrompt}
@@ -52,9 +52,9 @@ export function LlmPromptView({ onError, setLoading }: LlmPromptViewProps) {
         {llmLoading ? "Thinking..." : "Send Prompt"}
       </Button>
       {!!llmResponse && (
-        <div className="llm-response">
-          <h4>Response:</h4>
-          <p>{llmResponse}</p>
+        <div className={`mt-6 rounded bg-gray-800 p-4 text-left`}>
+          <h4 className="mt-0 text-blue-400">Response:</h4>
+          <p className="mb-0 whitespace-pre-wrap">{llmResponse}</p>
         </div>
       )}
     </Card>

@@ -9,6 +9,7 @@ applyTo: "**/*.tsx"
 - Please use the dedicated Vite Plugin for Tailwind CSS (`@tailwindcss/vite`) instead of PostCSS plugin.
 - Always prefer Tailwind CSS utility classes over custom CSS.
 - Follow TypeScript best practices with proper type annotations.
+- Only create components that you expect to reuse, else define it within the view.
 
 ## Useful Commands
 

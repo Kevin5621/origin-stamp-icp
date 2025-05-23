@@ -18,7 +18,11 @@ function App() {
     <div className="App">
       <div>
         <a href="https://reactjs.org" target="_blank" rel="noreferrer">
-          <img src={ReactIcon} className="logo react" alt="React logo" />
+          <img
+            src={ReactIcon}
+            className="h-24 animate-[logo-spin_60s_linear_infinite] p-6 will-change-[filter] hover:drop-shadow-[0_0_2em_#61dafbaa] motion-reduce:animate-none"
+            alt="React logo"
+          />
         </a>
       </div>
       <h1>Vibe Coding Template</h1>

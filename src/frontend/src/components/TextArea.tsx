@@ -25,7 +25,7 @@ export function TextArea({
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className="focus:border-blue-500 focus:outline-none"
+      className="mb-4 w-full resize-y rounded border border-gray-700 bg-gray-900 p-2 text-white focus:border-blue-500 focus:outline-none"
     />
   );
 }
