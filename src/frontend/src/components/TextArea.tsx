@@ -6,10 +6,11 @@ interface TextAreaProps {
   placeholder: string;
   rows?: number;
   disabled?: boolean;
+  className?: string;
 }
 
 /**
- * Reusable text area component
+ * Reusable text area component with built-in styling
  */
 export function TextArea({
   value,
@@ -17,6 +18,7 @@ export function TextArea({
   placeholder,
   rows = 4,
   disabled = false,
+  className = "",
 }: TextAreaProps) {
   return (
     <textarea
@@ -25,7 +27,7 @@ export function TextArea({
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className="mb-4 w-full resize-y rounded border border-gray-700 bg-gray-900 p-2 text-white focus:border-blue-500 focus:outline-none"
+      className={`font-inherit mb-4 w-full resize-y rounded-lg border border-gray-500 bg-gray-800 px-5 py-3 text-base text-white transition-colors duration-200 focus:border-blue-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${className} `.trim()}
     />
   );
 }
