@@ -125,7 +125,7 @@ ICP-Bootcamp-Vibe-Coding/
 ├── .github/workflows/                    # GitHub CI/CD pipelines
 ├── src/
 │   ├── backend/                          # Rust backend canister
-│   │   ├── src/                          
+│   │   ├── src/
 │   │   │   └── lib.rs                    # Main Rust file
 │   │   └── Cargo.toml                    # Rust dependencies
 │   ├── frontend/                         # React + Tailwind + TypeScript frontend
