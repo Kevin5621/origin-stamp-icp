@@ -1,12 +1,20 @@
 ---
 mode: "agent"
-tools: ["changes", "codebase", "usages", "terminalLastCommand"]
 description: "Add a feature to the frontend in typescript"
 ---
 
 ## Add Frontend Feature Instructions
 
 Only when working on features for the frontend, follow this step-by-step approach with GitHub Copilot Agent Mode.
+
+## Relevant Instructions
+
+IMPORTANT: you must search in codebase for files matching "\*\*/\*.instructions.md".
+Then read the files:
+
+- "typescript.instructions.md"
+- "frontend-test.instructions.md"
+- "rust.instructions.md".
 
 #### Step-by-Step Workflow
 
@@ -21,11 +29,9 @@ Please follow a Feature Driven Development workflow. Here are explicit steps for
    4. Do the rest of the workflow PER task.
 2. Update the changelog with an entry of the implemented feature.
 3. Implement Code:
-   1. If the task is on the backend, ensure to follow [Rust instructions](.github/instructions/rust.instructions.md).
-   2. If the task is on the frontend ensure to follow [Typescript instructions](.github/instructions/typescript.instructions.md).
-   3. Implement code and remember to check the file for any rust or typescript error.
-   4. If frontend was changed, open SimpleWindow and showcase the changes.
-   5. **CRITICAL PAUSE POINT** - STOP HERE and wait for human to review changes and approval before continuing!
+   1. Implement code according to the typescript or rust instructions.
+   2. If frontend was changed, use tool openSimpleBrowser and showcase the changes.
+   3. **CRITICAL PAUSE POINT** - STOP HERE and wait for human to review changes and approval before continuing!
 4. Implement Tests:
-   1. Then, write tests following [frontend test instructions](.github/instructions/frontend-test.instructions.md).
+   1. Then, write tests following frontend test instructions.
    2. Run tests and ensure it's passing.

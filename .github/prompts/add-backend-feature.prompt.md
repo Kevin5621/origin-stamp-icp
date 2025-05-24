@@ -1,12 +1,19 @@
 ---
 mode: "agent"
-tools: ["changes", "codebase", "usages", "terminalLastCommand"]
 description: "Add a feature to the backend in Rust"
 ---
 
 ## Add Backend Feature Instructions
 
 Only when working on features for the backend, follow this step-by-step approach with GitHub Copilot Agent Mode.
+
+## Relevant Instructions
+
+IMPORTANT: you must search in codebase for files matching "\*\*/\*.instructions.md".
+Then read the files:
+
+- "rust.instructions.md".
+- "backend-test.instructions.md"
 
 #### Step-by-Step Workflow
 
@@ -23,9 +30,9 @@ Please follow a Spec Driven Development workflow. Here are explicit steps for yo
 3. Implement Tests:
    1. If needed, create a new method on backend canister without actual logic.
    2. Regenerate Candid and Cargo check.
-   3. Then, write tests and ensure to follow [backend test instructions](.github/instructions/backend-test.instructions.md).
+   3. Then, write tests and ensure to follow backend test instructions.
    4. Then run tests and ensure it's failing. If not failing, check what went wrong and fix. If tests don't fail, you aren't testing anything!
    5. **CRITICAL PAUSE POINT** - STOP HERE and wait for human to review test cases and approval before continuing!
 4. Implement Code:
-   1. Implement code changes according to the tests described. Also ensure to follow [Rust instructions](.github/instructions/rust.instructions.md).
+   1. Implement code changes according to the tests described.
    2. Finally, run tests and ensure it's passing.
