@@ -103,8 +103,10 @@ When adding new features or making changes:
 
 - Follow Keep a Changelog format
 - Add entries under the [Unreleased] > appropriate section (Added, Changed, Fixed, etc.)
-- Use clear, concise descriptions that explain the impact to users
 - Start each entry with a verb in present tense (Add, Fix, Change)
+- Use clear, concise descriptions that explain the impact to users
+- Don't add anything if it's a small change.
+- Max 1 or 2 entries per feature or commit.
 
 Example changelog entry:
 

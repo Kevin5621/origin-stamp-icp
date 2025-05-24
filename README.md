@@ -1,6 +1,7 @@
-# 🧪🔥 IC Vibe Coding Template
+# 🧪🔥 Ultimate IC Vibe Coding Template
 
-This template was built for the **IC Vibe Coding Bootcamp (Rust Edition)**. If you are interested, you are welcome to [join until end of May](https://lu.ma/kyvm8zyd?tk=2jZPsD).
+This template was built for the **IC Vibe Coding Bootcamp (Rust Edition)** and it's meant to be used in Advance Challenge or in a future Hackathon.
+If you are interested, you are welcome to [join until end of May](https://lu.ma/kyvm8zyd?tk=2jZPsD).
 
 ## Welcome! 👋
 
@@ -8,18 +9,21 @@ This repository offers a high-quality, production-ready template to jumpstart yo
 
 It includes:
 
-- 🦀 **Rust** for backend canister
-- ⚛️ **React + Tailwind** for the frontend
-- 🤖 **IC LLM Canister** integration for Agent workflows
-- ✅ Best practices for testing, CI/CD, and developer experience
+- 🦀 **Rust-based Canister** backend
+- ⚛️ **React + Tailwind + Typescript** frontend
+- 🤖 **IC LLM Canister** integration for Agentic workflows
+- 🧪 **Full Test Suite**: Vitest + PocketIC for backend and frontend
+- 🔁 **CI/CD** with GitHub Actions for automated tests and code quality
+- 🤖 **Copilot Integration** to auto-generate tests, code, and changelogs
 
 Whether you're building full-stack dapps or agents, this template gives you a solid foundation to start fast and scale smoothly. 🚀
+
+![Template Screenshot](.github/assets/template-screenshot.png)
 
 ---
 
 ## 📜 Table of Contents
 
-- [✨ Features](#-features)
 - [🚀 Getting Started](#-getting-started)
 - [📁 Project Structure](#-project-structure)
 - [✅ Testing Patterns](#-testing-patterns)
@@ -27,18 +31,6 @@ Whether you're building full-stack dapps or agents, this template gives you a so
 - [🧠 GitHub Copilot Integration](#-github-copilot-integration)
 - [🔗 Resources & Documentation](#-learning-resources)
 - [📩 Submit Your Project!](#-submit-your-project)
-
----
-
-## ✨ Features
-
-- 🦀 **Rust-based Canister** backend.
-- ⚛️ **React + Tailwind + Typescript** in the frontend.
-- 🤖 **IC LLM Canister** for Agentic use cases.
-- 🧪 **Full Test Suite**: Powered by Vitest + PocketIC for backend, frontend and integration testing.
-- 🔁 **CI/CD**: GitHub Actions to automate builds, tests, and code quality checks
-- 📦 **DFX Config**: Pre-configured with best practices for Rust
-- 🤖 **Copilot Integration**: Automatically generate structured tests, code & changelogs
 
 ---
 
@@ -127,13 +119,33 @@ npm test tests/src/backend.test.ts    # individual test
 
 ```
 ICP-Bootcamp-Vibe-Coding/
+├── .devcontainer/devcontainer.json       # Container config for running your own codespace
+├── .github/instructions/                 # Copilot general and language specific instructions
+├── .github/prompts/                      # Copilot Prompts, like add feature and changes review
+├── .github/workflows/                    # GitHub CI/CD pipelines
 ├── src/
 │   ├── backend/                          # Rust backend canister
-│   │   ├── src/                          # Rust source files
+│   │   ├── src/                          
+│   │   │   └── lib.rs                    # Main Rust file
 │   │   └── Cargo.toml                    # Rust dependencies
+│   ├── frontend/                         # React + Tailwind + TypeScript frontend
+│   │   ├── src/
+│   │   │   ├── App.tsx                   # Main App component
+│   │   │   ├── index.css                 # Global styles with Tailwind
+│   │   │   ├── components/               # Reusable UI components
+│   │   │   ├── services/                 # Canister service layers
+│   │   │   └── views/                    # Page-level components
+│   │   ├── assets/                       # Static assets (images, icons)
+│   │   ├── tests/                        # Frontend unit tests
+│   │   ├── index.html                    # Frontend entry point
+│   │   ├── main.tsx                      # React main file
+│   │   ├── package.json                  # Frontend dependencies
+│   │   ├── tsconfig.json                 # TypeScript configuration
+│   │   ├── vite.config.ts                # Vite build configuration
+│   │   └── vite-env.d.ts                 # Vite type definitions
 │   └── declarations/                     # Auto-generated canister interfaces
 ├── tests/
-│   ├── src/                              # Test files
+│   ├── src/                              # Backend test files
 │   ├── backend-test-setup.ts             # PocketIC instance
 │   └── vitest.config.ts                  # Vitest configuration
 ├── scripts/
@@ -141,10 +153,6 @@ ICP-Bootcamp-Vibe-Coding/
 │   └── generate-candid.sh                # Useful one way script to build, generate candid and did files
 ├── dfx.json                              # ICP config
 ├── Cargo.toml                            # Root Rust workspace config
-├── .github/instructions/                 # Copilot general and language specific instructions
-├── .github/prompts/                      # Copilot Prompts, like add feature and changes review
-├── .github/workflows/                    # GitHub CI/CD pipelines
-├── .devcontainer/devcontainer.json       # Container config for running your own codespace
 └── CHANGELOG.md
 ```
 
