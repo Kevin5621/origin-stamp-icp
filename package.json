@@ -10,12 +10,13 @@
   "scripts": {
     "generate-candid": "bash ./scripts/generate-candid.sh",
     "lint": "prettier --check . && cargo clippy --target wasm32-unknown-unknown",
-    "format": "prettier --write . && cargo fmt && cargo clippy --fix --allow-dirty --target wasm32-unknown-unknown",
+    "format": "prettier --write . && cargo fmt && cargo clippy --fix --allow-dirty --allow-staged --target wasm32-unknown-unknown",
     "build": "npm run build --workspace=frontend",
     "start": "npm start --workspaces --if-present",
     "test": "npm run test:backend && npm run test:frontend",
     "test:frontend": "npm test --workspace=frontend",
-    "test:backend": "dfx build && vitest run -c tests/vitest.config.ts"
+    "test:backend": "dfx build && vitest run -c tests/vitest.config.ts",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22.14.1",
     "cross-fetch": "^4.1.0",
+    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "vite": "^6.2.1",
