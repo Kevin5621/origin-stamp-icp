@@ -21,6 +21,12 @@ applyTo: "**"
 - We use `prettier` for formatting and linting **TypeScript** code.
 - Run `npm run format` for formatting both typescript and rust code.
 
+## AI Assistance
+
+- Before implementing new features, consider asking human a few clarification questions.
+- If you would like to go beyond the scope of the prompt, please ask the human for permission first.
+- When finishing a significant change, please PAUSE and ask the human for review and permission to continue.
+
 ## Development Commands
 
 ### Backend Changes
