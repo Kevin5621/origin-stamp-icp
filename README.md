@@ -106,7 +106,7 @@ You can start the frontend development server with:
 
 ```bash
 # Just the frontend development server
-npm run dev
+npm start
 
 ```
 
