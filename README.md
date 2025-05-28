@@ -39,7 +39,7 @@ Whether you're building full-stack dapps or agents, this template gives you a so
 
 There was an Advanced Challenge Lab session, that was recorded and had a lot of information and showcase of Vibe Coding using this template.
 
-You can see here the full recording: https://pt-fr-icphub.short.gy/6o3BYv
+You can see here the full recording: https://www.youtube.com/watch?v=ZuNUy13wmlI
 
 ---
 
