@@ -65,9 +65,17 @@
           "github.copilot.chat.codeGeneration.instructions",
           "github.copilot.chat.testGeneration.instructions"
         ]
+      },
+      "codespaces": {
+        "repositories": {
+          "*": {
+            "installRecommendedExtensions": false
+          }
+        }
       }
     }
   },
+
   "features": {},
   "mounts": []
 }
