@@ -9,6 +9,7 @@ npm install
 
 # Set up dfx identity for codespace
 echo "🔑 Setting up dfx identity..."
+dfxvm install 0.25.0
 dfx identity new codespace_dev --storage-mode=plaintext || echo "Identity may already exist"
 dfx identity use codespace_dev      
 dfx start --background             
