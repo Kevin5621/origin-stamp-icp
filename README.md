@@ -1,7 +1,6 @@
 # 🧪🔥 Ultimate IC Vibe Coding Template
 
 This template was built for the **IC Vibe Coding Bootcamp (Rust Edition)** and it's meant to be used in Advance Challenge or in a future Hackathon.
-If you are interested, you are welcome to [join until end of May](https://lu.ma/kyvm8zyd?tk=2jZPsD).
 
 ## Welcome! 👋
 
