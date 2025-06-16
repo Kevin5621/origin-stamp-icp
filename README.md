@@ -293,10 +293,10 @@ We especially welcome candidates of limits you face, consider using the **Limit 
 ## 📩 Submit Your Project!
 
 🎯 **Completed your challenge? Submit your project here:**  
-📢 [Submission Form](https://forms.gle/Sgmm1y2bLXYY7mwC6)
+📢 [Submission Form](TODO)
 
 📌 **Want to explore more challenges? Return to the index:**  
-🔗 [IC Vibe Coding Bootcamp Index](https://github.com/pt-icp-hub/IC-Vibe-Coding-Bootcamp-Index)
+🔗 [IC Vibathon Index](https://github.com/pt-icp-hub/IC-Vibathon-Index)
 
 ---
 
