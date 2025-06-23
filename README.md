@@ -292,7 +292,7 @@ We especially welcome candidates of limits you face, consider using the **Limit 
 ## 📩 Submit Your Project!
 
 🎯 **Completed your challenge? Submit your project here:**  
-📢 [Submission Form](TODO)
+📢 [Taikai Submission](https://taikai.network/icp-eu-alliance/hackathons/VIBATHON)
 
 📌 **Want to explore more challenges? Return to the index:**  
 🔗 [IC Vibathon Index](https://github.com/pt-icp-hub/IC-Vibathon-Index)
