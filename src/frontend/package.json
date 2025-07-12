@@ -6,23 +6,27 @@
   "description": "Frontend for IC Vibe application",
   "scripts": {
     "start": "vite",
-    "build": "dfx generate && tsc && vite build",
+    "build": "tsc && vite build",
     "test": "vitest run"
   },
   "dependencies": {
+    "i18next": "^25.3.2",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-i18next": "^15.6.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.7",
+    "@tailwindcss/vite": "^4.1.11",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
-    "@vitejs/plugin-react": "^4.0.1",
+    "@vitejs/plugin-react": "^4.3.1",
     "dotenv": "^16.3.1",
     "jsdom": "^26.1.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4.1.7"
+    "tailwindcss": "^4.1.7",
+    "vite": "^5.3.1",
+    "vite-plugin-environment": "^1.1.3"
   }
 }
