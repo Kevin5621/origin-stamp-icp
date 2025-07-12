@@ -2,15 +2,11 @@ import { useState } from "react";
 import { Loader, ErrorDisplay, ThemeToggle } from "./components";
 
 function App() {
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [currentView, setCurrentView] = useState<
     "landing" | "dashboard" | "session" | "finalization" | "verification"
   >("landing");
-
-  const handleError = (errorMessage: string) => {
-    setError(errorMessage);
-  };
 
   const clearError = () => {
     setError(undefined);
