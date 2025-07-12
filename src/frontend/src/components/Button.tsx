@@ -5,22 +5,36 @@ interface ButtonProps {
   disabled?: boolean;
   className?: string;
   children: ReactNode;
+  variant?: "primary" | "secondary" | "cta";
 }
 
 /**
- * Reusable button component with built-in styling
+ * Reusable button component with semantic Neumorphic classes
  */
 export function Button({
   onClick,
   disabled = false,
   className = "",
   children,
+  variant = "primary",
 }: ButtonProps) {
+  const getButtonClass = () => {
+    switch (variant) {
+      case "cta":
+        return "btn-cta";
+      case "secondary":
+        return "btn-secondary";
+      case "primary":
+      default:
+        return "btn-primary";
+    }
+  };
+
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`font-inherit focus:outline-auto bg-gray mx-2 cursor-pointer rounded-lg border border-gray-500 px-5 py-3 text-base font-medium text-white transition-colors duration-200 hover:border-blue-400 focus:outline-4 focus:outline-blue-400 disabled:cursor-not-allowed disabled:opacity-50 ${className} `.trim()}
+      className={`${getButtonClass()} ${disabled ? "cursor-not-allowed opacity-50" : ""} ${className}`.trim()}
     >
       {children}
     </button>

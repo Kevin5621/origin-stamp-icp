@@ -1,21 +1,37 @@
 import { ReactNode } from "react";
 
 interface CardProps {
-  title: string;
+  title?: string;
   children: ReactNode;
   className?: string;
+  variant?: "raised" | "inset";
 }
 
 /**
- * Reusable card component that serves as a container
+ * Reusable card component with semantic Neumorphic classes
  */
-export function Card({ title, children, className = "" }: CardProps) {
+export function Card({
+  title,
+  children,
+  className = "",
+  variant = "raised",
+}: CardProps) {
+  const getCardClass = () => {
+    switch (variant) {
+      case "inset":
+        return "card-inset";
+      case "raised":
+      default:
+        return "card-raised";
+    }
+  };
+
   return (
-    <div
-      className={`my-4 rounded-lg border border-gray-300 p-8 transition-opacity duration-200 ease-out ${className}`}
-    >
-      <h3>{title}</h3>
-      {children}
+    <div className={`${getCardClass()} ${className}`.trim()}>
+      {title && (
+        <h3 className="text-primary mb-4 text-lg font-semibold">{title}</h3>
+      )}
+      <div className="text-primary">{children}</div>
     </div>
   );
 }
