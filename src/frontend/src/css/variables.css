@@ -1,0 +1,35 @@
+/* OriginStamp Color System Variables */
+:root {
+  /* Primary Colors */
+  --color-primary-bg: #e0e5ec;
+  --color-primary-text: #4d5b70;
+
+  /* Shadow Colors for Neumorphic Design */
+  --color-shadow-dark: #a3a3a3;
+  --color-shadow-light: #ffffff;
+
+  /* Semantic Colors */
+  --color-surface: var(--color-primary-bg);
+  --color-on-surface: var(--color-primary-text);
+  --color-text-primary: var(--color-primary-text);
+  --color-text-secondary: var(--color-primary-text);
+
+  /* Interactive States */
+  --color-hover-overlay: rgba(160, 181, 204, 0.1);
+  --color-modal-overlay: rgba(160, 181, 204, 0.8);
+
+  /* Status Colors */
+  --color-error: #c53030;
+  --color-error-bg: #fed7d7;
+  --color-success: #38a169;
+  --color-warning: #d69e2e;
+  --color-info: #3182ce;
+
+  /* Animation States */
+  --color-recording: #e53e3e;
+
+  /* Focus and Selection */
+  --color-focus: var(--color-primary-text);
+  --color-selection-bg: var(--color-primary-text);
+  --color-selection-text: var(--color-primary-bg);
+}

@@ -1,53 +1,66 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap');
+/* Import Font */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap");
+
+/* Import Tailwind CSS */
 @import "tailwindcss";
 
-/* Global styles for OriginStamp */
+/* Import OriginStamp CSS Modules */
+@import "./css/variables.css";
+@import "./css/neumorphic.css";
+@import "./css/utilities.css";
+
+/* Global Base Styles */
 * {
-  font-family: 'Archivo', sans-serif;
+  font-family: "Archivo", sans-serif;
 }
 
 body {
-  background-color: #E0E5EC;
-  color: #4D5B70;
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
   margin: 0;
   padding: 0;
   min-height: 100vh;
 }
 
-/* Custom scrollbar for better integration with Neumorphic design */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #E0E5EC;
+  background: var(--color-surface);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #a3a3a3;
+  background: var(--color-shadow-dark);
   border-radius: 4px;
-  box-shadow: inset 2px 2px 4px #a3a3a3, inset -2px -2px 4px #ffffff;
+  box-shadow:
+    inset 2px 2px 4px var(--color-shadow-dark),
+    inset -2px -2px 4px var(--color-shadow-light);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #8a8a8a;
 }
 
-/* Focus styles for better accessibility */
+/* Accessibility */
 :focus {
-  outline: 2px solid #4D5B70;
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
-/* Smooth transitions for all interactive elements */
-button, input, select, textarea {
+/* Global Transitions */
+button,
+input,
+select,
+textarea {
   transition: all 0.2s ease;
 }
 
-/* Selection styling */
+/* Text Selection */
 ::selection {
-  background-color: #4D5B70;
-  color: #E0E5EC;
+  background-color: var(--color-selection-bg);
+  color: var(--color-selection-text);
 }
