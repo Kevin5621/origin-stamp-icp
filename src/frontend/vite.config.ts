@@ -45,4 +45,4 @@ export default defineConfig({
     ],
     dedupe: ["@dfinity/agent"],
   },
-  });
+});
