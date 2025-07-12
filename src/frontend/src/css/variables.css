@@ -1,34 +1,68 @@
 /* OriginStamp Color System Variables */
 :root {
-  /* Primary Colors */
+  /* Light Theme Colors */
   --color-primary-bg: #e0e5ec;
   --color-primary-text: #4d5b70;
-
-  /* Shadow Colors for Neumorphic Design */
-  --color-shadow-dark: #a3a3a3;
-  --color-shadow-light: #ffffff;
-
-  /* Semantic Colors */
   --color-surface: var(--color-primary-bg);
   --color-on-surface: var(--color-primary-text);
   --color-text-primary: var(--color-primary-text);
   --color-text-secondary: var(--color-primary-text);
-
+  
+  /* Shadow Colors for Neumorphic Design */
+  --color-shadow-dark: #a3a3a3;
+  --color-shadow-light: #ffffff;
+  
   /* Interactive States */
   --color-hover-overlay: rgba(160, 181, 204, 0.1);
   --color-modal-overlay: rgba(160, 181, 204, 0.8);
-
+  
   /* Status Colors */
   --color-error: #c53030;
   --color-error-bg: #fed7d7;
   --color-success: #38a169;
   --color-warning: #d69e2e;
   --color-info: #3182ce;
-
+  
   /* Animation States */
   --color-recording: #e53e3e;
-
+  
   /* Focus and Selection */
+  --color-focus: var(--color-primary-text);
+  --color-selection-bg: var(--color-primary-text);
+  --color-selection-text: var(--color-primary-bg);
+  
+  /* Theme Transition */
+  --theme-transition: all 0.3s ease;
+}
+
+/* Dark Theme Colors */
+[data-theme="dark"] {
+  --color-primary-bg: #1a1a2e;
+  --color-primary-text: #e2e8f0;
+  --color-surface: var(--color-primary-bg);
+  --color-on-surface: var(--color-primary-text);
+  --color-text-primary: var(--color-primary-text);
+  --color-text-secondary: #94a3b8;
+  
+  /* Dark Theme Shadows */
+  --color-shadow-dark: #0f0f1a;
+  --color-shadow-light: #2a2a3e;
+  
+  /* Dark Theme Interactive States */
+  --color-hover-overlay: rgba(30, 41, 59, 0.3);
+  --color-modal-overlay: rgba(15, 23, 42, 0.9);
+  
+  /* Dark Theme Status Colors */
+  --color-error: #f87171;
+  --color-error-bg: #7f1d1d;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-info: #60a5fa;
+  
+  /* Dark Theme Animation States */
+  --color-recording: #ef4444;
+  
+  /* Dark Theme Focus and Selection */
   --color-focus: var(--color-primary-text);
   --color-selection-bg: var(--color-primary-text);
   --color-selection-text: var(--color-primary-bg);
