@@ -42,15 +42,24 @@ else
   canister_names=$(jq -r '.canisters | keys[]' dfx.json)
   
   for canister in $canister_names; do
-    generate_candid_for_canister "$canister"
+    # Only generate candid for canisters that have a candid field (i.e., not assets canisters)
+    if jq -e ".canisters.\"$canister\".candid" dfx.json > /dev/null 2>&1; then
+      generate_candid_for_canister "$canister"
+    fi
   done
 fi
 
 # Always refresh the did files
 if [ "$1" != "" ]; then
-  # Generate declarations for the specific canister
-  dfx generate "$1"
+  # Generate declarations for the specific canister if it has a candid file
+  if jq -e ".canisters.\"$1\".candid" dfx.json > /dev/null 2>&1; then
+    dfx generate "$1"
+  fi
 else
-  # Generate declarations for all canisters
-  dfx generate
+  # Generate declarations for all canisters that have a candid file
+  for canister in $canister_names; do
+    if jq -e ".canisters.\"$canister\".candid" dfx.json > /dev/null 2>&1; then
+      dfx generate "$canister"
+    fi
+  done
 fi
