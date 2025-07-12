@@ -1,1 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+
+/* Global styles for OriginStamp */
+* {
+  font-family: 'Archivo', sans-serif;
+}
+
+body {
+  background-color: #E0E5EC;
+  color: #4D5B70;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar for better integration with Neumorphic design */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E0E5EC;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a3a3a3;
+  border-radius: 4px;
+  box-shadow: inset 2px 2px 4px #a3a3a3, inset -2px -2px 4px #ffffff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+}
+
+/* Focus styles for better accessibility */
+:focus {
+  outline: 2px solid #4D5B70;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for all interactive elements */
+button, input, select, textarea {
+  transition: all 0.2s ease;
+}
+
+/* Selection styling */
+::selection {
+  background-color: #4D5B70;
+  color: #E0E5EC;
+}
