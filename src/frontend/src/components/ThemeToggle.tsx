@@ -13,8 +13,10 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
   useEffect(() => {
     // Check for saved theme preference or default to light
     const savedTheme = localStorage.getItem("originstamp-theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+
     if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
       setIsDark(true);
       document.documentElement.setAttribute("data-theme", "dark");
@@ -71,4 +73,4 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
       )}
     </button>
   );
-} 
+}

@@ -25,9 +25,7 @@ function App() {
       <div className="page-container">
         {/* Header */}
         <header className="page-header">
-          <h1 className="page-title">
-            OriginStamp
-          </h1>
+          <h1 className="page-title">OriginStamp</h1>
           <p className="page-subtitle">
             Protokol Verifikasi Terdesentralisasi untuk Era Digital
           </p>
@@ -38,9 +36,7 @@ function App() {
           {currentView === "landing" && (
             <section className="hero-section">
               <div className="hero-content">
-                <h2 className="hero-title">
-                  Buktikan Keaslian Karya Anda
-                </h2>
+                <h2 className="hero-title">Buktikan Keaslian Karya Anda</h2>
                 <p className="hero-description">
                   Dalam era AI generatif, buktikan bahwa karya Anda adalah hasil
                   dari proses kreatif manusia yang autentik. OriginStamp
@@ -61,9 +57,7 @@ function App() {
             <section className="section-container">
               <div className="section-content">
                 <div className="dashboard-header">
-                  <h2 className="dashboard-title">
-                    Dashboard Kreator
-                  </h2>
+                  <h2 className="dashboard-title">Dashboard Kreator</h2>
                   <div className="dashboard-actions">
                     <button
                       onClick={() => navigateToView("session")}
@@ -77,16 +71,26 @@ function App() {
                 <div className="grid-projects">
                   {/* Project Cards - placeholder for now */}
                   <div className="card-enhanced">
-                    <h3 className="mb-4 text-xl font-semibold text-primary">
+                    <h3 className="text-primary mb-4 text-xl font-semibold">
                       Belum Ada Proyek
                     </h3>
                     <p className="text-secondary mb-4">
                       Klik "Proyek Baru" untuk memulai verifikasi karya pertama
                       Anda
                     </p>
-                    <div className="flex items-center gap-2 text-sm text-secondary">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <div className="text-secondary flex items-center gap-2 text-sm">
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                       </svg>
                       <span>Mulai perjalanan verifikasi Anda</span>
                     </div>
@@ -99,14 +103,10 @@ function App() {
           {currentView === "session" && (
             <section className="session-container">
               <div className="section-content">
-                <h2 className="section-title">
-                  Sesi Perekaman Aktif
-                </h2>
+                <h2 className="section-title">Sesi Perekaman Aktif</h2>
                 <div className="session-indicator">
                   <div className="indicator-recording mx-auto mb-4 h-6 w-6"></div>
-                  <p className="session-status">
-                    Merekam Proses Kreatif...
-                  </p>
+                  <p className="session-status">Merekam Proses Kreatif...</p>
                   <p className="text-secondary text-sm">
                     Plugin OriginStamp sedang aktif
                   </p>
@@ -129,31 +129,47 @@ function App() {
           {currentView === "finalization" && (
             <section className="section-container">
               <div className="section-content">
-                <h2 className="section-title">
-                  Finalisasi Proyek
-                </h2>
+                <h2 className="section-title">Finalisasi Proyek</h2>
                 <div className="card-enhanced content-max-width">
-                  <h3 className="mb-6 text-2xl font-semibold text-primary">
+                  <h3 className="text-primary mb-6 text-2xl font-semibold">
                     Ringkasan Proses Kreatif
                   </h3>
                   <div className="grid-two-cols mb-8">
-                    <div className="text-center p-4">
-                      <div className="text-3xl font-bold text-primary mb-2">8h 24m</div>
+                    <div className="p-4 text-center">
+                      <div className="text-primary mb-2 text-3xl font-bold">
+                        8h 24m
+                      </div>
                       <div className="text-secondary text-sm">Durasi Total</div>
                     </div>
-                    <div className="text-center p-4">
-                      <div className="text-3xl font-bold text-primary mb-2">1,245</div>
+                    <div className="p-4 text-center">
+                      <div className="text-primary mb-2 text-3xl font-bold">
+                        1,245
+                      </div>
                       <div className="text-secondary text-sm">Aksi Terekam</div>
                     </div>
                   </div>
-                  <div className="bg-gradient-to-r from-info to-success p-4 rounded-xl mb-6">
+                  <div className="from-info to-success mb-6 rounded-xl bg-gradient-to-r p-4">
                     <div className="flex items-center gap-3">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <svg
+                        className="h-6 w-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                       </svg>
                       <div>
-                        <div className="text-white font-semibold">Proses Berhasil Direkam</div>
-                        <div className="text-white/80 text-sm">Semua aktivitas kreatif telah disimpan</div>
+                        <div className="font-semibold text-white">
+                          Proses Berhasil Direkam
+                        </div>
+                        <div className="text-sm text-white/80">
+                          Semua aktivitas kreatif telah disimpan
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -178,23 +194,31 @@ function App() {
             <section className="section-container">
               <div className="verification-container">
                 <div className="verification-header">
-                  <h2 className="section-title">
-                    Sertifikat Keaslian
-                  </h2>
+                  <h2 className="section-title">Sertifikat Keaslian</h2>
                   <div className="verification-badge">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     Karya Terverifikasi
                   </div>
                 </div>
 
                 <div className="card-enhanced">
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-primary mb-4">
+                  <div className="mb-8 text-center">
+                    <h3 className="text-primary mb-4 text-2xl font-bold">
                       ✓ Sertifikat Keaslian Diterbitkan
                     </h3>
-                    <p className="text-secondary max-w-2xl mx-auto">
+                    <p className="text-secondary mx-auto max-w-2xl">
                       Sertifikat keaslian telah diterbitkan untuk karya Anda.
                       Proses kreatif telah direkam secara permanen di blockchain
                       dan tidak dapat diubah.
@@ -202,26 +226,42 @@ function App() {
                   </div>
 
                   <div className="verification-stats">
-                    <div className="card-inset text-center p-6">
-                      <div className="text-2xl font-bold text-primary mb-2">8h 24m</div>
-                      <div className="text-secondary text-sm font-medium">Durasi Proses</div>
+                    <div className="card-inset p-6 text-center">
+                      <div className="text-primary mb-2 text-2xl font-bold">
+                        8h 24m
+                      </div>
+                      <div className="text-secondary text-sm font-medium">
+                        Durasi Proses
+                      </div>
                     </div>
-                    <div className="card-inset text-center p-6">
-                      <div className="text-2xl font-bold text-primary mb-2">1,245</div>
-                      <div className="text-secondary text-sm font-medium">Aksi Terekam</div>
+                    <div className="card-inset p-6 text-center">
+                      <div className="text-primary mb-2 text-2xl font-bold">
+                        1,245
+                      </div>
+                      <div className="text-secondary text-sm font-medium">
+                        Aksi Terekam
+                      </div>
                     </div>
-                    <div className="card-inset text-center p-6">
-                      <div className="text-2xl font-bold text-success mb-2">✓</div>
-                      <div className="text-secondary text-sm font-medium">Status</div>
+                    <div className="card-inset p-6 text-center">
+                      <div className="text-success mb-2 text-2xl font-bold">
+                        ✓
+                      </div>
+                      <div className="text-secondary text-sm font-medium">
+                        Status
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-8 p-6 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl">
-                    <h4 className="font-semibold text-primary mb-3">Informasi Sertifikat</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="from-primary/5 to-secondary/5 mt-8 rounded-xl bg-gradient-to-r p-6">
+                    <h4 className="text-primary mb-3 font-semibold">
+                      Informasi Sertifikat
+                    </h4>
+                    <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                       <div>
                         <span className="text-secondary">ID Sertifikat:</span>
-                        <span className="text-primary ml-2 font-mono">OS-2024-001</span>
+                        <span className="text-primary ml-2 font-mono">
+                          OS-2024-001
+                        </span>
                       </div>
                       <div>
                         <span className="text-secondary">Tanggal Terbit:</span>
@@ -229,16 +269,20 @@ function App() {
                       </div>
                       <div>
                         <span className="text-secondary">Blockchain:</span>
-                        <span className="text-primary ml-2">Internet Computer</span>
+                        <span className="text-primary ml-2">
+                          Internet Computer
+                        </span>
                       </div>
                       <div>
                         <span className="text-secondary">Status:</span>
-                        <span className="text-success ml-2 font-semibold">Aktif</span>
+                        <span className="text-success ml-2 font-semibold">
+                          Aktif
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="text-center mt-8">
+                  <div className="mt-8 text-center">
                     <button
                       onClick={() =>
                         navigator.clipboard.writeText(window.location.href)

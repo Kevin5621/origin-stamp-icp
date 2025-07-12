@@ -54,8 +54,8 @@
   z-index: 100;
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: 
-    6px 6px 12px var(--color-shadow-dark), 
+  box-shadow:
+    6px 6px 12px var(--color-shadow-dark),
     -6px -6px 12px var(--color-shadow-light);
   width: 3rem;
   height: 3rem;
@@ -73,8 +73,8 @@
 }
 
 .theme-toggle:active {
-  box-shadow: 
-    inset 3px 3px 6px var(--color-shadow-dark), 
+  box-shadow:
+    inset 3px 3px 6px var(--color-shadow-dark),
     inset -3px -3px 6px var(--color-shadow-light);
 }
 
@@ -109,7 +109,11 @@
   font-size: 3.5rem;
   font-weight: 800;
   color: var(--color-text-primary);
-  background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary) 0%,
+    var(--color-text-secondary) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -229,8 +233,8 @@
 
 .nav-wrapper {
   background-color: var(--color-surface);
-  box-shadow: 
-    6px 6px 12px var(--color-shadow-dark), 
+  box-shadow:
+    6px 6px 12px var(--color-shadow-dark),
     -6px -6px 12px var(--color-shadow-light);
   display: flex;
   gap: 1rem;
@@ -258,8 +262,8 @@
 .modal-dialog {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: 
-    12px 12px 24px var(--color-shadow-dark), 
+  box-shadow:
+    12px 12px 24px var(--color-shadow-dark),
     -12px -12px 24px var(--color-shadow-light);
   border-radius: 1rem;
   padding: 2rem;
@@ -279,8 +283,8 @@
 .modal-close {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: 
-    3px 3px 6px var(--color-shadow-dark), 
+  box-shadow:
+    3px 3px 6px var(--color-shadow-dark),
     -3px -3px 6px var(--color-shadow-light);
   position: absolute;
   top: 1rem;
@@ -297,8 +301,8 @@
 }
 
 .modal-close:active {
-  box-shadow: 
-    inset 2px 2px 4px var(--color-shadow-dark), 
+  box-shadow:
+    inset 2px 2px 4px var(--color-shadow-dark),
     inset -2px -2px 4px var(--color-shadow-light);
 }
 
@@ -318,8 +322,8 @@
 .form-input {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: 
-    inset 3px 3px 6px var(--color-shadow-dark), 
+  box-shadow:
+    inset 3px 3px 6px var(--color-shadow-dark),
     inset -3px -3px 6px var(--color-shadow-light);
   width: 100%;
   padding: 1rem 1.25rem;
@@ -332,8 +336,8 @@
 }
 
 .form-input:focus {
-  box-shadow: 
-    inset 6px 6px 12px var(--color-shadow-dark), 
+  box-shadow:
+    inset 6px 6px 12px var(--color-shadow-dark),
     inset -6px -6px 12px var(--color-shadow-light);
 }
 
@@ -356,8 +360,8 @@
 .btn-cta {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: 
-    8px 8px 16px var(--color-shadow-dark), 
+  box-shadow:
+    8px 8px 16px var(--color-shadow-dark),
     -8px -8px 16px var(--color-shadow-light);
   padding: 1.25rem 2.5rem;
   font-size: 1.125rem;
@@ -371,23 +375,23 @@
 
 .btn-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    12px 12px 24px var(--color-shadow-dark), 
+  box-shadow:
+    12px 12px 24px var(--color-shadow-dark),
     -12px -12px 24px var(--color-shadow-light);
 }
 
 .btn-cta:active {
   transform: translateY(0);
-  box-shadow: 
-    inset 5px 5px 10px var(--color-shadow-dark), 
+  box-shadow:
+    inset 5px 5px 10px var(--color-shadow-dark),
     inset -5px -5px 10px var(--color-shadow-light);
 }
 
 .btn-icon {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: 
-    3px 3px 6px var(--color-shadow-dark), 
+  box-shadow:
+    3px 3px 6px var(--color-shadow-dark),
     -3px -3px 6px var(--color-shadow-light);
   height: 2.5rem;
   width: 2.5rem;
@@ -401,8 +405,8 @@
 }
 
 .btn-icon:active {
-  box-shadow: 
-    inset 2px 2px 4px var(--color-shadow-dark), 
+  box-shadow:
+    inset 2px 2px 4px var(--color-shadow-dark),
     inset -2px -2px 4px var(--color-shadow-light);
 }
 
@@ -431,8 +435,8 @@
 
 .loading-spinner {
   background-color: var(--color-surface);
-  box-shadow: 
-    6px 6px 12px var(--color-shadow-dark), 
+  box-shadow:
+    6px 6px 12px var(--color-shadow-dark),
     -6px -6px 12px var(--color-shadow-light);
   height: 4rem;
   width: 4rem;
@@ -464,7 +468,7 @@
 }
 
 .card-enhanced::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -483,8 +487,8 @@
   padding: 2rem;
   background-color: var(--color-surface);
   border-radius: 1.5rem;
-  box-shadow: 
-    6px 6px 12px var(--color-shadow-dark), 
+  box-shadow:
+    6px 6px 12px var(--color-shadow-dark),
     -6px -6px 12px var(--color-shadow-light);
 }
 
@@ -511,8 +515,8 @@
   padding: 3rem;
   background-color: var(--color-surface);
   border-radius: 2rem;
-  box-shadow: 
-    inset 8px 8px 16px var(--color-shadow-dark), 
+  box-shadow:
+    inset 8px 8px 16px var(--color-shadow-dark),
     inset -8px -8px 16px var(--color-shadow-light);
   margin-bottom: 3rem;
 }
