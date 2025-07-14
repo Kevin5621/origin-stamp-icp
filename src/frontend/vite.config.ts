@@ -29,7 +29,7 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-    allowedHosts: [],
+    allowedHosts: ["originstamp.csalab.dev", "localhost"],
   },
   plugins: [
     react(),
