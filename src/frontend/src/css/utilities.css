@@ -53,10 +53,6 @@
 
 /* Theme Toggle */
 .theme-toggle {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 100;
   background-color: var(--color-surface);
   color: var(--color-on-surface);
   box-shadow:
@@ -87,6 +83,36 @@
   width: 1.25rem;
   height: 1.25rem;
   transition: var(--theme-transition);
+}
+
+.language-toggle {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  box-shadow: 6px 6px 12px var(--color-shadow-dark), -6px -6px 12px var(--color-shadow-light);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: var(--theme-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.language-toggle:hover {
+  transform: scale(1.05);
+}
+
+.language-toggle:active {
+  box-shadow: inset 3px 3px 6px var(--color-shadow-dark), inset -3px -3px 6px var(--color-shadow-light);
+}
+
+.language-toggle svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 /* Base Layout */

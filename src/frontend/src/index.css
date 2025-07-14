@@ -22,6 +22,15 @@ body {
   min-height: 100vh;
 }
 
+.controls-container {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 1rem;
+  z-index: 100;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

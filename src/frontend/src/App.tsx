@@ -23,8 +23,10 @@ function App() {
 
   return (
     <div className="app-container">
-      <ThemeToggle />
-      <LanguageToggle />
+      <div className="controls-container">
+        <ThemeToggle />
+        <LanguageToggle />
+      </div>
 
       <div className="page-container">
         {/* Semantic Header */}
