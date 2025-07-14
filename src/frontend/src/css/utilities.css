@@ -88,7 +88,9 @@
 .language-toggle {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: 6px 6px 12px var(--color-shadow-dark), -6px -6px 12px var(--color-shadow-light);
+  box-shadow:
+    6px 6px 12px var(--color-shadow-dark),
+    -6px -6px 12px var(--color-shadow-light);
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
@@ -105,7 +107,9 @@
 }
 
 .language-toggle:active {
-  box-shadow: inset 3px 3px 6px var(--color-shadow-dark), inset -3px -3px 6px var(--color-shadow-light);
+  box-shadow:
+    inset 3px 3px 6px var(--color-shadow-dark),
+    inset -3px -3px 6px var(--color-shadow-light);
 }
 
 .language-toggle svg {
