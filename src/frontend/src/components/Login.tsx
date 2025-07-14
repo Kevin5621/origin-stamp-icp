@@ -63,25 +63,39 @@ export function Login({ className = "" }: LoginProps) {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <header className="modal-header">
               <h2 className="text-primary login-title">{t("login_signup")}</h2>
-              <button onClick={handleCloseModal} className="modal-close" aria-label="Close dialog">
+              <button
+                onClick={handleCloseModal}
+                className="modal-close"
+                aria-label="Close dialog"
+              >
                 &times;
               </button>
             </header>
             <main className="modal-body">
-              <p className="text-secondary login-desc">{t("choose_login_method")}</p>
+              <p className="text-secondary login-desc">
+                {t("choose_login_method")}
+              </p>
               <div className="login-options">
                 <button
                   onClick={handleInternetIdentityLogin}
                   className="btn-neumorphic login-btn"
                 >
-                  <img src="/assets/ii-logo.svg" alt="ICP" className="login-btn-icon" />
+                  <img
+                    src="/assets/ii-logo.svg"
+                    alt="ICP"
+                    className="login-btn-icon"
+                  />
                   <span>{t("login_with_internet_identity")}</span>
                 </button>
                 <button
                   onClick={handleGoogleLogin}
                   className="btn-neumorphic login-btn"
                 >
-                  <img src="/assets/google-logo.svg" alt="Google" className="login-btn-icon" />
+                  <img
+                    src="/assets/google-logo.svg"
+                    alt="Google"
+                    className="login-btn-icon"
+                  />
                   <span>{t("login_with_google")}</span>
                 </button>
                 <div className="text-secondary login-or">{t("or")}</div>
@@ -89,7 +103,11 @@ export function Login({ className = "" }: LoginProps) {
                   onClick={handleGoogleSignup}
                   className="btn-neumorphic login-btn"
                 >
-                  <img src="/assets/google-logo.svg" alt="Google" className="login-btn-icon" />
+                  <img
+                    src="/assets/google-logo.svg"
+                    alt="Google"
+                    className="login-btn-icon"
+                  />
                   <span>{t("signup_with_google")}</span>
                 </button>
               </div>
@@ -102,4 +120,3 @@ export function Login({ className = "" }: LoginProps) {
 }
 
 export default Login;
-

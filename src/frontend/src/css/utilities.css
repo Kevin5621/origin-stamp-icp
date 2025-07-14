@@ -56,7 +56,10 @@
   border: none;
   border-radius: 0.5rem;
   padding: 0.75rem 1.5rem;
-  transition: box-shadow 0.2s, background 0.2s, color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    background 0.2s,
+    color 0.2s;
 }
 .btn-neumorphic.login-btn:hover {
   box-shadow:
@@ -198,7 +201,9 @@
 .btn-login-circular {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: 6px 6px 12px var(--color-shadow-dark), -6px -6px 12px var(--color-shadow-light);
+  box-shadow:
+    6px 6px 12px var(--color-shadow-dark),
+    -6px -6px 12px var(--color-shadow-light);
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
@@ -215,7 +220,9 @@
 }
 
 .btn-login-circular:active {
-  box-shadow: inset 3px 3px 6px var(--color-shadow-dark), inset -3px -3px 6px var(--color-shadow-light);
+  box-shadow:
+    inset 3px 3px 6px var(--color-shadow-dark),
+    inset -3px -3px 6px var(--color-shadow-light);
 }
 
 .btn-login-circular svg {
@@ -1745,5 +1752,3 @@
     inset 3px 3px 6px var(--color-shadow-dark),
     inset -3px -3px 6px var(--color-shadow-light);
 }
-
-
