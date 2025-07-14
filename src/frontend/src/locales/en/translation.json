@@ -47,5 +47,11 @@
   "verification_status_label": "Verification Status",
   "copy_certificate_link_button": "Copy Certificate Link",
   "dashboard_nav": "Dashboard",
-  "home_nav": "Home"
+  "home_nav": "Home",
+  "login_with_internet_identity": "Sign in with Internet Identity",
+  "login_with_google": "Sign in with Google",
+  "signup_with_google": "Sign up with Google",
+  "login_signup": "Sign In or Sign Up",
+  "choose_login_method": "Choose your login method",
+  "or": "or"
 }

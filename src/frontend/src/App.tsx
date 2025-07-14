@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader, ErrorDisplay, ThemeToggle } from "./components";
+import { Loader, ErrorDisplay, ThemeToggle, Login } from "./components";
 import LanguageToggle from "./components/LanguageToggle";
 import { useTranslation } from "react-i18next";
 
@@ -24,6 +24,7 @@ function App() {
   return (
     <div className="app-container">
       <div className="controls-container">
+        <Login />
         <ThemeToggle />
         <LanguageToggle />
       </div>

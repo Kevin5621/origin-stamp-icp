@@ -47,5 +47,11 @@
   "verification_status_label": "Status Verifikasi",
   "copy_certificate_link_button": "Salin Tautan Sertifikat",
   "dashboard_nav": "Dasbor",
-  "home_nav": "Beranda"
+  "home_nav": "Beranda",
+  "login_with_internet_identity": "Masuk dengan Internet Identity",
+  "login_with_google": "Masuk dengan Google",
+  "signup_with_google": "Daftar dengan Google",
+  "login_signup": "Masuk atau Daftar",
+  "choose_login_method": "Pilih metode login Anda",
+  "or": "atau"
 }
