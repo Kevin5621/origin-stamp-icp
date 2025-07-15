@@ -7,3 +7,4 @@ export * from "./Loader";
 export * from "./Modal";
 export * from "./ThemeToggle";
 export * from "./Login";
+export * from "./LoginForm";

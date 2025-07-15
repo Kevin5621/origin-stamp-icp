@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { LoginForm } from "./LoginForm";
 
 interface LoginProps {
   className?: string;
@@ -8,6 +9,7 @@ interface LoginProps {
 export function Login({ className = "" }: LoginProps) {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showCustomLogin, setShowCustomLogin] = useState(false);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -15,6 +17,15 @@ export function Login({ className = "" }: LoginProps) {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setShowCustomLogin(false);
+  };
+
+  const handleShowCustomLogin = () => {
+    setShowCustomLogin(true);
+  };
+
+  const handleBackToOptions = () => {
+    setShowCustomLogin(false);
   };
 
   // TODO: Implement login with ICP (Internet Computer Protocol)
@@ -72,45 +83,79 @@ export function Login({ className = "" }: LoginProps) {
               </button>
             </header>
             <main className="modal-body">
-              <p className="text-secondary login-desc">
-                {t("choose_login_method")}
-              </p>
-              <div className="login-options">
-                <button
-                  onClick={handleInternetIdentityLogin}
-                  className="btn-neumorphic login-btn"
-                >
-                  <img
-                    src="/assets/ii-logo.svg"
-                    alt="ICP"
-                    className="login-btn-icon"
-                  />
-                  <span>{t("login_with_internet_identity")}</span>
-                </button>
-                <button
-                  onClick={handleGoogleLogin}
-                  className="btn-neumorphic login-btn"
-                >
-                  <img
-                    src="/assets/google-logo.svg"
-                    alt="Google"
-                    className="login-btn-icon"
-                  />
-                  <span>{t("login_with_google")}</span>
-                </button>
-                <div className="text-secondary login-or">{t("or")}</div>
-                <button
-                  onClick={handleGoogleSignup}
-                  className="btn-neumorphic login-btn"
-                >
-                  <img
-                    src="/assets/google-logo.svg"
-                    alt="Google"
-                    className="login-btn-icon"
-                  />
-                  <span>{t("signup_with_google")}</span>
-                </button>
-              </div>
+              {!showCustomLogin ? (
+                <>
+                  <p className="text-secondary login-desc">
+                    {t("choose_login_method")}
+                  </p>
+                  <div className="login-options">
+                    <button
+                      onClick={handleInternetIdentityLogin}
+                      className="btn-neumorphic login-btn"
+                    >
+                      <img
+                        src="/assets/ii-logo.svg"
+                        alt="ICP"
+                        className="login-btn-icon"
+                      />
+                      <span>{t("login_with_internet_identity")}</span>
+                    </button>
+                    <button
+                      onClick={handleGoogleLogin}
+                      className="btn-neumorphic login-btn"
+                    >
+                      <img
+                        src="/assets/google-logo.svg"
+                        alt="Google"
+                        className="login-btn-icon"
+                      />
+                      <span>{t("login_with_google")}</span>
+                    </button>
+                    <div className="text-secondary login-or">{t("or")}</div>
+                    <button
+                      onClick={handleGoogleSignup}
+                      className="btn-neumorphic login-btn"
+                    >
+                      <img
+                        src="/assets/google-logo.svg"
+                        alt="Google"
+                        className="login-btn-icon"
+                      />
+                      <span>{t("signup_with_google")}</span>
+                    </button>
+                    <button
+                      onClick={handleShowCustomLogin}
+                      className="btn-neumorphic login-btn"
+                    >
+                      <span>Login with Username/Password</span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <button
+                    onClick={handleBackToOptions}
+                    className="mb-4 flex items-center gap-2 text-blue-600 hover:text-blue-800"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="h-4 w-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 19.5L8.25 12l7.5-7.5"
+                      />
+                    </svg>
+                    Back to options
+                  </button>
+                  <LoginForm />
+                </div>
+              )}
             </main>
           </div>
         </div>

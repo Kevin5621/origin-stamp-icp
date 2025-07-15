@@ -53,27 +53,98 @@ describe("Vibe Coding Template Backend", () => {
   });
 
   // The `it` function is used to define individual tests
-  it("should greet with the provided name", async () => {
-    const response = await actor.greet("World");
-    expect(response).toEqual("Hello, World!");
+  it("should register a new user successfully", async () => {
+    const username = "testuser";
+    const password = "testpass123";
+
+    const result = await actor.register_user(username, password);
+
+    expect(result.success).toBe(true);
+    expect(result.message).toBe("User registered successfully");
+    expect(result.username).toEqual([username]);
   });
 
-  it("should increment counter and return new value", async () => {
-    const initialCount = await actor.get_count();
-    const newCount = await actor.increment();
-    expect(newCount).toEqual(initialCount + BigInt(1));
+  it("should fail to register user with empty username", async () => {
+    const result = await actor.register_user("", "password123");
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("Username and password cannot be empty");
+    expect(result.username).toEqual([]);
   });
 
-  it("should get current counter value", async () => {
-    const count = await actor.get_count();
-    expect(typeof count).toBe("bigint");
+  it("should fail to register user with empty password", async () => {
+    const result = await actor.register_user("testuser", "");
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("Username and password cannot be empty");
+    expect(result.username).toEqual([]);
   });
 
-  it("should set counter to specified value", async () => {
-    const newValue = BigInt(42);
-    const result = await actor.set_count(newValue);
-    expect(result).toEqual(newValue);
-    const currentCount = await actor.get_count();
-    expect(currentCount).toEqual(newValue);
+  it("should fail to register duplicate username", async () => {
+    const username = "duplicateuser";
+    const password = "testpass123";
+
+    // Register first user
+    await actor.register_user(username, password);
+
+    // Try to register same username again
+    const result = await actor.register_user(username, password);
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("Username already exists");
+    expect(result.username).toEqual([]);
+  });
+
+  it("should login successfully with correct credentials", async () => {
+    const username = "loginuser";
+    const password = "loginpass123";
+
+    // First register the user
+    await actor.register_user(username, password);
+
+    // Then try to login
+    const result = await actor.login(username, password);
+
+    expect(result.success).toBe(true);
+    expect(result.message).toBe("Login successful");
+    expect(result.username).toEqual([username]);
+  });
+
+  it("should fail login with incorrect password", async () => {
+    const username = "loginuser2";
+    const password = "correctpass123";
+    const wrongPassword = "wrongpass123";
+
+    // First register the user
+    await actor.register_user(username, password);
+
+    // Try to login with wrong password
+    const result = await actor.login(username, wrongPassword);
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("Invalid password");
+    expect(result.username).toEqual([]);
+  });
+
+  it("should fail login with non-existent user", async () => {
+    const result = await actor.login("nonexistentuser", "somepassword");
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("User not found");
+    expect(result.username).toEqual([]);
+  });
+
+  it("should fail login with empty credentials", async () => {
+    const emptyUsernameResult = await actor.login("", "password123");
+    expect(emptyUsernameResult.success).toBe(false);
+    expect(emptyUsernameResult.message).toBe(
+      "Username and password cannot be empty",
+    );
+
+    const emptyPasswordResult = await actor.login("username", "");
+    expect(emptyPasswordResult.success).toBe(false);
+    expect(emptyPasswordResult.message).toBe(
+      "Username and password cannot be empty",
+    );
   });
 });
