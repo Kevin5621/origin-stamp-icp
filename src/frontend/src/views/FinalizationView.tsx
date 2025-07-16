@@ -38,31 +38,21 @@ const FinalizationView: React.FC<FinalizationViewProps> = ({ onNavigate }) => {
           <div className="metrics-grid">
             <div className="metric-card">
               <div className="metric-value">8h 24m</div>
-              <div className="metric-label">
-                {t("total_duration_label")}
-              </div>
+              <div className="metric-label">{t("total_duration_label")}</div>
             </div>
             <div className="metric-card">
               <div className="metric-value">1,245</div>
-              <div className="metric-label">
-                {t("actions_recorded_label")}
-              </div>
+              <div className="metric-label">{t("actions_recorded_label")}</div>
             </div>
             <div className="metric-card">
               <div className="metric-value">24</div>
-              <div className="metric-label">
-                {t("milestones_label")}
-              </div>
+              <div className="metric-label">{t("milestones_label")}</div>
             </div>
           </div>
 
           <div className="success-indicator">
             <div className="success-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -83,9 +73,7 @@ const FinalizationView: React.FC<FinalizationViewProps> = ({ onNavigate }) => {
         </article>
 
         <aside className="finalization-actions">
-          <p className="confirmation-text">
-            {t("confirm_finalization_text")}
-          </p>
+          <p className="confirmation-text">{t("confirm_finalization_text")}</p>
           <button
             onClick={() => onNavigate("verification")}
             className="btn-publish"

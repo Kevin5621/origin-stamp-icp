@@ -33,11 +33,7 @@ const VerificationView: React.FC<VerificationViewProps> = ({ onNavigate }) => {
         <article className="certificate-card">
           <div className="certificate-header">
             <div className="certificate-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -63,21 +59,15 @@ const VerificationView: React.FC<VerificationViewProps> = ({ onNavigate }) => {
                 <span className="detail-value">OS-2024-001</span>
               </div>
               <div className="detail-item">
-                <span className="detail-label">
-                  {t("issue_date_label")}
-                </span>
+                <span className="detail-label">{t("issue_date_label")}</span>
                 <span className="detail-value">24 Des 2024</span>
               </div>
               <div className="detail-item">
-                <span className="detail-label">
-                  {t("blockchain_label")}
-                </span>
+                <span className="detail-label">{t("blockchain_label")}</span>
                 <span className="detail-value">Internet Computer</span>
               </div>
               <div className="detail-item">
-                <span className="detail-label">
-                  {t("status_label")}
-                </span>
+                <span className="detail-label">{t("status_label")}</span>
                 <span className="detail-value status-active">
                   {t("status_active")}
                 </span>
@@ -89,29 +79,21 @@ const VerificationView: React.FC<VerificationViewProps> = ({ onNavigate }) => {
         <div className="verification-stats-grid">
           <div className="stat-card-large">
             <div className="stat-value">8h 24m</div>
-            <div className="stat-label">
-              {t("process_duration_label")}
-            </div>
+            <div className="stat-label">{t("process_duration_label")}</div>
           </div>
           <div className="stat-card-large">
             <div className="stat-value">1,245</div>
-            <div className="stat-label">
-              {t("actions_recorded_label")}
-            </div>
+            <div className="stat-label">{t("actions_recorded_label")}</div>
           </div>
           <div className="stat-card-large">
             <div className="stat-value success">✓</div>
-            <div className="stat-label">
-              {t("verification_status_label")}
-            </div>
+            <div className="stat-label">{t("verification_status_label")}</div>
           </div>
         </div>
 
         <aside className="verification-actions">
           <button
-            onClick={() =>
-              navigator.clipboard.writeText(window.location.href)
-            }
+            onClick={() => navigator.clipboard.writeText(window.location.href)}
             className="btn-copy-link"
             aria-label={t("copy_certificate_link_button")}
           >

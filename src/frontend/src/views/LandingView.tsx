@@ -23,9 +23,7 @@ const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
               className="btn-hero-cta"
               aria-label={t("start_verification_button")}
             >
-              <span className="btn-text">
-                {t("start_verification_button")}
-              </span>
+              <span className="btn-text">{t("start_verification_button")}</span>
               <svg
                 className="btn-icon"
                 viewBox="0 0 24 24"
@@ -46,11 +44,7 @@ const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
         <aside className="hero-features">
           <div className="feature-card">
             <div className="feature-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -69,11 +63,7 @@ const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
 
           <div className="feature-card">
             <div className="feature-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -82,9 +72,7 @@ const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
                 />
               </svg>
             </div>
-            <h3 className="feature-title">
-              {t("blockchain_secure_title")}
-            </h3>
+            <h3 className="feature-title">{t("blockchain_secure_title")}</h3>
             <p className="feature-description">
               {t("blockchain_secure_description")}
             </p>
@@ -92,11 +80,7 @@ const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
 
           <div className="feature-card">
             <div className="feature-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -105,9 +89,7 @@ const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
                 />
               </svg>
             </div>
-            <h3 className="feature-title">
-              {t("instant_proof_title")}
-            </h3>
+            <h3 className="feature-title">{t("instant_proof_title")}</h3>
             <p className="feature-description">
               {t("instant_proof_description")}
             </p>
