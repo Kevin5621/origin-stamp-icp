@@ -8,7 +8,7 @@ import {
   SessionView,
   FinalizationView,
   VerificationView,
-  ViewType
+  ViewType,
 } from "./views";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
 
   const renderCurrentView = () => {
     const viewProps = { onNavigate: navigateToView };
-    
+
     switch (currentView) {
       case "landing":
         return <LandingView {...viewProps} />;
@@ -64,9 +64,7 @@ function App() {
         </header>
 
         {/* Main Content Area */}
-        <main className="main-content">
-          {renderCurrentView()}
-        </main>
+        <main className="main-content">{renderCurrentView()}</main>
 
         {/* Semantic Navigation */}
         {currentView !== "landing" && (

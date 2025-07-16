@@ -8,10 +8,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
   const { t } = useTranslation();
 
   return (
-    <section
-      className="dashboard-section"
-      aria-labelledby="dashboard-title"
-    >
+    <section className="dashboard-section" aria-labelledby="dashboard-title">
       <div className="bento-dashboard">
         <header className="dashboard-header-card">
           <h2 id="dashboard-title" className="dashboard-title">
@@ -42,11 +39,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         <div className="projects-grid">
           <article className="empty-state-card">
             <div className="empty-state-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -55,9 +48,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                 />
               </svg>
             </div>
-            <h3 className="empty-state-title">
-              {t("no_projects_title")}
-            </h3>
+            <h3 className="empty-state-title">{t("no_projects_title")}</h3>
             <p className="empty-state-description">
               {t("no_projects_description")}
             </p>
@@ -82,15 +73,11 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           <aside className="dashboard-stats">
             <div className="stat-card">
               <div className="stat-value">0</div>
-              <div className="stat-label">
-                {t("completed_projects_label")}
-              </div>
+              <div className="stat-label">{t("completed_projects_label")}</div>
             </div>
             <div className="stat-card">
               <div className="stat-value">0</div>
-              <div className="stat-label">
-                {t("certificates_issued_label")}
-              </div>
+              <div className="stat-label">{t("certificates_issued_label")}</div>
             </div>
           </aside>
         </div>

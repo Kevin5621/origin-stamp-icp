@@ -8,23 +8,15 @@ const SessionView: React.FC<SessionViewProps> = ({ onNavigate }) => {
   const { t } = useTranslation();
 
   return (
-    <section
-      className="session-section"
-      aria-labelledby="session-title"
-    >
+    <section className="session-section" aria-labelledby="session-title">
       <div className="bento-session">
         <header className="session-header-card">
           <h2 id="session-title" className="session-title">
             {t("active_recording_session_title")}
           </h2>
           <div className="session-status-indicator">
-            <div
-              className="recording-dot"
-              aria-label="Sedang merekam"
-            ></div>
-            <span className="status-text">
-              {t("recording_status_text")}
-            </span>
+            <div className="recording-dot" aria-label="Sedang merekam"></div>
+            <span className="status-text">{t("recording_status_text")}</span>
           </div>
         </header>
 
@@ -39,23 +31,17 @@ const SessionView: React.FC<SessionViewProps> = ({ onNavigate }) => {
           </div>
 
           <div className="session-content">
-            <p className="session-description">
-              {t("session_description")}
-            </p>
+            <p className="session-description">{t("session_description")}</p>
 
             <div className="session-info">
               <div className="info-item">
-                <span className="info-label">
-                  {t("plugin_status_label")}
-                </span>
+                <span className="info-label">{t("plugin_status_label")}</span>
                 <span className="info-value status-active">
                   {t("status_active")}
                 </span>
               </div>
               <div className="info-item">
-                <span className="info-label">
-                  {t("duration_label")}
-                </span>
+                <span className="info-label">{t("duration_label")}</span>
                 <span className="info-value">0:00:00</span>
               </div>
             </div>
