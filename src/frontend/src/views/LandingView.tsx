@@ -6,7 +6,6 @@ interface LandingViewProps {
   onNavigate: (view: ViewType) => void;
 }
 
-
 const LandingView: React.FC<LandingViewProps> = () => {
   const { t } = useTranslation();
 
@@ -21,7 +20,15 @@ const LandingView: React.FC<LandingViewProps> = () => {
         </div>
         {/* Right Section: Neumorphic Card with Triangle */}
         <div className="landing-right">
-          <div className="neumorphic-card" style={{ width: "100%", height: "400px", minHeight: "400px", minWidth: "400px" }}>
+          <div
+            className="neumorphic-card"
+            style={{
+              width: "100%",
+              height: "400px",
+              minHeight: "400px",
+              minWidth: "400px",
+            }}
+          >
             {/* 3D Model Viewer: woman-statue.glb (served from public folder) */}
             <ThreeModelViewer src="/woman-statue.glb" />
           </div>
