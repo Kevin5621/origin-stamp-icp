@@ -1,0 +1,80 @@
+/* Global Base Styles */
+* {
+  font-family: "Raleway", sans-serif;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-shadow-dark);
+  border-radius: 4px;
+  box-shadow:
+    inset 2px 2px 4px var(--color-shadow-dark),
+    inset -2px -2px 4px var(--color-shadow-light);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+}
+
+/* Accessibility */
+:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Text Selection */
+::selection {
+  background-color: var(--color-selection-bg);
+  color: var(--color-selection-text);
+}
+
+/* =============================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.btn-hero-cta:focus,
+.btn-new-project:focus,
+.btn-finalize:focus,
+.btn-publish:focus,
+.btn-copy-link:focus,
+.nav-button:focus {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-shadow-dark: #000000;
+    --color-shadow-light: #ffffff;
+  }
+}

@@ -1,0 +1,61 @@
+/* =============================================================================
+   SEMANTIC NAVIGATION
+   ============================================================================= */
+
+.app-navigation {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+}
+
+.nav-container {
+  background-color: var(--color-surface);
+  box-shadow:
+    8px 8px 16px var(--color-shadow-dark),
+    -8px -8px 16px var(--color-shadow-light);
+  display: flex;
+  gap: 1rem;
+  border-radius: 1.5rem;
+  padding: 1rem;
+  transition: var(--theme-transition);
+}
+
+.nav-button {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: none;
+  border-radius: 1rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow:
+    4px 4px 8px var(--color-shadow-dark),
+    -4px -4px 8px var(--color-shadow-light);
+}
+
+.nav-button:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    6px 6px 12px var(--color-shadow-dark),
+    -6px -6px 12px var(--color-shadow-light);
+}
+
+.nav-button:active,
+.nav-button.active {
+  transform: translateY(0);
+  box-shadow:
+    inset 4px 4px 8px var(--color-shadow-dark),
+    inset -4px -4px 8px var(--color-shadow-light);
+}
+
+.nav-icon {
+  width: 1rem;
+  height: 1rem;
+}

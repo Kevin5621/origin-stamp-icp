@@ -1,0 +1,38 @@
+.controls-container {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 1rem;
+  z-index: 100;
+}
+
+/* Base Layout */
+.app-container {
+  min-height: 100vh;
+  background-color: var(--color-surface);
+  transition: var(--theme-transition);
+  position: relative;
+}
+
+.page-container {
+  margin: 0 auto;
+  max-width: 90rem;
+  padding: 2rem;
+  transition: var(--theme-transition);
+}
+
+/* Main Content */
+.main-content {
+  margin-bottom: 6rem;
+}
+
+/* Main Content */
+.main-content {
+  margin-bottom: 6rem;
+}
+
+/* Main Content */
+.main-content {
+  margin-bottom: 6rem;
+}
