@@ -14,7 +14,7 @@ services:
     image: adminer:latest
     restart: always
     ports:
-      - ${BIND_ADDR:-0.0.0.0:8080}:8080
+      - ${BIND_ADM:-0.0.0.0:8080}:8080
 
   app:
     image: csalab/originstamp:latest
@@ -22,7 +22,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - ${BIND_ADDR:-0.0.0.0:5173}:5173
+      - ${BIND_APP:-0.0.0.0:5173}:5173
     working_dir: /app
     volumes:
       - dfx:/root/.config/dfx
