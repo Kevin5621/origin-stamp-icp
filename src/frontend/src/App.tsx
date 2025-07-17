@@ -2,7 +2,14 @@ import { useState } from "react";
 import { Loader, ErrorDisplay, ThemeToggle, Login } from "./components";
 import LanguageToggle from "./components/LanguageToggle";
 import { useTranslation } from "react-i18next";
-import { LandingView, DashboardView, SessionView, FinalizationView, VerificationView, ViewType } from "./views";
+import {
+  LandingView,
+  DashboardView,
+  SessionView,
+  FinalizationView,
+  VerificationView,
+  ViewType,
+} from "./views";
 import { AppContainer } from "./components/layout/AppContainer";
 import { PageContainer } from "./components/layout/PageContainer";
 import { AppHeader } from "./components/header/AppHeader";
@@ -52,14 +59,16 @@ function App() {
         <AppHeader title={t("welcome_message")} subtitle={t("hello_world")} />
         <main className="main-content">{renderCurrentView()}</main>
         {currentView !== "landing" && (
-          <AppNavigation currentView={currentView} onNavigate={navigateToView} />
+          <AppNavigation
+            currentView={currentView}
+            onNavigate={navigateToView}
+          />
         )}
         {loading && !error && <Loader />}
         {!!error && <ErrorDisplay message={error} />}
       </PageContainer>
     </AppContainer>
   );
-
 }
 
 export default App;
