@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
+import { ViewType } from "./index";
 
 interface DashboardViewProps {
-  onNavigate: (view: string) => void;
+  onNavigate: (view: ViewType) => void;
 }
 
 const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
