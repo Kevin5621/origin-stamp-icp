@@ -32,5 +32,11 @@
     "vite": "^6.2.1",
     "vite-plugin-environment": "^1.1.3",
     "vitest": "^3.1.2"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.5.1",
+    "@react-three/fiber": "^9.2.0",
+    "@types/three": "^0.178.1",
+    "three": "^0.178.0"
   }
 }

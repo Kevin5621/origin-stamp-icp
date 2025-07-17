@@ -1,0 +1,75 @@
+/* Semantic ITCSS: LandingView Component Styles */
+.landing-layout {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  transition: var(--theme-transition);
+}
+
+.landing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  width: 100%;
+  max-width: 1200px;
+  align-items: center;
+}
+
+.landing-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.landing-title {
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  text-align: left;
+  font-family: 'Raleway', sans-serif;
+}
+
+.landing-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.neumorphic-card {
+  width: 600px;
+  height: 600px;
+  border-radius: 2rem;
+  background: var(--color-surface);
+  box-shadow:
+    8px 8px 24px var(--color-shadow-dark),
+    -8px -8px 24px var(--color-shadow-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.3s;
+}
+
+.triangle-shape {
+  width: 120px;
+  height: 120px;
+  background: transparent;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background-color: var(--color-primary-text);
+  box-shadow: 0 4px 16px var(--color-shadow-dark);
+}
+
+@media (max-width: 900px) {
+  .landing-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .landing-right {
+    margin-top: 2rem;
+  }
+}

@@ -4,3 +4,12 @@
   color: var(--color-on-surface);
   font-family: "Raleway", sans-serif;
 }
+
+// Added semantic neumorphic card override for LandingView
+.neumorphic-card {
+  /* Uses theme colors and shadows, see _settings.scss */
+  background: var(--color-surface);
+  box-shadow:
+    8px 8px 24px var(--color-shadow-dark),
+    -8px -8px 24px var(--color-shadow-light);
+}
