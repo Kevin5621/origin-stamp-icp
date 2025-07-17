@@ -1,0 +1,50 @@
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 767px) {
+  .page-container {
+    padding: 1rem;
+  }
+
+  .hero-primary-card,
+  .session-main-card,
+  .process-summary-card,
+  .certificate-card {
+    padding: 2rem;
+  }
+
+  .dashboard-header-card,
+  .session-header-card,
+  .finalization-header,
+  .verification-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .nav-container {
+    padding: 0.75rem;
+  }
+
+  .nav-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .nav-button span {
+    display: none;
+  }
+
+  .hero-features {
+    gap: 1rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .metrics-grid,
+  .verification-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

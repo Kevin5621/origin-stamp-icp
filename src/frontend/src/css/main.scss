@@ -1,16 +1,28 @@
 // ITCSS: Settings (global variables)
-@import "settings/_settings.scss";
+@use "settings/_settings.scss" as *;
 
 // ITCSS: Tools (mixins, functions) -- (none yet)
 
 // ITCSS: Generic (reset, base) -- (none yet)
+@use "generic/_base.scss" as *;
 
 // ITCSS: Elements (HTML elements) -- (none yet)
+@use "elements/_forms.scss" as *;
 
 // ITCSS: Objects (layout, wrappers) -- (none yet)
+@use "objects/_layout.scss" as *;
+@use "objects/_bento.scss" as *;
 
 // ITCSS: Components
-@import "components/_neumorphic.scss";
+@use "components/_surface.scss" as *;
+@use "components/_login.scss" as *;
+@use "components/_buttons.scss" as *;
+@use "components/_modal.scss" as *;
+@use "components/_header.scss" as *;
+@use "components/_navigation.scss" as *;
+@use "components/_forms.scss" as *;
 
 // ITCSS: Utilities
-@import "utilities/_utilities.scss";
+@use "utilities/_utilities.scss" as *;
+@use "utilities/_responsive.scss" as *;
+@use "utilities/_legacy.scss" as *;
