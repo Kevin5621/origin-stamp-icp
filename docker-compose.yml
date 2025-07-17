@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mariadb:11.8.2
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-RootPassworD}
+      MARIADB_USER: ${MYSQL_USER:-origin}
+      MARIADB_PASSWORD: ${MYSQL_PASSWORD:-stamp}
+      MARIADB_DATABASE: ${MYSQL_DATABASE:-originstamp}
+    volumes:
+      - db_data:/var/lib/mysql
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - ${BIND_ADDR:-0.0.0.0:8080}:8080
+
+  app:
+    image: csalab/originstamp:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - ${BIND_ADDR:-0.0.0.0:5173}:5173
+    working_dir: /app
+    volumes:
+      - dfx:/root/.config/dfx
+      - ./:/app
+    entrypoint: ["/bin/bash", "/app/startup.sh"]
+
+volumes:
+  db_data:
+  dfx:
