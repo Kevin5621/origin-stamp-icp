@@ -15,7 +15,7 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = ({
     camera={{ position: [0, 1, 3], fov: 50 }}
   >
     <Suspense fallback={null}>
-      <Gltf src={src} />
+      <Gltf src={src} rotation={[0, 180, 0]} scale={[2, 2, 2]} />
       <Environment preset="sunset" background={false} />
       <OrbitControls enablePan enableZoom enableRotate />
     </Suspense>
