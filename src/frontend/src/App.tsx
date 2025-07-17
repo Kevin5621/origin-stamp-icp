@@ -53,10 +53,7 @@ function App() {
       <main className="main-content">{renderCurrentView()}</main>
       {/* Navigation remains functional and styled via semantic CSS */}
       {currentView !== "landing" && (
-        <AppNavigation
-          currentView={currentView}
-          onNavigate={navigateToView}
-        />
+        <AppNavigation currentView={currentView} onNavigate={navigateToView} />
       )}
       {loading && !error && <Loader />}
       {!!error && <ErrorDisplay message={error} />}
