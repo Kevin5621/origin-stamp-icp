@@ -25,6 +25,12 @@
       "source": ["src/frontend/dist/"]
     }
   },
+  "networks": {
+    "local": {
+      "bind": "0.0.0.0:4943",
+      "type": "ephemeral"
+    }
+  },
   "output_env_file": ".env",
   "version": 1,
   "dfx": "0.25.0"

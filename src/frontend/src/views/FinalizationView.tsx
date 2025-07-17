@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
+import { ViewType } from "./index";
 
 interface FinalizationViewProps {
-  onNavigate: (view: string) => void;
+  onNavigate: (view: ViewType) => void;
 }
 
 const FinalizationView: React.FC<FinalizationViewProps> = ({ onNavigate }) => {

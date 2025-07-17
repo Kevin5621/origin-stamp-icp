@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
+import { ViewType } from "./index";
 
 interface LandingViewProps {
-  onNavigate: (view: string) => void;
+  onNavigate: (view: ViewType) => void;
 }
 
 const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
