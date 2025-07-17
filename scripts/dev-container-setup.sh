@@ -9,10 +9,14 @@ npm install
 
 # Set up dfx identity for codespace
 echo "🔑 Setting up dfx identity..."
-dfxvm install 0.25.0
+if ! command -v dfx &> /dev/null
+then
+    dfxvm install 0.25.0
+fi
+
 dfx identity new codespace_dev --storage-mode=plaintext || echo "Identity may already exist"
-dfx identity use codespace_dev      
-dfx start --background             
+dfx identity use codespace_dev
+dfx start --background
 dfx stop
 
 # Install jq for JSON parsing in scripts
@@ -23,9 +27,6 @@ apt-get update && apt-get install -y jq curl
 echo "🦀 Setting up Rust tools..."
 rustup component add rustfmt
 rustup component add clippy
-
-# Install Ollama for local LLM support
-echo "🤖 Installing Ollama for LLM support..."
-curl -fsSL https://ollama.com/install.sh | sh
+rustup target add wasm32-unknown-unknown
 
 echo "✅ Development environment setup complete!"
