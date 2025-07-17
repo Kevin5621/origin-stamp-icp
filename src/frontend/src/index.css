@@ -1,5 +1,5 @@
 /* Import Font */
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap");
 
 /* Import Tailwind CSS */
 @import "tailwindcss";
@@ -11,7 +11,7 @@
 
 /* Global Base Styles */
 * {
-  font-family: "Archivo", sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
 body {
