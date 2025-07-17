@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./src/App";
 import "./src/index.css";
+import "./src/css/main.scss";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./src/i18n";
 
