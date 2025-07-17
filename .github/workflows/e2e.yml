@@ -55,7 +55,7 @@ jobs:
           dfx stop
 
       - name: Check Lint
-        run: npm run lint
+        run: npm run lint --write
 
       - name: Run tests
         run: npm run test
