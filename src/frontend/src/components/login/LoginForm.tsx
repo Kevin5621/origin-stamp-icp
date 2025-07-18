@@ -1,9 +1,7 @@
-
 import React, { useState } from "react";
 import type { LoginResult } from "../../../../declarations/backend/backend.did";
 import { backendService } from "../../services/backendService";
 import { useTranslation } from "react-i18next";
-
 
 export const LoginForm: React.FC = () => {
   const { t } = useTranslation();
@@ -11,7 +9,6 @@ export const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<LoginResult | null>(null);
-
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +35,6 @@ export const LoginForm: React.FC = () => {
       setLoading(false);
     }
   };
-
 
   const handleRegister = async () => {
     if (!username || !password) {
@@ -135,7 +131,10 @@ export const LoginForm: React.FC = () => {
           }`}
         >
           <p className="text-sm">
-            <strong>{t("login_status_label")}:</strong> {result.success ? t("login_status_success") : t("login_status_failed")}
+            <strong>{t("login_status_label")}:</strong>{" "}
+            {result.success
+              ? t("login_status_success")
+              : t("login_status_failed")}
           </p>
           <p className="text-sm">
             <strong>{t("login_message_label")}:</strong> {result.message}
