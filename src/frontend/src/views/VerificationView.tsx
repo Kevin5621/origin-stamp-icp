@@ -1,13 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { ViewType } from "./index";
 
-interface VerificationViewProps {
-  onNavigate: (view: ViewType) => void;
-}
-
-const VerificationView: React.FC<VerificationViewProps> = ({
-  onNavigate: _onNavigate,
-}) => {
+const VerificationView: React.FC = () => {
   const { t } = useTranslation();
 
   return (

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { LoginForm } from "./LoginForm";
 import { useAuth } from "../../contexts/AuthContext";
 import { TransformableAvatar } from "../profile/TransformableAvatar";
@@ -10,6 +11,7 @@ interface LoginProps {
 
 export function Login({ className = "" }: LoginProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCustomLogin, setShowCustomLogin] = useState(false);
@@ -39,6 +41,8 @@ export function Login({ className = "" }: LoginProps) {
 
   const handleLoginSuccess = () => {
     handleCloseModal();
+    // Redirect ke dashboard setelah login berhasil
+    navigate("/dashboard");
   };
 
   const handleLogout = () => {

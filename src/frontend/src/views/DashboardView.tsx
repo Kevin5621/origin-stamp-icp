@@ -1,12 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { ViewType } from "./index";
+import { useNavigate } from "react-router-dom";
 
-interface DashboardViewProps {
-  onNavigate: (view: ViewType) => void;
-}
-
-const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
+const DashboardView: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <section className="dashboard-section" aria-labelledby="dashboard-title">
@@ -16,7 +13,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             {t("dashboard_creator_title")}
           </h2>
           <button
-            onClick={() => onNavigate("session")}
+            onClick={() => navigate("/session")}
             className="btn-new-project"
             aria-label={t("new_project_button")}
           >

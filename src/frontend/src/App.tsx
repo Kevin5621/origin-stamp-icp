@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Loader, ErrorDisplay, ThemeToggle, Login } from "./components";
 import LanguageToggle from "./components/ui/LanguageToggle";
 import {
@@ -7,58 +8,71 @@ import {
   SessionView,
   FinalizationView,
   VerificationView,
-  ViewType,
 } from "./views";
+import LoginView from "./views/LoginView";
 import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
   const [loading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-  const [currentView, setCurrentView] = useState<ViewType>("landing");
-
-  const clearError = () => {
-    setError(undefined);
-  };
-
-  const navigateToView = (view: ViewType) => {
-    setCurrentView(view);
-    clearError();
-  };
-
-  const viewProps = { onNavigate: navigateToView };
-  const renderCurrentView = () => {
-    switch (currentView) {
-      case "landing":
-        return <LandingView {...viewProps} />;
-      case "dashboard":
-        return <DashboardView {...viewProps} />;
-      case "session":
-        return <SessionView {...viewProps} />;
-      case "finalization":
-        return <FinalizationView {...viewProps} />;
-      case "verification":
-        return <VerificationView {...viewProps} />;
-      default:
-        return <LandingView {...viewProps} />;
-    }
-  };
+  const [error] = useState<string | undefined>();
 
   return (
     <AuthProvider>
-      <div className="controls-container">
-        <Login />
-        <ThemeToggle />
-        <LanguageToggle />
-      </div>
-      {/* Main view is now the core element, no container wrappers */}
-      <main className="main-content">{renderCurrentView()}</main>
-      {/* Navigation remains functional and styled via semantic CSS */}
-      {currentView !== "landing" && (
-        <AppNavigation currentView={currentView} onNavigate={navigateToView} />
-      )}
-      {loading && !error && <Loader />}
-      {!!error && <ErrorDisplay message={error} />}
+      <BrowserRouter>
+        <div className="controls-container">
+          <Login />
+          <ThemeToggle />
+          <LanguageToggle />
+        </div>
+
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<LandingView />} />
+            <Route path="/login" element={<LoginView />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/session"
+              element={
+                <ProtectedRoute>
+                  <SessionView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/finalization"
+              element={
+                <ProtectedRoute>
+                  <FinalizationView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/verification"
+              element={
+                <ProtectedRoute>
+                  <VerificationView />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+
+        {/* Navigation untuk halaman yang memerlukan autentikasi */}
+        <AppNavigation />
+
+        {loading && !error && <Loader />}
+        {!!error && <ErrorDisplay message={error} />}
+      </BrowserRouter>
     </AuthProvider>
   );
 }

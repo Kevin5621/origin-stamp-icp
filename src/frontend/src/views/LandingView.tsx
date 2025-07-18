@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ViewType } from "./index";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import ThreeModelViewer from "../components/ThreeModelViewer";
 import { TypingEffect } from "../utils";
 import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../hooks/useTheme";
 
-interface LandingViewProps {
-  onNavigate: (view: ViewType) => void;
-}
-
-const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
+const LandingView: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [showButton, setShowButton] = useState(false);
   const [showShadow, setShowShadow] = useState(false);
   const [show3DModel, setShow3DModel] = useState(false);
@@ -73,7 +72,13 @@ const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
               type="button"
               className="btn-wireframe"
               aria-label={t("get_started_button")}
-              onClick={() => onNavigate("dashboard")}
+              onClick={() => {
+                if (isAuthenticated) {
+                  navigate("/dashboard");
+                } else {
+                  navigate("/login");
+                }
+              }}
             >
               {t("get_started_button")}
             </button>

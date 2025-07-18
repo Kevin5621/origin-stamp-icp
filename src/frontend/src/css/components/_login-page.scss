@@ -1,0 +1,101 @@
+/* Login Page Components - ITCSS Components Layer */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+  padding: 2rem;
+}
+
+.login-page-container {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--color-surface);
+  border-radius: 20px;
+  box-shadow:
+    20px 20px 60px var(--color-shadow-dark),
+    -20px -20px 60px var(--color-shadow-light);
+  overflow: hidden;
+}
+
+.login-page-content {
+  padding: 3rem 2rem;
+}
+
+.login-page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.login-page-body {
+  width: 100%;
+}
+
+.login-page-desc {
+  text-align: center;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.login-page-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-page-or {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.login-page-or::before,
+.login-page-or::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.login-page-or::before {
+  left: 0;
+}
+
+.login-page-or::after {
+  right: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .login-page {
+    padding: 1rem;
+  }
+
+  .login-page-container {
+    max-width: 100%;
+  }
+
+  .login-page-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .login-page-title {
+    font-size: 1.75rem;
+  }
+}
