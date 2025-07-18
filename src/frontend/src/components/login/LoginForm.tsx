@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { LoginResult } from "../../../declarations/backend/backend.did";
+import type { LoginResult } from "../../../../declarations/backend/backend.did";
 import { backendService } from "../../services/backendService";
 
 export const LoginForm: React.FC = () => {
