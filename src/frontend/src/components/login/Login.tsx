@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LoginForm } from "./LoginForm";
+import { useAuth } from "../../contexts/AuthContext";
+import { getInitials, getAvatarColor } from "../../utils/userUtils";
 
 interface LoginProps {
   readonly className?: string;
@@ -8,11 +10,18 @@ interface LoginProps {
 
 export function Login({ className = "" }: LoginProps) {
   const { t } = useTranslation();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCustomLogin, setShowCustomLogin] = useState(false);
 
   const handleOpenModal = () => {
-    setIsModalOpen(true);
+    if (isAuthenticated) {
+      // Jika sudah login, tampilkan menu logout atau profile
+      // Untuk sementara, langsung logout
+      logout();
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -26,6 +35,10 @@ export function Login({ className = "" }: LoginProps) {
 
   const handleBackToLoginOptions = () => {
     setShowCustomLogin(false);
+  };
+
+  const handleLoginSuccess = () => {
+    handleCloseModal();
   };
 
   // TODO: Implement login with ICP (Internet Computer Protocol)
@@ -45,6 +58,24 @@ export function Login({ className = "" }: LoginProps) {
     // TODO: Add logic for registering a new user with Google (Gmail)
     handleCloseModal();
   };
+
+  // Render avatar dengan inisial jika sudah login
+  if (isAuthenticated && user) {
+    const initials = getInitials(user.username);
+    const avatarColor = getAvatarColor(user.username);
+
+    return (
+      <button
+        onClick={handleOpenModal}
+        className={`btn-login-circular btn-login-circular--avatar ${className}`.trim()}
+        aria-label={t("logout")}
+        title={t("logout")}
+        style={{ backgroundColor: avatarColor }}
+      >
+        <span className="btn-login-circular__initials">{initials}</span>
+      </button>
+    );
+  }
 
   return (
     <>
@@ -147,7 +178,10 @@ export function Login({ className = "" }: LoginProps) {
                   </div>
                 </>
               ) : (
-                <LoginForm onBack={handleBackToLoginOptions} />
+                <LoginForm
+                  onBack={handleBackToLoginOptions}
+                  onLoginSuccess={handleLoginSuccess}
+                />
               )}
             </main>
           </div>

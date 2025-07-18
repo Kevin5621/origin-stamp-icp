@@ -3,13 +3,19 @@ import type { LoginResult } from "../../../../declarations/backend/backend.did";
 import { backendService } from "../../services/backendService";
 import { useTranslation } from "react-i18next";
 import { Toast } from "../common/Toast";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface LoginFormProps {
   onBack: () => void;
+  onLoginSuccess?: () => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onBack }) => {
+export const LoginForm: React.FC<LoginFormProps> = ({
+  onBack,
+  onLoginSuccess,
+}) => {
   const { t } = useTranslation();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -60,11 +66,20 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onBack }) => {
       setResult(loginResult);
 
       if (loginResult.success) {
+        // Set user ke context autentikasi
+        if (loginResult.username?.[0]) {
+          login(loginResult.username[0]);
+        }
+
         showToast(
           "success",
           t("login_success", { username: loginResult.username[0] }),
         );
-        // Here you can redirect or update app state
+
+        // Panggil callback untuk menutup modal
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        }
       } else {
         showToast("error", t("login_failed", { message: loginResult.message }));
       }

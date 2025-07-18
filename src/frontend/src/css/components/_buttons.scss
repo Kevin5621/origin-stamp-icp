@@ -250,3 +250,32 @@
   width: 1.5rem;
   height: 1.5rem;
 }
+
+/* Avatar dengan inisial untuk user yang sudah login */
+.btn-login-circular--avatar {
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-login-circular--avatar:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.btn-login-circular--avatar:active {
+  transform: scale(0.95);
+}
+
+.btn-login-circular__initials {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  user-select: none;
+}
