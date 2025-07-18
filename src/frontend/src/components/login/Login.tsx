@@ -74,13 +74,6 @@ export function Login({ className = "" }: LoginProps) {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <header className="modal-header">
               <h2 className="text-primary login-title">{t("login_signup")}</h2>
-              <button
-                onClick={handleCloseModal}
-                className="modal-close"
-                aria-label="Close dialog"
-              >
-                &times;
-              </button>
             </header>
             <main className="modal-body">
               {!showCustomLogin ? (
@@ -91,7 +84,7 @@ export function Login({ className = "" }: LoginProps) {
                   <div className="login-options">
                     <button
                       onClick={handleInternetIdentityLogin}
-                      className="btn-neumorphic login-btn"
+                      className="login-btn login-btn--icp"
                     >
                       <img
                         src="/assets/ii-logo.svg"
@@ -102,7 +95,7 @@ export function Login({ className = "" }: LoginProps) {
                     </button>
                     <button
                       onClick={handleGoogleLogin}
-                      className="btn-neumorphic login-btn"
+                      className="login-btn login-btn--google"
                     >
                       <img
                         src="/assets/google-logo.svg"
@@ -114,7 +107,7 @@ export function Login({ className = "" }: LoginProps) {
                     <div className="text-secondary login-or">{t("or")}</div>
                     <button
                       onClick={handleGoogleSignup}
-                      className="btn-neumorphic login-btn"
+                      className="login-btn login-btn--signup"
                     >
                       <img
                         src="/assets/google-logo.svg"
@@ -125,7 +118,7 @@ export function Login({ className = "" }: LoginProps) {
                     </button>
                     <button
                       onClick={handleShowCustomLogin}
-                      className="btn-neumorphic login-btn"
+                      className="login-btn"
                     >
                       <span>Login with Username/Password</span>
                     </button>
