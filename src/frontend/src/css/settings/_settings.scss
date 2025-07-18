@@ -13,7 +13,7 @@
 
   /* Interactive States */
   --color-hover-overlay: rgba(160, 181, 204, 0.1);
-  --color-modal-overlay: rgba(160, 181, 204, 0.8);
+  /* --color-modal-overlay removed: modal overlay now uses blur only, no color */
 
   /* Status Colors */
   --color-error: #c53030;
@@ -49,7 +49,7 @@
 
   /* Dark Theme Interactive States */
   --color-hover-overlay: rgba(30, 41, 59, 0.3);
-  --color-modal-overlay: rgba(15, 23, 42, 0.9);
+  /* --color-modal-overlay removed: modal overlay now uses blur only, no color */
 
   /* Dark Theme Status Colors */
   --color-error: #f87171;

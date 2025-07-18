@@ -1,8 +1,27 @@
-/* Modal utilities */
+.modal-content {
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  border: 1px solid var(--color-primary-text);
+  box-shadow: none;
+  border-radius: 0;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: var(--theme-transition);
+}
+.modal-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
 .modal-overlay {
+  background: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,10 +31,8 @@
 .modal-content {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow:
-    12px 12px 24px var(--color-shadow-dark),
-    -12px -12px 24px var(--color-shadow-light);
-  border-radius: 0.5rem;
+  border: 1px solid var(--color-primary-text);
+  border-radius: 0;
   padding: 1.5rem;
   position: relative;
   z-index: 1001;
@@ -32,30 +49,8 @@
 
 .modal-close {
   background-color: var(--color-surface);
-  color: var(--color-text-primary);
-  box-shadow:
-    6px 6px 12px var(--color-shadow-dark),
-    -6px -6px 12px var(--color-shadow-light);
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-
-.modal-close:hover {
-  opacity: 0.9;
-}
-
-.modal-close:active {
-  box-shadow:
-    inset 3px 3px 6px var(--color-shadow-dark),
-    inset -3px -3px 6px var(--color-shadow-light);
-}
+/* .modal-close removed for wireframe minimalism */
 
 .modal-wrapper {
   position: fixed;
@@ -66,7 +61,9 @@
 .modal-backdrop {
   position: absolute;
   inset: 0;
-  background-color: var(--color-modal-overlay);
+  background: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .modal-dialog {

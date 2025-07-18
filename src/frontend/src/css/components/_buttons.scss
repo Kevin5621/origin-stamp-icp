@@ -19,7 +19,7 @@
 }
 
 .btn-wireframe::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -128,13 +128,13 @@
     font-size: 14px;
     min-height: 40px;
   }
-  
+
   .btn-wireframe--small {
     padding: 6px 12px;
     font-size: 12px;
     min-height: 32px;
   }
-  
+
   .btn-wireframe--large {
     padding: 14px 28px;
     font-size: 15px;
