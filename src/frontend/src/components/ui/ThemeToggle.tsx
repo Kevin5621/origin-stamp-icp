@@ -31,6 +31,13 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
     setIsDark(!isDark);
     document.documentElement.setAttribute("data-theme", newTheme);
     localStorage.setItem("originstamp-theme", newTheme);
+
+    // Dispatch custom event untuk memberitahu komponen lain
+    window.dispatchEvent(
+      new CustomEvent("themeChanged", {
+        detail: { theme: newTheme },
+      }),
+    );
   };
 
   return (
