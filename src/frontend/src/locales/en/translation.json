@@ -53,5 +53,6 @@
   "signup_with_google": "Sign up with Google",
   "login_signup": "Sign In or Sign Up",
   "choose_login_method": "Choose your login method",
-  "or": "or"
+  "or": "or",
+  "get_started_button": "Get Started"
 }

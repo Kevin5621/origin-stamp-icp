@@ -18,10 +18,13 @@
   align-items: center;
 }
 
+// Refactored alignment to flex-start for left alignment of button and title
 .landing-left {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
+  gap: 2rem; /* Jarak antara judul dan button, bisa disesuaikan */
   height: 100%;
 }
 

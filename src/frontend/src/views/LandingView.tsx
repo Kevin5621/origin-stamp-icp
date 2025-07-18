@@ -6,7 +6,7 @@ interface LandingViewProps {
   onNavigate: (view: ViewType) => void;
 }
 
-const LandingView: React.FC<LandingViewProps> = () => {
+const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
   const { t } = useTranslation();
 
   return (
@@ -17,6 +17,17 @@ const LandingView: React.FC<LandingViewProps> = () => {
           <h1 id="welcome-title" className="landing-title">
             {t("welcome_message")}
           </h1>
+          {/* Wireframe Get Started Button is directly below welcome_message */}
+          <div>
+            <button
+              type="button"
+              className="btn-wireframe"
+              aria-label={t("get_started_button")}
+              onClick={() => onNavigate("dashboard")}
+            >
+              {t("get_started_button")}
+            </button>
+          </div>
         </div>
         {/* Right Section: Neumorphic Card with Triangle */}
         <div className="landing-right">
