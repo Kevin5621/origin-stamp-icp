@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { LoginForm } from "./LoginForm";
 
 interface LoginProps {
-  className?: string;
+  readonly className?: string;
 }
 
 export function Login({ className = "" }: LoginProps) {
@@ -48,6 +48,7 @@ export function Login({ className = "" }: LoginProps) {
 
   return (
     <>
+      {/* Circular login button using semantic class and translation */}
       <button
         onClick={handleOpenModal}
         className={`btn-login-circular ${className}`.trim()}
@@ -70,8 +71,24 @@ export function Login({ className = "" }: LoginProps) {
       </button>
 
       {isModalOpen && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          role="dialog"
+          tabIndex={0}
+          onClick={handleCloseModal}
+          onKeyDown={(e) => {
+            if (e.key === "Escape" || e.key === "Enter") handleCloseModal();
+          }}
+        >
+          <div
+            className="modal-content"
+            role="document"
+            tabIndex={-1}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") handleCloseModal();
+            }}
+          >
             <header className="modal-header">
               <h2 className="text-primary login-title">{t("login_signup")}</h2>
             </header>
@@ -120,15 +137,19 @@ export function Login({ className = "" }: LoginProps) {
                       onClick={handleShowCustomLogin}
                       className="login-btn"
                     >
-                      <span>Login with Username/Password</span>
+                      <span>{t("login_with_username_password")}</span>
                     </button>
                   </div>
                 </>
               ) : (
                 <div>
+                  {/* Back to options button using semantic color and translation */}
                   <button
                     onClick={handleBackToOptions}
-                    className="mb-4 flex items-center gap-2 text-blue-600 hover:text-blue-800"
+                    className="login-btn login-btn--back"
+                    type="button"
+                    aria-label={t("back_to_options")}
+                    title={t("back_to_options")}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +157,7 @@ export function Login({ className = "" }: LoginProps) {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="h-4 w-4"
+                      className="login-btn-icon"
                     >
                       <path
                         strokeLinecap="round"
@@ -144,7 +165,7 @@ export function Login({ className = "" }: LoginProps) {
                         d="M15.75 19.5L8.25 12l7.5-7.5"
                       />
                     </svg>
-                    Back to options
+                    <span>{t("back_to_options")}</span>
                   </button>
                   <LoginForm />
                 </div>
