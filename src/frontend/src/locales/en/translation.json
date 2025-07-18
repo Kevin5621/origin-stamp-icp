@@ -74,5 +74,11 @@
   "login_status_label": "Status",
   "login_status_success": "Success",
   "login_status_failed": "Failed",
-  "login_message_label": "Message"
+  "login_message_label": "Message",
+  "logout": "Logout",
+  "open_profile": "Open Profile",
+  "close_profile": "Close Profile",
+  "online": "Online",
+  "username": "Username",
+  "login_time": "Login Time"
 }

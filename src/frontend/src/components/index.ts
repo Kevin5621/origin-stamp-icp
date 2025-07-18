@@ -9,3 +9,4 @@ export * from "./common/Modal";
 export * from "./ui/ThemeToggle";
 export * from "./login/Login";
 export * from "./login/LoginForm";
+export * from "./profile";

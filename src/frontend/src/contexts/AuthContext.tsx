@@ -8,6 +8,7 @@ import React, {
 
 interface User {
   username: string;
+  loginTime: string;
 }
 
 interface AuthContextType {
@@ -40,7 +41,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = (username: string) => {
-    const userData = { username };
+    const userData = {
+      username,
+      loginTime: new Date().toLocaleString(),
+    };
     setUser(userData);
     localStorage.setItem("auth-user", JSON.stringify(userData));
   };
