@@ -60,7 +60,7 @@ const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
             <button
               onClick={() => onNavigate("dashboard")}
-              className="rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
+              className="rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               Get Started
             </button>
@@ -81,15 +81,15 @@ const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
               <div
                 ref={modelViewerRef as any}
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  backgroundColor: '#f0f0f0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#666',
-                  fontSize: '18px',
-                  fontWeight: '500'
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "#f0f0f0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#666",
+                  fontSize: "18px",
+                  fontWeight: "500",
                 }}
               >
                 🎨 3D Model View
@@ -124,7 +124,7 @@ const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
       {/* Animated Background Grid */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <svg
-          className="absolute left-1/2 top-1/2 h-[200%] w-[200%] -translate-x-1/2 -translate-y-1/2 transform"
+          className="absolute top-1/2 left-1/2 h-[200%] w-[200%] -translate-x-1/2 -translate-y-1/2 transform"
           viewBox="0 0 100 100"
           fill="none"
         >
