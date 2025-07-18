@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import type { LoginResult } from "../../../../declarations/backend/backend.did";
 import { backendService } from "../../services/backendService";
 import { useTranslation } from "react-i18next";
-import { Button } from "../common/Button";
 import { Toast } from "../common/Toast";
 
 export const LoginForm: React.FC = () => {
@@ -104,23 +103,20 @@ export const LoginForm: React.FC = () => {
         duration={5000}
       />
 
-      <div className="card-raised">
-        <h2 className="login-title text-primary">
-          {t("login_register_title")}
-        </h2>
+      <div className="login-form-container">
+        <div className="login-form-header">
+          <h2 className="login-form-title">{t("login_register_title")}</h2>
+        </div>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleLogin();
           }}
-          className="login-options"
+          className="login-form-content"
         >
-          <div>
-            <label
-              htmlFor="username"
-              className="text-secondary mb-2 block text-sm font-medium"
-            >
+          <div className="login-form-group">
+            <label htmlFor="username" className="login-form-label">
               {t("login_username_label")}
             </label>
             <input
@@ -128,17 +124,14 @@ export const LoginForm: React.FC = () => {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="input-field"
+              className="login-form-input"
               placeholder={t("login_username_placeholder")}
               disabled={loading}
             />
           </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="text-secondary mb-2 block text-sm font-medium"
-            >
+          <div className="login-form-group">
+            <label htmlFor="password" className="login-form-label">
               {t("login_password_label")}
             </label>
             <input
@@ -146,46 +139,44 @@ export const LoginForm: React.FC = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
+              className="login-form-input"
               placeholder={t("login_password_placeholder")}
               disabled={loading}
             />
           </div>
 
-          <div className="flex gap-4">
-            <Button
+          <div className="login-form-actions">
+            <button
+              type="button"
               onClick={handleLogin}
               disabled={loading}
-              variant="primary"
-              className="flex-1"
+              className="login-form-button login-form-button--secondary"
             >
               {loading ? t("loading") : t("login_button")}
-            </Button>
+            </button>
 
-            <Button
+            <button
+              type="button"
               onClick={handleRegister}
               disabled={loading}
-              variant="secondary"
-              className="flex-1"
+              className="login-form-button login-form-button--secondary"
             >
               {loading ? t("loading") : t("register_button")}
-            </Button>
+            </button>
           </div>
         </form>
 
         {result && (
-          <div className="mt-4 space-y-2">
-            <div className="text-secondary text-sm">
+          <div className="login-form-result">
+            <p>
+              <strong>{t("login_message_label")}:</strong> {result.message}
+            </p>
+            {result.username?.[0] && (
               <p>
-                <strong>{t("login_message_label")}:</strong> {result.message}
+                <strong>{t("login_username_label")}:</strong>{" "}
+                {result.username[0]}
               </p>
-              {result.username?.[0] && (
-                <p>
-                  <strong>{t("login_username_label")}:</strong>{" "}
-                  {result.username[0]}
-                </p>
-              )}
-            </div>
+            )}
           </div>
         )}
       </div>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LoginForm } from "./LoginForm";
-import { Button } from "../common/Button";
 
 interface LoginProps {
   readonly className?: string;
@@ -23,10 +22,6 @@ export function Login({ className = "" }: LoginProps) {
 
   const handleShowCustomLogin = () => {
     setShowCustomLogin(true);
-  };
-
-  const handleBackToOptions = () => {
-    setShowCustomLogin(false);
   };
 
   // TODO: Implement login with ICP (Internet Computer Protocol)
@@ -143,31 +138,7 @@ export function Login({ className = "" }: LoginProps) {
                   </div>
                 </>
               ) : (
-                <div>
-                  {/* Back to options button using semantic color and translation */}
-                  <Button
-                    onClick={handleBackToOptions}
-                    variant="primary"
-                    className="flex-1"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="login-btn-icon"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.75 19.5L8.25 12l7.5-7.5"
-                      />
-                    </svg>
-                    <span>{t("back_to_options")}</span>
-                  </Button>
-                  <LoginForm />
-                </div>
+                <LoginForm />
               )}
             </main>
           </div>
