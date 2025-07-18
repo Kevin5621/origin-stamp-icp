@@ -24,7 +24,7 @@ export function Button({
     const baseClass = "btn-wireframe";
     const variantClass = `btn-wireframe--${variant}`;
     const sizeClass = size !== "medium" ? `btn-wireframe--${size}` : "";
-    
+
     return `${baseClass} ${variantClass} ${sizeClass}`.trim();
   };
 

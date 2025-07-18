@@ -16,7 +16,10 @@ export function ToastExample() {
     message: "",
   });
 
-  const showToast = (type: "success" | "error" | "warning" | "info", message: string) => {
+  const showToast = (
+    type: "success" | "error" | "warning" | "info",
+    message: string,
+  ) => {
     setToast({
       isVisible: true,
       type,
@@ -25,7 +28,7 @@ export function ToastExample() {
   };
 
   const hideToast = () => {
-    setToast(prev => ({ ...prev, isVisible: false }));
+    setToast((prev) => ({ ...prev, isVisible: false }));
   };
 
   return (
@@ -37,19 +40,21 @@ export function ToastExample() {
         onClose={hideToast}
         duration={5000}
       />
-      
+
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Toast Notification Examples</h3>
-        
-        <div className="flex gap-2 flex-wrap">
+
+        <div className="flex flex-wrap gap-2">
           <Button
-            onClick={() => showToast("success", "Operation completed successfully!")}
+            onClick={() =>
+              showToast("success", "Operation completed successfully!")
+            }
             variant="success"
             size="small"
           >
             Success Toast
           </Button>
-          
+
           <Button
             onClick={() => showToast("error", "Something went wrong!")}
             variant="error"
@@ -57,7 +62,7 @@ export function ToastExample() {
           >
             Error Toast
           </Button>
-          
+
           <Button
             onClick={() => showToast("warning", "Please check your input!")}
             variant="warning"
@@ -65,7 +70,7 @@ export function ToastExample() {
           >
             Warning Toast
           </Button>
-          
+
           <Button
             onClick={() => showToast("info", "Here's some information!")}
             variant="info"
@@ -77,4 +82,4 @@ export function ToastExample() {
       </div>
     </>
   );
-} 
+}
