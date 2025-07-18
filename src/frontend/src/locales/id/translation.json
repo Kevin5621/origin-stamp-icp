@@ -74,5 +74,11 @@
   "login_status_label": "Status",
   "login_status_success": "Berhasil",
   "login_status_failed": "Gagal",
-  "login_message_label": "Pesan"
+  "login_message_label": "Pesan",
+  "logout": "Keluar",
+  "open_profile": "Buka Profil",
+  "close_profile": "Tutup Profil",
+  "online": "Daring",
+  "username": "Nama Pengguna",
+  "login_time": "Waktu Masuk"
 }

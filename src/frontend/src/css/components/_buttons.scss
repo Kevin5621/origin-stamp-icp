@@ -1,3 +1,5 @@
+/* Button Components - ITCSS Components Layer */
+
 .btn-wireframe {
   background-color: transparent;
   color: var(--color-on-surface);
@@ -253,23 +255,32 @@
 
 /* Avatar dengan inisial untuk user yang sudah login */
 .btn-login-circular--avatar {
-  color: white;
+  color: var(--color-on-surface);
   font-weight: 600;
   font-size: 0.875rem;
   letter-spacing: 0.025em;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--color-surface);
+  box-shadow:
+    6px 6px 12px var(--color-shadow-dark),
+    -6px -6px 12px var(--color-shadow-light);
 }
 
 .btn-login-circular--avatar:hover {
   transform: scale(1.05);
-  filter: brightness(1.1);
+  box-shadow:
+    8px 8px 16px var(--color-shadow-dark),
+    -8px -8px 16px var(--color-shadow-light);
 }
 
 .btn-login-circular--avatar:active {
   transform: scale(0.95);
+  box-shadow:
+    inset 3px 3px 6px var(--color-shadow-dark),
+    inset -3px -3px 6px var(--color-shadow-light);
 }
 
 .btn-login-circular__initials {

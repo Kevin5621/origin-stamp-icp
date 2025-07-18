@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LoginForm } from "./LoginForm";
 import { useAuth } from "../../contexts/AuthContext";
-import { getInitials, getAvatarColor } from "../../utils/userUtils";
+import { TransformableAvatar } from "../profile/TransformableAvatar";
 
 interface LoginProps {
   readonly className?: string;
@@ -13,12 +13,12 @@ export function Login({ className = "" }: LoginProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCustomLogin, setShowCustomLogin] = useState(false);
+  const [isProfileExpanded, setIsProfileExpanded] = useState(false);
 
   const handleOpenModal = () => {
     if (isAuthenticated) {
-      // Jika sudah login, tampilkan menu logout atau profile
-      // Untuk sementara, langsung logout
-      logout();
+      // Toggle profile expansion
+      setIsProfileExpanded(!isProfileExpanded);
     } else {
       setIsModalOpen(true);
     }
@@ -41,6 +41,15 @@ export function Login({ className = "" }: LoginProps) {
     handleCloseModal();
   };
 
+  const handleLogout = () => {
+    logout();
+    setIsProfileExpanded(false);
+  };
+
+  const handleProfileToggle = () => {
+    setIsProfileExpanded(!isProfileExpanded);
+  };
+
   // TODO: Implement login with ICP (Internet Computer Protocol)
   const handleInternetIdentityLogin = () => {
     // TODO: Add logic for authenticating with Internet Identity (ICP)
@@ -59,21 +68,26 @@ export function Login({ className = "" }: LoginProps) {
     handleCloseModal();
   };
 
-  // Render avatar dengan inisial jika sudah login
+  // Render transformable avatar jika sudah login
   if (isAuthenticated && user) {
-    const initials = getInitials(user.username);
-    const avatarColor = getAvatarColor(user.username);
-
     return (
-      <button
-        onClick={handleOpenModal}
-        className={`btn-login-circular btn-login-circular--avatar ${className}`.trim()}
-        aria-label={t("logout")}
-        title={t("logout")}
-        style={{ backgroundColor: avatarColor }}
-      >
-        <span className="btn-login-circular__initials">{initials}</span>
-      </button>
+      <>
+        <TransformableAvatar
+          user={user}
+          isExpanded={isProfileExpanded}
+          onToggle={handleProfileToggle}
+          onLogout={handleLogout}
+          className={className}
+        />
+
+        {/* Overlay untuk menutup profile card saat klik di luar */}
+        {isProfileExpanded && (
+          <div
+            className="profile-overlay"
+            onClick={() => setIsProfileExpanded(false)}
+          />
+        )}
+      </>
     );
   }
 
