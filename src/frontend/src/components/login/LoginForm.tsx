@@ -4,7 +4,11 @@ import { backendService } from "../../services/backendService";
 import { useTranslation } from "react-i18next";
 import { Toast } from "../common/Toast";
 
-export const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  onBack: () => void;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({ onBack }) => {
   const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +37,15 @@ export const LoginForm: React.FC = () => {
 
   const hideToast = () => {
     setToast((prev) => ({ ...prev, isVisible: false }));
+  };
+
+  const handleBack = (e?: React.MouseEvent) => {
+    // Mencegah event bubbling
+    if (e) {
+      e.stopPropagation();
+    }
+    // Kembali ke component Login
+    onBack();
   };
 
   const handleLogin = async () => {
@@ -104,6 +117,27 @@ export const LoginForm: React.FC = () => {
       />
 
       <div className="login-form-container">
+        {/* Tombol kembali di pojok kanan atas */}
+        <button
+          onClick={handleBack}
+          className="login-form-back-button"
+          aria-label="Kembali"
+          title="Kembali"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+        </button>
+
         <div className="login-form-header">
           <h2 className="login-form-title">{t("login_register_title")}</h2>
         </div>
