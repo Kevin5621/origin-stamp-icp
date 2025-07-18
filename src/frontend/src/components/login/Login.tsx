@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LoginForm } from "./LoginForm";
+import { Button } from "../common/Button";
 
 interface LoginProps {
   readonly className?: string;
@@ -144,12 +145,10 @@ export function Login({ className = "" }: LoginProps) {
               ) : (
                 <div>
                   {/* Back to options button using semantic color and translation */}
-                  <button
+                  <Button
                     onClick={handleBackToOptions}
-                    className="login-btn login-btn--back"
-                    type="button"
-                    aria-label={t("back_to_options")}
-                    title={t("back_to_options")}
+                    variant="primary"
+                    className="flex-1"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +165,7 @@ export function Login({ className = "" }: LoginProps) {
                       />
                     </svg>
                     <span>{t("back_to_options")}</span>
-                  </button>
+                  </Button>
                   <LoginForm />
                 </div>
               )}

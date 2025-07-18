@@ -5,11 +5,12 @@ interface ButtonProps {
   disabled?: boolean;
   className?: string;
   children: ReactNode;
-  variant?: "primary" | "secondary" | "cta";
+  variant?: "primary" | "secondary" | "success" | "error" | "warning" | "info";
+  size?: "small" | "medium" | "large";
 }
 
 /**
- * Reusable button component with semantic Neumorphic classes
+ * Reusable button component with wireframe design
  */
 export function Button({
   onClick,
@@ -17,17 +18,14 @@ export function Button({
   className = "",
   children,
   variant = "primary",
+  size = "medium",
 }: ButtonProps) {
   const getButtonClass = () => {
-    switch (variant) {
-      case "cta":
-        return "btn-cta";
-      case "secondary":
-        return "btn-secondary";
-      case "primary":
-      default:
-        return "btn-primary";
-    }
+    const baseClass = "btn-wireframe";
+    const variantClass = `btn-wireframe--${variant}`;
+    const sizeClass = size !== "medium" ? `btn-wireframe--${size}` : "";
+    
+    return `${baseClass} ${variantClass} ${sizeClass}`.trim();
   };
 
   return (
