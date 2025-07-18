@@ -59,7 +59,10 @@
   border: 1px solid var(--color-primary-text);
   border-radius: 0;
   box-shadow: none;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
   cursor: pointer;
 
   &:hover {
