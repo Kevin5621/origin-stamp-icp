@@ -24,6 +24,10 @@ export function Login({ className = "" }: LoginProps) {
     setShowCustomLogin(true);
   };
 
+  const handleBackToLoginOptions = () => {
+    setShowCustomLogin(false);
+  };
+
   // TODO: Implement login with ICP (Internet Computer Protocol)
   const handleInternetIdentityLogin = () => {
     // TODO: Add logic for authenticating with Internet Identity (ICP)
@@ -85,9 +89,14 @@ export function Login({ className = "" }: LoginProps) {
               if (e.key === "Escape") handleCloseModal();
             }}
           >
-            <header className="modal-header">
-              <h2 className="text-primary login-title">{t("login_signup")}</h2>
-            </header>
+            {/* Header hanya muncul saat tidak di LoginForm */}
+            {!showCustomLogin && (
+              <header className="modal-header">
+                <h2 className="text-primary login-title">
+                  {t("login_signup")}
+                </h2>
+              </header>
+            )}
             <main className="modal-body">
               {!showCustomLogin ? (
                 <>
@@ -138,7 +147,7 @@ export function Login({ className = "" }: LoginProps) {
                   </div>
                 </>
               ) : (
-                <LoginForm />
+                <LoginForm onBack={handleBackToLoginOptions} />
               )}
             </main>
           </div>

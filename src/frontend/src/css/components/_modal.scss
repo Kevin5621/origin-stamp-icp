@@ -16,6 +16,16 @@
   text-align: center;
   margin-bottom: 1.5rem;
 }
+
+/* Modal body tanpa header */
+.modal-content:has(.modal-body:only-child) {
+  padding-top: 1.5rem;
+}
+
+.modal-body {
+  width: 100%;
+}
+
 .modal-overlay {
   background: transparent;
   backdrop-filter: blur(8px);
