@@ -10,6 +10,8 @@ import {
   ViewType,
 } from "./views";
 import { AppNavigation } from "./components/navigation/AppNavigation";
+import { AuthProvider } from "./contexts/AuthContext";
+
 function App() {
   const [loading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -43,7 +45,7 @@ function App() {
   };
 
   return (
-    <>
+    <AuthProvider>
       <div className="controls-container">
         <Login />
         <ThemeToggle />
@@ -57,7 +59,7 @@ function App() {
       )}
       {loading && !error && <Loader />}
       {!!error && <ErrorDisplay message={error} />}
-    </>
+    </AuthProvider>
   );
 }
 
