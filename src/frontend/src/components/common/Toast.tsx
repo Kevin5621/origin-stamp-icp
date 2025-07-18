@@ -11,12 +11,12 @@ interface ToastProps {
 /**
  * Toast notification component that appears on the right side
  */
-export function Toast({ 
-  type, 
-  message, 
-  isVisible, 
-  onClose, 
-  duration = 5000 
+export function Toast({
+  type,
+  message,
+  isVisible,
+  onClose,
+  duration = 5000,
 }: ToastProps) {
   useEffect(() => {
     if (isVisible && duration > 0) {
@@ -34,8 +34,8 @@ export function Toast({
     <div className={`toast toast--${type}`}>
       <div className="toast-content">
         <span className="toast-message">{message}</span>
-        <button 
-          className="toast-close" 
+        <button
+          className="toast-close"
           onClick={onClose}
           aria-label="Close notification"
         >
@@ -44,4 +44,4 @@ export function Toast({
       </div>
     </div>
   );
-} 
+}

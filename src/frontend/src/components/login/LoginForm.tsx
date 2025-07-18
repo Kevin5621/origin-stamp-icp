@@ -21,7 +21,10 @@ export const LoginForm: React.FC = () => {
     message: "",
   });
 
-  const showToast = (type: "success" | "error" | "warning" | "info", message: string) => {
+  const showToast = (
+    type: "success" | "error" | "warning" | "info",
+    message: string,
+  ) => {
     setToast({
       isVisible: true,
       type,
@@ -30,7 +33,7 @@ export const LoginForm: React.FC = () => {
   };
 
   const hideToast = () => {
-    setToast(prev => ({ ...prev, isVisible: false }));
+    setToast((prev) => ({ ...prev, isVisible: false }));
   };
 
   const handleLogin = async () => {
@@ -45,7 +48,10 @@ export const LoginForm: React.FC = () => {
       setResult(loginResult);
 
       if (loginResult.success) {
-        showToast("success", t("login_success", { username: loginResult.username[0] }));
+        showToast(
+          "success",
+          t("login_success", { username: loginResult.username[0] }),
+        );
         // Here you can redirect or update app state
       } else {
         showToast("error", t("login_failed", { message: loginResult.message }));
@@ -75,7 +81,10 @@ export const LoginForm: React.FC = () => {
       if (registerResult.success) {
         showToast("success", t("register_success"));
       } else {
-        showToast("error", t("register_failed", { message: registerResult.message }));
+        showToast(
+          "error",
+          t("register_failed", { message: registerResult.message }),
+        );
       }
     } catch (error) {
       console.error("Registration error:", error);
@@ -94,74 +103,87 @@ export const LoginForm: React.FC = () => {
         onClose={hideToast}
         duration={5000}
       />
-      
+
       <div className="card-raised">
-        <h2 className="login-title text-primary">{t("login_register_title")}</h2>
+        <h2 className="login-title text-primary">
+          {t("login_register_title")}
+        </h2>
 
-        <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="login-options">
-        <div>
-          <label
-            htmlFor="username"
-            className="text-secondary mb-2 block text-sm font-medium"
-          >
-            {t("login_username_label")}
-          </label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="input-field"
-            placeholder={t("login_username_placeholder")}
-            disabled={loading}
-          />
-        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+          className="login-options"
+        >
+          <div>
+            <label
+              htmlFor="username"
+              className="text-secondary mb-2 block text-sm font-medium"
+            >
+              {t("login_username_label")}
+            </label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="input-field"
+              placeholder={t("login_username_placeholder")}
+              disabled={loading}
+            />
+          </div>
 
-        <div>
-          <label
-            htmlFor="password"
-            className="text-secondary mb-2 block text-sm font-medium"
-          >
-            {t("login_password_label")}
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input-field"
-            placeholder={t("login_password_placeholder")}
-            disabled={loading}
-          />
-        </div>
+          <div>
+            <label
+              htmlFor="password"
+              className="text-secondary mb-2 block text-sm font-medium"
+            >
+              {t("login_password_label")}
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input-field"
+              placeholder={t("login_password_placeholder")}
+              disabled={loading}
+            />
+          </div>
 
-        <div className="flex gap-4">
-          <Button
-            onClick={handleLogin}
-            disabled={loading}
-            variant="primary"
-            className="flex-1"
-          >
-            {loading ? t("loading") : t("login_button")}
-          </Button>
+          <div className="flex gap-4">
+            <Button
+              onClick={handleLogin}
+              disabled={loading}
+              variant="primary"
+              className="flex-1"
+            >
+              {loading ? t("loading") : t("login_button")}
+            </Button>
 
-          <Button
-            onClick={handleRegister}
-            disabled={loading}
-            variant="secondary"
-            className="flex-1"
-          >
-            {loading ? t("loading") : t("register_button")}
-          </Button>
-        </div>
-      </form>
+            <Button
+              onClick={handleRegister}
+              disabled={loading}
+              variant="secondary"
+              className="flex-1"
+            >
+              {loading ? t("loading") : t("register_button")}
+            </Button>
+          </div>
+        </form>
 
-              {result && (
+        {result && (
           <div className="mt-4 space-y-2">
-            <div className="text-sm text-secondary">
-              <p><strong>{t("login_message_label")}:</strong> {result.message}</p>
+            <div className="text-secondary text-sm">
+              <p>
+                <strong>{t("login_message_label")}:</strong> {result.message}
+              </p>
               {result.username?.[0] && (
-                <p><strong>{t("login_username_label")}:</strong> {result.username[0]}</p>
+                <p>
+                  <strong>{t("login_username_label")}:</strong>{" "}
+                  {result.username[0]}
+                </p>
               )}
             </div>
           </div>
