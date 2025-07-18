@@ -1,12 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { ViewType } from "./index";
+import { useNavigate } from "react-router-dom";
 
-interface FinalizationViewProps {
-  onNavigate: (view: ViewType) => void;
-}
-
-const FinalizationView: React.FC<FinalizationViewProps> = ({ onNavigate }) => {
+const FinalizationView: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <section
@@ -76,7 +73,7 @@ const FinalizationView: React.FC<FinalizationViewProps> = ({ onNavigate }) => {
         <aside className="finalization-actions">
           <p className="confirmation-text">{t("confirm_finalization_text")}</p>
           <button
-            onClick={() => onNavigate("verification")}
+            onClick={() => navigate("/verification")}
             className="btn-publish"
             aria-label={t("finalize_and_publish_button")}
           >

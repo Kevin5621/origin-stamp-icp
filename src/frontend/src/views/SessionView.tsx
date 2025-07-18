@@ -1,12 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { ViewType } from "./index";
+import { useNavigate } from "react-router-dom";
 
-interface SessionViewProps {
-  onNavigate: (view: ViewType) => void;
-}
-
-const SessionView: React.FC<SessionViewProps> = ({ onNavigate }) => {
+const SessionView: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <section className="session-section" aria-labelledby="session-title">
@@ -51,7 +48,7 @@ const SessionView: React.FC<SessionViewProps> = ({ onNavigate }) => {
 
         <aside className="session-controls">
           <button
-            onClick={() => onNavigate("finalization")}
+            onClick={() => navigate("/finalization")}
             className="btn-finalize"
             aria-label={t("finalize_project_button")}
           >

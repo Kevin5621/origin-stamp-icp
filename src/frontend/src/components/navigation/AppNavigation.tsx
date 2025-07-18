@@ -1,28 +1,27 @@
-import { ViewType } from "../../views";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useLocation } from "react-router-dom";
 
-export interface AppNavigationProps {
-  readonly currentView: ViewType;
-  readonly onNavigate: (view: ViewType) => void;
-}
 /**
  * Navigation bar for switching between views
  */
-export function AppNavigation({ currentView, onNavigate }: AppNavigationProps) {
+export function AppNavigation() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentView = location.pathname;
   return (
     <nav className="app-navigation" aria-label="Navigasi utama">
       <div className="nav-container">
         <button
-          onClick={() => onNavigate("dashboard")}
-          className={`nav-button ${currentView === "dashboard" ? "active" : ""}`}
-          aria-current={currentView === "dashboard" ? "page" : undefined}
+          onClick={() => navigate("/dashboard")}
+          className={`nav-button ${currentView === "/dashboard" ? "active" : ""}`}
+          aria-current={currentView === "/dashboard" ? "page" : undefined}
         >
           {/* Dashboard icon can be added here */}
           <span>{t("dashboard_nav")}</span>
         </button>
         <button
-          onClick={() => onNavigate("landing")}
+          onClick={() => navigate("/")}
           className="nav-button"
           aria-label={t("home_nav")}
         >
