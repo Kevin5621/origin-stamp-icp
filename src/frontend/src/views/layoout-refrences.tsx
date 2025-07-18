@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import { useEffect, useRef } from "react";
 
 interface LayoutRefrencesProps {
@@ -6,7 +5,6 @@ interface LayoutRefrencesProps {
 }
 
 const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
-  const { t } = useTranslation();
   const modelViewerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -19,12 +17,23 @@ const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
       document.head.appendChild(script);
     }
 
-    // Add Google Fonts
+    // Load Google Fonts
     if (!document.querySelector('link[href*="Raleway"]')) {
       const link = document.createElement("link");
-      link.href =
+      link.rel = "preconnect";
+      link.href = "https://fonts.googleapis.com";
+      document.head.appendChild(link);
+
+      const link2 = document.createElement("link");
+      link2.rel = "preconnect";
+      link2.href = "https://fonts.gstatic.com";
+      link2.crossOrigin = "anonymous";
+      document.head.appendChild(link2);
+
+      const link3 = document.createElement("link");
+      link3.rel = "stylesheet";
+      link3.href =
         "https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap";
-      link.rel = "stylesheet";
       document.head.appendChild(link);
     }
   }, []);
@@ -36,43 +45,28 @@ const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
         <div className="space-y-8 text-center lg:text-left">
           <div className="space-y-4">
             <h1 className="text-6xl font-light tracking-tight text-gray-900 lg:text-7xl">
-              Origin
+              Prove
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Authenticity
+              </span>
             </h1>
-            <h2 className="text-6xl font-semibold tracking-tight text-gray-900 lg:text-7xl">
-              Stamp
-            </h2>
+            <p className="text-xl text-gray-600 lg:text-2xl">
+              Secure your original work on the blockchain with immutable proof
+              of creation
+            </p>
           </div>
 
-          <p className="mx-auto max-w-xl text-xl leading-relaxed font-light text-gray-600 lg:mx-0 lg:text-2xl">
-            Authentic verification through blockchain technology
-          </p>
-
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
             <button
               onClick={() => onNavigate("dashboard")}
-              className="group relative transform rounded-full bg-gray-900 px-8 py-4 text-lg font-medium text-white transition-all duration-300 hover:-translate-y-1 hover:bg-gray-800 hover:shadow-lg"
+              className="rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
             >
-              <span className="flex items-center gap-3">
-                Get Started
-                <svg
-                  className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
-              </span>
+              Get Started
             </button>
-
             <button
               onClick={() => onNavigate("verification")}
-              className="mx-auto block text-lg font-medium text-gray-600 transition-colors duration-300 hover:text-gray-900 lg:mx-0"
+              className="rounded-2xl border-2 border-gray-300 px-8 py-4 text-lg font-semibold text-gray-700 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50"
             >
               Learn More
             </button>
@@ -84,21 +78,22 @@ const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
           <div className="relative">
             {/* 3D Model Container */}
             <div className="h-96 w-96 overflow-hidden rounded-3xl bg-white shadow-xl lg:h-[500px] lg:w-[500px]">
-              <model-viewer
-                ref={modelViewerRef}
-                src="a/home/kevin/Documents/IC-Vibe-Coding-Template-Rust/src/frontend/assets/3d/woman-statue.glb"
-                alt="3D Woman Statue"
-                auto-rotate
-                camera-controls
-                environment-image="neutral"
-                shadow-intensity="1"
-                className="h-full w-full"
+              <div
+                ref={modelViewerRef as any}
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "transparent",
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '#f0f0f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#666',
+                  fontSize: '18px',
+                  fontWeight: '500'
                 }}
-              />
+              >
+                🎨 3D Model View
+              </div>
             </div>
 
             {/* Decorative Elements */}
@@ -126,12 +121,12 @@ const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Background Pattern */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
+      {/* Animated Background Grid */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <svg
-          className="absolute top-0 left-0 h-full w-full"
+          className="absolute left-1/2 top-1/2 h-[200%] w-[200%] -translate-x-1/2 -translate-y-1/2 transform"
           viewBox="0 0 100 100"
-          preserveAspectRatio="none"
+          fill="none"
         >
           <defs>
             <pattern
@@ -143,46 +138,15 @@ const LayoutRefrences: React.FC<LayoutRefrencesProps> = ({ onNavigate }) => {
               <path
                 d="M 10 0 L 0 0 0 10"
                 fill="none"
-                stroke="#f1f5f9"
+                stroke="currentColor"
                 strokeWidth="0.5"
+                className="text-gray-200"
               />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
         </svg>
       </div>
-
-      <style jsx>{`
-        @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap");
-
-        * {
-          font-family: "Raleway", sans-serif;
-        }
-
-        model-viewer {
-          --poster-color: transparent;
-          --progress-bar-color: #4f46e5;
-          --progress-bar-height: 2px;
-        }
-
-        model-viewer::part(default-progress-bar) {
-          display: none;
-        }
-
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };
