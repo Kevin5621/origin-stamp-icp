@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 
 /**
  * FloatingHeader - Komponen header floating yang dapat disembunyikan/muncul berdasarkan scroll
- * 
+ *
  * Fitur:
  * - Auto-hide saat scroll ke bawah
  * - Auto-show saat scroll ke atas atau di posisi atas
@@ -11,13 +11,13 @@ import React, { useState, useEffect, useCallback } from "react";
  * - Reusable dan customizable
  * - Tidak menutupi main-content
  * - Profile dropdown tidak mempengaruhi button lain
- * 
+ *
  * Props:
  * @param children - Konten yang akan ditampilkan dalam header
  * @param className - Class tambahan untuk styling
  * @param threshold - Jarak scroll minimum sebelum header disembunyikan (default: 100px)
  * @param showOnTop - Posisi header di atas atau bawah (default: true = atas)
- * 
+ *
  * Contoh penggunaan:
  * ```tsx
  * // Basic usage
@@ -26,10 +26,10 @@ import React, { useState, useEffect, useCallback } from "react";
  *   <ThemeToggle />
  *   <LanguageToggle />
  * </FloatingHeader>
- * 
+ *
  * // Custom threshold dan styling
- * <FloatingHeader 
- *   threshold={150} 
+ * <FloatingHeader
+ *   threshold={150}
  *   className="custom-header"
  *   showOnTop={false}
  * >
@@ -37,7 +37,7 @@ import React, { useState, useEffect, useCallback } from "react";
  *   <Button>Action 2</Button>
  * </FloatingHeader>
  * ```
- * 
+ *
  * CSS Classes yang tersedia:
  * - .floating-header - Container utama
  * - .floating-header--visible - State saat header terlihat
@@ -63,16 +63,16 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
 
   const handleScroll = useCallback(() => {
     const currentScrollY = window.scrollY;
-    
+
     // Jika scroll ke atas atau di posisi atas, tampilkan header
     if (currentScrollY <= 0 || currentScrollY < lastScrollY) {
       setIsVisible(true);
-    } 
+    }
     // Jika scroll ke bawah lebih dari threshold, sembunyikan header
     else if (currentScrollY > lastScrollY && currentScrollY > threshold) {
       setIsVisible(false);
     }
-    
+
     setLastScrollY(currentScrollY);
   }, [lastScrollY, threshold]);
 
@@ -91,21 +91,19 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [handleScroll]);
 
   return (
-    <header 
-      className={`floating-header ${isVisible ? 'floating-header--visible' : 'floating-header--hidden'} ${className}`}
-      style={{ 
-        top: showOnTop ? '0' : 'auto',
-        bottom: showOnTop ? 'auto' : '0'
+    <header
+      className={`floating-header ${isVisible ? "floating-header--visible" : "floating-header--hidden"} ${className}`}
+      style={{
+        top: showOnTop ? "0" : "auto",
+        bottom: showOnTop ? "auto" : "0",
       }}
     >
-      <div className="floating-header-content">
-        {children}
-      </div>
+      <div className="floating-header-content">{children}</div>
     </header>
   );
 };

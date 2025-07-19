@@ -42,7 +42,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         </svg>
         <input
           type="text"
-          className="search-input"
+          className="search-input wireframe-input"
           placeholder={t("search_projects_placeholder")}
           value={searchQuery}
           onChange={handleSearchChange}
@@ -53,7 +53,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
       <div className="filter-controls">
         {/* Sort Dropdown */}
         <select
-          className="sort-select"
+          className="sort-select wireframe-select"
           onChange={handleSortChange}
           defaultValue="newest"
         >
@@ -64,9 +64,9 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         </select>
 
         {/* View Toggle */}
-        <div className="view-toggle">
+        <div className="view-toggle wireframe-toggle">
           <button
-            className={`view-btn ${currentView === "list" ? "active" : ""}`}
+            className={`toggle-btn ${currentView === "list" ? "active" : ""}`}
             onClick={() => onViewChange("list")}
             aria-label={t("list_view")}
           >

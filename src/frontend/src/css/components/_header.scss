@@ -114,16 +114,16 @@
     background-color: rgba(var(--color-surface-rgb), 0.1);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(var(--color-border-rgb, 209, 213, 219), 0.2);
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 4px 6px -1px var(--color-shadow-overlay),
+      0 2px 4px -1px var(--color-shadow-overlay);
 
     &:hover {
       background-color: rgba(var(--color-surface-rgb), 0.15);
       border-color: rgba(var(--color-border-rgb, 209, 213, 219), 0.3);
-      box-shadow: 
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      box-shadow:
+        0 10px 15px -3px var(--color-shadow-overlay),
+        0 4px 6px -2px var(--color-shadow-overlay);
     }
   }
 }
@@ -158,7 +158,7 @@
   .floating-header {
     padding: 1.25rem;
   }
-  
+
   .main-content {
     padding-top: 5.5rem;
   }
@@ -168,11 +168,11 @@
   .floating-header {
     padding: 1rem;
   }
-  
+
   .floating-header-content {
     gap: 0.5rem;
   }
-  
+
   .main-content {
     padding-top: 5rem;
   }
@@ -182,11 +182,11 @@
   .floating-header {
     padding: 1rem;
   }
-  
+
   .floating-header-content {
     gap: 0.5rem;
   }
-  
+
   .main-content {
     padding-top: 4.5rem;
   }
@@ -196,7 +196,7 @@
   .floating-header {
     padding: 0.75rem;
   }
-  
+
   .main-content {
     padding-top: 4rem;
   }
