@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import { LoginForm } from "../components/login/LoginForm";
+import { useAuth } from "../../contexts/AuthContext";
+import { LoginForm } from "../../components/login/LoginForm";
 import { useTranslation } from "react-i18next";
 
-const LoginView: React.FC = () => {
+/**
+ * Login Page - Halaman login
+ * Tidak memerlukan autentikasi
+ */
+const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
@@ -112,4 +116,4 @@ const LoginView: React.FC = () => {
   );
 };
 
-export default LoginView;
+export default LoginPage;

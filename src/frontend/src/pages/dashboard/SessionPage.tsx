@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const SessionView: React.FC = () => {
+/**
+ * Session Page - Halaman session recording
+ * Memerlukan autentikasi
+ */
+const SessionPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -73,4 +77,4 @@ const SessionView: React.FC = () => {
   );
 };
 
-export default SessionView;
+export default SessionPage;
