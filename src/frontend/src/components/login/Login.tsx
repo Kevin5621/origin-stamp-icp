@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LoginForm } from "./LoginForm";
@@ -16,6 +16,41 @@ export function Login({ className = "" }: LoginProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCustomLogin, setShowCustomLogin] = useState(false);
   const [isProfileExpanded, setIsProfileExpanded] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  // Handle click outside profile
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileExpanded(false);
+      }
+    };
+
+    if (isProfileExpanded) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isProfileExpanded]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsProfileExpanded(false);
+      }
+    };
+
+    if (isProfileExpanded) {
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isProfileExpanded]);
 
   const handleOpenModal = () => {
     if (isAuthenticated) {
@@ -75,7 +110,7 @@ export function Login({ className = "" }: LoginProps) {
   // Render transformable avatar jika sudah login
   if (isAuthenticated && user) {
     return (
-      <>
+      <div ref={profileRef} className="profile-container">
         <TransformableAvatar
           user={user}
           isExpanded={isProfileExpanded}
@@ -83,15 +118,7 @@ export function Login({ className = "" }: LoginProps) {
           onLogout={handleLogout}
           className={className}
         />
-
-        {/* Overlay untuk menutup profile card saat klik di luar */}
-        {isProfileExpanded && (
-          <div
-            className="profile-overlay"
-            onClick={() => setIsProfileExpanded(false)}
-          />
-        )}
-      </>
+      </div>
     );
   }
 
