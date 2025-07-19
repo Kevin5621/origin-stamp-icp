@@ -1,50 +1,88 @@
-# 🧪🔥 Ultimate IC Vibe Coding Template
+# OriginStamp: Verifying Creation, Elevating Value
 
-This template was built for the **IC Vibe Coding Bootcamp (Rust Edition)** and it's meant to be used in Advance Challenge or in a future Hackathon.
+> Building the foundational trust layer for the new creative economy. As generative AI blurs the line between human and machine, OriginStamp provides a "Proof-of-Process" protocol, allowing creators to generate unforgeable on-chain histories for their work.
 
-## Welcome! 👋
+## 🎯 Project Overview
 
-This repository offers a high-quality, production-ready template to jumpstart your Internet Computer (ICP) development.
+OriginStamp is a revolutionary decentralized protocol that addresses the fundamental crisis of trust in the digital creative economy. In an age where AI-generated content blurs the line between human and machine creation, OriginStamp provides a "Proof-of-Process" protocol that allows creators to generate unforgeable, on-chain histories for their work.
 
-It includes:
+## 🚨 The Problem: The Digital Authenticity Crisis
+
+In the age of advanced generative AI, the digital world faces a fundamental crisis of trust:
+
+- **Indistinguishable Content**: It's becoming increasingly difficult to distinguish authentic, human-created work from AI-generated content
+- **Devalued Human Creativity**: The flood of AI content devalues the skill, time, and creativity of human artists, writers, and developers
+- **Provenance Issues**: Significant challenges for copyright, digital commerce, and intellectual property protection
+- **Lack of Standards**: No reliable standard for verifying the true origin and effort behind digital assets
+
+## 💡 Our Solution: A Paradigm Shift
+
+OriginStamp is **not** an AI detection tool. Instead, we offer a more fundamental and proactive solution: a decentralized protocol for **Proof of Human Process**.
+
+We provide creators with tools to generate an unforgeable, on-chain certificate of origin for any digital or physical work. This certificate doesn't just point to the final file; it contains the entire, immutable history of its creation process.
+
+## 🔧 How It Works: The Three Pillars of Trust
+
+### 1. Verified Identity & Session Initiation
+
+A creator begins by authenticating using **Internet Identity**, linking their secure, hardware-based identity to a new project. They initiate a "Creation Session" within the OriginStamp dApp, which creates a dedicated, secure on-chain log for their work.
+
+### 2. Immutable Process Logging
+
+Through a simple plugin in their native creative software (e.g., Photoshop, VS Code, Ableton), key creative actions are automatically and periodically recorded to the project's on-chain log. These records can include metadata like "New layer created," "Brush tool used," periodic file hashes, or code commit hashes, each with an immutable timestamp.
+
+### 3. The Certificate NFT
+
+Upon completion, the creator finalizes the session. This action mints a final **Certificate NFT**. This NFT is a container holding the final asset's hash and, most importantly, a cryptographic link to the entire, unchangeable on-chain log of its creation process.
+
+## 🔍 The Verification Experience
+
+Anyone can verify an OriginStamp asset. By scanning a QR code or visiting a public verification page, a user is presented with a clear, interactive dashboard. This dashboard displays the full creation timeline, allowing a potential buyer or collector to see the entire history and compare the on-chain process data with the final work, providing unparalleled confidence in its authenticity.
+
+## 🌐 Why Internet Computer (ICP)?
+
+This project is uniquely suited for the Internet Computer ecosystem for several critical reasons:
+
+- **Reverse Gas Model**: This is essential. It allows the platform to cover the small, frequent transaction costs of logging, providing a frictionless experience for creators. They can focus on creating, not on paying for every recorded action.
+- **On-Chain Data Storage**: ICP's architecture allows for the efficient and affordable storage of the extensive log data directly on-chain, ensuring the provenance record is truly permanent and decentralized.
+- **Internet Identity**: Provides a built-in, secure, and user-friendly authentication system without the need for traditional seed phrases, which is crucial for linking a work to a real identity.
+- **Performance**: ICP's speed and fast finality are necessary to handle the real-time logging of creative actions without interrupting the creator's flow.
+
+## 🎯 Hackathon Goal (MVP)
+
+Our goal for the WCHL 2025 hackathon is to build a functional Minimum Viable Product that includes:
+
+- The core canisters for project initiation and immutable logging.
+- A proof-of-concept plugin for a web-based text editor.
+- The public-facing verification dashboard to display the on-chain process history.
+
+## 🚀 Technology Stack
+
+This project is built with:
 
 - 🦀 **Rust-based Canister** backend
-- ⚛️ **React + Tailwind + Typescript** frontend
-- 🤖 **IC LLM Canister** integration for Agentic workflows
+- ⚛️ **React + TypeScript** frontend with modular architecture
+- 🎨 **Neumorphic Design System** for modern UI/UX
+- 🔐 **Internet Identity** authentication
 - 🧪 **Full Test Suite**: Vitest + PocketIC for backend and frontend
 - 🔁 **CI/CD** with GitHub Actions for automated tests and code quality
-- 🤖 **Copilot Integration** to auto-generate tests, code, and changelogs
-
-Whether you're building full-stack dapps or agents, this template gives you a solid foundation to start fast and scale smoothly. 🚀
-
-![Template Screenshot](.github/assets/template-screenshot.png)
+- 📚 **Comprehensive Documentation** for all components
 
 ---
 
 ## 📜 Table of Contents
 
-- [🎥 Recording](#-recording)
 - [🚀 Getting Started](#-getting-started)
 - [📁 Project Structure](#-project-structure)
 - [✅ Testing Patterns](#-testing-patterns)
 - [🔄 CI/CD Workflow](#-cicd-workflow)
-- [🧠 GitHub Copilot Integration](#-github-copilot-integration)
 - [🔗 Resources & Documentation](#-learning-resources)
-- [📩 Submit Your Project!](#-submit-your-project)
-
----
-
-## 🎥 Recording
-
-There was an Advanced Challenge Lab session, that was recorded and had a lot of information and showcase of Vibe Coding using this template.
-
-You can see here the full recording: https://www.youtube.com/watch?v=ZuNUy13wmlI
 
 ---
 
 ## 🚀 Getting Started
 
-### 🧑‍💻 1. Get Codespace Ready
+### 🧑‍💻 1. Development Environment Setup
 
 A **devcontainer** is preconfigured for you to start coding instantly!
 
@@ -60,108 +98,116 @@ A **devcontainer** is preconfigured for you to start coding instantly!
 npm install
 ```
 
-### 3. Running Ollama
+### 3. Start Local Development
 
-To be able to test the agent locally, you'll need a server for processing the agent's prompts. For that, we'll use `ollama`, which is a tool that can download and serve LLMs.
-See the documentation on the [Ollama website](https://ollama.com/). Run:
+#### Option A: Full Deployment (Recommended)
 
 ```bash
-ollama serve
-# Expected to start listening on port 11434
+# Deploy everything (backend + frontend)
+npm run deploy
 ```
 
-The above command will start the Ollama server, so that it can process requests by the agent. Additionally, and in a separate window, run the following command to download the LLM that will be used by the agent:
+#### Option B: Step-by-Step Deployment
 
 ```bash
-ollama run llama3.1:8b
-```
-
-Once the command executes and the model is loaded, you can terminate it by typing /bye. You won't need to do this step again.
-
-### 4. Deployment
-
-Then, in one terminal window, run:
-
-```bash
+# Start DFX local network
 dfx start --clean
+
+# In another terminal, deploy backend canisters
+npm run deploy:backend
+
+# Deploy frontend
+npm run deploy:frontend
+
+# Deploy dependencies (if any)
+npm run deploy:deps
 ```
 
-Keep this tab open for reading logs.
-
-Then pull the dependency and deploy the canisters in another window:
+### 4. Start the Development Server
 
 ```bash
-dfx deploy # deploys the backend and frontend canisters
-```
-
-```bash
-dfx deps pull
-dfx deps deploy  # deploys the llm canister
-```
-
-### 5. Start the Development Server
-
-You can start the frontend development server with:
-
-```bash
-# Just the frontend development server
+# Start frontend development server
 npm start
-
 ```
 
-### 6. Run Tests
+### 5. Run Tests
 
 ```bash
+# Run all tests
 npm test
+
+# Run specific test suites
+npm run test:frontend    # Frontend tests only
+npm run test:backend     # Backend tests only
 ```
 
-You can also run:
+## 📚 Documentation
 
-```bash
-npm test tests/src/backend.test.ts    # individual test
-```
+Comprehensive documentation is available in the `docs/` folder:
+
+- [📖 Project Overview](./docs/project-overview.md) - High-level project description
+- [🎨 UI Components](./docs/frontend/ui-components.md) - Design system and components
+- [🛠️ Development Setup](./docs/development/development-setup.md) - Development environment guide
 
 ---
 
 ## 📁 Project Structure
 
 ```
-ICP-Bootcamp-Vibe-Coding/
-├── .devcontainer/devcontainer.json       # Container config for running your own codespace
-├── .github/instructions/                 # Copilot general and language specific instructions
-├── .github/prompts/                      # Copilot Prompts, like add feature and changes review
+OriginStamp/
+├── .devcontainer/devcontainer.json       # Container config for development
 ├── .github/workflows/                    # GitHub CI/CD pipelines
+├── docs/                                 # 📚 Comprehensive documentation
+│   ├── project-overview.md              # Project description and goals
+│   ├── frontend/                        # Frontend component documentation
+│   ├── backend/                         # Backend architecture docs
+│   ├── testing/                         # Testing strategies and guides
+│   ├── development/                     # Development setup and processes
+│   └── api/                             # API documentation
 ├── src/
-│   ├── backend/                          # Rust backend canister
+│   ├── backend/                         # 🦀 Rust backend canister
 │   │   ├── src/
-│   │   │   └── lib.rs                    # Main Rust file
-│   │   └── Cargo.toml                    # Rust dependencies
-│   ├── frontend/                         # React + Tailwind + TypeScript frontend
+│   │   │   └── lib.rs                   # Main Rust file
+│   │   └── Cargo.toml                   # Rust dependencies
+│   ├── frontend/                        # ⚛️ React + TypeScript frontend
 │   │   ├── src/
-│   │   │   ├── App.tsx                   # Main App component
-│   │   │   ├── index.css                 # Global styles with Tailwind
-│   │   │   ├── components/               # Reusable UI components
-│   │   │   ├── services/                 # Canister service layers
-│   │   │   └── views/                    # Page-level components
-│   │   ├── assets/                       # Static assets (images, icons)
-│   │   ├── tests/                        # Frontend unit tests
-│   │   ├── index.html                    # Frontend entry point
-│   │   ├── main.tsx                      # React main file
-│   │   ├── package.json                  # Frontend dependencies
-│   │   ├── tsconfig.json                 # TypeScript configuration
-│   │   ├── vite.config.ts                # Vite build configuration
-│   │   └── vite-env.d.ts                 # Vite type definitions
-│   └── declarations/                     # Auto-generated canister interfaces
+│   │   │   ├── App.tsx                  # Main App component
+│   │   │   ├── pages/                   # 📄 Page components (modular)
+│   │   │   │   ├── landing/            # Landing page
+│   │   │   │   ├── auth/               # Authentication pages
+│   │   │   │   └── dashboard/          # Dashboard pages
+│   │   │   ├── components/             # 🧩 Reusable UI components
+│   │   │   │   ├── login/              # Authentication components
+│   │   │   │   ├── profile/            # User profile components
+│   │   │   │   ├── common/             # Common UI elements
+│   │   │   │   └── ui/                 # UI components
+│   │   │   ├── contexts/               # React contexts
+│   │   │   ├── hooks/                  # Custom React hooks
+│   │   │   ├── services/               # API service layers
+│   │   │   ├── types/                  # TypeScript type definitions
+│   │   │   ├── utils/                  # Utility functions
+│   │   │   └── css/                    # 🎨 ITCSS styling architecture
+│   │   ├── assets/                     # Static assets (images, icons)
+│   │   ├── tests/                      # Frontend unit tests
+│   │   ├── index.html                  # Frontend entry point
+│   │   ├── main.tsx                    # React main file
+│   │   ├── package.json                # Frontend dependencies
+│   │   ├── tsconfig.json               # TypeScript configuration
+│   │   ├── vite.config.ts              # Vite build configuration
+│   │   └── vite-env.d.ts               # Vite type definitions
+│   └── declarations/                   # Auto-generated canister interfaces
 ├── tests/
-│   ├── src/                              # Backend test files
-│   ├── backend-test-setup.ts             # PocketIC instance
-│   └── vitest.config.ts                  # Vitest configuration
+│   ├── src/                            # Backend test files
+│   ├── backend-test-setup.ts           # PocketIC instance
+│   └── vitest.config.ts                # Vitest configuration
 ├── scripts/
-│   ├── dev-container-setup.sh            # Extra set up steps for codespace
-│   └── generate-candid.sh                # Useful one way script to build, generate candid and did files
-├── dfx.json                              # ICP config
-├── Cargo.toml                            # Root Rust workspace config
-└── CHANGELOG.md
+│   ├── start.sh                        # 🚀 Full deployment script
+│   ├── dev-container-setup.sh          # Development environment setup
+│   └── generate-candid.sh              # Candid generation script
+├── dfx.json                            # ICP configuration
+├── Cargo.toml                          # Root Rust workspace config
+├── package.json                        # Project dependencies and scripts
+└── CHANGELOG.md                        # Project changelog
 ```
 
 ---
@@ -171,132 +217,74 @@ ICP-Bootcamp-Vibe-Coding/
 Located under `.github/workflows/`, this includes:
 
 - 🧪 Automated end-2-end test runs
+- 🔍 Code quality checks
+- 🚀 Automated deployment
 
-It could be extended to:
+## 🧪 Testing Strategy
 
-- check for security updates (audit);
-- test coverage;
-- code quality.
+### Frontend Testing
 
----
+- **Component Testing**: Individual component tests with React Testing Library
+- **Integration Testing**: User flow and interaction tests
+- **E2E Testing**: Complete user journey testing
 
-## 🧠 **GitHub Copilot Integration**
+### Backend Testing
 
-This project leverages two key customization folders:
+- **Unit Testing**: Individual function and method tests
+- **Integration Testing**: Canister interaction tests
+- **PocketIC Testing**: Local blockchain simulation
 
-- `.github/instructions/` – Provides essential context to guide AI responses.
-- `.github/prompts/` – Defines workflow prompts to effectively assist you.
+## 🎨 Design System
 
-Think of the AI as a super-fast junior developer, handling the heavy lifting while you focus on quality control. Instead of using PRs, you’re reviewing and refining code directly in the IDE through Copilot chat.
+### Neumorphic Design
 
-### 📝 **About Instructions**
+- **Soft UI**: Subtle shadows and highlights
+- **Consistent Spacing**: 8px grid system
+- **Color Palette**: Light/dark theme support
+- **Typography**: Clear hierarchy and readability
 
-Instructions provide "context" that applies to specific files using regex patterns defined in `applyTo`. They are ideal for project-wide or language-specific guidance.
+### Component Library
 
-**Current Instructions:**
+- **Reusable Components**: Button, Card, Modal, Toast
+- **Form Elements**: Input, Select, Checkbox
+- **Navigation**: Header, Sidebar, Breadcrumbs
+- **Feedback**: Loading, Error, Success states
 
-- **general:** `applyTo: **`
-- **rust:** `applyTo: */*.rs`
-- **test:** `applyTo: tests/**`
+## 🚀 Deployment
 
-**Examples of Context You Can Define:**
+### Local Development
 
-- This is an ICP project using Rust canisters.
-- For Rust, we follow Clippy and Rust FMT style guides and linting tools.
-- For tests, we use **Pocket IC** and maintain a specific test structure.
+```bash
+# Full deployment
+npm run deploy
 
-### 🛠️ **About Prompts**
-
-Prompts define specific tasks and guide the AI through a structured workflow. They are especially useful for maintaining a consistent development process.
-
----
-
-#### ✨ **Add Feature Prompt**
-
-```markdown
-/add-feature Add a function to decrease the counter value
+# Step-by-step
+npm run deploy:backend
+npm run deploy:frontend
 ```
 
-In this workflow, Copilot follows a Spec Driven Workflow:
+### Production Deployment
 
-1. Clarification Phase:
-   • Updates the changelog and asks for any necessary clarifications.
-2. Test First Approach:
-   • Generates a test case and ensures it fails, confirming that the test is effectively targeting the desired behavior.
-3. Human Confirmation:
-   • The AI pauses for a human to review and confirm the spec, ensuring alignment before proceeding.
-4. Implementation Phase:
-   • Implements the code, self-checks for errors, installs necessary libraries, lints, formats, and runs tests to confirm they pass.
-
-**✅ Key Takeaways**
-
-When you explore the prompt, please notice:
-
-- CRITICAL PAUSE POINTS
-  - Strategic pauses allow the human to verify the work in small, reviewable chunks and redirect if necessary.
-- Command Explanations
-  - The prompt can include specific commands or scripts, guiding the AI in self-checking, running scripts, or managing dependencies.
-- Task-Specific Advice
-  - The prompt is the place to add any specific guidance or notes relevant only to the particular task at hand.
-
-#### 🚧 **Changes Review Prompt**
-
-To run a review, simply call the prompt:
-
-```markdown
-/changes-review
-```
-
-The AI will analyze the current git diffs, then reference other files in the repo for context. It will generate a comprehensive report for you to review before committing.
-
-#### ✅ **Focus Areas**
-
-1. **Business Logic:**
-
-   - Detects potential unwanted side effects or missing edge cases.
-
-2. **Code Quality:**
-
-   - Suggests improvements or refactor opportunities.
-
-3. **Security & Performance:**
-   - Identifies vulnerabilities or inefficiencies.
-
-#### 📌 **Why It Matters**
-
-- AI can handle the heavy lifting, but it's **your responsibility as the Senior** to validate the findings.
-- Double-check and ensure quality – small issues now can become big problems later. 😉
-
----
+- **Internet Computer**: Mainnet deployment
+- **Environment Variables**: Secure configuration
+- **Monitoring**: Performance and error tracking
 
 ## 📚 Learning Resources
 
-- [Instruction and Prompt Files](https://code.visualstudio.com/docs/copilot/copilot-customization)
-- [Agent Mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode)
-- [Copilot Reference](https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features)
 - [ICP Dev Docs](https://internetcomputer.org/docs)
 - [Rust CDK](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
-- [PicJS Doc](https://dfinity.github.io/pic-js/)
+- [React Documentation](https://react.dev/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Vite Build Tool](https://vitejs.dev/)
 - [Vitest Testing Framework](https://vitest.dev/)
 
----
+## 🙏 Acknowledgments
 
-### 🤝 **Contributing**
-
-We welcome contributions! If you encounter a bug, have a feature request, or want to suggest improvements, please open an issue or submit a Pull Request.
-
-We especially welcome candidates of limits you face, consider using the **Limit Candidate Form Issue** – it helps us prioritize and address the most impactful limits effectively.
-
----
-
-## 📩 Submit Your Project!
-
-🎯 **Completed your challenge? Submit your project here:**  
-📢 [Taikai Submission](https://taikai.network/icp-eu-alliance/hackathons/VIBATHON)
-
-📌 **Want to explore more challenges? Return to the index:**  
-🔗 [IC Vibathon Index](https://github.com/pt-icp-hub/IC-Vibathon-Index)
+- **Internet Computer Foundation** for the amazing blockchain platform
+- **React Team** for the incredible frontend framework
+- **Rust Community** for the robust backend language
+- **Open Source Contributors** who make this possible
 
 ---
 
-**Now go build something fast, tested, and production-ready 🚀🦀**
+**Build the future of digital authenticity with OriginStamp! 🚀✨**
