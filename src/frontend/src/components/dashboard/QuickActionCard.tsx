@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface QuickActionCardProps {
   icon: React.ReactNode;
@@ -11,13 +11,11 @@ const QuickActionCard: React.FC<QuickActionCardProps> = ({
   icon,
   title,
   description,
-  onClick
+  onClick,
 }) => {
   return (
     <div className="quick-action-card" onClick={onClick}>
-      <div className="action-icon">
-        {icon}
-      </div>
+      <div className="action-icon">{icon}</div>
       <div className="action-content">
         <div className="action-title">{title}</div>
         <div className="action-description">{description}</div>
@@ -26,4 +24,4 @@ const QuickActionCard: React.FC<QuickActionCardProps> = ({
   );
 };
 
-export default QuickActionCard; 
+export default QuickActionCard;

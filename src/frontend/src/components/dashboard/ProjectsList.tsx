@@ -1,19 +1,19 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import ProjectCard from './ProjectCard';
-import EmptyState from './EmptyState';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import ProjectCard from "./ProjectCard";
+import EmptyState from "./EmptyState";
 
 interface RecentProject {
   id: string;
   title: string;
-  status: 'active' | 'completed' | 'draft';
+  status: "active" | "completed" | "draft";
   lastModified: Date;
   progress: number;
 }
 
 interface ProjectsListProps {
   projects: RecentProject[];
-  viewMode: 'list' | 'grid';
+  viewMode: "list" | "grid";
   onProjectClick: (projectId: string) => void;
   onNewProject: () => void;
 }
@@ -22,7 +22,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
   projects,
   viewMode,
   onProjectClick,
-  onNewProject
+  onNewProject,
 }) => {
   const { t } = useTranslation();
 
@@ -33,10 +33,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
         description={t("no_projects_description")}
         hint={t("start_verification_journey_hint")}
         actionButton={
-          <button
-            onClick={onNewProject}
-            className="btn-new-project"
-          >
+          <button onClick={onNewProject} className="btn-new-project">
             <svg
               className="btn-icon"
               viewBox="0 0 24 24"
@@ -58,7 +55,9 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
   }
 
   return (
-    <div className={`projects-list ${viewMode === 'grid' ? 'projects-grid-view' : ''}`}>
+    <div
+      className={`projects-list ${viewMode === "grid" ? "projects-grid-view" : ""}`}
+    >
       {projects.map((project, index) => (
         <ProjectCard
           key={project.id}
@@ -71,4 +70,4 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
   );
 };
 
-export default ProjectsList; 
+export default ProjectsList;

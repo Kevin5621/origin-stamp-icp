@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface SearchFilterProps {
   onSearch: (query: string) => void;
   onSort: (sortBy: string) => void;
-  onViewChange: (view: 'list' | 'grid') => void;
-  currentView: 'list' | 'grid';
+  onViewChange: (view: "list" | "grid") => void;
+  currentView: "list" | "grid";
 }
 
 const SearchFilter: React.FC<SearchFilterProps> = ({
   onSearch,
   onSort,
   onViewChange,
-  currentView
+  currentView,
 }) => {
   const { t } = useTranslation();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -31,9 +31,14 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
     <section className="search-filter-section">
       {/* Search Input */}
       <div className="search-container">
-        <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="11" cy="11" r="8" strokeWidth="2"/>
-          <path d="M21 21l-4.35-4.35" strokeWidth="2"/>
+        <svg
+          className="search-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <circle cx="11" cy="11" r="8" strokeWidth="2" />
+          <path d="M21 21l-4.35-4.35" strokeWidth="2" />
         </svg>
         <input
           type="text"
@@ -47,7 +52,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
       {/* Filter Controls */}
       <div className="filter-controls">
         {/* Sort Dropdown */}
-        <select 
+        <select
           className="sort-select"
           onChange={handleSortChange}
           defaultValue="newest"
@@ -61,29 +66,29 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         {/* View Toggle */}
         <div className="view-toggle">
           <button
-            className={`view-btn ${currentView === 'list' ? 'active' : ''}`}
-            onClick={() => onViewChange('list')}
+            className={`view-btn ${currentView === "list" ? "active" : ""}`}
+            onClick={() => onViewChange("list")}
             aria-label={t("list_view")}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="8" y1="6" x2="21" y2="6" strokeWidth="2"/>
-              <line x1="8" y1="12" x2="21" y2="12" strokeWidth="2"/>
-              <line x1="8" y1="18" x2="21" y2="18" strokeWidth="2"/>
-              <line x1="3" y1="6" x2="3.01" y2="6" strokeWidth="2"/>
-              <line x1="3" y1="12" x2="3.01" y2="12" strokeWidth="2"/>
-              <line x1="3" y1="18" x2="3.01" y2="18" strokeWidth="2"/>
+              <line x1="8" y1="6" x2="21" y2="6" strokeWidth="2" />
+              <line x1="8" y1="12" x2="21" y2="12" strokeWidth="2" />
+              <line x1="8" y1="18" x2="21" y2="18" strokeWidth="2" />
+              <line x1="3" y1="6" x2="3.01" y2="6" strokeWidth="2" />
+              <line x1="3" y1="12" x2="3.01" y2="12" strokeWidth="2" />
+              <line x1="3" y1="18" x2="3.01" y2="18" strokeWidth="2" />
             </svg>
           </button>
           <button
-            className={`view-btn ${currentView === 'grid' ? 'active' : ''}`}
-            onClick={() => onViewChange('grid')}
+            className={`view-btn ${currentView === "grid" ? "active" : ""}`}
+            onClick={() => onViewChange("grid")}
             aria-label={t("grid_view")}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <rect x="3" y="3" width="7" height="7" strokeWidth="2"/>
-              <rect x="14" y="3" width="7" height="7" strokeWidth="2"/>
-              <rect x="14" y="14" width="7" height="7" strokeWidth="2"/>
-              <rect x="3" y="14" width="7" height="7" strokeWidth="2"/>
+              <rect x="3" y="3" width="7" height="7" strokeWidth="2" />
+              <rect x="14" y="3" width="7" height="7" strokeWidth="2" />
+              <rect x="14" y="14" width="7" height="7" strokeWidth="2" />
+              <rect x="3" y="14" width="7" height="7" strokeWidth="2" />
             </svg>
           </button>
         </div>
@@ -92,4 +97,4 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
   );
 };
 
-export default SearchFilter; 
+export default SearchFilter;

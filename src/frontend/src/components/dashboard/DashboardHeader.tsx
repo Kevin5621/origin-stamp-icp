@@ -1,5 +1,5 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface DashboardHeaderProps {
   onNewProject: () => void;
@@ -14,9 +14,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onNewProject }) => {
         <h2 id="dashboard-title" className="dashboard-title">
           {t("dashboard_creator_title")}
         </h2>
-        <p className="dashboard-subtitle">
-          {t("dashboard_welcome_message")}
-        </p>
+        <p className="dashboard-subtitle">{t("dashboard_welcome_message")}</p>
       </div>
       <button
         onClick={onNewProject}
@@ -42,4 +40,4 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onNewProject }) => {
   );
 };
 
-export default DashboardHeader; 
+export default DashboardHeader;
