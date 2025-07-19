@@ -1,77 +1,284 @@
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Camera, Palette, Download, Upload, Clock, CheckCircle } from "lucide-react";
 
 /**
- * Session Page - Halaman session recording
+ * Session Page - Halaman session recording dengan pemilihan art type
  * Memerlukan autentikasi
  */
 const SessionPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [artType, setArtType] = useState<"physical" | "digital" | null>(null);
+  const [sessionStarted, setSessionStarted] = useState(false);
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
+
+  const handleArtTypeSelect = (type: "physical" | "digital") => {
+    setArtType(type);
+  };
+
+  const handleStartSession = () => {
+    setSessionStarted(true);
+  };
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newPhotos = Array.from(files).map(file => URL.createObjectURL(file));
+      setUploadedPhotos(prev => [...prev, ...newPhotos]);
+    }
+  };
+
+  const handleFinalize = () => {
+    navigate("/finalization");
+  };
 
   return (
     <section className="session-section" aria-labelledby="session-title">
-      <div className="bento-session">
-        <header className="session-header-card">
-          <h2 id="session-title" className="session-title">
-            {t("active_recording_session_title")}
-          </h2>
-          <div className="session-status-indicator">
-            <div className="recording-dot" aria-label="Sedang merekam"></div>
-            <span className="status-text">{t("recording_status_text")}</span>
+      <div className="session-layout">
+        {/* Header */}
+        <header className="session-header">
+          <div className="header-content">
+            <h1 id="session-title" className="session-title">
+              {artType ? t("active_recording_session_title") : t("select_art_type_title")}
+            </h1>
+            <p className="session-subtitle">
+              {artType 
+                ? t("session_description")
+                : t("select_art_type_subtitle")
+              }
+            </p>
           </div>
         </header>
 
-        <article className="session-main-card">
-          <div className="session-visual">
-            <div className="recording-animation">
-              <div className="pulse-ring"></div>
-              <div className="pulse-ring delay-1"></div>
-              <div className="pulse-ring delay-2"></div>
-              <div className="recording-core"></div>
-            </div>
-          </div>
+        {/* Main Content */}
+        <main className="session-main">
+          {!artType ? (
+            /* Art Type Selection */
+            <div className="art-type-selection">
+              <div className="selection-grid">
+                <div 
+                  className="art-type-card wireframe-card"
+                  onClick={() => handleArtTypeSelect("physical")}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleArtTypeSelect("physical");
+                    }
+                  }}
+                >
+                  <div className="art-type-icon-wrapper">
+                    <Camera size={32} strokeWidth={2} />
+                  </div>
+                  <h3 className="art-type-title">{t("physical_art_title")}</h3>
+                  <p className="art-type-description">
+                    {t("physical_art_description")}
+                  </p>
+                  <div className="art-type-features">
+                    <span className="feature-tag">{t("step_by_step_photos")}</span>
+                    <span className="feature-tag">{t("manual_process")}</span>
+                  </div>
+                </div>
 
-          <div className="session-content">
-            <p className="session-description">{t("session_description")}</p>
-
-            <div className="session-info">
-              <div className="info-item">
-                <span className="info-label">{t("plugin_status_label")}</span>
-                <span className="info-value status-active">
-                  {t("status_active")}
-                </span>
+                <div 
+                  className="art-type-card wireframe-card"
+                  onClick={() => handleArtTypeSelect("digital")}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleArtTypeSelect("digital");
+                    }
+                  }}
+                >
+                  <div className="art-type-icon-wrapper">
+                    <Palette size={32} strokeWidth={2} />
+                  </div>
+                  <h3 className="art-type-title">{t("digital_art_title")}</h3>
+                  <p className="art-type-description">
+                    {t("digital_art_description")}
+                  </p>
+                  <div className="art-type-features">
+                    <span className="feature-tag">{t("automatic_plugin")}</span>
+                    <span className="feature-tag">{t("real_time_log")}</span>
+                  </div>
+                </div>
               </div>
-              <div className="info-item">
-                <span className="info-label">{t("duration_label")}</span>
-                <span className="info-value">0:00:00</span>
+            </div>
+          ) : !sessionStarted ? (
+            /* Session Setup */
+            <div className="session-setup">
+              <div className="setup-card wireframe-card">
+                <div className="setup-header">
+                  <div className="setup-icon-wrapper">
+                    {artType === "physical" ? (
+                      <Camera size={24} strokeWidth={2} />
+                    ) : (
+                      <Palette size={24} strokeWidth={2} />
+                    )}
+                  </div>
+                  <h3 className="setup-title">
+                    {artType === "physical" ? t("setup_physical_art") : t("setup_digital_art")}
+                  </h3>
+                </div>
+
+                {artType === "physical" ? (
+                  <div className="setup-content">
+                    <p className="setup-description">
+                      {t("physical_art_setup_description")}
+                    </p>
+                    <div className="upload-section">
+                      <label className="upload-area wireframe-card">
+                        <Upload size={24} strokeWidth={2} />
+                        <span>{t("upload_process_photos")}</span>
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={handlePhotoUpload}
+                          className="file-input"
+                        />
+                      </label>
+                      {uploadedPhotos.length > 0 && (
+                        <div className="uploaded-photos">
+                          <h4>{t("uploaded_photos_count", { count: uploadedPhotos.length })}</h4>
+                          <div className="photo-grid">
+                            {uploadedPhotos.map((photo, index) => (
+                              <div key={index} className="photo-item">
+                                <img src={photo} alt={t("process_photo", { number: index + 1 })} />
+                                <span className="photo-timestamp">
+                                  {new Date().toLocaleTimeString()}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="setup-content">
+                    <p className="setup-description">
+                      {t("digital_art_setup_description")}
+                    </p>
+                    <div className="plugin-section">
+                      <div className="plugin-list">
+                        <div className="plugin-item wireframe-card">
+                          <div className="plugin-info">
+                            <h4>{t("photoshop_plugin")}</h4>
+                            <p>{t("photoshop_description")}</p>
+                          </div>
+                          <a 
+                            href="#" 
+                            className="plugin-download-btn wireframe-button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              alert("Link download akan tersedia segera!");
+                            }}
+                          >
+                            <Download size={16} strokeWidth={2} />
+                            {t("download")}
+                          </a>
+                        </div>
+                        <div className="plugin-item wireframe-card">
+                          <div className="plugin-info">
+                            <h4>{t("vscode_extension")}</h4>
+                            <p>{t("vscode_description")}</p>
+                          </div>
+                          <a 
+                            href="#" 
+                            className="plugin-download-btn wireframe-button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              alert("Link download akan tersedia segera!");
+                            }}
+                          >
+                            <Download size={16} strokeWidth={2} />
+                            {t("download")}
+                          </a>
+                        </div>
+                        <div className="plugin-item wireframe-card">
+                          <div className="plugin-info">
+                            <h4>{t("ableton_plugin")}</h4>
+                            <p>{t("ableton_description")}</p>
+                          </div>
+                          <a 
+                            href="#" 
+                            className="plugin-download-btn wireframe-button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              alert("Link download akan tersedia segera!");
+                            }}
+                          >
+                            <Download size={16} strokeWidth={2} />
+                            {t("download")}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="setup-actions">
+                  <button
+                    onClick={() => setArtType(null)}
+                    className="btn-back wireframe-button"
+                  >
+                    {t("back")}
+                  </button>
+                  <button
+                    onClick={handleStartSession}
+                    className="btn-start-session wireframe-button primary"
+                    disabled={artType === "physical" && uploadedPhotos.length === 0}
+                  >
+                    <CheckCircle size={16} strokeWidth={2} />
+                    {t("start_session")}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </article>
+          ) : (
+            /* Active Session */
+            <div className="active-session">
+              <div className="session-status-card wireframe-card">
+                <div className="status-header">
+                  <div className="recording-indicator">
+                    <div className="recording-dot"></div>
+                    <span className="status-text">{t("recording_status_text")}</span>
+                  </div>
+                  <div className="session-timer">
+                    <Clock size={20} strokeWidth={2} />
+                    <span>00:00:00</span>
+                  </div>
+                </div>
 
-        <aside className="session-controls">
-          <button
-            onClick={() => navigate("/finalization")}
-            className="btn-finalize"
-            aria-label={t("finalize_project_button")}
-          >
-            <span>{t("finalize_project_button")}</span>
-            <svg
-              className="btn-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </button>
-        </aside>
+                <div className="session-progress">
+                  <div className="progress-info">
+                    <span className="progress-label">{t("session_progress")}</span>
+                    <span className="progress-value">0%</span>
+                  </div>
+                  <div className="progress-bar wireframe-progress">
+                    <div className="progress-fill" style={{ width: "0%" }}></div>
+                  </div>
+                </div>
+
+                <div className="session-actions">
+                  <button
+                    onClick={handleFinalize}
+                    className="btn-finalize wireframe-button primary"
+                  >
+                    <CheckCircle size={16} strokeWidth={2} />
+                    {t("finalize_session")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </section>
   );
