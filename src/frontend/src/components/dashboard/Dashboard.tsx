@@ -1,10 +1,9 @@
-import React from 'react';
-import DashboardHeader from './DashboardHeader';
-import DashboardMain from './DashboardMain';
-import DashboardStats from './DashboardStats';
-import LoadingSkeleton from './LoadingSkeleton';
-import ToastContainer from '../common/ToastContainer';
-import { useToast } from '../../hooks/useToast';
+import React from "react";
+import DashboardMain from "./DashboardMain";
+import DashboardStats from "./DashboardStats";
+import LoadingSkeleton from "./LoadingSkeleton";
+import ToastContainer from "../common/ToastContainer";
+import { useToast } from "../../hooks/useToast";
 
 interface ProjectStats {
   completedProjects: number;
@@ -16,7 +15,7 @@ interface ProjectStats {
 interface RecentProject {
   id: string;
   title: string;
-  status: 'active' | 'completed' | 'draft';
+  status: "active" | "completed" | "draft";
   lastModified: Date;
   progress: number;
 }
@@ -25,14 +24,14 @@ interface DashboardProps {
   isLoading: boolean;
   stats: ProjectStats;
   projects: RecentProject[];
-  selectedFilter: 'all' | 'active' | 'completed';
-  viewMode: 'list' | 'grid';
+  selectedFilter: "all" | "active" | "completed";
+  viewMode: "list" | "grid";
   onNewProject: () => void;
   onProjectClick: (projectId: string) => void;
   onSearch: (query: string) => void;
   onSort: (sortBy: string) => void;
-  onViewChange: (view: 'list' | 'grid') => void;
-  onFilterChange: (filter: 'all' | 'active' | 'completed') => void;
+  onViewChange: (view: "list" | "grid") => void;
+  onFilterChange: (filter: "all" | "active" | "completed") => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -46,7 +45,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   onSearch,
   onSort,
   onViewChange,
-  onFilterChange
+  onFilterChange,
 }) => {
   const { toasts, removeToast } = useToast();
 
@@ -111,11 +110,11 @@ const Dashboard: React.FC<DashboardProps> = ({
           />
         </main>
       </div>
-      
+
       {/* Toast Container */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </section>
   );
 };
 
-export default Dashboard; 
+export default Dashboard;
