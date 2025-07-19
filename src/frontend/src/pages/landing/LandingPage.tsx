@@ -104,7 +104,7 @@ const LandingPage: React.FC = () => {
             {show3DModel && (
               <ThreeModelViewer
                 src="/woman-statue.glb"
-                enableInteraction={false}
+                enableInteraction={true}
                 theme={currentTheme}
               />
             )}

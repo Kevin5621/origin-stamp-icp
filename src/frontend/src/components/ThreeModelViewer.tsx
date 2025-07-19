@@ -51,7 +51,7 @@ useGLTF.preload("/woman-statue.glb");
 const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
   ({
     src,
-    enableInteraction = false,
+    enableInteraction = true,
     theme = "light", // Default light theme
   }) => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -138,7 +138,7 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
               enableRotate={true}
               minDistance={3}
               maxDistance={8}
-              autoRotate={false}
+              autoRotate={true}
               autoRotateSpeed={1}
             />
           )}
