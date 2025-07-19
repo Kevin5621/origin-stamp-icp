@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { 
-  FileText, 
-  Search, 
-  Filter, 
-  Download, 
-  Share2, 
-  Eye, 
+import {
+  FileText,
+  Search,
+  Filter,
+  Download,
+  Share2,
+  Eye,
   Calendar,
   Clock,
   CheckCircle,
   Copy,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 
 const CertificatesPage: React.FC = () => {
@@ -20,7 +20,9 @@ const CertificatesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
+  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(
+    null,
+  );
 
   // Debug: Log when component mounts
   useEffect(() => {
@@ -39,10 +41,10 @@ const CertificatesPage: React.FC = () => {
       type: "digital",
       duration: "2h 30m",
       actions: 156,
-      certificateUrl: "https://originstamp.io/cert/CERT-001"
+      certificateUrl: "https://originstamp.io/cert/CERT-001",
     },
     {
-      id: "CERT-002", 
+      id: "CERT-002",
       title: "Physical Painting - Landscape",
       artist: "Jane Smith",
       issueDate: "2024-01-10",
@@ -50,7 +52,7 @@ const CertificatesPage: React.FC = () => {
       type: "physical",
       duration: "4h 15m",
       actions: 89,
-      certificateUrl: "https://originstamp.io/cert/CERT-002"
+      certificateUrl: "https://originstamp.io/cert/CERT-002",
     },
     {
       id: "CERT-003",
@@ -61,15 +63,17 @@ const CertificatesPage: React.FC = () => {
       type: "digital",
       duration: "8h 45m",
       actions: 234,
-      certificateUrl: "https://originstamp.io/cert/CERT-003"
-    }
+      certificateUrl: "https://originstamp.io/cert/CERT-003",
+    },
   ];
 
-  const filteredCertificates = certificates.filter(cert => {
-    const matchesSearch = cert.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cert.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cert.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === "all" || cert.status === filterStatus;
+  const filteredCertificates = certificates.filter((cert) => {
+    const matchesSearch =
+      cert.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cert.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cert.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      filterStatus === "all" || cert.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
@@ -95,7 +99,7 @@ const CertificatesPage: React.FC = () => {
       navigator.share({
         title: "Certificate of Authenticity",
         text: "Check out this verified artwork certificate",
-        url: certUrl
+        url: certUrl,
       });
     } else {
       navigator.clipboard.writeText(certUrl);
@@ -126,7 +130,10 @@ const CertificatesPage: React.FC = () => {
   };
 
   return (
-    <section className="certificates-section" aria-labelledby="certificates-title">
+    <section
+      className="certificates-section"
+      aria-labelledby="certificates-title"
+    >
       <div className="certificates-layout">
         {/* Header */}
         <header className="certificates-header">
@@ -145,7 +152,7 @@ const CertificatesPage: React.FC = () => {
             </div>
             <div className="stat-item">
               <span className="stat-value">
-                {certificates.filter(c => c.status === "verified").length}
+                {certificates.filter((c) => c.status === "verified").length}
               </span>
               <span className="stat-label">{t("verified_certificates")}</span>
             </div>
@@ -203,11 +210,13 @@ const CertificatesPage: React.FC = () => {
                       <p className="certificate-artist">by {cert.artist}</p>
                       <div className="certificate-meta">
                         <span className="certificate-id">{cert.id}</span>
-                        <span className="certificate-type">{getTypeIcon(cert.type)} {cert.type}</span>
+                        <span className="certificate-type">
+                          {getTypeIcon(cert.type)} {cert.type}
+                        </span>
                       </div>
                     </div>
                     <div className="certificate-status">
-                      <div 
+                      <div
                         className="status-badge"
                         style={{ backgroundColor: getStatusColor(cert.status) }}
                       >
@@ -220,7 +229,9 @@ const CertificatesPage: React.FC = () => {
                   <div className="certificate-details">
                     <div className="detail-item">
                       <Calendar size={16} strokeWidth={2} />
-                      <span>Issued: {new Date(cert.issueDate).toLocaleDateString()}</span>
+                      <span>
+                        Issued: {new Date(cert.issueDate).toLocaleDateString()}
+                      </span>
                     </div>
                     <div className="detail-item">
                       <Clock size={16} strokeWidth={2} />
@@ -249,7 +260,9 @@ const CertificatesPage: React.FC = () => {
                       Download
                     </button>
                     <button
-                      onClick={() => handleShareCertificate(cert.certificateUrl)}
+                      onClick={() =>
+                        handleShareCertificate(cert.certificateUrl)
+                      }
                       className="action-btn wireframe-button"
                       title="Share Certificate"
                     >
@@ -275,10 +288,9 @@ const CertificatesPage: React.FC = () => {
               </div>
               <h3 className="empty-title">{t("no_certificates_found")}</h3>
               <p className="empty-description">
-                {searchTerm || filterStatus !== "all" 
+                {searchTerm || filterStatus !== "all"
                   ? t("adjust_search_filter")
-                  : t("no_certificates_description")
-                }
+                  : t("no_certificates_description")}
               </p>
               {!searchTerm && filterStatus === "all" && (
                 <button
@@ -295,7 +307,10 @@ const CertificatesPage: React.FC = () => {
         {/* Certificate Preview Modal */}
         {selectedCertificate && (
           <div className="certificate-modal">
-            <div className="modal-overlay" onClick={() => setSelectedCertificate(null)} />
+            <div
+              className="modal-overlay"
+              onClick={() => setSelectedCertificate(null)}
+            />
             <div className="modal-content wireframe-card">
               <div className="modal-header">
                 <h2>{t("certificate_preview")}</h2>
@@ -342,4 +357,4 @@ const CertificatesPage: React.FC = () => {
   );
 };
 
-export default CertificatesPage; 
+export default CertificatesPage;
