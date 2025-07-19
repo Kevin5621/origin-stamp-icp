@@ -27,7 +27,7 @@ services:
     volumes:
       - dfx:/root/.config/dfx
       - ./:/app
-    entrypoint: ["/bin/bash", "/app/startup.sh"]
+    entrypoint: ["/bin/bash", "/app/start.sh"]
 
 volumes:
   db_data:
