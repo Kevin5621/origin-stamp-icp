@@ -32,7 +32,7 @@
     6px 6px 12px var(--color-shadow-dark),
     -6px -6px 12px var(--color-shadow-light);
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to visible */
   transform-origin: center;
 }
 
@@ -62,7 +62,9 @@
     12px 12px 24px var(--color-shadow-dark),
     -12px -12px 24px var(--color-shadow-light);
   transform: scale(1);
-  position: relative;
+  position: absolute; /* Changed from relative to absolute */
+  top: 0;
+  right: 0;
   z-index: 1001;
   display: flex;
   flex-direction: column;
@@ -206,100 +208,52 @@
   color: var(--color-text-primary);
   font-weight: 600;
   text-align: right;
-  max-width: 60%;
-  word-break: break-word;
 }
 
 .profile-card__actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 0;
+  margin-top: auto;
   padding-top: 20px;
   border-top: 1px solid var(--color-border);
 }
 
 .profile-card__logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 28px;
-  background-color: var(--color-surface);
-  color: var(--color-error);
+  width: 100%;
+  padding: 12px 16px;
+  background-color: var(--color-error);
+  color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    4px 4px 8px var(--color-shadow-dark),
-    -4px -4px 8px var(--color-shadow-light);
-  width: 100%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.profile-card__logout-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transition: left 0.5s ease;
-}
-
-.profile-card__logout-btn:hover::before {
-  left: 100%;
+  gap: 8px;
 }
 
 .profile-card__logout-btn:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    6px 6px 12px var(--color-shadow-dark),
-    -6px -6px 12px var(--color-shadow-light);
+  background-color: var(--color-error);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
 
 .profile-card__logout-btn:active {
   transform: translateY(0);
-  box-shadow:
-    inset 2px 2px 4px var(--color-shadow-dark),
-    inset -2px -2px 4px var(--color-shadow-light);
 }
 
-.profile-card__logout-btn svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
-}
-
-.profile-card__logout-btn:hover svg {
-  transform: translateX(2px);
-}
-
-/* Profile Overlay */
-.profile-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: transparent;
-  z-index: 999;
+.profile-card__logout-icon {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 2;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .transformable-avatar--expanded .transformable-avatar__circle {
-    width: 300px;
-    right: -10px;
+    width: 280px;
+    min-height: 320px;
     padding: 24px;
   }
 
@@ -309,6 +263,7 @@
 
   .profile-card__header {
     gap: 16px;
+    padding-bottom: 16px;
   }
 
   .profile-card__avatar {
@@ -323,16 +278,55 @@
   .profile-card__username {
     font-size: 1.25rem;
   }
+}
 
-  .profile-card__content {
-    gap: 16px;
+@media (max-width: 480px) {
+  .transformable-avatar--expanded .transformable-avatar__circle {
+    width: 260px;
+    min-height: 300px;
+    padding: 20px;
   }
 
-  .profile-card__credential {
-    padding: 12px 0;
+  .transformable-avatar__content {
+    padding: 20px;
   }
 
-  .profile-card__logout-btn {
-    padding: 14px 24px;
+  .profile-card__header {
+    gap: 12px;
+    padding-bottom: 12px;
   }
+
+  .profile-card__avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .profile-card__initials {
+    font-size: 1.125rem;
+  }
+
+  .profile-card__username {
+    font-size: 1.125rem;
+  }
+}
+
+/* Ensure profile dropdown doesn't affect other floating header elements */
+.floating-header-content .transformable-avatar {
+  position: relative;
+}
+
+.floating-header-content .transformable-avatar--expanded {
+  position: relative;
+}
+
+/* Profile overlay untuk menutup saat klik di luar */
+.profile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  z-index: 999;
+  cursor: pointer;
 }

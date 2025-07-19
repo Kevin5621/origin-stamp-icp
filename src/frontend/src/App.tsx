@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Loader, ErrorDisplay, ThemeToggle, Login } from "./components";
+import {
+  Loader,
+  ErrorDisplay,
+  ThemeToggle,
+  Login,
+  FloatingHeader,
+} from "./components";
 import LanguageToggle from "./components/ui/LanguageToggle";
 import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -20,11 +26,11 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="controls-container">
+        <FloatingHeader className="app-floating-header">
           <Login />
           <ThemeToggle />
           <LanguageToggle />
-        </div>
+        </FloatingHeader>
 
         <main className="main-content">
           <Routes>
