@@ -100,14 +100,21 @@ npm install
 
 ### 3. Start Local Development
 
-#### Option A: Full Deployment (Recommended)
+#### Option A: Quick Development (Recommended)
+
+```bash
+# Start everything for development (DFX + Backend + Frontend)
+npm run dev
+```
+
+#### Option B: Full Deployment (Production-like)
 
 ```bash
 # Deploy everything (backend + frontend)
 npm run deploy
 ```
 
-#### Option B: Step-by-Step Deployment
+#### Option C: Step-by-Step Deployment
 
 ```bash
 # Start DFX local network
@@ -123,10 +130,13 @@ npm run deploy:frontend
 npm run deploy:deps
 ```
 
-### 4. Start the Development Server
+### 4. Development Workflow
 
 ```bash
-# Start frontend development server
+# For daily development (starts DFX, deploys backend, starts frontend)
+npm run dev
+
+# For frontend development only (if backend is already running)
 npm start
 ```
 
