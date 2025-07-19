@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Camera, Palette, Download, Upload, Clock, CheckCircle } from "lucide-react";
+import {
+  Camera,
+  Palette,
+  Download,
+  Upload,
+  Clock,
+  CheckCircle,
+} from "lucide-react";
 
 /**
  * Session Page - Halaman session recording dengan pemilihan art type
@@ -25,8 +32,10 @@ const SessionPage: React.FC = () => {
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      const newPhotos = Array.from(files).map(file => URL.createObjectURL(file));
-      setUploadedPhotos(prev => [...prev, ...newPhotos]);
+      const newPhotos = Array.from(files).map((file) =>
+        URL.createObjectURL(file),
+      );
+      setUploadedPhotos((prev) => [...prev, ...newPhotos]);
     }
   };
 
@@ -41,13 +50,14 @@ const SessionPage: React.FC = () => {
         <header className="session-header">
           <div className="header-content">
             <h1 id="session-title" className="session-title">
-              {artType ? t("active_recording_session_title") : t("select_art_type_title")}
+              {artType
+                ? t("active_recording_session_title")
+                : t("select_art_type_title")}
             </h1>
             <p className="session-subtitle">
-              {artType 
+              {artType
                 ? t("session_description")
-                : t("select_art_type_subtitle")
-              }
+                : t("select_art_type_subtitle")}
             </p>
           </div>
         </header>
@@ -58,7 +68,7 @@ const SessionPage: React.FC = () => {
             /* Art Type Selection */
             <div className="art-type-selection">
               <div className="selection-grid">
-                <div 
+                <div
                   className="art-type-card wireframe-card"
                   onClick={() => handleArtTypeSelect("physical")}
                   role="button"
@@ -78,12 +88,14 @@ const SessionPage: React.FC = () => {
                     {t("physical_art_description")}
                   </p>
                   <div className="art-type-features">
-                    <span className="feature-tag">{t("step_by_step_photos")}</span>
+                    <span className="feature-tag">
+                      {t("step_by_step_photos")}
+                    </span>
                     <span className="feature-tag">{t("manual_process")}</span>
                   </div>
                 </div>
 
-                <div 
+                <div
                   className="art-type-card wireframe-card"
                   onClick={() => handleArtTypeSelect("digital")}
                   role="button"
@@ -122,7 +134,9 @@ const SessionPage: React.FC = () => {
                     )}
                   </div>
                   <h3 className="setup-title">
-                    {artType === "physical" ? t("setup_physical_art") : t("setup_digital_art")}
+                    {artType === "physical"
+                      ? t("setup_physical_art")
+                      : t("setup_digital_art")}
                   </h3>
                 </div>
 
@@ -145,11 +159,20 @@ const SessionPage: React.FC = () => {
                       </label>
                       {uploadedPhotos.length > 0 && (
                         <div className="uploaded-photos">
-                          <h4>{t("uploaded_photos_count", { count: uploadedPhotos.length })}</h4>
+                          <h4>
+                            {t("uploaded_photos_count", {
+                              count: uploadedPhotos.length,
+                            })}
+                          </h4>
                           <div className="photo-grid">
                             {uploadedPhotos.map((photo, index) => (
                               <div key={index} className="photo-item">
-                                <img src={photo} alt={t("process_photo", { number: index + 1 })} />
+                                <img
+                                  src={photo}
+                                  alt={t("process_photo", {
+                                    number: index + 1,
+                                  })}
+                                />
                                 <span className="photo-timestamp">
                                   {new Date().toLocaleTimeString()}
                                 </span>
@@ -172,8 +195,8 @@ const SessionPage: React.FC = () => {
                             <h4>{t("photoshop_plugin")}</h4>
                             <p>{t("photoshop_description")}</p>
                           </div>
-                          <a 
-                            href="#" 
+                          <a
+                            href="#"
                             className="plugin-download-btn wireframe-button"
                             onClick={(e) => {
                               e.preventDefault();
@@ -189,8 +212,8 @@ const SessionPage: React.FC = () => {
                             <h4>{t("vscode_extension")}</h4>
                             <p>{t("vscode_description")}</p>
                           </div>
-                          <a 
-                            href="#" 
+                          <a
+                            href="#"
                             className="plugin-download-btn wireframe-button"
                             onClick={(e) => {
                               e.preventDefault();
@@ -206,8 +229,8 @@ const SessionPage: React.FC = () => {
                             <h4>{t("ableton_plugin")}</h4>
                             <p>{t("ableton_description")}</p>
                           </div>
-                          <a 
-                            href="#" 
+                          <a
+                            href="#"
                             className="plugin-download-btn wireframe-button"
                             onClick={(e) => {
                               e.preventDefault();
@@ -233,7 +256,9 @@ const SessionPage: React.FC = () => {
                   <button
                     onClick={handleStartSession}
                     className="btn-start-session wireframe-button primary"
-                    disabled={artType === "physical" && uploadedPhotos.length === 0}
+                    disabled={
+                      artType === "physical" && uploadedPhotos.length === 0
+                    }
                   >
                     <CheckCircle size={16} strokeWidth={2} />
                     {t("start_session")}
@@ -248,7 +273,9 @@ const SessionPage: React.FC = () => {
                 <div className="status-header">
                   <div className="recording-indicator">
                     <div className="recording-dot"></div>
-                    <span className="status-text">{t("recording_status_text")}</span>
+                    <span className="status-text">
+                      {t("recording_status_text")}
+                    </span>
                   </div>
                   <div className="session-timer">
                     <Clock size={20} strokeWidth={2} />
@@ -258,11 +285,16 @@ const SessionPage: React.FC = () => {
 
                 <div className="session-progress">
                   <div className="progress-info">
-                    <span className="progress-label">{t("session_progress")}</span>
+                    <span className="progress-label">
+                      {t("session_progress")}
+                    </span>
                     <span className="progress-value">0%</span>
                   </div>
                   <div className="progress-bar wireframe-progress">
-                    <div className="progress-fill" style={{ width: "0%" }}></div>
+                    <div
+                      className="progress-fill"
+                      style={{ width: "0%" }}
+                    ></div>
                   </div>
                 </div>
 
