@@ -1,19 +1,17 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { loadAllTranslations } from "./utils/translationLoader";
 
-// Import translation files
-import enTranslation from "./locales/en/translation.json";
-import idTranslation from "./locales/id/translation.json";
-
+// Initialize i18n dengan sistem modular
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources: {
       en: {
-        translation: enTranslation,
+        translation: loadAllTranslations("en"),
       },
       id: {
-        translation: idTranslation,
+        translation: loadAllTranslations("id"),
       },
     },
     lng: "en", // default language
@@ -21,6 +19,7 @@ i18n
     interpolation: {
       escapeValue: false, // react already escapes by default
     },
+    debug: process.env.NODE_ENV === "development",
   });
 
 export default i18n;
