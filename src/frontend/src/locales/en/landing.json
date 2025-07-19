@@ -1,0 +1,14 @@
+{
+  "welcome_message": "Welcome to the OriginStamp!",
+  "get_started_button": "Get Started",
+  "hello_world": "Decentralized Verification Protocol for the Digital Age",
+  "prove_authenticity_title": "Prove the Authenticity of Your Work",
+  "prove_authenticity_description": "In the era of generative AI, prove that your work is the result of an authentic human creative process. OriginStamp provides an unforgeable \"digital birth certificate\".",
+  "start_verification_button": "Start Verifying My Work",
+  "automatic_verification_title": "Automatic Verification",
+  "automatic_verification_description": "Creative process recorded in real-time",
+  "blockchain_secure_title": "Blockchain Secure",
+  "blockchain_secure_description": "Permanent certificate on the Internet Computer",
+  "instant_proof_title": "Instant Proof",
+  "instant_proof_description": "Verifiable proof of authenticity"
+}

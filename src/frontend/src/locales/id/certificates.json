@@ -1,0 +1,14 @@
+{
+  "search_certificates_placeholder": "Cari sertifikat...",
+  "total_certificates": "Total Sertifikat",
+  "verified_certificates": "Terverifikasi",
+  "certificate_preview": "Preview Sertifikat",
+  "certificate_of_authenticity": "Sertifikat Keaslian",
+  "certificate_preview_description": "Dokumen ini memverifikasi keaslian proses kreatif",
+  "download_pdf": "Download PDF",
+  "close": "Tutup",
+  "no_certificates_found": "Tidak Ada Sertifikat Ditemukan",
+  "no_certificates_description": "Anda belum menerbitkan sertifikat apapun. Mulai dengan membuat proyek baru.",
+  "adjust_search_filter": "Coba sesuaikan kriteria pencarian atau filter Anda",
+  "create_new_project": "Buat Proyek Baru"
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart3,
   TrendingUp,
@@ -28,6 +29,7 @@ import {
  */
 const AnalyticsPage: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [timeRange, setTimeRange] = useState("30d");
   const [selectedMetric, setSelectedMetric] = useState("projects");
 
