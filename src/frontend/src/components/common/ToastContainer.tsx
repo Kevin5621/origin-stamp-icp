@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Toast, useToast } from "../../hooks/useToast";
+import { Toast } from "../../hooks/useToast";
 
 interface ToastContainerProps {
   toasts: Toast[];
