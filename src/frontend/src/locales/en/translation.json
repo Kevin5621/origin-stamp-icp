@@ -138,5 +138,17 @@
   "back": "Back",
   "start_session": "Start Session",
   "session_progress": "Session Progress",
-  "finalize_session": "Finalize Session"
+  "finalize_session": "Finalize Session",
+  "search_certificates_placeholder": "Search certificates...",
+  "total_certificates": "Total Certificates",
+  "verified_certificates": "Verified",
+  "certificate_preview": "Certificate Preview",
+  "certificate_of_authenticity": "Certificate of Authenticity",
+  "certificate_preview_description": "This document certifies the authenticity of the creative process",
+  "download_pdf": "Download PDF",
+  "close": "Close",
+  "no_certificates_found": "No Certificates Found",
+  "no_certificates_description": "You haven't issued any certificates yet. Start by creating a new project.",
+  "adjust_search_filter": "Try adjusting your search or filter criteria",
+  "create_new_project": "Create New Project"
 }

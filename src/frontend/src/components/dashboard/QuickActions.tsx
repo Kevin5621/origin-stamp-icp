@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Plus, FileCheck, BarChart3 } from "lucide-react";
 import QuickActionCard from "./QuickActionCard";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface QuickActionsProps {
   onNewProject: () => void;
@@ -11,6 +12,13 @@ interface QuickActionsProps {
 const QuickActions: React.FC<QuickActionsProps> = ({ onNewProject }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
+
+  const handleCertificatesClick = () => {
+    console.log("Auth state:", { isAuthenticated, user });
+    console.log("Navigating to /certificates");
+    navigate("/certificates");
+  };
 
   return (
     <section className="quick-actions-section">
@@ -18,7 +26,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onNewProject }) => {
         <h3 className="quick-actions-title">{t("quick_actions_title")}</h3>
         <p className="quick-actions-subtitle">{t("quick_actions_subtitle")}</p>
       </div>
-
+      
       <div className="quick-actions-grid">
         <QuickActionCard
           icon={<Plus size={24} strokeWidth={2} />}
@@ -32,7 +40,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onNewProject }) => {
           icon={<FileCheck size={24} strokeWidth={2} />}
           title={t("view_certificates_title")}
           description={t("view_certificates_description")}
-          onClick={() => navigate("/certificates")}
+          onClick={handleCertificatesClick}
           variant="secondary"
         />
 
