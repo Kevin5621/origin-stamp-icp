@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Clock, 
-  FileText, 
-  Users, 
+import {
+  BarChart3,
+  TrendingUp,
+  Clock,
+  FileText,
+  Users,
   Calendar,
   Activity,
   Target,
@@ -13,12 +13,12 @@ import {
   Zap,
   ArrowUpRight,
   ArrowDownRight,
-  Minus
+  Minus,
 } from "lucide-react";
 
 /**
  * AnalyticsPage - Halaman analisis dan statistik
- * 
+ *
  * Fitur:
  * - Dashboard statistik overview
  * - Grafik performa
@@ -45,24 +45,24 @@ const AnalyticsPage: React.FC = () => {
       totalHours: 156,
       totalActions: 2847,
       activeUsers: 3,
-      completionRate: 85
+      completionRate: 85,
     },
     trends: {
       projectsGrowth: 12.5,
       certificatesGrowth: 8.3,
       hoursGrowth: -2.1,
-      actionsGrowth: 15.7
+      actionsGrowth: 15.7,
     },
     monthlyData: [
       { month: "Jan", projects: 4, certificates: 3, hours: 45 },
       { month: "Feb", projects: 6, certificates: 5, hours: 52 },
       { month: "Mar", projects: 8, certificates: 7, hours: 48 },
-      { month: "Apr", projects: 6, certificates: 3, hours: 11 }
+      { month: "Apr", projects: 6, certificates: 3, hours: 11 },
     ],
     projectTypes: [
       { type: "Digital Art", count: 12, percentage: 50 },
       { type: "Physical Art", count: 8, percentage: 33 },
-      { type: "Code Projects", count: 4, percentage: 17 }
+      { type: "Code Projects", count: 4, percentage: 17 },
     ],
     recentActivity: [
       {
@@ -70,35 +70,41 @@ const AnalyticsPage: React.FC = () => {
         type: "certificate_issued",
         title: "Certificate issued for 'Abstract Composition'",
         time: "2 hours ago",
-        user: "John Doe"
+        user: "John Doe",
       },
       {
         id: 2,
         type: "project_started",
         title: "New project started: 'Landscape Painting'",
         time: "4 hours ago",
-        user: "Jane Smith"
+        user: "Jane Smith",
       },
       {
         id: 3,
         type: "session_completed",
         title: "Session completed: 'Web Application'",
         time: "1 day ago",
-        user: "Mike Johnson"
+        user: "Mike Johnson",
       },
       {
         id: 4,
         type: "certificate_verified",
         title: "Certificate verified: 'Digital Artwork'",
         time: "2 days ago",
-        user: "John Doe"
-      }
-    ]
+        user: "John Doe",
+      },
+    ],
   };
 
   const getGrowthIcon = (value: number) => {
-    if (value > 0) return <ArrowUpRight size={16} strokeWidth={2} className="text-success" />;
-    if (value < 0) return <ArrowDownRight size={16} strokeWidth={2} className="text-error" />;
+    if (value > 0)
+      return (
+        <ArrowUpRight size={16} strokeWidth={2} className="text-success" />
+      );
+    if (value < 0)
+      return (
+        <ArrowDownRight size={16} strokeWidth={2} className="text-error" />
+      );
     return <Minus size={16} strokeWidth={2} className="text-secondary" />;
   };
 
@@ -147,9 +153,7 @@ const AnalyticsPage: React.FC = () => {
             <h1 id="analytics-title" className="analytics-title">
               {t("analytics_title")}
             </h1>
-            <p className="analytics-subtitle">
-              {t("analytics_description")}
-            </p>
+            <p className="analytics-subtitle">{t("analytics_description")}</p>
           </div>
           <div className="header-controls">
             <select
@@ -175,13 +179,21 @@ const AnalyticsPage: React.FC = () => {
                 </div>
                 <div className="stat-trend">
                   {getGrowthIcon(analyticsData.trends.projectsGrowth)}
-                  <span style={{ color: getGrowthColor(analyticsData.trends.projectsGrowth) }}>
+                  <span
+                    style={{
+                      color: getGrowthColor(
+                        analyticsData.trends.projectsGrowth,
+                      ),
+                    }}
+                  >
                     {analyticsData.trends.projectsGrowth}%
                   </span>
                 </div>
               </div>
               <div className="stat-content">
-                <h3 className="stat-value">{analyticsData.overview.totalProjects}</h3>
+                <h3 className="stat-value">
+                  {analyticsData.overview.totalProjects}
+                </h3>
                 <p className="stat-label">{t("total_projects")}</p>
               </div>
             </div>
@@ -193,13 +205,21 @@ const AnalyticsPage: React.FC = () => {
                 </div>
                 <div className="stat-trend">
                   {getGrowthIcon(analyticsData.trends.certificatesGrowth)}
-                  <span style={{ color: getGrowthColor(analyticsData.trends.certificatesGrowth) }}>
+                  <span
+                    style={{
+                      color: getGrowthColor(
+                        analyticsData.trends.certificatesGrowth,
+                      ),
+                    }}
+                  >
                     {analyticsData.trends.certificatesGrowth}%
                   </span>
                 </div>
               </div>
               <div className="stat-content">
-                <h3 className="stat-value">{analyticsData.overview.totalCertificates}</h3>
+                <h3 className="stat-value">
+                  {analyticsData.overview.totalCertificates}
+                </h3>
                 <p className="stat-label">{t("certificates_issued")}</p>
               </div>
             </div>
@@ -211,13 +231,19 @@ const AnalyticsPage: React.FC = () => {
                 </div>
                 <div className="stat-trend">
                   {getGrowthIcon(analyticsData.trends.hoursGrowth)}
-                  <span style={{ color: getGrowthColor(analyticsData.trends.hoursGrowth) }}>
+                  <span
+                    style={{
+                      color: getGrowthColor(analyticsData.trends.hoursGrowth),
+                    }}
+                  >
                     {analyticsData.trends.hoursGrowth}%
                   </span>
                 </div>
               </div>
               <div className="stat-content">
-                <h3 className="stat-value">{analyticsData.overview.totalHours}h</h3>
+                <h3 className="stat-value">
+                  {analyticsData.overview.totalHours}h
+                </h3>
                 <p className="stat-label">{t("total_hours")}</p>
               </div>
             </div>
@@ -229,13 +255,19 @@ const AnalyticsPage: React.FC = () => {
                 </div>
                 <div className="stat-trend">
                   {getGrowthIcon(analyticsData.trends.actionsGrowth)}
-                  <span style={{ color: getGrowthColor(analyticsData.trends.actionsGrowth) }}>
+                  <span
+                    style={{
+                      color: getGrowthColor(analyticsData.trends.actionsGrowth),
+                    }}
+                  >
                     {analyticsData.trends.actionsGrowth}%
                   </span>
                 </div>
               </div>
               <div className="stat-content">
-                <h3 className="stat-value">{analyticsData.overview.totalActions}</h3>
+                <h3 className="stat-value">
+                  {analyticsData.overview.totalActions}
+                </h3>
                 <p className="stat-label">{t("total_actions")}</p>
               </div>
             </div>
@@ -247,11 +279,15 @@ const AnalyticsPage: React.FC = () => {
                 </div>
                 <div className="stat-trend">
                   <Minus size={16} strokeWidth={2} className="text-secondary" />
-                  <span style={{ color: "var(--color-text-secondary)" }}>0%</span>
+                  <span style={{ color: "var(--color-text-secondary)" }}>
+                    0%
+                  </span>
                 </div>
               </div>
               <div className="stat-content">
-                <h3 className="stat-value">{analyticsData.overview.activeUsers}</h3>
+                <h3 className="stat-value">
+                  {analyticsData.overview.activeUsers}
+                </h3>
                 <p className="stat-label">{t("active_users")}</p>
               </div>
             </div>
@@ -262,12 +298,18 @@ const AnalyticsPage: React.FC = () => {
                   <Award size={24} strokeWidth={2} />
                 </div>
                 <div className="stat-trend">
-                  <ArrowUpRight size={16} strokeWidth={2} className="text-success" />
+                  <ArrowUpRight
+                    size={16}
+                    strokeWidth={2}
+                    className="text-success"
+                  />
                   <span style={{ color: "var(--color-success)" }}>+5%</span>
                 </div>
               </div>
               <div className="stat-content">
-                <h3 className="stat-value">{analyticsData.overview.completionRate}%</h3>
+                <h3 className="stat-value">
+                  {analyticsData.overview.completionRate}%
+                </h3>
                 <p className="stat-label">{t("completion_rate")}</p>
               </div>
             </div>
@@ -312,7 +354,8 @@ const AnalyticsPage: React.FC = () => {
                         <span className="data-label">{data.month}</span>
                         <span className="data-value">
                           {selectedMetric === "projects" && data.projects}
-                          {selectedMetric === "certificates" && data.certificates}
+                          {selectedMetric === "certificates" &&
+                            data.certificates}
                           {selectedMetric === "hours" && data.hours}
                         </span>
                       </div>
@@ -333,19 +376,27 @@ const AnalyticsPage: React.FC = () => {
                     <div key={index} className="distribution-item">
                       <div className="distribution-info">
                         <span className="distribution-label">
-                          {type.type === "Digital Art" ? t("digital_art") :
-                           type.type === "Physical Art" ? t("physical_art") :
-                           type.type === "Code Projects" ? t("code_projects") : type.type}
+                          {type.type === "Digital Art"
+                            ? t("digital_art")
+                            : type.type === "Physical Art"
+                              ? t("physical_art")
+                              : type.type === "Code Projects"
+                                ? t("code_projects")
+                                : type.type}
                         </span>
-                        <span className="distribution-count">{type.count} projects</span>
+                        <span className="distribution-count">
+                          {type.count} projects
+                        </span>
                       </div>
                       <div className="distribution-bar">
-                        <div 
+                        <div
                           className="distribution-fill"
                           style={{ width: `${type.percentage}%` }}
                         ></div>
                       </div>
-                      <span className="distribution-percentage">{type.percentage}%</span>
+                      <span className="distribution-percentage">
+                        {type.percentage}%
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -366,7 +417,7 @@ const AnalyticsPage: React.FC = () => {
             <div className="activity-list">
               {analyticsData.recentActivity.map((activity) => (
                 <div key={activity.id} className="activity-item">
-                  <div 
+                  <div
                     className="activity-icon"
                     style={{ color: getActivityColor(activity.type) }}
                   >
@@ -388,4 +439,4 @@ const AnalyticsPage: React.FC = () => {
   );
 };
 
-export default AnalyticsPage; 
+export default AnalyticsPage;
