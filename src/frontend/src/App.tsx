@@ -19,6 +19,7 @@ import SessionPage from "./pages/dashboard/SessionPage";
 import FinalizationPage from "./pages/dashboard/FinalizationPage";
 import VerificationPage from "./pages/dashboard/VerificationPage";
 import CertificatesPage from "./pages/dashboard/CertificatesPage";
+import AnalyticsPage from "./pages/dashboard/AnalyticsPage";
 
 function App() {
   const [loading] = useState(false);
@@ -74,6 +75,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CertificatesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <AnalyticsPage />
                 </ProtectedRoute>
               }
             />

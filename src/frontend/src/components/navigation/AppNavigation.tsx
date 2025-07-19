@@ -28,6 +28,13 @@ export function AppNavigation() {
           <span>{t("view_certificates_title")}</span>
         </button>
         <button
+          onClick={() => navigate("/analytics")}
+          className={`nav-button ${currentView === "/analytics" ? "active" : ""}`}
+          aria-current={currentView === "/analytics" ? "page" : undefined}
+        >
+          <span>{t("analytics_title")}</span>
+        </button>
+        <button
           onClick={() => navigate("/")}
           className="nav-button"
           aria-label={t("home_nav")}
