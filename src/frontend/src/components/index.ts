@@ -6,6 +6,7 @@ export * from "./ui/ErrorDisplay";
 export * from "./common/InputField";
 export * from "./common/Loader";
 export * from "./common/Modal";
+export * from "./common/FloatingHeader";
 export * from "./ui/ThemeToggle";
 export * from "./login/Login";
 export * from "./login/LoginForm";

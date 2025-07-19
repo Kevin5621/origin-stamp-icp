@@ -37,3 +37,186 @@
   line-height: 1.6;
   font-family: "Raleway", sans-serif;
 }
+
+/* =============================================================================
+   FLOATING HEADER COMPONENT STYLES
+   Transparan floating header dengan scroll behavior
+   ============================================================================= */
+
+.floating-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  will-change: transform, opacity;
+
+  &.floating-header--visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  &.floating-header--hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.75rem;
+  }
+}
+
+.floating-header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 1.25rem;
+  padding: 1rem;
+  pointer-events: auto;
+  min-height: 3.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+
+  /* Hover effect untuk memberikan feedback visual */
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Active state untuk memberikan feedback saat diklik */
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.75rem;
+    gap: 0.5rem;
+    min-height: 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+    gap: 0.375rem;
+    min-height: 2.5rem;
+    border-radius: 1rem;
+  }
+}
+
+/* App-specific floating header styling */
+.app-floating-header {
+  .floating-header-content {
+    /* Transparan background dengan blur effect */
+    background-color: rgba(var(--color-surface-rgb), 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(var(--color-border-rgb, 209, 213, 219), 0.2);
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+    &:hover {
+      background-color: rgba(var(--color-surface-rgb), 0.15);
+      border-color: rgba(var(--color-border-rgb, 209, 213, 219), 0.3);
+      box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .app-floating-header .floating-header-content {
+  background-color: rgba(var(--color-surface-rgb), 0.1);
+  border-color: rgba(var(--color-border-rgb, 55, 65, 81), 0.2);
+  backdrop-filter: blur(8px);
+
+  &:hover {
+    background-color: rgba(var(--color-surface-rgb), 0.15);
+    border-color: rgba(var(--color-border-rgb, 55, 65, 81), 0.3);
+  }
+}
+
+/* Ensure main content doesn't overlap with floating header */
+.main-content {
+  padding-top: 6rem; /* Memberikan ruang untuk floating header */
+  position: relative;
+  z-index: 1;
+  margin-top: 0;
+}
+
+/* Dashboard specific - tidak perlu padding-top karena sudah ada layout sendiri */
+.dashboard-section {
+  padding-top: 0;
+}
+
+/* Responsive adjustments for different screen sizes */
+@media (max-width: 1024px) {
+  .floating-header {
+    padding: 1.25rem;
+  }
+  
+  .main-content {
+    padding-top: 5.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .floating-header {
+    padding: 1rem;
+  }
+  
+  .floating-header-content {
+    gap: 0.5rem;
+  }
+  
+  .main-content {
+    padding-top: 5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .floating-header {
+    padding: 1rem;
+  }
+  
+  .floating-header-content {
+    gap: 0.5rem;
+  }
+  
+  .main-content {
+    padding-top: 4.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-header {
+    padding: 0.75rem;
+  }
+  
+  .main-content {
+    padding-top: 4rem;
+  }
+}
+
+/* Profile dropdown positioning - ensure it doesn't affect other buttons */
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1001;
+  margin-top: 0.5rem;
+}
+
+/* Ensure other buttons in floating header don't move when profile expands */
+.floating-header-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+.floating-header-content > *:last-child {
+  z-index: 2; /* Profile button should be on top */
+}
