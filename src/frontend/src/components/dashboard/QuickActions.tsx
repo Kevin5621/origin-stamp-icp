@@ -26,7 +26,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onNewProject }) => {
         <h3 className="quick-actions-title">{t("quick_actions_title")}</h3>
         <p className="quick-actions-subtitle">{t("quick_actions_subtitle")}</p>
       </div>
-      
+
       <div className="quick-actions-grid">
         <QuickActionCard
           icon={<Plus size={24} strokeWidth={2} />}
