@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const FinalizationView: React.FC = () => {
+/**
+ * Finalization Page - Halaman finalisasi project
+ * Memerlukan autentikasi
+ */
+const FinalizationPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -98,4 +102,4 @@ const FinalizationView: React.FC = () => {
   );
 };
 
-export default FinalizationView;
+export default FinalizationPage;

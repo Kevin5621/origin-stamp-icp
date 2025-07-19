@@ -1,6 +1,10 @@
 import { useTranslation } from "react-i18next";
 
-const VerificationView: React.FC = () => {
+/**
+ * Verification Page - Halaman verifikasi sertifikat
+ * Memerlukan autentikasi
+ */
+const VerificationPage: React.FC = () => {
   const { t } = useTranslation();
 
   return (
@@ -114,4 +118,4 @@ const VerificationView: React.FC = () => {
   );
 };
 
-export default VerificationView;
+export default VerificationPage;

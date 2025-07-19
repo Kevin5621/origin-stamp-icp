@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import ThreeModelViewer from "../components/ThreeModelViewer";
-import { TypingEffect } from "../utils";
+import { useAuth } from "../../contexts/AuthContext";
+import ThreeModelViewer from "../../components/ThreeModelViewer";
+import { TypingEffect } from "../../utils";
 import { useGLTF } from "@react-three/drei";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../../hooks/useTheme";
 
-const LandingView: React.FC = () => {
+/**
+ * Landing Page - Halaman utama aplikasi
+ * Tidak memerlukan autentikasi
+ */
+const LandingPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -124,4 +128,4 @@ const LandingView: React.FC = () => {
   );
 };
 
-export default LandingView;
+export default LandingPage;

@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const DashboardView: React.FC = () => {
+/**
+ * Dashboard Page - Halaman dashboard utama
+ * Memerlukan autentikasi
+ */
+const DashboardPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -84,4 +88,4 @@ const DashboardView: React.FC = () => {
   );
 };
 
-export default DashboardView;
+export default DashboardPage;

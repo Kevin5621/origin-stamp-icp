@@ -2,17 +2,16 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Loader, ErrorDisplay, ThemeToggle, Login } from "./components";
 import LanguageToggle from "./components/ui/LanguageToggle";
-import {
-  LandingView,
-  DashboardView,
-  SessionView,
-  FinalizationView,
-  VerificationView,
-} from "./views";
-import LoginView from "./views/LoginView";
 import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+// Import pages dari sistem modular baru
+import LandingPage from "./pages/landing/LandingPage";
+import LoginPage from "./pages/auth/LoginPage";
+import DashboardPage from "./pages/dashboard/DashboardPage";
+import SessionPage from "./pages/dashboard/SessionPage";
+import FinalizationPage from "./pages/dashboard/FinalizationPage";
+import VerificationPage from "./pages/dashboard/VerificationPage";
 
 function App() {
   const [loading] = useState(false);
@@ -29,13 +28,13 @@ function App() {
 
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<LandingView />} />
-            <Route path="/login" element={<LoginView />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <DashboardView />
+                  <DashboardPage />
                 </ProtectedRoute>
               }
             />
@@ -43,7 +42,7 @@ function App() {
               path="/session"
               element={
                 <ProtectedRoute>
-                  <SessionView />
+                  <SessionPage />
                 </ProtectedRoute>
               }
             />
@@ -51,7 +50,7 @@ function App() {
               path="/finalization"
               element={
                 <ProtectedRoute>
-                  <FinalizationView />
+                  <FinalizationPage />
                 </ProtectedRoute>
               }
             />
@@ -59,7 +58,7 @@ function App() {
               path="/verification"
               element={
                 <ProtectedRoute>
-                  <VerificationView />
+                  <VerificationPage />
                 </ProtectedRoute>
               }
             />
