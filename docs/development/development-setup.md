@@ -24,10 +24,13 @@ npm install
 ### 3. Start Development Server
 
 ```bash
-# Start frontend only
+# Start everything for development (DFX + Backend + Frontend)
+npm run dev
+
+# Or start frontend only (if backend is already running)
 npm start
 
-# Or start full deployment
+# Or start full deployment (production-like)
 npm run deploy
 ```
 
@@ -53,18 +56,23 @@ src/frontend/
 
 ```bash
 # Development
-npm start              # Start dev server
+npm run dev            # Start everything (DFX + Backend + Frontend)
+npm start              # Start frontend only
 npm run build          # Build for production
 npm run preview        # Preview production build
+```
 
 # Testing
-npm test               # Run all tests
-npm run test:frontend  # Frontend tests only
+
+npm test # Run all tests
+npm run test:frontend # Frontend tests only
 
 # Deployment
-npm run deploy         # Full deployment
+
+npm run deploy # Full deployment
 npm run deploy:frontend # Frontend only
-```
+
+````
 
 ## 🎨 Styling
 
@@ -111,7 +119,7 @@ npm run deploy:frontend # Frontend only
 # Run tests
 npm test
 
-```
+````
 
 ### Testing Libraries
 

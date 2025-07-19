@@ -13,6 +13,7 @@
     "format": "prettier --write . && cargo fmt && cargo clippy --fix --allow-dirty --allow-staged --target wasm32-unknown-unknown",
     "build": "npm run build --workspace=frontend",
     "start": "npm start --workspaces --if-present",
+    "dev": "bash ./scripts/dev.sh",
     "deploy": "bash ./scripts/start.sh",
     "deploy:backend": "dfx deploy",
     "deploy:frontend": "npm run build && dfx deploy frontend",
