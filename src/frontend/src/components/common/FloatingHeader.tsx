@@ -1,50 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-/**
- * FloatingHeader - Komponen header floating yang dapat disembunyikan/muncul berdasarkan scroll
- *
- * Fitur:
- * - Auto-hide saat scroll ke bawah
- * - Auto-show saat scroll ke atas atau di posisi atas
- * - Transparan background dengan blur effect
- * - Responsive design
- * - Reusable dan customizable
- * - Tidak menutupi main-content
- * - Profile dropdown tidak mempengaruhi button lain
- *
- * Props:
- * @param children - Konten yang akan ditampilkan dalam header
- * @param className - Class tambahan untuk styling
- * @param threshold - Jarak scroll minimum sebelum header disembunyikan (default: 100px)
- * @param showOnTop - Posisi header di atas atau bawah (default: true = atas)
- *
- * Contoh penggunaan:
- * ```tsx
- * // Basic usage
- * <FloatingHeader>
- *   <Login />
- *   <ThemeToggle />
- *   <LanguageToggle />
- * </FloatingHeader>
- *
- * // Custom threshold dan styling
- * <FloatingHeader
- *   threshold={150}
- *   className="custom-header"
- *   showOnTop={false}
- * >
- *   <Button>Action 1</Button>
- *   <Button>Action 2</Button>
- * </FloatingHeader>
- * ```
- *
- * CSS Classes yang tersedia:
- * - .floating-header - Container utama
- * - .floating-header--visible - State saat header terlihat
- * - .floating-header--hidden - State saat header tersembunyi
- * - .floating-header-content - Container untuk konten
- * - .app-floating-header - Styling khusus untuk app header
- */
 interface FloatingHeaderProps {
   children: React.ReactNode;
   className?: string;

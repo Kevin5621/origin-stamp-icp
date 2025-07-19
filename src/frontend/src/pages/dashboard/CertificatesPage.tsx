@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import {
   FileText,
   Search,
-  Filter,
   Download,
   Share2,
   Eye,
@@ -12,7 +11,6 @@ import {
   Clock,
   CheckCircle,
   Copy,
-  ExternalLink,
 } from "lucide-react";
 
 const CertificatesPage: React.FC = () => {

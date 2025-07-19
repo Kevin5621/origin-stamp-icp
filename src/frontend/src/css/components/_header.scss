@@ -72,6 +72,8 @@
   }
 }
 
+
+
 .floating-header-content {
   display: flex;
   align-items: center;
@@ -82,6 +84,8 @@
   min-height: 3.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, box-shadow;
+  position: relative;
+  isolation: isolate;
 
   /* Hover effect untuk memberikan feedback visual */
   &:hover {
@@ -91,6 +95,20 @@
   /* Active state untuk memberikan feedback saat diklik */
   &:active {
     transform: translateY(0);
+  }
+
+  .theme-toggle,
+  .language-toggle {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    transform: none !important;
+  }
+
+  .profile-container {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
   }
 
   @media (max-width: 768px) {
@@ -202,21 +220,4 @@
   }
 }
 
-/* Profile dropdown positioning - ensure it doesn't affect other buttons */
-.profile-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 1001;
-  margin-top: 0.5rem;
-}
 
-/* Ensure other buttons in floating header don't move when profile expands */
-.floating-header-content > * {
-  position: relative;
-  z-index: 1;
-}
-
-.floating-header-content > *:last-child {
-  z-index: 2; /* Profile button should be on top */
-}
