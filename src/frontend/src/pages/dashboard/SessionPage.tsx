@@ -92,8 +92,8 @@ const SessionPage: React.FC = () => {
                       {t("step_by_step_photos")}
                     </span>
                     <span className="feature-tag">{t("manual_process")}</span>
-                  </div>
-                </div>
+            </div>
+          </div>
 
                 <div
                   className="art-type-card wireframe-card"
@@ -295,17 +295,17 @@ const SessionPage: React.FC = () => {
                       className="progress-fill"
                       style={{ width: "0%" }}
                     ></div>
-                  </div>
-                </div>
+            </div>
+          </div>
 
                 <div className="session-actions">
-                  <button
+          <button
                     onClick={handleFinalize}
                     className="btn-finalize wireframe-button primary"
                   >
                     <CheckCircle size={16} strokeWidth={2} />
                     {t("finalize_session")}
-                  </button>
+          </button>
                 </div>
               </div>
             </div>

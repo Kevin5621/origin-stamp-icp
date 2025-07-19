@@ -24,15 +24,13 @@
 
 /* Main Content */
 .main-content {
-  margin-bottom: 6rem;
-}
+  padding-top: 6rem; /* Space for floating header */
+  margin-bottom: 6rem; /* Space for navigation */
+  min-height: calc(100vh - 12rem);
+  transition: var(--theme-transition);
 
-/* Main Content */
-.main-content {
-  margin-bottom: 6rem;
-}
-
-/* Main Content */
-.main-content {
-  margin-bottom: 6rem;
+  @media (max-width: 768px) {
+    padding-top: 5rem;
+    margin-bottom: 5rem;
+  }
 }
