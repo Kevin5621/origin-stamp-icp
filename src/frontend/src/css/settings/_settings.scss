@@ -7,6 +7,9 @@
   --color-text-primary: var(--color-primary-text);
   --color-text-secondary: var(--color-primary-text);
 
+  /* RGB Values for Surface Colors */
+  --color-surface-rgb: 224, 229, 236;
+
   /* Shadow Colors for Neumorphic Design */
   --color-shadow-dark: #a3a3a3;
   --color-shadow-light: #ffffff;
@@ -22,12 +25,21 @@
   --color-warning: #d69e2e;
   --color-info: #3182ce;
 
+  /* RGB Values for Status Colors */
+  --color-error-rgb: 197, 48, 48;
+  --color-success-rgb: 56, 161, 105;
+  --color-warning-rgb: 214, 158, 46;
+  --color-info-rgb: 49, 130, 206;
+
   /* Additional Colors */
   --color-secondary: #6b7280;
   --color-border: #d1d5db;
   --color-text-tertiary: #9ca3af;
   --color-surface-disabled: #f3f4f6;
   --color-primary-rgb: 77, 91, 112;
+
+  /* RGB Values for Additional Colors */
+  --color-border-rgb: 209, 213, 219;
 
   /* Animation States */
   --color-recording: #e53e3e;
@@ -50,6 +62,9 @@
   --color-text-primary: var(--color-primary-text);
   --color-text-secondary: #94a3b8;
 
+  /* Dark Theme RGB Values for Surface Colors */
+  --color-surface-rgb: 26, 26, 46;
+
   /* Dark Theme Shadows */
   --color-shadow-dark: #0f0f1a;
   --color-shadow-light: #2a2a3e;
@@ -65,12 +80,21 @@
   --color-warning: #fbbf24;
   --color-info: #60a5fa;
 
+  /* Dark Theme RGB Values for Status Colors */
+  --color-error-rgb: 248, 113, 113;
+  --color-success-rgb: 74, 222, 128;
+  --color-warning-rgb: 251, 191, 36;
+  --color-info-rgb: 96, 165, 250;
+
   /* Dark Theme Additional Colors */
   --color-secondary: #9ca3af;
   --color-border: #374151;
   --color-text-tertiary: #6b7280;
   --color-surface-disabled: #1f2937;
   --color-primary-rgb: 226, 232, 240;
+
+  /* Dark Theme RGB Values for Additional Colors */
+  --color-border-rgb: 55, 65, 81;
 
   /* Dark Theme Animation States */
   --color-recording: #ef4444;

@@ -93,6 +93,7 @@
   "active_sessions_label": "Active Sessions",
   "total_value_label": "Total Value",
   "quick_actions_title": "Quick Actions",
+  "quick_actions_subtitle": "Quick access to main features",
   "new_project_description": "Create a new verification project",
   "verify_work_title": "Verify Work",
   "verify_work_description": "Verify work authenticity",

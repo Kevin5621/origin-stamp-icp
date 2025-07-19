@@ -33,7 +33,10 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
         description={t("no_projects_description")}
         hint={t("start_verification_journey_hint")}
         actionButton={
-          <button onClick={onNewProject} className="btn-new-project">
+          <button
+            onClick={onNewProject}
+            className="btn-new-project wireframe-button primary"
+          >
             <svg
               className="btn-icon"
               viewBox="0 0 24 24"

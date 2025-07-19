@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 
 interface EmptyStateProps {
   title: string;
@@ -16,8 +15,6 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   icon,
   actionButton,
 }) => {
-  const { t } = useTranslation();
-
   const defaultIcon = (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path
@@ -30,13 +27,13 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   );
 
   return (
-    <article className="empty-state-card">
+    <article className="empty-state-card wireframe-card">
       <div className="empty-state-icon">{icon || defaultIcon}</div>
       <h3 className="empty-state-title">{title}</h3>
       <p className="empty-state-description">{description}</p>
 
       {hint && (
-        <div className="empty-state-hint">
+        <div className="empty-state-hint wireframe-badge">
           <svg
             className="hint-icon"
             viewBox="0 0 24 24"

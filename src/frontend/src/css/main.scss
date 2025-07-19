@@ -13,6 +13,11 @@
 @use "objects/_layout.scss" as *;
 @use "objects/_bento.scss" as *;
 
+// ITCSS: Utilities
+@use "utilities/_utilities.scss" as *;
+@use "utilities/_responsive.scss" as *;
+@use "utilities/_legacy.scss" as *;
+
 // ITCSS: Components
 @use "components/_surface.scss" as *;
 @use "components/_landing.scss" as *;
@@ -27,8 +32,3 @@
 @use "components/_navigation.scss" as *;
 @use "components/_forms.scss" as *;
 @use "components/_dashboard.scss" as *;
-
-// ITCSS: Utilities
-@use "utilities/_utilities.scss" as *;
-@use "utilities/_responsive.scss" as *;
-@use "utilities/_legacy.scss" as *;

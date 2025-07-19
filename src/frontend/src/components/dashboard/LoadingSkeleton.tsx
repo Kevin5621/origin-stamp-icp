@@ -23,7 +23,7 @@ const LoadingSkeleton: React.FC = () => {
         <aside className="dashboard-sidebar">
           <div className="dashboard-stats">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="stat-card">
+              <div key={i} className="stat-card wireframe-card">
                 <div className="stat-header">
                   <div className="skeleton skeleton-avatar"></div>
                 </div>
@@ -57,7 +57,7 @@ const LoadingSkeleton: React.FC = () => {
             </div>
             <div className="quick-actions">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="quick-action-card">
+                <div key={i} className="quick-action-card wireframe-card">
                   <div className="skeleton skeleton-avatar"></div>
                   <div className="action-content">
                     <div className="skeleton skeleton-text"></div>
@@ -101,7 +101,7 @@ const LoadingSkeleton: React.FC = () => {
             </div>
 
             {/* Filter Tabs Skeleton */}
-            <div className="filter-tabs">
+            <div className="filter-tabs wireframe-tabs">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
@@ -118,7 +118,7 @@ const LoadingSkeleton: React.FC = () => {
             {/* Projects List Skeleton */}
             <div className="projects-list">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="project-card">
+                <div key={i} className="project-card wireframe-card">
                   <div className="project-header">
                     <div
                       className="skeleton skeleton-title"
