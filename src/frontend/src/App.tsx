@@ -132,6 +132,9 @@ function App() {
         {loading && !error && <Loader />}
         {!!error && <ErrorDisplay message={error} />}
       </BrowserRouter>
+      
+      {/* Portal target untuk modal */}
+      <div id="modal-root"></div>
     </AuthProvider>
   );
 }
