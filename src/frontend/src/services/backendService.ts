@@ -6,15 +6,6 @@ import type { LoginResult } from "../../../declarations/backend/backend.did";
  */
 export const backendService = {
   /**
-   * Sends a prompt to the LLM backend
-   * @param prompt The user's prompt text
-   * @returns Promise with the LLM response
-   */
-  async sendLlmPrompt(prompt: string): Promise<string> {
-    return await backend.prompt(prompt);
-  },
-
-  /**
    * Registers a new user
    * @param username Username for the new user
    * @param password Password for the new user
