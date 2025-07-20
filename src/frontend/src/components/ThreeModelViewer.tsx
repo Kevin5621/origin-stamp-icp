@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState, memo } from "react";
 interface ThreeModelViewerProps {
   src: string;
   enableInteraction?: boolean;
+  enableRotation?: boolean;
   theme?: "light" | "dark";
 }
 
@@ -35,8 +36,8 @@ const Model: React.FC<{ src: string; onLoad?: () => void }> = memo(
     return (
       <primitive
         object={scene}
-        position={[0, 0, 0]} // Posisi tengah container
-        rotation={[0, -Math.PI / 2, 0]} // Rotasi -90 derajat untuk menghadap ke depan
+        position={[0, 0, 0]}
+        rotation={[0, -Math.PI / 2, 0]}
         scale={[2, 2, 2]}
       />
     );
@@ -52,7 +53,8 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
   ({
     src,
     enableInteraction = true,
-    theme = "light", // Default light theme
+    enableRotation = false,
+    theme = "light",
   }) => {
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -88,16 +90,20 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
     return (
       <Canvas
         style={{
-          width: "100%",
-          height: "100%",
+          width: "150%",
+          height: "150%",
           opacity: isLoaded ? 1 : 0,
           transition: "opacity 0.5s ease-in-out",
           background: "transparent",
+          position: "absolute",
+          top: "-25%",
+          left: "-25%",
+          overflow: "visible",
         }}
         shadows
         camera={{
-          position: [0, 0, 4], // Posisi kamera
-          fov: 40,
+          position: [0, 0, 3.5],
+          fov: 50,
           near: 0.1,
           far: 1000,
         }}
@@ -111,7 +117,7 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
         {/* Lighting yang optimal berdasarkan tema */}
         <ambientLight intensity={lightIntensity.ambient} />
         <directionalLight
-          position={[3, 3, 3]}
+          position={[3, 4, 3]}
           intensity={lightIntensity.directional}
           castShadow
           shadow-mapSize-width={2048}
@@ -119,27 +125,37 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
         />
         <pointLight position={[-3, 3, -3]} intensity={lightIntensity.point} />
 
-        {/* Tambahan lighting untuk efek glow */}
+        {/* Tambahan lighting khusus untuk bagian atas model */}
         <spotLight
-          position={[0, 5, 0]}
-          intensity={lightIntensity.spot}
-          angle={0.3}
-          penumbra={0.5}
+          position={[0, 6, 2]}
+          intensity={lightIntensity.spot * 1.2}
+          angle={0.4}
+          penumbra={0.3}
           color="#ffffff"
+          target-position={[0, 1, 0]}
+        />
+
+        {/* Rim light untuk highlight kontur */}
+        <directionalLight
+          position={[-2, 2, -2]}
+          intensity={lightIntensity.directional * 0.3}
+          color="#e0e7ff"
         />
 
         <Suspense fallback={null}>
           <Model src={src} onLoad={() => setIsLoaded(true)} />
-          {/* OrbitControls hanya aktif jika enableInteraction = true */}
-          {enableInteraction && (
+          {/* OrbitControls dengan batasan yang lebih optimal untuk viewing bagian atas */}
+          {(enableInteraction || enableRotation) && (
             <OrbitControls
-              enablePan={true}
-              enableZoom={true}
-              enableRotate={true}
+              enablePan={enableInteraction}
+              enableZoom={enableInteraction}
+              enableRotate={enableInteraction || enableRotation}
               minDistance={3}
               maxDistance={8}
-              autoRotate={true}
-              autoRotateSpeed={1}
+              autoRotate={enableRotation}
+              autoRotateSpeed={0.8}
+              maxPolarAngle={Math.PI * 0.65}
+              minPolarAngle={Math.PI * 0.2}
             />
           )}
           <Preload all />
