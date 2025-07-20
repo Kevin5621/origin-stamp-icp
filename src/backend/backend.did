@@ -1,27 +1,47 @@
-type AssistantMessage = record {
-  content : opt text;
-  tool_calls : vec ToolCall;
-};
-type ChatMessage = variant {
-  tool : record { content : text; tool_call_id : text };
-  user : record { content : text };
-  assistant : AssistantMessage;
-  system : record { content : text };
-};
-type FunctionCall = record { name : text; arguments : vec ToolCallArgument };
 type LoginResult = record {
   username : opt text;
   message : text;
   success : bool;
 };
-type ToolCall = record { id : text; function : FunctionCall };
-type ToolCallArgument = record { value : text; name : text };
+type PhysicalArtSession = record {
+  status : text;
+  updated_at : nat64;
+  uploaded_photos : vec text;
+  username : text;
+  session_id : text;
+  art_title : text;
+  description : text;
+  created_at : nat64;
+};
+type Result = variant { Ok : text; Err : text };
+type Result_1 = variant { Ok : bool; Err : text };
+type S3Config = record {
+  region : text;
+  endpoint : opt text;
+  secret_access_key : text;
+  bucket_name : text;
+  access_key_id : text;
+};
+type UploadFileData = record {
+  content_type : text;
+  file_size : nat64;
+  filename : text;
+};
 service : {
-  chat : (vec ChatMessage) -> (text);
+  configure_s3 : (S3Config) -> (bool);
+  create_physical_art_session : (text, text, text) -> (Result);
+  generate_upload_url : (text, UploadFileData) -> (Result);
   get_all_users : () -> (vec text) query;
+  get_s3_config : () -> (opt S3Config) query;
+  get_s3_config_status : () -> (bool) query;
+  get_session_details : (text) -> (opt PhysicalArtSession) query;
   get_user_count : () -> (nat64) query;
   get_user_info : (text) -> (opt record { text; nat64 }) query;
+  get_user_sessions : (text) -> (vec PhysicalArtSession) query;
   login : (text, text) -> (LoginResult);
-  prompt : (text) -> (text);
   register_user : (text, text) -> (LoginResult);
+  remove_photo_from_session : (text, text) -> (Result_1);
+  set_s3_config : (S3Config) -> (bool);
+  update_session_status : (text, text) -> (Result_1);
+  upload_photo_to_session : (text, text) -> (Result_1);
 }

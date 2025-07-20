@@ -7,6 +7,7 @@ import DashboardPage from "../pages/dashboard/DashboardPage";
 import SessionPage from "../pages/dashboard/SessionPage";
 import FinalizationPage from "../pages/dashboard/FinalizationPage";
 import VerificationPage from "../pages/dashboard/VerificationPage";
+import AdminPage from "../pages/admin/AdminPage";
 
 /**
  * App Routes - Route manager utama
@@ -49,6 +50,14 @@ export const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <VerificationPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminPage />
           </ProtectedRoute>
         }
       />
