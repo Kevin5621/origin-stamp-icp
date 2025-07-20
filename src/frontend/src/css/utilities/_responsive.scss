@@ -1,50 +1,238 @@
 /* =============================================================================
-   RESPONSIVE DESIGN
+   UTILITIES: RESPONSIVE DESIGN
    ============================================================================= */
 
-@media (max-width: 767px) {
+/* =============================================================================
+   MOBILE PORTRAIT (max-width: 480px)
+   ============================================================================= */
+
+@media (max-width: 480px) {
+  /* Layout adjustments */
   .page-container {
-    padding: 1rem;
+    padding: var(--spacing-sm);
   }
 
+  /* Card adjustments */
   .hero-primary-card,
   .session-main-card,
   .process-summary-card,
   .certificate-card {
-    padding: 2rem;
+    padding: var(--spacing-lg);
   }
 
+  /* Header adjustments */
   .dashboard-header-card,
   .session-header-card,
   .finalization-header,
   .verification-header {
     flex-direction: column;
     text-align: center;
+    gap: var(--spacing-md);
   }
 
+  /* Navigation adjustments */
   .nav-container {
-    padding: 0.75rem;
+    padding: var(--spacing-sm);
   }
 
   .nav-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.875rem;
   }
 
   .nav-button span {
     display: none;
   }
 
+  /* Grid adjustments */
   .hero-features {
-    gap: 1rem;
+    gap: var(--spacing-md);
   }
 
   .feature-card {
-    padding: 1.5rem;
+    padding: var(--spacing-lg);
   }
 
   .metrics-grid,
   .verification-stats-grid {
     grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  /* Typography adjustments */
+  .landing-title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  /* Spacing adjustments */
+  .section {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .section--small {
+    padding: var(--spacing-md) 0;
+  }
+
+  .section--large {
+    padding: var(--spacing-2xl) 0;
+  }
+}
+
+/* =============================================================================
+   MOBILE LANDSCAPE (max-width: 768px)
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  /* Layout adjustments */
+  .page-container {
+    padding: var(--spacing-md);
+  }
+
+  /* Grid adjustments */
+  .grid--2-cols,
+  .grid--3-cols,
+  .grid--4-cols {
+    grid-template-columns: 1fr;
+  }
+
+  /* Typography adjustments */
+  .landing-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  /* Controls adjustments */
+  .controls-container {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+
+  /* Dolly zoom adjustments */
+  .dolly-zoom-content-wrapper {
+    max-width: 400px;
+    max-height: 400px;
+    height: 60vh;
+  }
+
+  .scroll-indicator {
+    font-size: clamp(10px, 2vw, 12px);
+    bottom: 15px;
+
+    div {
+      font-size: clamp(11px, 2.2vw, 12px);
+    }
+  }
+}
+
+/* =============================================================================
+   TABLET (max-width: 900px)
+   ============================================================================= */
+
+@media (max-width: 900px) {
+  /* Grid adjustments */
+  .landing-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-vh-sm);
+  }
+
+  /* Spacing adjustments */
+  .landing-left,
+  .landing-right {
+    padding-left: var(--spacing-vw-md);
+    padding-right: var(--spacing-vw-md);
+  }
+
+  .landing-right {
+    margin-top: var(--spacing-vh-sm);
+  }
+
+  /* Dolly zoom adjustments */
+  .dolly-zoom-left-section {
+    width: 100vw;
+    padding-left: var(--spacing-vw-md);
+    justify-content: center;
+    text-align: center;
+  }
+
+  .dolly-zoom-right-section {
+    width: 100vw;
+    top: 60%;
+    padding-right: var(--spacing-vw-md);
+  }
+
+  .dolly-zoom-left-section .landing-left {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* =============================================================================
+   DESKTOP (min-width: 901px)
+   ============================================================================= */
+
+@media (min-width: 901px) {
+  /* Container adjustments */
+  .container {
+    max-width: var(--breakpoint-desktop);
+  }
+
+  /* Grid adjustments */
+  .grid--auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .grid--auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+/* =============================================================================
+   WIDE DESKTOP (min-width: 1201px)
+   ============================================================================= */
+
+@media (min-width: 1201px) {
+  /* Container adjustments */
+  .container {
+    max-width: var(--breakpoint-wide);
+  }
+
+  /* Grid adjustments */
+  .grid--auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+
+  .grid--auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+/* =============================================================================
+   ACCESSIBILITY RESPONSIVE
+   ============================================================================= */
+
+/* High DPI displays */
+@media screen and (min-resolution: 2dppx) {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-shadow-dark: #000000;
+    --color-shadow-light: #ffffff;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

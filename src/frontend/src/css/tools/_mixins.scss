@@ -1,0 +1,150 @@
+/* =============================================================================
+   TOOLS: MIXINS & FUNCTIONS
+   ============================================================================= */
+
+/* =============================================================================
+   RESPONSIVE MIXINS
+   ============================================================================= */
+
+@mixin mobile-portrait {
+  @media (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin mobile-landscape {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 900px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 901px) {
+    @content;
+  }
+}
+
+/* =============================================================================
+   PERFORMANCE MIXINS
+   ============================================================================= */
+
+@mixin gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin smooth-transition(
+  $property: all,
+  $duration: 0.3s,
+  $timing: cubic-bezier(0.4, 0, 0.2, 1)
+) {
+  transition: $property $duration $timing;
+  will-change: $property;
+}
+
+@mixin performance-contained {
+  contain: layout style paint;
+  isolation: isolate;
+}
+
+/* =============================================================================
+   LAYOUT MIXINS
+   ============================================================================= */
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin absolute-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin viewport-cover {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+/* =============================================================================
+   TYPOGRAPHY MIXINS
+   ============================================================================= */
+
+@mixin responsive-font($min-size, $preferred-size, $max-size) {
+  font-size: clamp($min-size, $preferred-size, $max-size);
+}
+
+@mixin heading-style {
+  font-family: "Raleway", sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+/* =============================================================================
+   ACCESSIBILITY MIXINS
+   ============================================================================= */
+
+@mixin focus-visible {
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =============================================================================
+   UTILITY MIXINS
+   ============================================================================= */
+
+@mixin reset-spacing {
+  margin: 0;
+  padding: 0;
+}
+
+@mixin no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

@@ -1,192 +1,267 @@
-// Shadow Utilities
+/* =============================================================================
+   UTILITIES: GENERAL UTILITIES
+   ============================================================================= */
+
+/* =============================================================================
+   SHADOW UTILITIES
+   ============================================================================= */
+
 .shadow-raised {
-  box-shadow:
-    6px 6px 12px var(--color-shadow-dark),
-    -6px -6px 12px var(--color-shadow-light);
+  box-shadow: var(--shadow-neumorphic-sm);
 }
+
 .shadow-raised-large {
-  box-shadow:
-    9px 9px 16px var(--color-shadow-dark),
-    -9px -9px 16px var(--color-shadow-light);
+  box-shadow: var(--shadow-neumorphic-md);
 }
+
 .shadow-raised-xl {
-  box-shadow:
-    12px 12px 24px var(--color-shadow-dark),
-    -12px -12px 24px var(--color-shadow-light);
+  box-shadow: var(--shadow-neumorphic-lg);
 }
+
 .shadow-inset {
   box-shadow:
     inset 3px 3px 6px var(--color-shadow-dark),
     inset -3px -3px 6px var(--color-shadow-light);
 }
+
 .shadow-inset-large {
   box-shadow:
     inset 6px 6px 12px var(--color-shadow-dark),
     inset -6px -6px 12px var(--color-shadow-light);
 }
+
 .shadow-inset-focus {
   box-shadow:
     inset 6px 6px 12px var(--color-shadow-dark),
     inset -6px -6px 12px var(--color-shadow-light);
 }
+
 .shadow-pressed {
   box-shadow:
     inset 5px 5px 10px var(--color-shadow-dark),
     inset -5px -5px 10px var(--color-shadow-light);
 }
 
-/* Wireframe Utilities untuk Content */
+/* =============================================================================
+   WIREFRAME UTILITIES - SHARP & GEOMETRIC
+   ============================================================================= */
+
 .wireframe {
-  border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  border-radius: 8px;
+  border: 2px solid var(--color-primary-text);
+  background-color: transparent;
+  color: var(--color-primary-text);
+  border-radius: 0; // Explicitly no border radius for sharp edges
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
+  transition: all 0.2s ease;
 }
 
 .wireframe-card {
-  border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
+  border: 2px solid var(--color-primary-text);
+  background-color: transparent;
+  color: var(--color-primary-text);
+  border-radius: 0; // Sharp edges
+  padding: var(--spacing-lg);
+  transition: all 0.2s ease;
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
 
   &:hover {
-    border-color: var(--color-info);
-    box-shadow: 0 2px 8px rgba(var(--color-info-rgb), 0.1);
+    border-color: var(--color-primary-text);
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 }
 
 .wireframe-input {
-  border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  color: var(--color-text-primary);
+  border: 2px solid var(--color-primary-text);
+  background-color: transparent;
+  border-radius: 0; // Sharp edges
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--color-primary-text);
   font-size: 0.875rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
 
   &::placeholder {
-    color: var(--color-text-tertiary);
+    color: var(--color-primary-text);
+    opacity: 0.6;
+    text-transform: uppercase;
   }
 
   &:focus {
     outline: none;
-    border-color: var(--color-info);
-    box-shadow: 0 0 0 3px rgba(var(--color-info-rgb), 0.1);
+    border-color: var(--color-primary-text);
+    box-shadow: 0 0 0 3px var(--color-primary-text);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    border-color: var(--color-primary-text);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 }
 
 .wireframe-button {
-  border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  color: var(--color-text-primary);
-  font-weight: 600;
+  border: 2px solid var(--color-primary-text);
+  background-color: transparent;
+  border-radius: 0; // Sharp edges
+  padding: var(--spacing-sm) var(--spacing-lg);
+  color: var(--color-primary-text);
+  font-weight: var(--font-weight-bold);
   font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
 
   &:hover {
-    border-color: var(--color-info);
-    background-color: rgba(var(--color-info-rgb), 0.05);
-    transform: translateY(-1px);
+    border-color: var(--color-primary-text);
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+    svg {
+      color: var(--color-surface) !important;
+    }
   }
 
   &:active {
     transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus {
+    outline: 3px solid var(--color-primary-text);
+    outline-offset: 2px;
   }
 
   &.primary {
-    background-color: var(--color-info);
-    border-color: var(--color-info);
-    color: white;
+    background-color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
+    color: var(--color-surface);
 
     &:hover {
-      background-color: var(--color-info);
+      background-color: var(--color-primary-text);
       filter: brightness(1.1);
     }
   }
 }
 
 .wireframe-select {
-  border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  color: var(--color-text-primary);
+  border: 2px solid var(--color-primary-text);
+  background-color: transparent;
+  border-radius: 0; // Sharp edges
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--color-primary-text);
   font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
 
   &:focus {
     outline: none;
-    border-color: var(--color-info);
-    box-shadow: 0 0 0 3px rgba(var(--color-info-rgb), 0.1);
+    border-color: var(--color-primary-text);
+    box-shadow: 0 0 0 3px var(--color-primary-text);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    border-color: var(--color-primary-text);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 }
 
 .wireframe-tabs {
   display: flex;
-  gap: 0.5rem;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 0.25rem;
+  gap: 0; // No gap for seamless connection
+  background-color: transparent;
+  border: 2px solid var(--color-primary-text);
+  border-radius: 0; // Sharp edges
+  padding: 0;
+  overflow: hidden;
 }
 
 .wireframe-tab {
   background: transparent;
   border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  color: var(--color-text-secondary);
+  border-radius: 0; // Sharp edges
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--color-primary-text);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  border-right: 1px solid var(--color-primary-text);
+
+  &:last-child {
+    border-right: none;
+  }
 
   &:hover {
-    color: var(--color-text-primary);
+    color: var(--color-surface);
+    background-color: var(--color-primary-text);
   }
 
   &.active {
-    background-color: var(--color-info);
-    color: white;
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
   }
 }
 
 .wireframe-toggle {
   display: flex;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 0.25rem;
+  background-color: transparent;
+  border: 2px solid var(--color-primary-text);
+  border-radius: 0; // Sharp edges
+  padding: 0;
+  overflow: hidden;
 
   .toggle-btn {
     background: transparent;
     border: none;
-    border-radius: 6px;
-    padding: 0.5rem;
-    color: var(--color-text-secondary);
+    border-radius: 0; // Sharp edges
+    padding: var(--spacing-sm);
+    color: var(--color-primary-text);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    font-family: var(--font-family-mono, "Courier New", monospace);
+    text-transform: uppercase;
+    font-weight: var(--font-weight-bold);
+    border-right: 1px solid var(--color-primary-text);
+
+    &:last-child {
+      border-right: none;
+    }
 
     &:hover {
-      color: var(--color-text-primary);
+      color: var(--color-surface);
+      background-color: var(--color-primary-text);
     }
 
     &.active {
-      background-color: var(--color-info);
-      color: white;
+      background-color: var(--color-primary-text);
+      color: var(--color-surface);
     }
 
     svg {
       width: 1.25rem;
       height: 1.25rem;
-      stroke-width: 1.5;
+      stroke-width: 2; // Thicker stroke for sharp look
     }
   }
 }
@@ -194,13 +269,13 @@
 .wireframe-status {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-lg);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter-spacing-wide);
 
   &.active {
     background-color: rgba(var(--color-info-rgb), 0.1);
@@ -231,91 +306,141 @@
   width: 100%;
   height: 8px;
   background-color: var(--color-border);
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   overflow: hidden;
 
   .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--color-info), var(--color-success));
-    border-radius: 4px;
-    transition: width 0.3s ease;
+    border-radius: var(--border-radius-sm);
+    transition: width var(--transition-normal);
   }
 }
 
 .wireframe-divider {
   height: 1px;
   background-color: var(--color-border);
-  margin: 1rem 0;
+  margin: var(--spacing-md) 0;
 }
 
-.wireframe-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-primary);
+/* =============================================================================
+   TEXT UTILITIES
+   ============================================================================= */
 
-  svg {
-    width: 1rem;
-    height: 1rem;
-    stroke-width: 2;
-  }
+.text-center {
+  text-align: center !important;
 }
 
-/* Utility Classes */
+.text-left {
+  text-align: left !important;
+}
 
-/* Text Utilities */
+.text-right {
+  text-align: right !important;
+}
+
+.text-justify {
+  text-align: justify !important;
+}
+
 .text-primary {
-  color: var(--color-text-primary);
+  color: var(--color-text-primary) !important;
 }
 
 .text-secondary {
-  color: var(--color-text-secondary);
+  color: var(--color-text-secondary) !important;
+}
+
+.text-tertiary {
+  color: var(--color-text-tertiary) !important;
 }
 
 .text-error {
-  color: var(--color-error);
+  color: var(--color-error) !important;
 }
 
 .text-success {
-  color: var(--color-success);
+  color: var(--color-success) !important;
 }
 
 .text-warning {
-  color: var(--color-warning);
+  color: var(--color-warning) !important;
 }
 
 .text-info {
-  color: var(--color-info);
+  color: var(--color-info) !important;
 }
 
-/* Status Indicators */
-.status-recording {
-  color: var(--color-recording);
+/* =============================================================================
+   SPACING UTILITIES
+   ============================================================================= */
+
+.m-0 {
+  margin: 0 !important;
+}
+.m-xs {
+  margin: var(--spacing-xs) !important;
+}
+.m-sm {
+  margin: var(--spacing-sm) !important;
+}
+.m-md {
+  margin: var(--spacing-md) !important;
+}
+.m-lg {
+  margin: var(--spacing-lg) !important;
+}
+.m-xl {
+  margin: var(--spacing-xl) !important;
 }
 
-.indicator-recording {
-  background-color: var(--color-recording);
-  border-radius: 9999px;
-  animation: pulse 2s infinite;
+.p-0 {
+  padding: 0 !important;
+}
+.p-xs {
+  padding: var(--spacing-xs) !important;
+}
+.p-sm {
+  padding: var(--spacing-sm) !important;
+}
+.p-md {
+  padding: var(--spacing-md) !important;
+}
+.p-lg {
+  padding: var(--spacing-lg) !important;
+}
+.p-xl {
+  padding: var(--spacing-xl) !important;
 }
 
-.status-active {
-  color: var(--color-success);
-  font-weight: 600;
+/* =============================================================================
+   BORDER UTILITIES
+   ============================================================================= */
+
+.border {
+  border: 1px solid var(--color-border) !important;
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+.border-0 {
+  border: none !important;
+}
+
+.border-radius-sm {
+  border-radius: var(--border-radius-sm) !important;
+}
+
+.border-radius-md {
+  border-radius: var(--border-radius-md) !important;
+}
+
+.border-radius-lg {
+  border-radius: var(--border-radius-lg) !important;
+}
+
+.border-radius-xl {
+  border-radius: var(--border-radius-xl) !important;
+}
+
+.border-radius-full {
+  border-radius: var(--border-radius-full) !important;
 }

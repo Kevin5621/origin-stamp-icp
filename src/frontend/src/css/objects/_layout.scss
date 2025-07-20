@@ -1,33 +1,38 @@
-.controls-container {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  display: flex;
-  gap: 1rem;
-  z-index: 100;
-}
+/* =============================================================================
+   OBJECTS: LAYOUT PATTERNS
+   ============================================================================= */
 
-/* Base Layout */
+/* =============================================================================
+   BASE LAYOUT OBJECTS
+   ============================================================================= */
+
 .app-container {
   min-height: 100vh;
   background-color: var(--color-surface);
   transition: var(--theme-transition);
   position: relative;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .page-container {
   margin: 0 auto;
   max-width: 90rem;
-  padding: 2rem;
+  padding: var(--spacing-xl);
   transition: var(--theme-transition);
 }
 
-/* Main Content */
+/* =============================================================================
+   MAIN CONTENT LAYOUT
+   ============================================================================= */
+
 .main-content {
   padding-top: 6rem; /* Space for floating header */
   margin-bottom: 6rem; /* Space for navigation */
   min-height: calc(100vh - 12rem);
   transition: var(--theme-transition);
+  width: 100%;
+  position: relative;
 
   @media (max-width: 768px) {
     padding-top: 5rem;
@@ -40,9 +45,192 @@
   padding-top: 0 !important;
   margin-bottom: 0 !important;
   min-height: 100vh !important;
+  width: 100vw !important;
+  position: relative !important;
+  overflow: visible !important;
+  /* Memastikan tidak ada scroll horizontal yang tidak diinginkan */
+  max-width: 100vw !important;
 
   @media (max-width: 768px) {
     padding-top: 0 !important;
     margin-bottom: 0 !important;
+  }
+}
+
+/* Memastikan landing page container tetap stabil */
+.main-content--overlay .dolly-zoom-container {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: relative !important;
+  overflow: visible !important;
+  /* Memastikan transform origin konsisten */
+  transform-origin: center center !important;
+}
+
+/* =============================================================================
+   GRID LAYOUT OBJECTS
+   ============================================================================= */
+
+.grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.grid--2-cols {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid--3-cols {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid--4-cols {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid--auto-fit {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid--auto-fill {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* =============================================================================
+   FLEX LAYOUT OBJECTS
+   ============================================================================= */
+
+.flex {
+  display: flex;
+}
+
+.flex--center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex--between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex--around {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.flex--column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex--column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =============================================================================
+   CONTAINER OBJECTS
+   ============================================================================= */
+
+.container {
+  width: 100%;
+  max-width: var(--breakpoint-desktop);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.container--fluid {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.container--narrow {
+  width: 100%;
+  max-width: var(--breakpoint-tablet);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* =============================================================================
+   SECTION OBJECTS
+   ============================================================================= */
+
+.section {
+  padding: var(--spacing-2xl) 0;
+}
+
+.section--small {
+  padding: var(--spacing-xl) 0;
+}
+
+.section--large {
+  padding: var(--spacing-3xl) 0;
+}
+
+.section--full-height {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =============================================================================
+   CONTROLS CONTAINER
+   ============================================================================= */
+
+.controls-container {
+  position: absolute;
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+  display: flex;
+  gap: var(--spacing-md);
+  z-index: var(--z-index-fixed);
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: var(--spacing-md);
+  }
+
+  .grid--2-cols,
+  .grid--3-cols,
+  .grid--4-cols {
+    grid-template-columns: 1fr;
+  }
+
+  .controls-container {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: var(--spacing-sm);
+  }
+
+  .section {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .section--small {
+    padding: var(--spacing-md) 0;
+  }
+
+  .section--large {
+    padding: var(--spacing-2xl) 0;
   }
 }

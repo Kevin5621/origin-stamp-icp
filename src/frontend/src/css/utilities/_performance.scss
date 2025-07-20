@@ -1,0 +1,194 @@
+/* =============================================================================
+   UTILITIES: PERFORMANCE HELPERS
+   ============================================================================= */
+
+/* =============================================================================
+   GPU ACCELERATION UTILITIES
+   ============================================================================= */
+
+.u-gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.u-gpu-layer {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.u-smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.u-performance-contained {
+  contain: layout style paint;
+  isolation: isolate;
+}
+
+/* =============================================================================
+   LAYOUT UTILITIES
+   ============================================================================= */
+
+.u-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.u-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.u-absolute-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.u-viewport-cover {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+.u-reset-spacing {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* =============================================================================
+   OVERFLOW UTILITIES
+   ============================================================================= */
+
+.u-overflow-visible {
+  overflow: visible !important;
+}
+
+.u-overflow-hidden {
+  overflow: hidden !important;
+}
+
+.u-overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
+.u-overflow-y-auto {
+  overflow-y: auto !important;
+}
+
+/* =============================================================================
+   POSITIONING UTILITIES
+   ============================================================================= */
+
+.u-relative {
+  position: relative !important;
+}
+
+.u-absolute {
+  position: absolute !important;
+}
+
+.u-fixed {
+  position: fixed !important;
+}
+
+.u-sticky {
+  position: sticky !important;
+}
+
+/* =============================================================================
+   Z-INDEX UTILITIES
+   ============================================================================= */
+
+.u-z-10 {
+  z-index: 10 !important;
+}
+
+.u-z-15 {
+  z-index: 15 !important;
+}
+
+.u-z-30 {
+  z-index: 30 !important;
+}
+
+.u-z-1000 {
+  z-index: 1000 !important;
+}
+
+/* =============================================================================
+   TRANSFORM UTILITIES
+   ============================================================================= */
+
+.u-transform-center {
+  transform: translate(-50%, -50%) !important;
+}
+
+.u-transform-x-center {
+  transform: translateX(-50%) !important;
+}
+
+.u-transform-y-center {
+  transform: translateY(-50%) !important;
+}
+
+.u-transform-origin-center {
+  transform-origin: center center !important;
+}
+
+/* =============================================================================
+   DISPLAY UTILITIES
+   ============================================================================= */
+
+.u-block {
+  display: block !important;
+}
+
+.u-none {
+  display: none !important;
+}
+
+.u-hidden {
+  visibility: hidden !important;
+}
+
+.u-visible {
+  visibility: visible !important;
+}
+
+/* =============================================================================
+   POINTER EVENTS UTILITIES
+   ============================================================================= */
+
+.u-pointer-none {
+  pointer-events: none !important;
+}
+
+.u-pointer-auto {
+  pointer-events: auto !important;
+}
+
+/* =============================================================================
+   USER SELECT UTILITIES
+   ============================================================================= */
+
+.u-no-select {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+.u-select-text {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}

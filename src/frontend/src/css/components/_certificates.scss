@@ -48,7 +48,7 @@
 .certificates-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 0.5rem 0;
 
   @media (max-width: 768px) {
@@ -182,11 +182,22 @@
   cursor: pointer;
 
   &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     transform: translateY(-2px);
     box-shadow:
       0 4px 12px rgba(0, 0, 0, 0.1),
       6px 6px 12px var(--color-shadow-dark),
       -6px -6px 12px var(--color-shadow-light);
+
+    .certificate-title,
+    .certificate-artist,
+    .certificate-id,
+    .certificate-type,
+    .detail-item {
+      color: var(--color-primary-text) !important;
+    }
   }
 
   @media (max-width: 768px) {
@@ -209,12 +220,21 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--color-info), var(--color-success));
-  color: white;
+  color: var(--color-surface);
   box-shadow:
     0 4px 12px rgba(var(--color-info-rgb), 0.3),
-    inset 2px 2px 4px rgba(255, 255, 255, 0.2),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.1);
+    inset 2px 2px 4px var(--color-white-overlay),
+    inset -2px -2px 4px var(--color-shadow-overlay);
   flex-shrink: 0;
+
+  .certificate-card:hover & {
+    background: var(--color-surface);
+    color: var(--color-primary-text);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      inset 2px 2px 4px var(--color-shadow-light),
+      inset -2px -2px 4px var(--color-shadow-dark);
+  }
 
   @media (max-width: 768px) {
     width: 2.5rem;
@@ -230,7 +250,7 @@
 .certificate-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 0.25rem 0;
   line-height: 1.4;
 }
@@ -246,6 +266,15 @@
   gap: 1rem;
   align-items: center;
   flex-wrap: wrap;
+
+  .certificate-card:hover & {
+    .certificate-id,
+    .certificate-type {
+      background-color: var(--color-surface);
+      color: var(--color-primary-text);
+      border-color: var(--color-primary-text);
+    }
+  }
 }
 
 .certificate-id {
@@ -280,9 +309,15 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: white;
+  color: var(--color-surface);
   background-color: var(--color-success);
   border: 1px solid rgba(255, 255, 255, 0.2);
+
+  .certificate-card:hover & {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
+  }
 }
 
 /* Certificate Details */
@@ -318,6 +353,20 @@
   gap: 0.5rem;
   flex-wrap: wrap;
 
+  .certificate-card:hover & {
+    .action-btn {
+      background-color: var(--color-surface);
+      color: var(--color-primary-text);
+      border-color: var(--color-primary-text);
+
+      &:hover {
+        background-color: var(--color-primary-text);
+        color: var(--color-surface);
+        border-color: var(--color-primary-text);
+      }
+    }
+  }
+
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -333,6 +382,12 @@
   font-weight: 500;
   flex: 1;
   justify-content: center;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    border-color: var(--color-primary-text);
+  }
 
   @media (max-width: 768px) {
     flex: none;
@@ -351,6 +406,16 @@
   min-height: 300px;
   justify-content: center;
 
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+
+    .empty-title,
+    .empty-description {
+      color: var(--color-surface) !important;
+    }
+  }
+
   @media (max-width: 768px) {
     padding: 2rem 1rem;
     min-height: 250px;
@@ -365,7 +430,7 @@
 .empty-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0;
 
   @media (max-width: 768px) {
@@ -389,6 +454,12 @@
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   font-weight: 600;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    border-color: var(--color-primary-text);
+  }
 }
 
 /* Certificate Modal */
@@ -423,6 +494,18 @@
   max-height: 80vh;
   overflow-y: auto;
   padding: 0;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+
+    h2,
+    h3,
+    p,
+    .preview-content {
+      color: var(--color-surface) !important;
+    }
+  }
 }
 
 .modal-header {
@@ -435,7 +518,7 @@
   h2 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     margin: 0;
   }
 }
@@ -451,8 +534,8 @@
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--color-border);
-    color: var(--color-text-primary);
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
   }
 }
 
@@ -470,7 +553,7 @@
   h3 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     margin: 0 0 0.5rem 0;
   }
 
@@ -504,6 +587,14 @@
   justify-content: flex-end;
   padding: 1.5rem;
   border-top: 1px solid var(--color-border);
+
+  .wireframe-button {
+    &:hover {
+      background-color: var(--color-primary-text);
+      color: var(--color-surface);
+      border-color: var(--color-primary-text);
+    }
+  }
 
   @media (max-width: 768px) {
     flex-direction: column;

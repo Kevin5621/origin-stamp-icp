@@ -1,4 +1,11 @@
-/* Semantic ITCSS: LandingView Component Styles - Enhanced */
+/* =============================================================================
+   COMPONENTS: LANDING PAGE STYLES
+   ============================================================================= */
+
+/* =============================================================================
+   LANDING LAYOUT - NORMAL STATE
+   ============================================================================= */
+
 .landing-layout {
   width: 100vw;
   height: 100vh;
@@ -7,10 +14,10 @@
   justify-content: center;
   background: var(--color-surface);
   transition: var(--theme-transition);
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
   overflow: visible !important;
+  position: relative;
 }
 
 .landing-layout ~ .app-floating-header {
@@ -21,10 +28,12 @@
 .landing-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: 4vw;
   width: 100%;
   max-width: 1200px;
   align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 .landing-left {
@@ -32,17 +41,23 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 2rem;
+  gap: 2vh;
   height: 100%;
+  padding-left: 5vw;
+  margin: 0;
 }
 
 .landing-title {
-  font-size: 3rem;
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 600;
   color: var(--color-text-primary);
   letter-spacing: -0.02em;
   text-align: left;
   font-family: "Raleway", sans-serif;
+  line-height: 1.2;
+  margin: 0;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .landing-right {
@@ -52,11 +67,15 @@
   height: 100%;
   position: relative;
   overflow: visible;
+  padding-right: 5vw;
+  margin: 0;
 
   canvas {
     width: 100% !important;
     height: 100% !important;
     border-radius: 1rem;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
 
   > div {
@@ -67,230 +86,143 @@
     height: 100%;
     overflow: visible;
     position: relative;
+    margin: 0;
+    padding: 0;
   }
 }
 
-.neumorphic-card {
-  width: 600px;
-  height: 600px;
-  border-radius: 2rem;
-  background: var(--color-surface);
-  box-shadow:
-    8px 8px 24px var(--color-shadow-dark),
-    -8px -8px 24px var(--color-shadow-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: box-shadow 0.3s;
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
 
-  &--initial {
-    box-shadow: none;
-    transform: scale(0.9);
-    opacity: 0.3;
-  }
-
-  &--animated {
-    box-shadow:
-      20px 20px 60px var(--color-shadow-dark),
-      -20px -20px 60px var(--color-shadow-light);
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.triangle-shape {
-  width: 120px;
-  height: 120px;
-  background: transparent;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  background-color: var(--color-primary-text);
-  box-shadow: 0 4px 16px var(--color-shadow-dark);
-}
-
-/* Enhanced Dolly Zoom Container Styles */
-.dolly-zoom-container {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-  overflow: visible !important;
-  background: var(--color-surface);
-  transition: var(--theme-transition);
-
-  /* Performance optimizations for smooth scrolling */
-  * {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Enhanced GPU acceleration */
-  .dolly-zoom-left-section,
-  .dolly-zoom-right-section {
-    transform: translateZ(0); /* Force GPU layer */
-    perspective: 1000px;
-    transform-style: preserve-3d;
-    contain: layout style paint; /* Performance containment */
-    overflow: visible !important;
-  }
-
-  /* Ensure button remains clickable during animation */
-  .btn-wireframe {
-    position: relative;
-    z-index: 100;
-    pointer-events: auto;
-    transform: translateZ(0); /* Separate GPU layer for button */
-  }
-
-  /* Enhanced scroll indicator animation */
-  .scroll-indicator {
-    animation: smoothPulse 3s ease-in-out infinite; /* Slower animation to match scroll speed */
-    transform: translateZ(0); /* GPU acceleration */
-  }
-}
-
-/* Prevent 3D object clipping with enhanced overflow controls */
-.dolly-zoom-right-section {
-  overflow: visible !important; /* Allow 3D object to overflow */
-
-  .landing-right {
-    width: 100% !important;
-    height: 100% !important;
-    overflow: visible !important; /* Allow overflow */
-
-    canvas {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: contain !important;
-      border-radius: 1rem;
-      /* Enhanced rendering for smooth scaling */
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
-    }
-
-    > div {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      aspect-ratio: 1/1;
-      overflow: visible !important; /* Critical: allow 3D content to overflow */
-      position: relative;
-    }
-  }
-}
-
-/* Enhanced animation keyframes */
-@keyframes smoothPulse {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: translateX(-50%) scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: translateX(-50%) scale(1.05);
-  }
-}
-
-/* Loading spinner animation */
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--color-shadow-light);
-  border-top: 3px solid var(--color-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-/* Responsive adjustments for Dolly Zoom */
+/* Tablet and smaller desktop */
 @media (max-width: 900px) {
   .landing-grid {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2vh;
   }
+
+  .landing-left,
   .landing-right {
-    margin-top: 2rem;
+    padding-left: 3vw;
+    padding-right: 3vw;
+  }
+
+  .landing-right {
+    margin-top: 2vh;
   }
 }
 
+/* Mobile landscape */
 @media (max-width: 768px) {
-  .dolly-zoom-container {
-    .landing-title {
-      font-size: 2.5rem; /* Larger for mobile */
-    }
+  .landing-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
 
-    .dolly-zoom-right-section {
-      /* Adjust scale for mobile viewing */
-      .landing-right {
-        canvas {
-          border-radius: 0.5rem; /* Smaller radius for mobile */
-        }
-      }
-    }
-
-    .scroll-indicator {
-      font-size: 12px;
-      bottom: 15px;
-
-      div:first-child {
-        font-size: 13px;
-      }
-    }
+  .landing-left,
+  .landing-right {
+    padding-left: 3vw;
+    padding-right: 3vw;
   }
 }
 
+/* Mobile portrait */
 @media (max-width: 480px) {
-  .dolly-zoom-container {
-    .landing-title {
-      font-size: 2rem;
-    }
+  .landing-title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .landing-left,
+  .landing-right {
+    padding-left: 2vw;
+    padding-right: 2vw;
   }
 }
 
-/* Additional performance optimizations */
-.dolly-zoom-container * {
-  /* Enhanced GPU acceleration for all elements */
-  transform: translateZ(0);
-  /* Smoother animations with better timing */
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  /* Reduce motion for users who prefer it */
-}
+/* =============================================================================
+   WIREFRAME ELEMENTS IN LANDING PAGE
+   ============================================================================= */
 
-/* Reduce motion for accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .dolly-zoom-container * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+/* Wireframe elements within landing page */
+.landing-layout .btn-wireframe {
+  border: 2px solid var(--color-primary-text);
+  background-color: transparent;
+  color: var(--color-primary-text);
+  border-radius: 0; // Sharp edges for wireframe
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 
-  .scroll-indicator {
-    animation: none;
+  &:focus {
+    outline: 3px solid var(--color-primary-text);
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 }
 
-/* Prevent layout shift during animation with enhanced containment */
-.dolly-zoom-left-section,
-.dolly-zoom-right-section {
-  overflow: visible !important;
-  isolation: isolate; /* Create stacking context */
+.landing-layout .wireframe {
+  border: 2px solid var(--color-primary-text);
+  background-color: transparent;
+  color: var(--color-primary-text);
+  border-radius: 0; // Sharp edges
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
 }
 
-/* Enhanced focus styles for accessibility */
-.dolly-zoom-container .btn-wireframe:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.2);
+.landing-layout .wireframe-input {
+  border: 2px solid var(--color-primary-text);
+  background-color: transparent;
+  color: var(--color-primary-text);
+  border-radius: 0; // Sharp edges
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
+
+  &::placeholder {
+    color: var(--color-primary-text);
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary-text);
+    box-shadow: 0 0 0 3px var(--color-primary-text);
+    outline-offset: 2px;
+  }
+}
+
+/* Wireframe title variant */
+.landing-title--wireframe {
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-primary-text);
+  border: 2px solid var(--color-primary-text);
+  padding: var(--spacing-md);
+  border-radius: 0; // Sharp edges
+  background-color: transparent;
+  display: inline-block;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
 }

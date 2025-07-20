@@ -48,7 +48,7 @@
 .analytics-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 0.5rem 0;
 
   @media (max-width: 768px) {
@@ -96,11 +96,24 @@
   transition: all 0.3s ease;
 
   &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     transform: translateY(-2px);
     box-shadow:
       0 4px 12px rgba(0, 0, 0, 0.1),
       6px 6px 12px var(--color-shadow-dark),
       -6px -6px 12px var(--color-shadow-light);
+
+    .stat-value,
+    .stat-label,
+    .data-value,
+    .data-label,
+    .distribution-label,
+    .distribution-count,
+    .distribution-percentage {
+      color: var(--color-primary-text) !important;
+    }
   }
 
   @media (max-width: 768px) {
@@ -123,11 +136,11 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--color-info), var(--color-success));
-  color: white;
+  color: var(--color-surface);
   box-shadow:
     0 4px 12px rgba(var(--color-info-rgb), 0.3),
-    inset 2px 2px 4px rgba(255, 255, 255, 0.2),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.1);
+    inset 2px 2px 4px var(--color-white-overlay),
+    inset -2px -2px 4px var(--color-shadow-overlay);
 
   @media (max-width: 768px) {
     width: 2.5rem;
@@ -150,7 +163,7 @@
 .stat-value {
   font-size: 2.5rem;
   font-weight: 800;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 0.5rem 0;
   line-height: 1;
 
@@ -188,6 +201,19 @@
   @extend .wireframe-card !optional;
   padding: 2rem;
 
+  &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
+
+    h3,
+    .chart-placeholder,
+    .data-value,
+    .data-label {
+      color: var(--color-primary-text) !important;
+    }
+  }
+
   @media (max-width: 768px) {
     padding: 1.5rem;
   }
@@ -204,7 +230,7 @@
   h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     margin: 0;
   }
 
@@ -236,12 +262,13 @@
   transition: all 0.3s ease;
 
   &:hover {
-    color: var(--color-text-primary);
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
   }
 
   &.active {
     background-color: var(--color-info);
-    color: white;
+    color: var(--color-surface);
   }
 }
 
@@ -296,7 +323,7 @@
 .data-value {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
 }
 
 /* Distribution Chart */
@@ -314,6 +341,24 @@
   background-color: var(--color-primary-bg);
   border-radius: 8px;
   border: 1px solid var(--color-border);
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      6px 6px 12px var(--color-shadow-dark),
+      -6px -6px 12px var(--color-shadow-light);
+
+    .distribution-label,
+    .distribution-count,
+    .distribution-percentage {
+      color: var(--color-surface) !important;
+    }
+  }
 }
 
 .distribution-info {
@@ -325,7 +370,7 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin-bottom: 0.25rem;
 }
 
@@ -353,7 +398,7 @@
 .distribution-percentage {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   min-width: 40px;
   text-align: right;
 }
@@ -366,6 +411,18 @@
 .activity-card {
   @extend .wireframe-card !optional;
   padding: 2rem;
+
+  &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
+
+    h3,
+    .activity-title,
+    .activity-meta {
+      color: var(--color-primary-text) !important;
+    }
+  }
 
   @media (max-width: 768px) {
     padding: 1.5rem;
@@ -383,7 +440,7 @@
   h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     margin: 0;
   }
 
@@ -399,6 +456,11 @@
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+  }
 }
 
 .activity-list {
@@ -415,12 +477,6 @@
   background-color: var(--color-primary-bg);
   border-radius: 8px;
   border: 1px solid var(--color-border);
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: var(--color-surface);
-    border-color: var(--color-info);
-  }
 }
 
 .activity-icon {
