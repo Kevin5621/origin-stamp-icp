@@ -13,6 +13,7 @@
       "gzip": true,
       "wasm": "target/wasm32-unknown-unknown/release/backend.wasm",
       "build": ["bash ./scripts/generate-candid.sh backend"],
+      "post_deploy": ["bash ./scripts/setup-s3.sh"],
       "metadata": [
         {
           "name": "candid:service"

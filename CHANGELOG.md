@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add automated S3 configuration setup during deployment
+- Add Physical Art Session management for photo uploads
+- Add S3 presigned URL generation with AWS Signature V4
+- Add automatic S3 credentials management via environment variables
+- Add deployment scripts with integrated S3 setup (`npm run deploy:full`)
 - Add set_count update method to allow setting the counter to a specific value
 - Add frontend development server scripts (`npm run start`)
 - Add LLM canister implementation
