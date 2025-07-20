@@ -1,14 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import {
-  Camera,
-  Palette,
-  Download,
-  Upload,
-  Clock,
-  CheckCircle,
-} from "lucide-react";
+import { Camera, Palette, Download, Clock, CheckCircle } from "lucide-react";
+import PhysicalArtSetup from "../../components/session/PhysicalArtSetup";
 
 /**
  * Session Page - Halaman session recording dengan pemilihan art type
@@ -19,7 +13,14 @@ const SessionPage: React.FC = () => {
   const navigate = useNavigate();
   const [artType, setArtType] = useState<"physical" | "digital" | null>(null);
   const [sessionStarted, setSessionStarted] = useState(false);
-  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
+
+  const handleSessionCreated = (sessionId: string) => {
+    console.log("Session created:", sessionId);
+  };
+
+  const handlePhotosUploaded = (photoUrls: string[]) => {
+    console.log("Photos uploaded:", photoUrls);
+  };
 
   const handleArtTypeSelect = (type: "physical" | "digital") => {
     setArtType(type);
@@ -27,16 +28,6 @@ const SessionPage: React.FC = () => {
 
   const handleStartSession = () => {
     setSessionStarted(true);
-  };
-
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const newPhotos = Array.from(files).map((file) =>
-        URL.createObjectURL(file),
-      );
-      setUploadedPhotos((prev) => [...prev, ...newPhotos]);
-    }
   };
 
   const handleFinalize = () => {
@@ -122,11 +113,11 @@ const SessionPage: React.FC = () => {
               </div>
             </div>
           ) : !sessionStarted ? (
-            /* Session Setup */
-            <div className="session-setup">
+            /* Art Type Setup */
+            <div className="art-setup">
               <div className="setup-card wireframe-card">
                 <div className="setup-header">
-                  <div className="setup-icon-wrapper">
+                  <div className="setup-icon">
                     {artType === "physical" ? (
                       <Camera size={24} strokeWidth={2} />
                     ) : (
@@ -141,48 +132,10 @@ const SessionPage: React.FC = () => {
                 </div>
 
                 {artType === "physical" ? (
-                  <div className="setup-content">
-                    <p className="setup-description">
-                      {t("physical_art_setup_description")}
-                    </p>
-                    <div className="upload-section">
-                      <label className="upload-area wireframe-card">
-                        <Upload size={24} strokeWidth={2} />
-                        <span>{t("upload_process_photos")}</span>
-                        <input
-                          type="file"
-                          multiple
-                          accept="image/*"
-                          onChange={handlePhotoUpload}
-                          className="file-input"
-                        />
-                      </label>
-                      {uploadedPhotos.length > 0 && (
-                        <div className="uploaded-photos">
-                          <h4>
-                            {t("uploaded_photos_count", {
-                              count: uploadedPhotos.length,
-                            })}
-                          </h4>
-                          <div className="photo-grid">
-                            {uploadedPhotos.map((photo, index) => (
-                              <div key={index} className="photo-item">
-                                <img
-                                  src={photo}
-                                  alt={t("process_photo", {
-                                    number: index + 1,
-                                  })}
-                                />
-                                <span className="photo-timestamp">
-                                  {new Date().toLocaleTimeString()}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <PhysicalArtSetup
+                    onSessionCreated={handleSessionCreated}
+                    onPhotosUploaded={handlePhotosUploaded}
+                  />
                 ) : (
                   <div className="setup-content">
                     <p className="setup-description">
@@ -253,16 +206,15 @@ const SessionPage: React.FC = () => {
                   >
                     {t("back")}
                   </button>
-                  <button
-                    onClick={handleStartSession}
-                    className="btn-start-session wireframe-button primary"
-                    disabled={
-                      artType === "physical" && uploadedPhotos.length === 0
-                    }
-                  >
-                    <CheckCircle size={16} strokeWidth={2} />
-                    {t("start_session")}
-                  </button>
+                  {artType === "digital" && (
+                    <button
+                      onClick={handleStartSession}
+                      className="btn-start-session wireframe-button primary"
+                    >
+                      <CheckCircle size={16} strokeWidth={2} />
+                      {t("start_session")}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

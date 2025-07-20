@@ -1,6 +1,6 @@
 use candid::CandidType;
 use ic_cdk::export_candid;
-use ic_llm::{ChatMessage, Model};
+use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -19,25 +19,30 @@ pub struct LoginResult {
     pub username: Option<String>,
 }
 
-#[ic_cdk::update]
-async fn prompt(prompt_str: String) -> String {
-    ic_llm::prompt(Model::Llama3_1_8B, prompt_str).await
+// Physical Art Session structure
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub struct PhysicalArtSession {
+    pub session_id: String,
+    pub username: String,
+    pub art_title: String,
+    pub description: String,
+    pub uploaded_photos: Vec<String>,
+    pub status: String,
+    pub created_at: u64,
+    pub updated_at: u64,
 }
 
-#[ic_cdk::update]
-async fn chat(messages: Vec<ChatMessage>) -> String {
-    let response = ic_llm::chat(Model::Llama3_1_8B)
-        .with_messages(messages)
-        .send()
-        .await;
-
-    // A response can contain tool calls, but we're not calling tools in this project,
-    // so we can return the response message directly.
-    response.message.content.unwrap_or_default()
+// Upload file data structure
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub struct UploadFileData {
+    pub filename: String,
+    pub content_type: String,
+    pub file_size: u64,
 }
 
 thread_local! {
     static USERS: RefCell<HashMap<String, User>> = RefCell::new(HashMap::new());
+    static PHYSICAL_ART_SESSIONS: RefCell<HashMap<String, PhysicalArtSession>> = RefCell::new(HashMap::new());
 }
 
 // Simple hash function for password (Note: In production, use proper password hashing like bcrypt)
@@ -45,6 +50,22 @@ fn simple_hash(password: &str) -> String {
     // This is a very basic hash - in production, use proper password hashing
     let char_sum: u32 = password.chars().map(|c| c as u32).sum::<u32>();
     format!("{:x}", (password.len() as u32) * 42 + char_sum)
+}
+
+// Generate random ID
+fn generate_random_id() -> String {
+    let timestamp = ic_cdk::api::time();
+    let random_part = simple_hash(&timestamp.to_string());
+    format!(
+        "{:x}{:x}",
+        timestamp & 0xFFFFFFFF,
+        random_part
+            .chars()
+            .take(8)
+            .collect::<String>()
+            .parse::<u32>()
+            .unwrap_or(0)
+    )
 }
 
 #[ic_cdk::update]
@@ -142,6 +163,152 @@ fn get_user_info(username: String) -> Option<(String, u64)> {
 #[ic_cdk::query]
 fn get_user_count() -> usize {
     USERS.with(|users| users.borrow().len())
+}
+
+// Create physical art session
+#[ic_cdk::update]
+fn create_physical_art_session(
+    username: String,
+    art_title: String,
+    description: String,
+) -> Result<String, String> {
+    let session_id = generate_random_id();
+    let session = PhysicalArtSession {
+        session_id: session_id.clone(),
+        username: username.clone(),
+        art_title,
+        description,
+        uploaded_photos: Vec::new(),
+        status: "draft".to_string(),
+        created_at: ic_cdk::api::time(),
+        updated_at: ic_cdk::api::time(),
+    };
+
+    PHYSICAL_ART_SESSIONS.with(|sessions| {
+        sessions.borrow_mut().insert(session_id.clone(), session);
+    });
+
+    Ok(session_id)
+}
+
+// Generate upload URL (placeholder - needs S3 implementation)
+#[ic_cdk::update]
+fn generate_upload_url(session_id: String, file_data: UploadFileData) -> Result<String, String> {
+    // For now, return a placeholder URL
+    // In full implementation, this would generate S3 presigned URL
+    Ok(format!(
+        "https://example.com/upload/{}/{}",
+        session_id, file_data.filename
+    ))
+}
+
+// Upload photo to session (record the uploaded photo)
+#[ic_cdk::update]
+fn upload_photo_to_session(session_id: String, photo_url: String) -> Result<bool, String> {
+    PHYSICAL_ART_SESSIONS.with(|sessions| {
+        let mut sessions_map = sessions.borrow_mut();
+        match sessions_map.get_mut(&session_id) {
+            Some(session) => {
+                session.uploaded_photos.push(photo_url);
+                session.updated_at = ic_cdk::api::time();
+                Ok(true)
+            }
+            None => Err("Session not found".to_string()),
+        }
+    })
+}
+
+// Get session details
+#[ic_cdk::query]
+fn get_session_details(session_id: String) -> Option<PhysicalArtSession> {
+    PHYSICAL_ART_SESSIONS.with(|sessions| sessions.borrow().get(&session_id).cloned())
+}
+
+// Get user sessions
+#[ic_cdk::query]
+fn get_user_sessions(username: String) -> Vec<PhysicalArtSession> {
+    PHYSICAL_ART_SESSIONS.with(|sessions| {
+        sessions
+            .borrow()
+            .values()
+            .filter(|session| session.username == username)
+            .cloned()
+            .collect()
+    })
+}
+
+// Update session status
+#[ic_cdk::update]
+fn update_session_status(session_id: String, status: String) -> Result<bool, String> {
+    PHYSICAL_ART_SESSIONS.with(|sessions| {
+        let mut sessions_map = sessions.borrow_mut();
+        match sessions_map.get_mut(&session_id) {
+            Some(session) => {
+                session.status = status;
+                session.updated_at = ic_cdk::api::time();
+                Ok(true)
+            }
+            None => Err("Session not found".to_string()),
+        }
+    })
+}
+
+// Remove photo from session
+#[ic_cdk::update]
+fn remove_photo_from_session(session_id: String, photo_url: String) -> Result<bool, String> {
+    PHYSICAL_ART_SESSIONS.with(|sessions| {
+        let mut sessions_map = sessions.borrow_mut();
+        match sessions_map.get_mut(&session_id) {
+            Some(session) => {
+                session.uploaded_photos.retain(|url| url != &photo_url);
+                session.updated_at = ic_cdk::api::time();
+                Ok(true)
+            }
+            None => Err("Session not found".to_string()),
+        }
+    })
+}
+
+// Set S3 config (alias for configure_s3)
+#[ic_cdk::update]
+fn set_s3_config(config: S3Config) -> bool {
+    configure_s3(config)
+}
+
+// Get S3 config status
+#[ic_cdk::query]
+fn get_s3_config_status() -> bool {
+    S3_CONFIG.with(|config| config.borrow().is_some())
+}
+
+// S3 Configuration
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub struct S3Config {
+    pub bucket_name: String,
+    pub region: String,
+    pub access_key_id: String,
+    pub secret_access_key: String,
+    pub endpoint: Option<String>, // For custom S3-compatible services
+}
+
+// Global state for S3 configuration
+thread_local! {
+    static S3_CONFIG: RefCell<Option<S3Config>> = RefCell::new(None);
+}
+
+// Configure S3 settings
+#[ic_cdk::update]
+fn configure_s3(config: S3Config) -> bool {
+    S3_CONFIG.with(|s3_config| {
+        *s3_config.borrow_mut() = Some(config);
+        true
+    })
+}
+
+// Get S3 configuration (for testing)
+#[ic_cdk::query]
+fn get_s3_config() -> Option<S3Config> {
+    S3_CONFIG.with(|config| config.borrow().clone())
 }
 
 export_candid!();

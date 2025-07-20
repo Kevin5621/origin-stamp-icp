@@ -5,7 +5,6 @@ import { backend } from "../../../declarations/backend";
 // Mock the backend canister
 vi.mock("../../../declarations/backend", () => ({
   backend: {
-    prompt: vi.fn().mockResolvedValue("This is a mock LLM response"),
     register_user: vi.fn().mockResolvedValue({
       success: true,
       message: "User registered successfully",
@@ -28,17 +27,6 @@ describe("backendService", () => {
   beforeEach(() => {
     // Clear all mocks before each test
     vi.clearAllMocks();
-  });
-
-  describe("sendLlmPrompt", () => {
-    it("should call backend.prompt with the provided prompt", async () => {
-      // Execute
-      const result = await backendService.sendLlmPrompt("Test prompt");
-
-      // Assert
-      expect(backend.prompt).toHaveBeenCalledWith("Test prompt");
-      expect(result).toBe("This is a mock LLM response");
-    });
   });
 
   describe("registerUser", () => {

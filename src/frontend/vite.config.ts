@@ -40,6 +40,7 @@ export default defineConfig({
     tailwindcss(),
     environment("all", { prefix: "CANISTER_" }),
     environment("all", { prefix: "DFX_" }),
+    environment("all", { prefix: "S3_" }),
   ],
   resolve: {
     alias: [
