@@ -110,7 +110,7 @@ const DollyZoomContainer: React.FC<DollyZoomContainerProps> = ({
         height: "100vh",
         position: "relative",
         overflow: "visible",
-        background: theme === "dark" ? "#1a1a1a" : "#ffffff",
+        background: "var(--color-surface)",
       }}
     >
       {/* Left Section */}
@@ -182,7 +182,7 @@ const DollyZoomContainer: React.FC<DollyZoomContainerProps> = ({
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 30,
-          color: theme === "dark" ? "#ffffff" : "#000000",
+          color: "var(--color-text-primary)",
           fontSize: "14px",
           opacity: 0.7,
           pointerEvents: "none",

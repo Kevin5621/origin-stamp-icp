@@ -55,7 +55,7 @@
 
 /* Dark Theme Colors */
 [data-theme="dark"] {
-  --color-primary-bg: #1a1a2e;
+  --color-primary-bg: #1a1a1a;
   --color-primary-text: #e2e8f0;
   --color-surface: var(--color-primary-bg);
   --color-on-surface: var(--color-primary-text);
@@ -63,11 +63,11 @@
   --color-text-secondary: #94a3b8;
 
   /* Dark Theme RGB Values for Surface Colors */
-  --color-surface-rgb: 26, 26, 46;
+  --color-surface-rgb: 26, 26, 26;
 
   /* Dark Theme Shadows */
-  --color-shadow-dark: #0f0f1a;
-  --color-shadow-light: #2a2a3e;
+  --color-shadow-dark: #0f0f0f;
+  --color-shadow-light: #2a2a2a;
 
   /* Dark Theme Interactive States */
   --color-hover-overlay: rgba(30, 41, 59, 0.3);
