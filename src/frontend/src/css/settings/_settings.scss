@@ -1,4 +1,12 @@
+/* =============================================================================
+   SETTINGS: GLOBAL VARIABLES & CONFIGURATION
+   ============================================================================= */
+
 :root {
+  /* =============================================================================
+     COLOR SYSTEM
+     ============================================================================= */
+
   /* Light Theme Colors */
   --color-primary-bg: #e0e5ec;
   --color-primary-text: #4d5b70;
@@ -16,7 +24,6 @@
 
   /* Interactive States */
   --color-hover-overlay: rgba(160, 181, 204, 0.1);
-  /* --color-modal-overlay removed: modal overlay now uses blur only, no color */
 
   /* Status Colors */
   --color-error: #c53030;
@@ -49,11 +56,138 @@
   --color-selection-bg: var(--color-primary-text);
   --color-selection-text: var(--color-primary-bg);
 
-  /* Theme Transition */
+  /* Overlay Colors for Neumorphic Effects */
+  --color-white-overlay: rgba(255, 255, 255, 0.1);
+  --color-shadow-overlay: rgba(0, 0, 0, 0.1);
+  --color-white-overlay-light: rgba(255, 255, 255, 0.05);
+
+  /* =============================================================================
+     TYPOGRAPHY
+     ============================================================================= */
+
+  --font-family-primary: "Raleway", sans-serif;
+  --font-family-mono: "Fira Code", monospace;
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.05em;
+
+  /* =============================================================================
+     SPACING SYSTEM
+     ============================================================================= */
+
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 1.5rem; /* 24px */
+  --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
+  --spacing-3xl: 4rem; /* 64px */
+
+  /* Viewport-based spacing */
+  --spacing-vw-sm: 2vw;
+  --spacing-vw-md: 3vw;
+  --spacing-vw-lg: 5vw;
+  --spacing-vh-sm: 2vh;
+  --spacing-vh-md: 3vh;
+  --spacing-vh-lg: 5vh;
+
+  /* =============================================================================
+     BREAKPOINTS
+     ============================================================================= */
+
+  --breakpoint-mobile-portrait: 480px;
+  --breakpoint-mobile-landscape: 768px;
+  --breakpoint-tablet: 900px;
+  --breakpoint-desktop: 1200px;
+  --breakpoint-wide: 1440px;
+
+  /* =============================================================================
+     BORDER RADIUS
+     ============================================================================= */
+
+  --border-radius-sm: 0.25rem; /* 4px */
+  --border-radius-md: 0.5rem; /* 8px */
+  --border-radius-lg: 1rem; /* 16px */
+  --border-radius-xl: 1.5rem; /* 24px */
+  --border-radius-2xl: 2rem; /* 32px */
+  --border-radius-full: 9999px;
+
+  /* =============================================================================
+     SHADOWS
+     ============================================================================= */
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Neumorphic shadows */
+  --shadow-neumorphic-sm:
+    2px 2px 8px var(--color-shadow-dark),
+    -2px -2px 8px var(--color-shadow-light);
+  --shadow-neumorphic-md:
+    8px 8px 24px var(--color-shadow-dark),
+    -8px -8px 24px var(--color-shadow-light);
+  --shadow-neumorphic-lg:
+    20px 20px 60px var(--color-shadow-dark),
+    -20px -20px 60px var(--color-shadow-light);
+
+  /* =============================================================================
+     TRANSITIONS & ANIMATIONS
+     ============================================================================= */
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
   --theme-transition: all 0.3s ease;
+
+  --easing-linear: linear;
+  --easing-ease: ease;
+  --easing-ease-in: ease-in;
+  --easing-ease-out: ease-out;
+  --easing-ease-in-out: ease-in-out;
+  --easing-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* =============================================================================
+     Z-INDEX SCALE
+     ============================================================================= */
+
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+
+  /* =============================================================================
+     PERFORMANCE
+     ============================================================================= */
+
+  --gpu-acceleration: translateZ(0);
+  --will-change-transform: transform;
+  --backface-visibility: hidden;
+  --font-smoothing: antialiased;
 }
 
-/* Dark Theme Colors */
+/* =============================================================================
+   DARK THEME OVERRIDES
+   ============================================================================= */
+
 [data-theme="dark"] {
   --color-primary-bg: #1a1a1a;
   --color-primary-text: #e2e8f0;
@@ -71,7 +205,6 @@
 
   /* Dark Theme Interactive States */
   --color-hover-overlay: rgba(30, 41, 59, 0.3);
-  /* --color-modal-overlay removed: modal overlay now uses blur only, no color */
 
   /* Dark Theme Status Colors */
   --color-error: #f87171;
@@ -103,4 +236,9 @@
   --color-focus: var(--color-primary-text);
   --color-selection-bg: var(--color-primary-text);
   --color-selection-text: var(--color-primary-bg);
+
+  /* Dark Theme Overlay Colors for Neumorphic Effects */
+  --color-white-overlay: rgba(255, 255, 255, 0.05);
+  --color-shadow-overlay: rgba(0, 0, 0, 0.2);
+  --color-white-overlay-light: rgba(255, 255, 255, 0.02);
 }

@@ -68,7 +68,7 @@
 .dashboard-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0;
 
   @media (max-width: 768px) {
@@ -147,7 +147,7 @@
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0;
 }
 
@@ -170,11 +170,19 @@
   overflow: hidden;
 
   &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     transform: translateY(-2px);
     box-shadow:
       0 4px 12px var(--color-hover-overlay),
       6px 6px 12px var(--color-shadow-dark),
       -6px -6px 12px var(--color-shadow-light);
+
+    .stat-value,
+    .stat-label {
+      color: var(--color-primary-text) !important;
+    }
   }
 
   &:focus {
@@ -192,7 +200,7 @@
         var(--color-success)
       );
       border-color: var(--color-info);
-      color: white;
+      color: var(--color-surface);
       box-shadow:
         0 4px 12px rgba(var(--color-info-rgb), 0.3),
         inset 2px 2px 4px var(--color-white-overlay),
@@ -225,7 +233,7 @@
         var(--color-info)
       );
       border-color: var(--color-success);
-      color: white;
+      color: var(--color-surface);
       box-shadow:
         0 4px 12px rgba(var(--color-success-rgb), 0.3),
         inset 2px 2px 4px var(--color-white-overlay),
@@ -243,7 +251,7 @@
         var(--color-error)
       );
       border-color: var(--color-warning);
-      color: white;
+      color: var(--color-surface);
       box-shadow:
         0 4px 12px rgba(var(--color-warning-rgb), 0.3),
         inset 2px 2px 4px var(--color-white-overlay),
@@ -261,7 +269,7 @@
         var(--color-secondary)
       );
       border-color: var(--color-info);
-      color: white;
+      color: var(--color-surface);
       box-shadow:
         0 4px 12px rgba(var(--color-info-rgb), 0.3),
         inset 2px 2px 4px var(--color-white-overlay),
@@ -330,7 +338,7 @@
 .stat-value {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 0.5rem 0;
   line-height: 1;
 }
@@ -356,7 +364,7 @@
 .quick-actions-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 0.5rem 0;
 }
 
@@ -388,11 +396,19 @@
   overflow: hidden;
 
   &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     transform: translateY(-2px);
     box-shadow:
       0 4px 12px var(--color-hover-overlay),
       6px 6px 12px var(--color-shadow-dark),
       -6px -6px 12px var(--color-shadow-light);
+
+    .action-title,
+    .action-description {
+      color: var(--color-primary-text) !important;
+    }
   }
 
   &:focus {
@@ -410,7 +426,7 @@
         var(--color-success)
       );
       border-color: var(--color-info);
-      color: white;
+      color: var(--color-surface);
       box-shadow:
         0 4px 12px rgba(var(--color-info-rgb), 0.3),
         inset 2px 2px 4px var(--color-white-overlay),
@@ -493,7 +509,7 @@
 .action-title {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 0.25rem 0;
   line-height: 1.4;
 }
@@ -618,11 +634,21 @@
   transition: all 0.3s ease;
 
   &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     transform: translateY(-2px);
     box-shadow:
       0 4px 12px var(--color-hover-overlay),
       6px 6px 12px var(--color-shadow-dark),
       -6px -6px 12px var(--color-shadow-light);
+
+    .project-title,
+    .progress-label,
+    .progress-percentage,
+    .meta-text {
+      color: var(--color-primary-text) !important;
+    }
   }
 
   &:focus {
@@ -645,7 +671,7 @@
 .project-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0;
   flex: 1;
   line-height: 1.4;
@@ -695,7 +721,7 @@
 .progress-percentage {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
 }
 
 .progress-bar {
@@ -766,7 +792,7 @@
 .empty-state-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0;
 
   @media (max-width: 768px) {

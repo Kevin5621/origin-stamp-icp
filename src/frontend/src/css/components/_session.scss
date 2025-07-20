@@ -38,7 +38,7 @@
 .session-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 0.5rem 0;
 
   @media (max-width: 768px) {
@@ -84,11 +84,20 @@
   overflow: hidden;
 
   &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     transform: translateY(-4px);
     box-shadow:
       0 8px 24px rgba(0, 0, 0, 0.1),
       6px 6px 12px var(--color-shadow-dark),
       -6px -6px 12px var(--color-shadow-light);
+
+    .art-type-title,
+    .art-type-description,
+    .feature-tag {
+      color: var(--color-primary-text) !important;
+    }
   }
 
   &:focus {
@@ -110,11 +119,11 @@
   justify-content: center;
   margin: 0 auto 1.5rem;
   background: linear-gradient(135deg, var(--color-info), var(--color-success));
-  color: white;
+  color: var(--color-surface);
   box-shadow:
     0 4px 12px rgba(var(--color-info-rgb), 0.3),
-    inset 2px 2px 4px rgba(255, 255, 255, 0.2),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.1);
+    inset 2px 2px 4px var(--color-white-overlay),
+    inset -2px -2px 4px var(--color-shadow-overlay);
 
   @media (max-width: 768px) {
     width: 3rem;
@@ -126,7 +135,7 @@
 .art-type-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 1rem 0;
 }
 
@@ -166,6 +175,19 @@
   @extend .wireframe-card !optional;
   padding: 2rem;
 
+  &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
+
+    .setup-title,
+    .setup-description,
+    h4,
+    p {
+      color: var(--color-primary-text) !important;
+    }
+  }
+
   @media (max-width: 768px) {
     padding: 1.5rem;
   }
@@ -188,17 +210,17 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--color-info), var(--color-success));
-  color: white;
+  color: var(--color-surface);
   box-shadow:
     0 4px 12px rgba(var(--color-info-rgb), 0.3),
-    inset 2px 2px 4px rgba(255, 255, 255, 0.2),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.1);
+    inset 2px 2px 4px var(--color-white-overlay),
+    inset -2px -2px 4px var(--color-shadow-overlay);
 }
 
 .setup-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0;
 }
 
@@ -232,9 +254,9 @@
   color: var(--color-text-secondary);
 
   &:hover {
-    border-color: var(--color-info);
-    background-color: rgba(var(--color-info-rgb), 0.05);
-    color: var(--color-info);
+    background-color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
+    color: var(--color-surface);
   }
 
   .file-input {
@@ -249,7 +271,7 @@
 .uploaded-photos h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 1rem 0;
 }
 
@@ -304,11 +326,19 @@
   transition: all 0.3s ease;
 
   &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     transform: translateY(-2px);
     box-shadow:
       0 4px 12px rgba(0, 0, 0, 0.1),
       6px 6px 12px var(--color-shadow-dark),
       -6px -6px 12px var(--color-shadow-light);
+
+    h4,
+    p {
+      color: var(--color-primary-text) !important;
+    }
   }
 }
 
@@ -318,7 +348,7 @@
   h4 {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     margin: 0 0 0.25rem 0;
   }
 
@@ -342,8 +372,9 @@
   background-color: rgba(var(--color-info-rgb), 0.05);
 
   &:hover {
-    background-color: var(--color-info);
-    color: white;
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    border-color: var(--color-primary-text);
   }
 }
 
@@ -365,6 +396,12 @@
   color: var(--color-text-secondary);
   border-color: var(--color-border);
   background-color: var(--color-surface);
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    border-color: var(--color-primary-text);
+  }
 }
 
 .btn-start-session {
@@ -373,6 +410,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    border-color: var(--color-primary-text);
+  }
 
   &:disabled {
     opacity: 0.5;
@@ -388,6 +431,18 @@
 .session-status-card {
   @extend .wireframe-card !optional;
   padding: 2rem;
+
+  &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
+
+    .session-timer,
+    .progress-label,
+    .progress-value {
+      color: var(--color-primary-text) !important;
+    }
+  }
 
   @media (max-width: 768px) {
     padding: 1.5rem;
@@ -441,7 +496,7 @@
   gap: 0.5rem;
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
 }
 
 .session-progress {
@@ -464,7 +519,7 @@
 .progress-value {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
 }
 
 .progress-bar {

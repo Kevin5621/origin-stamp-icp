@@ -1,24 +1,26 @@
 /* =============================================================================
+   COMPONENTS: NAVIGATION STYLES
+   ============================================================================= */
+
+/* =============================================================================
    SEMANTIC NAVIGATION
    ============================================================================= */
 
 .app-navigation {
   position: fixed;
-  bottom: 2rem;
+  bottom: var(--spacing-xl);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 50;
+  z-index: var(--z-index-sticky);
 }
 
 .nav-container {
   background-color: var(--color-surface);
-  box-shadow:
-    8px 8px 16px var(--color-shadow-dark),
-    -8px -8px 16px var(--color-shadow-light);
+  box-shadow: var(--shadow-neumorphic-md);
   display: flex;
-  gap: 1rem;
-  border-radius: 1.5rem;
-  padding: 1rem;
+  gap: var(--spacing-md);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-md);
   transition: var(--theme-transition);
 }
 
@@ -26,36 +28,296 @@
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   border: none;
-  border-radius: 1rem;
-  padding: 0.75rem 1.25rem;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-normal);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  box-shadow:
-    4px 4px 8px var(--color-shadow-dark),
-    -4px -4px 8px var(--color-shadow-light);
-}
+  gap: var(--spacing-sm);
+  box-shadow: var(--shadow-neumorphic-sm);
 
-.nav-button:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    6px 6px 12px var(--color-shadow-dark),
-    -6px -6px 12px var(--color-shadow-light);
-}
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-neumorphic-lg);
+  }
 
-.nav-button:active,
-.nav-button.active {
-  transform: translateY(0);
-  box-shadow:
-    inset 4px 4px 8px var(--color-shadow-dark),
-    inset -4px -4px 8px var(--color-shadow-light);
+  &:active,
+  &.active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-inset);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
 }
 
 .nav-icon {
   width: 1rem;
   height: 1rem;
+  transition: transform var(--transition-normal);
+}
+
+.nav-button:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+/* =============================================================================
+   NAVIGATION VARIANTS
+   ============================================================================= */
+
+.nav--horizontal {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.nav--vertical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.nav--pills {
+  .nav-button {
+    border-radius: var(--border-radius-full);
+  }
+}
+
+.nav--tabs {
+  .nav-container {
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-xs);
+  }
+
+  .nav-button {
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+/* =============================================================================
+   NAVIGATION SIZES
+   ============================================================================= */
+
+.nav--small {
+  .nav-container {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .nav-button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8125rem;
+  }
+
+  .nav-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+.nav--large {
+  .nav-container {
+    padding: var(--spacing-lg);
+    gap: var(--spacing-lg);
+  }
+
+  .nav-button {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 1rem;
+  }
+
+  .nav-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+/* =============================================================================
+   NAVIGATION POSITIONS
+   ============================================================================= */
+
+.nav--top {
+  position: fixed;
+  top: var(--spacing-xl);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav--bottom {
+  position: fixed;
+  bottom: var(--spacing-xl);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav--left {
+  position: fixed;
+  left: var(--spacing-xl);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nav--right {
+  position: fixed;
+  right: var(--spacing-xl);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* =============================================================================
+   NAVIGATION STATES
+   ============================================================================= */
+
+.nav--disabled {
+  .nav-button {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.nav--loading {
+  .nav-button {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      animation: shimmer 1.5s infinite;
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* =============================================================================
+   NAVIGATION WITH BADGES
+   ============================================================================= */
+
+.nav-button--with-badge {
+  position: relative;
+
+  .nav-badge {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    background-color: var(--color-error);
+    color: white;
+    border-radius: var(--border-radius-full);
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-bold);
+    min-width: 1.25rem;
+    height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--spacing-xs);
+  }
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .app-navigation {
+    bottom: var(--spacing-md);
+  }
+
+  .nav-container {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .nav-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.8125rem;
+
+    span {
+      display: none;
+    }
+  }
+
+  .nav--large {
+    .nav-container {
+      padding: var(--spacing-md);
+      gap: var(--spacing-md);
+    }
+
+    .nav-button {
+      padding: var(--spacing-sm) var(--spacing-lg);
+      font-size: 0.875rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .app-navigation {
+    bottom: var(--spacing-sm);
+  }
+
+  .nav-container {
+    padding: var(--spacing-xs);
+    gap: var(--spacing-xs);
+    border-radius: var(--border-radius-lg);
+  }
+
+  .nav-button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    border-radius: var(--border-radius-md);
+  }
+
+  .nav--large {
+    .nav-container {
+      padding: var(--spacing-sm);
+      gap: var(--spacing-sm);
+    }
+
+    .nav-button {
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-size: 0.8125rem;
+    }
+  }
+}
+
+/* =============================================================================
+   ACCESSIBILITY
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-button,
+  .nav-icon {
+    transition: none;
+  }
+
+  .nav-button:hover .nav-icon {
+    transform: none;
+  }
 }
