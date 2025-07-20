@@ -1,6 +1,22 @@
-/* Global Base Styles */
+/* =============================================================================
+   GENERIC: BASE STYLES & RESET
+   ============================================================================= */
+
+/* Global reset and base styles */
 * {
   font-family: "Raleway", sans-serif;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  /* Prevent unwanted zoom on mobile */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  /* Smooth scrolling for GSAP animations */
+  scroll-behavior: smooth;
 }
 
 body {
@@ -9,9 +25,43 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  /* CRITICAL: Keep overflow-y auto for ScrollTrigger */
+  overflow-y: auto;
+  position: relative;
 }
 
-/* Custom Scrollbar */
+/* Ensure root element consistency */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Main content containers */
+.main-content {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.main-content--overlay {
+  /* Remove padding and margin that cause empty space */
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 100vh !important;
+  height: auto !important;
+  /* Ensure no additional space */
+  display: block;
+  overflow: visible;
+}
+
+/* =============================================================================
+   CUSTOM SCROLLBAR
+   ============================================================================= */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -34,22 +84,21 @@ body {
   background: #8a8a8a;
 }
 
-/* Accessibility */
+/* =============================================================================
+   ACCESSIBILITY
+   ============================================================================= */
+
 :focus {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
-/* Text Selection */
 ::selection {
   background-color: var(--color-selection-bg);
   color: var(--color-selection-text);
 }
 
-/* =============================================================================
-   ACCESSIBILITY IMPROVEMENTS
-   ============================================================================= */
-
+/* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -60,21 +109,73 @@ body {
   }
 }
 
-/* Focus states for keyboard navigation */
-.btn-hero-cta:focus,
-.btn-new-project:focus,
-.btn-finalize:focus,
-.btn-publish:focus,
-.btn-copy-link:focus,
-.nav-button:focus {
-  outline: 2px solid var(--color-info);
-  outline-offset: 2px;
-}
-
-/* High contrast mode support */
+/* High contrast mode */
 @media (prefers-contrast: high) {
   :root {
     --color-shadow-dark: #000000;
     --color-shadow-light: #ffffff;
   }
+}
+
+/* High DPI display optimizations */
+@media screen and (min-resolution: 2dppx) {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* =============================================================================
+   GLOBAL ANIMATIONS
+   ============================================================================= */
+
+@keyframes smoothPulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateX(-50%) scale(1.05);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* =============================================================================
+   GSAP PIN-SPACER FIXES
+   ============================================================================= */
+
+/* Remove empty space created by GSAP pin-spacer */
+.gsap-pin-spacer {
+  /* No additional height */
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+
+  /* Remove margin and padding */
+  margin: 0 !important;
+  padding: 0 !important;
+
+  /* No border or outline */
+  border: none !important;
+  outline: none !important;
+
+  /* Display none to truly remove space */
+  display: none !important;
+}
+
+/* Alternative if display: none causes issues with GSAP */
+.gsap-pin-spacer[style*="height"] {
+  height: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }

@@ -1,26 +1,31 @@
 // ITCSS: Settings (global variables)
 @use "settings/_settings.scss" as *;
 
-// ITCSS: Tools (mixins, functions) -- (none yet)
+// ITCSS: Tools (mixins, functions)
+@use "tools/_mixins.scss" as *;
 
-// ITCSS: Generic (reset, base) -- (none yet)
+// ITCSS: Generic (reset, base)
 @use "generic/_base.scss" as *;
 
-// ITCSS: Elements (HTML elements) -- (none yet)
+// ITCSS: Elements (HTML elements)
 @use "elements/_forms.scss" as *;
+@use "elements/_canvas.scss" as *;
 
-// ITCSS: Objects (layout, wrappers) -- (none yet)
+// ITCSS: Objects (layout, wrappers)
 @use "objects/_layout.scss" as *;
 @use "objects/_bento.scss" as *;
+@use "objects/_dolly-zoom.scss" as *;
 
 // ITCSS: Utilities
 @use "utilities/_utilities.scss" as *;
 @use "utilities/_responsive.scss" as *;
 @use "utilities/_legacy.scss" as *;
+@use "utilities/_performance.scss" as *;
 
 // ITCSS: Components
 @use "components/_surface.scss" as *;
 @use "components/_landing.scss" as *;
+@use "components/_dolly-zoom.scss" as *;
 @use "components/_login.scss" as *;
 @use "components/_login-form.scss" as *;
 @use "components/_login-page.scss" as *;

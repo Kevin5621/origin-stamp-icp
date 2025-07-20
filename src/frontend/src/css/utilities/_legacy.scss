@@ -1,28 +1,32 @@
 /* =============================================================================
-   LEGACY SUPPORT (for components that haven't been updated yet)
+   UTILITIES: LEGACY SUPPORT
+   ============================================================================= */
+
+/* =============================================================================
+   LEGACY SECTION STYLES
    ============================================================================= */
 
 .section-title {
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   text-align: center;
 }
 
 .section-subtitle {
-  margin-bottom: 3rem;
+  margin-bottom: var(--spacing-2xl);
   font-size: 1.125rem;
   color: var(--color-text-secondary);
   text-align: center;
   max-width: 48rem;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.7;
+  line-height: var(--line-height-relaxed);
 }
 
 .section-container {
-  margin-bottom: 4rem;
+  margin-bottom: var(--spacing-3xl);
 }
 
 .section-content {
@@ -44,14 +48,17 @@
   margin: 0 auto;
 }
 
+/* =============================================================================
+   LEGACY CARD STYLES
+   ============================================================================= */
+
 .card-enhanced {
   background-color: var(--color-surface);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  box-shadow:
-    9px 9px 16px var(--color-shadow-dark),
-    -9px -9px 16px var(--color-shadow-light);
-  transition: all 0.2s ease;
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-neumorphic-md);
+  transition: var(--transition-fast);
+  position: relative;
 }
 
 .card-enhanced::before {
@@ -62,8 +69,12 @@
   right: 0;
   height: 4px;
   background: linear-gradient(90deg, var(--color-info), var(--color-success));
-  border-radius: 1.5rem 1.5rem 0 0;
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
 }
+
+/* =============================================================================
+   LEGACY LOADING STYLES
+   ============================================================================= */
 
 .loading-container {
   display: flex;
@@ -90,36 +101,144 @@
   }
 }
 
+/* =============================================================================
+   LEGACY BUTTON STYLES
+   ============================================================================= */
+
 .btn-cta {
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   border: none;
-  border-radius: 1rem;
-  padding: 1rem 2rem;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md) var(--spacing-xl);
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow:
-    8px 8px 16px var(--color-shadow-dark),
-    -8px -8px 16px var(--color-shadow-light);
-}
+  transition: var(--transition-normal);
+  box-shadow: var(--shadow-neumorphic-sm);
 
-.btn-cta:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    12px 12px 24px var(--color-shadow-dark),
-    -12px -12px 24px var(--color-shadow-light);
-}
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-neumorphic-lg);
+  }
 
-.btn-cta:active {
-  transform: translateY(0);
-  box-shadow:
-    inset 6px 6px 12px var(--color-shadow-dark),
-    inset -6px -6px 12px var(--color-shadow-light);
+  &:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-inset-large);
+  }
 }
 
 .btn-icon {
   width: 1.25rem;
   height: 1.25rem;
+}
+
+/* =============================================================================
+   LEGACY STATUS INDICATORS
+   ============================================================================= */
+
+.status-recording {
+  color: var(--color-recording);
+}
+
+.indicator-recording {
+  background-color: var(--color-recording);
+  border-radius: var(--border-radius-full);
+  animation: pulse 2s infinite;
+}
+
+.status-active {
+  color: var(--color-success);
+  font-weight: var(--font-weight-semibold);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* =============================================================================
+   LEGACY BADGE STYLES
+   ============================================================================= */
+
+.wireframe-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: transparent;
+  border: 2px solid var(--color-primary-text);
+  border-radius: 0; // Sharp edges for wireframe
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-text);
+  font-family: var(--font-family-mono, "Courier New", monospace);
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-primary-text);
+    color: var(--color-surface);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    stroke-width: 2;
+  }
+}
+
+/* =============================================================================
+   LEGACY RESPONSIVE ADJUSTMENTS
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .card-enhanced {
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+  }
+
+  .btn-cta {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .section-subtitle {
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .card-enhanced {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+  }
+
+  .btn-cta {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.875rem;
+  }
 }
