@@ -293,7 +293,7 @@ pub struct S3Config {
 
 // Global state for S3 configuration
 thread_local! {
-    static S3_CONFIG: RefCell<Option<S3Config>> = RefCell::new(None);
+    static S3_CONFIG: RefCell<Option<S3Config>> = const { RefCell::new(None) };
 }
 
 // Configure S3 settings
