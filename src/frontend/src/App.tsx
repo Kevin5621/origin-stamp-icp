@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import {
   Loader,
   ErrorDisplay,
@@ -21,6 +27,90 @@ import VerificationPage from "./pages/dashboard/VerificationPage";
 import CertificatesPage from "./pages/dashboard/CertificatesPage";
 import AnalyticsPage from "./pages/dashboard/AnalyticsPage";
 
+// Component untuk menentukan apakah navbar harus ditampilkan
+function NavigationWrapper() {
+  const location = useLocation();
+  const isLandingPage = location.pathname === "/";
+  const isLoginPage = location.pathname === "/login";
+
+  // Hanya tampilkan navbar jika bukan landing page atau login page
+  if (isLandingPage || isLoginPage) {
+    return null;
+  }
+
+  return <AppNavigation />;
+}
+
+// Component untuk menentukan class pada main content
+function MainContentWrapper() {
+  const location = useLocation();
+  const isLandingPage = location.pathname === "/";
+  const isLoginPage = location.pathname === "/login";
+
+  const mainClass =
+    isLandingPage || isLoginPage
+      ? "main-content main-content--overlay"
+      : "main-content";
+
+  return (
+    <main className={mainClass}>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/session"
+          element={
+            <ProtectedRoute>
+              <SessionPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/finalization"
+          element={
+            <ProtectedRoute>
+              <FinalizationPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/verification"
+          element={
+            <ProtectedRoute>
+              <VerificationPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/certificates"
+          element={
+            <ProtectedRoute>
+              <CertificatesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <AnalyticsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </main>
+  );
+}
+
 function App() {
   const [loading] = useState(false);
   const [error] = useState<string | undefined>();
@@ -34,64 +124,10 @@ function App() {
           <LanguageToggle />
         </FloatingHeader>
 
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/session"
-              element={
-                <ProtectedRoute>
-                  <SessionPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/finalization"
-              element={
-                <ProtectedRoute>
-                  <FinalizationPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/verification"
-              element={
-                <ProtectedRoute>
-                  <VerificationPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/certificates"
-              element={
-                <ProtectedRoute>
-                  <CertificatesPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/analytics"
-              element={
-                <ProtectedRoute>
-                  <AnalyticsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
+        <MainContentWrapper />
 
         {/* Navigation untuk halaman yang memerlukan autentikasi */}
-        <AppNavigation />
+        <NavigationWrapper />
 
         {loading && !error && <Loader />}
         {!!error && <ErrorDisplay message={error} />}

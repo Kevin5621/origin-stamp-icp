@@ -1,12 +1,21 @@
 /* Semantic ITCSS: LandingView Component Styles */
 .landing-layout {
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--color-surface);
   transition: var(--theme-transition);
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: hidden;
+}
+
+.landing-layout ~ .app-floating-header {
+  z-index: 1000;
+  padding-top: 0 !important;
 }
 
 .landing-grid {
