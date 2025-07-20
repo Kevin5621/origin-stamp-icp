@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,9 @@ export function Login({ className = "" }: LoginProps) {
   const [showCustomLogin, setShowCustomLogin] = useState(false);
   const [isProfileExpanded, setIsProfileExpanded] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const loginButtonRef = useRef<HTMLButtonElement>(null);
+  const bodyScrollLockRef = useRef<boolean>(false);
 
   // Handle click outside profile
   useEffect(() => {
@@ -39,77 +42,130 @@ export function Login({ className = "" }: LoginProps) {
     };
   }, [isProfileExpanded]);
 
-  // Handle escape key
+  // Handle escape key untuk modal dan profile
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsProfileExpanded(false);
+        if (isModalOpen) {
+          handleCloseModal();
+        } else if (isProfileExpanded) {
+          setIsProfileExpanded(false);
+        }
       }
     };
 
-    if (isProfileExpanded) {
+    if (isModalOpen || isProfileExpanded) {
       document.addEventListener("keydown", handleEscapeKey);
     }
 
     return () => {
       document.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [isProfileExpanded]);
+  }, [isModalOpen, isProfileExpanded]);
 
-  const handleOpenModal = () => {
+  // Focus management untuk aksesibilitas
+  useEffect(() => {
+    if (isModalOpen && modalRef.current) {
+      const focusableElements = modalRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      const firstElement = focusableElements[0] as HTMLElement;
+      if (firstElement) {
+        // Delay focus untuk memastikan modal sudah ter-render
+        setTimeout(() => {
+          firstElement.focus();
+        }, 100);
+      }
+    }
+  }, [isModalOpen, showCustomLogin]);
+
+  // Prevent body scroll saat modal terbuka - dengan optimasi
+  useEffect(() => {
+    if (isModalOpen && !bodyScrollLockRef.current) {
+      const originalStyle = window.getComputedStyle(document.body);
+      const scrollBarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollBarWidth}px`;
+      document.body.classList.add("modal-open");
+      bodyScrollLockRef.current = true;
+    } else if (!isModalOpen && bodyScrollLockRef.current) {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      document.body.classList.remove("modal-open");
+      bodyScrollLockRef.current = false;
+    }
+
+    return () => {
+      if (bodyScrollLockRef.current) {
+        document.body.style.overflow = "";
+        document.body.style.paddingRight = "";
+        document.body.classList.remove("modal-open");
+        bodyScrollLockRef.current = false;
+      }
+    };
+  }, [isModalOpen]);
+
+  const handleOpenModal = useCallback(() => {
     if (isAuthenticated) {
-      // Toggle profile expansion
       setIsProfileExpanded(!isProfileExpanded);
     } else {
       setIsModalOpen(true);
+      setShowCustomLogin(false);
     }
-  };
+  }, [isAuthenticated, isProfileExpanded]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setShowCustomLogin(false);
-  };
+    // Return focus ke tombol login dengan delay
+    setTimeout(() => {
+      if (loginButtonRef.current) {
+        loginButtonRef.current.focus();
+      }
+    }, 150);
+  }, []);
 
-  const handleShowCustomLogin = () => {
+  const handleShowCustomLogin = useCallback(() => {
     setShowCustomLogin(true);
-  };
+  }, []);
 
-  const handleBackToLoginOptions = () => {
+  const handleBackToLoginOptions = useCallback(() => {
     setShowCustomLogin(false);
-  };
+  }, []);
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = useCallback(() => {
     handleCloseModal();
-    // Redirect ke dashboard setelah login berhasil
     navigate("/dashboard");
-  };
+  }, [handleCloseModal, navigate]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     setIsProfileExpanded(false);
-  };
+  }, [logout]);
 
-  const handleProfileToggle = () => {
+  const handleProfileToggle = useCallback(() => {
     setIsProfileExpanded(!isProfileExpanded);
-  };
+  }, [isProfileExpanded]);
 
   // TODO: Implement login with ICP (Internet Computer Protocol)
-  const handleInternetIdentityLogin = () => {
+  const handleInternetIdentityLogin = useCallback(() => {
     // TODO: Add logic for authenticating with Internet Identity (ICP)
     handleCloseModal();
-  };
+  }, [handleCloseModal]);
 
   // TODO: Implement login with Gmail (Google)
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = useCallback(() => {
     // TODO: Add logic for authenticating with Google (Gmail)
     handleCloseModal();
-  };
+  }, [handleCloseModal]);
 
   // TODO: Implement registration with Gmail (Google)
-  const handleGoogleSignup = () => {
+  const handleGoogleSignup = useCallback(() => {
     // TODO: Add logic for registering a new user with Google (Gmail)
     handleCloseModal();
-  };
+  }, [handleCloseModal]);
 
   // Render transformable avatar jika sudah login
   if (isAuthenticated && user) {
@@ -130,10 +186,13 @@ export function Login({ className = "" }: LoginProps) {
     <>
       {/* Circular login button using semantic class and translation */}
       <button
+        ref={loginButtonRef}
         onClick={handleOpenModal}
         className={`btn-login-circular ${className}`.trim()}
         aria-label={t("login_signup")}
         title={t("login_signup")}
+        aria-expanded={isModalOpen}
+        aria-haspopup="dialog"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -141,6 +200,7 @@ export function Login({ className = "" }: LoginProps) {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -153,75 +213,111 @@ export function Login({ className = "" }: LoginProps) {
       {isModalOpen &&
         createPortal(
           <div
+            ref={modalRef}
             className="modal-overlay"
             role="dialog"
-            tabIndex={0}
+            aria-modal="true"
+            aria-labelledby="login-modal-title"
+            tabIndex={-1}
             onClick={handleCloseModal}
             onKeyDown={(e) => {
-              if (e.key === "Escape" || e.key === "Enter") handleCloseModal();
+              if (e.key === "Escape") handleCloseModal();
             }}
           >
             <div
               className="modal-content"
               role="document"
-              tabIndex={-1}
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === "Escape") handleCloseModal();
               }}
             >
-              {/* Header hanya muncul saat tidak di LoginForm */}
+              {/* Close button untuk wireframe style */}
+              <button
+                onClick={handleCloseModal}
+                className="modal-close"
+                aria-label={t("close_modal")}
+                title={t("close_modal")}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+
               {!showCustomLogin && (
                 <header className="modal-header">
-                  <h2 className="text-primary login-title">
+                  <h1 id="login-modal-title" className="login-title">
                     {t("login_signup")}
-                  </h2>
+                  </h1>
                 </header>
               )}
+
               <main className="modal-body">
                 {!showCustomLogin ? (
                   <>
-                    <p className="text-secondary login-desc">
-                      {t("choose_login_method")}
-                    </p>
+                    <p className="login-desc">{t("choose_login_method")}</p>
+
                     <div className="login-options">
                       <button
                         onClick={handleInternetIdentityLogin}
                         className="login-btn login-btn--icp"
+                        aria-label={t("login_with_internet_identity")}
                       >
                         <img
                           src="/assets/ii-logo.svg"
-                          alt="ICP"
+                          alt=""
                           className="login-btn-icon"
+                          aria-hidden="true"
                         />
                         <span>{t("login_with_internet_identity")}</span>
                       </button>
+
                       <button
                         onClick={handleGoogleLogin}
                         className="login-btn login-btn--google"
+                        aria-label={t("login_with_google")}
                       >
                         <img
                           src="/assets/google-logo.svg"
-                          alt="Google"
+                          alt=""
                           className="login-btn-icon"
+                          aria-hidden="true"
                         />
                         <span>{t("login_with_google")}</span>
                       </button>
-                      <div className="text-secondary login-or">{t("or")}</div>
+
+                      <div className="login-or" role="separator">
+                        {t("or")}
+                      </div>
+
                       <button
                         onClick={handleGoogleSignup}
                         className="login-btn login-btn--signup"
+                        aria-label={t("signup_with_google")}
                       >
                         <img
                           src="/assets/google-logo.svg"
-                          alt="Google"
+                          alt=""
                           className="login-btn-icon"
+                          aria-hidden="true"
                         />
                         <span>{t("signup_with_google")}</span>
                       </button>
+
                       <button
                         onClick={handleShowCustomLogin}
                         className="login-btn"
+                        aria-label={t("login_with_username_password")}
                       >
                         <span>{t("login_with_username_password")}</span>
                       </button>
@@ -236,7 +332,7 @@ export function Login({ className = "" }: LoginProps) {
               </main>
             </div>
           </div>,
-          document.getElementById("modal-root")!
+          document.getElementById("modal-root")!,
         )}
     </>
   );

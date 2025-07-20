@@ -131,10 +131,10 @@ function App() {
 
         {loading && !error && <Loader />}
         {!!error && <ErrorDisplay message={error} />}
+
+        {/* Portal target untuk modal */}
+        <div id="modal-root"></div>
       </BrowserRouter>
-      
-      {/* Portal target untuk modal */}
-      <div id="modal-root"></div>
     </AuthProvider>
   );
 }
