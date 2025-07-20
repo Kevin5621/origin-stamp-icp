@@ -164,6 +164,24 @@
   margin-top: 0;
 }
 
+/* Landing page specific - hapus padding untuk overlay header */
+.landing-layout {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Main content khusus untuk landing page - tanpa padding */
+.main-content--landing {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Main content untuk halaman dengan overlay header (landing dan login) */
+.main-content--overlay {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
 /* Dashboard specific - tidak perlu padding-top karena sudah ada layout sendiri */
 .dashboard-section {
   padding-top: 0;

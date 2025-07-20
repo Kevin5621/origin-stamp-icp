@@ -1,12 +1,16 @@
 /* Login Page Components - ITCSS Components Layer */
 
 .login-page {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--color-surface);
   padding: 2rem;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: hidden;
 }
 
 .login-page-container {
