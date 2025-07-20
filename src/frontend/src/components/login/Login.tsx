@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LoginForm } from "./LoginForm";
@@ -149,92 +150,94 @@ export function Login({ className = "" }: LoginProps) {
         </svg>
       </button>
 
-      {isModalOpen && (
-        <div
-          className="modal-overlay"
-          role="dialog"
-          tabIndex={0}
-          onClick={handleCloseModal}
-          onKeyDown={(e) => {
-            if (e.key === "Escape" || e.key === "Enter") handleCloseModal();
-          }}
-        >
+      {isModalOpen &&
+        createPortal(
           <div
-            className="modal-content"
-            role="document"
-            tabIndex={-1}
-            onClick={(e) => e.stopPropagation()}
+            className="modal-overlay"
+            role="dialog"
+            tabIndex={0}
+            onClick={handleCloseModal}
             onKeyDown={(e) => {
-              if (e.key === "Escape") handleCloseModal();
+              if (e.key === "Escape" || e.key === "Enter") handleCloseModal();
             }}
           >
-            {/* Header hanya muncul saat tidak di LoginForm */}
-            {!showCustomLogin && (
-              <header className="modal-header">
-                <h2 className="text-primary login-title">
-                  {t("login_signup")}
-                </h2>
-              </header>
-            )}
-            <main className="modal-body">
-              {!showCustomLogin ? (
-                <>
-                  <p className="text-secondary login-desc">
-                    {t("choose_login_method")}
-                  </p>
-                  <div className="login-options">
-                    <button
-                      onClick={handleInternetIdentityLogin}
-                      className="login-btn login-btn--icp"
-                    >
-                      <img
-                        src="/assets/ii-logo.svg"
-                        alt="ICP"
-                        className="login-btn-icon"
-                      />
-                      <span>{t("login_with_internet_identity")}</span>
-                    </button>
-                    <button
-                      onClick={handleGoogleLogin}
-                      className="login-btn login-btn--google"
-                    >
-                      <img
-                        src="/assets/google-logo.svg"
-                        alt="Google"
-                        className="login-btn-icon"
-                      />
-                      <span>{t("login_with_google")}</span>
-                    </button>
-                    <div className="text-secondary login-or">{t("or")}</div>
-                    <button
-                      onClick={handleGoogleSignup}
-                      className="login-btn login-btn--signup"
-                    >
-                      <img
-                        src="/assets/google-logo.svg"
-                        alt="Google"
-                        className="login-btn-icon"
-                      />
-                      <span>{t("signup_with_google")}</span>
-                    </button>
-                    <button
-                      onClick={handleShowCustomLogin}
-                      className="login-btn"
-                    >
-                      <span>{t("login_with_username_password")}</span>
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <LoginForm
-                  onBack={handleBackToLoginOptions}
-                  onLoginSuccess={handleLoginSuccess}
-                />
+            <div
+              className="modal-content"
+              role="document"
+              tabIndex={-1}
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") handleCloseModal();
+              }}
+            >
+              {/* Header hanya muncul saat tidak di LoginForm */}
+              {!showCustomLogin && (
+                <header className="modal-header">
+                  <h2 className="text-primary login-title">
+                    {t("login_signup")}
+                  </h2>
+                </header>
               )}
-            </main>
-          </div>
-        </div>
-      )}
+              <main className="modal-body">
+                {!showCustomLogin ? (
+                  <>
+                    <p className="text-secondary login-desc">
+                      {t("choose_login_method")}
+                    </p>
+                    <div className="login-options">
+                      <button
+                        onClick={handleInternetIdentityLogin}
+                        className="login-btn login-btn--icp"
+                      >
+                        <img
+                          src="/assets/ii-logo.svg"
+                          alt="ICP"
+                          className="login-btn-icon"
+                        />
+                        <span>{t("login_with_internet_identity")}</span>
+                      </button>
+                      <button
+                        onClick={handleGoogleLogin}
+                        className="login-btn login-btn--google"
+                      >
+                        <img
+                          src="/assets/google-logo.svg"
+                          alt="Google"
+                          className="login-btn-icon"
+                        />
+                        <span>{t("login_with_google")}</span>
+                      </button>
+                      <div className="text-secondary login-or">{t("or")}</div>
+                      <button
+                        onClick={handleGoogleSignup}
+                        className="login-btn login-btn--signup"
+                      >
+                        <img
+                          src="/assets/google-logo.svg"
+                          alt="Google"
+                          className="login-btn-icon"
+                        />
+                        <span>{t("signup_with_google")}</span>
+                      </button>
+                      <button
+                        onClick={handleShowCustomLogin}
+                        className="login-btn"
+                      >
+                        <span>{t("login_with_username_password")}</span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <LoginForm
+                    onBack={handleBackToLoginOptions}
+                    onLoginSuccess={handleLoginSuccess}
+                  />
+                )}
+              </main>
+            </div>
+          </div>,
+          document.getElementById("modal-root")!
+        )}
     </>
   );
 }
