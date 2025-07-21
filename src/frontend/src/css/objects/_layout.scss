@@ -57,15 +57,7 @@
   }
 }
 
-/* Memastikan landing page container tetap stabil */
-.main-content--overlay .dolly-zoom-container {
-  width: 100vw !important;
-  height: 100vh !important;
-  position: relative !important;
-  overflow: visible !important;
-  /* Memastikan transform origin konsisten */
-  transform-origin: center center !important;
-}
+
 
 /* =============================================================================
    GRID LAYOUT OBJECTS

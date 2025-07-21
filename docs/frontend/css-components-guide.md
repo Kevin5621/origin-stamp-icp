@@ -638,58 +638,7 @@ Base surface styling untuk containers.
 }
 ```
 
-## Komponen Dolly Zoom
 
-### Dolly Zoom Container
-
-**File:** `components/_dolly-zoom.scss`
-
-Container untuk dolly zoom animation.
-
-```scss
-.dolly-zoom-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2rem;
-}
-
-.dolly-zoom-left-section {
-  flex: 1;
-  z-index: 10;
-}
-
-.dolly-zoom-right-section {
-  flex: 1;
-  z-index: 5;
-}
-```
-
-### Scroll Indicator
-
-**File:** `components/_dolly-zoom.scss`
-
-Indicator untuk scroll animation.
-
-```scss
-.scroll-indicator {
-  position: absolute;
-  bottom: 2vh;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 30;
-  color: var(--color-text-primary);
-  font-size: clamp(12px, 1.5vw, 14px);
-  opacity: 0.7;
-  pointer-events: none;
-  text-align: center;
-  animation: smoothPulse 3s ease-in-out infinite;
-}
-```
 
 ## Best Practices
 

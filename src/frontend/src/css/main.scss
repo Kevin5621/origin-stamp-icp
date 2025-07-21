@@ -14,7 +14,6 @@
 // ITCSS: Objects (layout, wrappers)
 @use "objects/_layout.scss" as *;
 @use "objects/_bento.scss" as *;
-@use "objects/_dolly-zoom.scss" as *;
 
 // ITCSS: Utilities
 @use "utilities/_utilities.scss" as *;
@@ -25,7 +24,6 @@
 // ITCSS: Components
 @use "components/_surface.scss" as *;
 @use "components/_landing.scss" as *;
-@use "components/_dolly-zoom.scss" as *;
 @use "components/_login.scss" as *;
 @use "components/_login-form.scss" as *;
 @use "components/_login-page.scss" as *;

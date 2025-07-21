@@ -90,15 +90,13 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
     return (
       <Canvas
         style={{
-          width: "150%",
-          height: "150%",
+          width: "100%",
+          height: "100%",
           opacity: isLoaded ? 1 : 0,
           transition: "opacity 0.5s ease-in-out",
           background: "transparent",
-          position: "absolute",
-          top: "-25%",
-          left: "-25%",
-          overflow: "visible",
+          position: "relative",
+          overflow: "hidden",
         }}
         shadows
         camera={{
