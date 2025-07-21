@@ -53,7 +53,7 @@ const LandingPage: React.FC = () => {
   };
 
   const handleLearnMore = () => {
-    scrollToElement("how-it-works", lenis);
+    navigate("/how-it-works");
   };
 
   return (
@@ -146,7 +146,7 @@ const LandingPage: React.FC = () => {
 
       {/* How It Works Section */}
       <section
-        id="how-it-works"
+        id="howitworks"
         className="landing-section landing-section--how-it-works"
       >
         <div className="landing-container">

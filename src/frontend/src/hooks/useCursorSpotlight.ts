@@ -2,7 +2,9 @@ import { useEffect, useCallback } from "react";
 
 export const useCursorSpotlight = () => {
   const handleMouseMove = useCallback((event: MouseEvent) => {
-    const cards = document.querySelectorAll(".landing-step, .landing-feature");
+    const cards = document.querySelectorAll(
+      ".landing-step, .landing-feature, .how-it-works-phase-card, .how-it-works-result-card, .how-it-works-cta-content, .how-it-works-hero-content",
+    );
 
     cards.forEach((card) => {
       const rect = card.getBoundingClientRect();

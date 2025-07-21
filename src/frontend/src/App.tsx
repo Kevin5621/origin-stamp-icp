@@ -19,6 +19,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 // Import pages dari sistem modular baru
 import LandingPage from "./pages/landing/LandingPage";
+import HowItWorksPage from "./pages/how-it-works/HowItWorksPage";
 import LoginPage from "./pages/auth/LoginPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import SessionPage from "./pages/dashboard/SessionPage";
@@ -32,9 +33,10 @@ function NavigationWrapper() {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
   const isLoginPage = location.pathname === "/login";
+  const isHowItWorksPage = location.pathname === "/how-it-works";
 
-  // Hanya tampilkan navbar jika bukan landing page atau login page
-  if (isLandingPage || isLoginPage) {
+  // Hanya tampilkan navbar jika bukan landing page, login page, atau how it works page
+  if (isLandingPage || isLoginPage || isHowItWorksPage) {
     return null;
   }
 
@@ -46,9 +48,10 @@ function MainContentWrapper() {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
   const isLoginPage = location.pathname === "/login";
+  const isHowItWorksPage = location.pathname === "/how-it-works";
 
   const mainClass =
-    isLandingPage || isLoginPage
+    isLandingPage || isLoginPage || isHowItWorksPage
       ? "main-content main-content--overlay"
       : "main-content";
 
@@ -56,6 +59,7 @@ function MainContentWrapper() {
     <main className={mainClass}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/dashboard"
