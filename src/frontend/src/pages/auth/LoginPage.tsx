@@ -13,11 +13,8 @@ import { googleAuthService } from "../../services/googleAuth";
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("common");
-  const { 
-    isAuthenticated, 
-    loginWithInternetIdentity, 
-    loginWithGoogle 
-  } = useAuth();
+  const { isAuthenticated, loginWithInternetIdentity, loginWithGoogle } =
+    useAuth();
   const [showCustomLogin, setShowCustomLogin] = useState(false);
 
   // Redirect jika sudah login
