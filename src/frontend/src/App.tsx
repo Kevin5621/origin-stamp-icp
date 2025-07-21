@@ -16,6 +16,7 @@ import {
 import LanguageToggle from "./components/ui/LanguageToggle";
 import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ToastProvider } from "./contexts/ToastContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 // Import pages dari sistem modular baru
 import LandingPage from "./pages/landing/LandingPage";
@@ -130,24 +131,26 @@ function App() {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <FloatingHeader className="app-floating-header">
-          <Login />
-          <ThemeToggle />
-          <LanguageToggle />
-        </FloatingHeader>
+      <ToastProvider>
+        <BrowserRouter>
+          <FloatingHeader className="app-floating-header">
+            <Login />
+            <ThemeToggle />
+            <LanguageToggle />
+          </FloatingHeader>
 
-        <MainContentWrapper />
+          <MainContentWrapper />
 
-        {/* Navigation untuk halaman yang memerlukan autentikasi */}
-        <NavigationWrapper />
+          {/* Navigation untuk halaman yang memerlukan autentikasi */}
+          <NavigationWrapper />
 
-        {loading && !error && <Loader />}
-        {!!error && <ErrorDisplay message={error} />}
+          {loading && !error && <Loader />}
+          {!!error && <ErrorDisplay message={error} />}
 
-        {/* Portal target untuk modal */}
-        <div id="modal-root"></div>
-      </BrowserRouter>
+          {/* Portal target untuk modal */}
+          <div id="modal-root"></div>
+        </BrowserRouter>
+      </ToastProvider>
     </AuthProvider>
   );
 }

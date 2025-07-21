@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { useToastContext } from "../../contexts/ToastContext";
 import { LoginForm } from "../../components/login/LoginForm";
 import { useTranslation } from "react-i18next";
 import { AuthClient } from "@dfinity/auth-client";
@@ -13,6 +14,7 @@ import { googleAuthService } from "../../services/googleAuth";
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("common");
+  const { success, error } = useToastContext();
   const { isAuthenticated, loginWithInternetIdentity, loginWithGoogle } =
     useAuth();
   const [showCustomLogin, setShowCustomLogin] = useState(false);
@@ -63,14 +65,23 @@ const LoginPage: React.FC = () => {
           const principal = identity.getPrincipal().toString();
           loginWithInternetIdentity(principal);
           navigate("/dashboard");
+          success(
+            t("login_success", {
+              username: `User ${principal.slice(0, 8)}...`,
+            }),
+          );
         },
-        onError: (error) => {
-          console.error("Internet Identity login failed:", error);
+        onError: (err) => {
+          console.error("Internet Identity login failed:", err);
+          error(
+            t("login_failed", { message: "Internet Identity login failed" }),
+          );
           // Keep page open on error so user can try again
         },
       });
-    } catch (error) {
-      console.error("Error during Internet Identity login:", error);
+    } catch (err) {
+      console.error("Error during Internet Identity login:", err);
+      error(t("login_failed", { message: "Internet Identity login failed" }));
       // Keep page open on error so user can try again
     }
   };
@@ -81,8 +92,10 @@ const LoginPage: React.FC = () => {
       const userInfo = await googleAuthService.signIn();
       loginWithGoogle(userInfo);
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Google login failed:", error);
+      success(t("login_success", { username: userInfo.name }));
+    } catch (err) {
+      console.error("Google login failed:", err);
+      error(t("login_failed", { message: "Google login failed" }));
       // Keep page open on error so user can try again
     }
   };
@@ -93,8 +106,10 @@ const LoginPage: React.FC = () => {
       const userInfo = await googleAuthService.signUp();
       loginWithGoogle(userInfo);
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Google signup failed:", error);
+      success(t("register_success"));
+    } catch (err) {
+      console.error("Google signup failed:", err);
+      error(t("register_failed", { message: "Google signup failed" }));
       // Keep page open on error so user can try again
     }
   };

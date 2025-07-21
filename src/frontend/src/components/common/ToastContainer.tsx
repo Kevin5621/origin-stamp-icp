@@ -11,7 +11,7 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: string) => void }> = ({
   toast,
   onRemove,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   const getToastIcon = (type: string) => {
     switch (type) {
