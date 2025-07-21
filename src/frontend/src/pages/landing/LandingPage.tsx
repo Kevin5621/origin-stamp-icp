@@ -6,6 +6,7 @@ import ThreeModelViewer from "../../components/ThreeModelViewer";
 import { TypingEffect } from "../../utils";
 import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
+import { useLandingLenis, scrollToElement } from "../../hooks/useLenis";
 
 /**
  * Landing Page - Halaman utama aplikasi
@@ -18,6 +19,7 @@ const LandingPage: React.FC = () => {
   const [showButton, setShowButton] = useState(false);
   const [show3DModel, setShow3DModel] = useState(false);
   const currentTheme = useTheme();
+  const lenis = useLandingLenis();
 
   // Preload 3D model saat komponen mount
   useEffect(() => {
@@ -38,30 +40,22 @@ const LandingPage: React.FC = () => {
     }, 800);
   };
 
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleLearnMore = () => {
+    scrollToElement("how-it-works", lenis);
+  };
+
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        position: "relative",
-        background: "var(--color-surface)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden",
-      }}
-    >
-      {/* 3D Model di tengah */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 1,
-        }}
-      >
+    <div className="landing-layout">
+      {/* 3D Model Background - Fixed Position */}
+      <div className="landing-3d-background">
         {show3DModel && (
           <ThreeModelViewer
             src="/woman-statue.glb"
@@ -72,57 +66,174 @@ const LandingPage: React.FC = () => {
         )}
       </div>
 
-      {/* Content overlay */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 10,
-          textAlign: "center",
-          color: "var(--color-text-primary)",
-          maxWidth: "600px",
-          padding: "2rem",
-        }}
-      >
-        <h1 id="welcome-title" className="landing-title">
-          <TypingEffect
-            text={t("welcome_message")}
-            speed={50}
-            delay={100}
-            className="landing-title"
-            onComplete={handleTypingComplete}
-          />
-        </h1>
+      {/* Hero Section */}
+      <section id="hero" className="landing-hero">
+        <div className="landing-hero-content">
+          <h1 id="welcome-title" className="landing-title">
+            <TypingEffect
+              text={t("welcome_message")}
+              speed={50}
+              delay={100}
+              className="landing-title"
+              onComplete={handleTypingComplete}
+            />
+          </h1>
 
-        {/* Wireframe Get Started Button */}
-        <div
-          style={{
-            opacity: showButton ? 1 : 0,
-            transition: "opacity 0.5s ease-in-out",
-            visibility: showButton ? "visible" : "hidden",
-            marginTop: "2rem",
-          }}
-        >
-          <button
-            type="button"
-            className="btn-wireframe"
-            aria-label={t("get_started_button")}
-            style={{
-              position: "relative",
-              zIndex: 100,
-              pointerEvents: "auto",
-            }}
-            onClick={() => {
-              if (isAuthenticated) {
-                navigate("/dashboard");
-              } else {
-                navigate("/login");
-              }
-            }}
-          >
-            {t("get_started_button")}
-          </button>
+          <p className="landing-subtitle">{t("hero_subtitle")}</p>
+
+          {/* Hero Buttons */}
+          <div className="landing-hero-buttons">
+            <button
+              type="button"
+              className="btn-wireframe"
+              aria-label={t("get_started_button")}
+              style={{
+                opacity: showButton ? 1 : 0,
+                transition: "opacity 0.5s ease-in-out",
+                visibility: showButton ? "visible" : "hidden",
+              }}
+              onClick={handleGetStarted}
+            >
+              {t("get_started_button")}
+            </button>
+
+            <button
+              type="button"
+              className="btn-wireframe"
+              aria-label={t("learn_how_button")}
+              style={{
+                opacity: showButton ? 1 : 0,
+                transition: "opacity 0.5s ease-in-out",
+                visibility: showButton ? "visible" : "hidden",
+              }}
+              onClick={handleLearnMore}
+            >
+              {t("learn_how_button")}
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Problem Section */}
+      <section
+        id="problem"
+        className="landing-section landing-section--problem"
+      >
+        <div className="landing-container">
+          <h2 className="landing-section-title">{t("problem_title")}</h2>
+          <p className="landing-section-description">
+            {t("problem_description")}
+          </p>
+        </div>
+      </section>
+
+      {/* Solution Section */}
+      <section
+        id="solution"
+        className="landing-section landing-section--solution"
+      >
+        <div className="landing-container">
+          <h2 className="landing-section-title">{t("solution_title")}</h2>
+          <p className="landing-section-description">
+            {t("solution_description")}
+          </p>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section
+        id="how-it-works"
+        className="landing-section landing-section--how-it-works"
+      >
+        <div className="landing-container">
+          <h2 className="landing-section-title">{t("how_it_works_title")}</h2>
+
+          <div className="landing-steps">
+            <div className="landing-step">
+              <div className="landing-step-number">1</div>
+              <h3 className="landing-step-title">{t("step_1_title")}</h3>
+              <p className="landing-step-description">
+                {t("step_1_description")}
+              </p>
+            </div>
+
+            <div className="landing-step">
+              <div className="landing-step-number">2</div>
+              <h3 className="landing-step-title">{t("step_2_title")}</h3>
+              <p className="landing-step-description">
+                {t("step_2_description")}
+              </p>
+            </div>
+
+            <div className="landing-step">
+              <div className="landing-step-number">3</div>
+              <h3 className="landing-step-title">{t("step_3_title")}</h3>
+              <p className="landing-step-description">
+                {t("step_3_description")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why OriginStamp Section */}
+      <section
+        id="why-originstamp"
+        className="landing-section landing-section--why-originstamp"
+      >
+        <div className="landing-container">
+          <h2 className="landing-section-title">
+            {t("why_originstamp_title")}
+          </h2>
+
+          <div className="landing-features">
+            <div className="landing-feature">
+              <h3 className="landing-feature-title">{t("feature_1_title")}</h3>
+              <p className="landing-feature-description">
+                {t("feature_1_description")}
+              </p>
+            </div>
+
+            <div className="landing-feature">
+              <h3 className="landing-feature-title">{t("feature_2_title")}</h3>
+              <p className="landing-feature-description">
+                {t("feature_2_description")}
+              </p>
+            </div>
+
+            <div className="landing-feature">
+              <h3 className="landing-feature-title">{t("feature_3_title")}</h3>
+              <p className="landing-feature-description">
+                {t("feature_3_description")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final Call to Action Section */}
+      <section
+        id="final-cta"
+        className="landing-section landing-section--final-cta"
+      >
+        <div className="landing-container">
+          <h2 className="landing-section-title">{t("final_cta_title")}</h2>
+          <p className="landing-section-description">
+            {t("final_cta_description")}
+          </p>
+
+          <div style={{ marginTop: "2rem" }}>
+            <button
+              type="button"
+              className="btn-wireframe"
+              aria-label={t("start_verification_button")}
+              onClick={handleGetStarted}
+            >
+              {t("start_verification_button")}
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
