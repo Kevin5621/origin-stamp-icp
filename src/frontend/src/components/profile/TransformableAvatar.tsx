@@ -2,10 +2,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { getInitials } from "../../utils/userUtils";
 import { ProfileCard } from "./ProfileCard";
+import { LogOut } from "lucide-react";
 
 interface User {
   username: string;
   loginTime: string;
+  loginMethod?: "username" | "icp" | "google";
 }
 
 interface TransformableAvatarProps {
@@ -13,6 +15,7 @@ interface TransformableAvatarProps {
   isExpanded: boolean;
   onToggle: () => void;
   onLogout: () => void;
+  onSettings: () => void;
   className?: string;
 }
 
@@ -21,9 +24,10 @@ export const TransformableAvatar: React.FC<TransformableAvatarProps> = ({
   isExpanded,
   onToggle,
   onLogout,
+  onSettings,
   className = "",
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const initials = getInitials(user.username);
 
   return (
@@ -40,9 +44,24 @@ export const TransformableAvatar: React.FC<TransformableAvatarProps> = ({
           <span className="transformable-avatar__initials">{initials}</span>
 
           {isExpanded && (
-            <div className="transformable-avatar__content">
-              <ProfileCard user={user} onLogout={onLogout} />
-            </div>
+            <>
+              <button
+                onClick={onLogout}
+                className="profile-card__logout-btn profile-card__logout-btn--floating"
+                aria-label={t("logout")}
+                title={t("logout")}
+                type="button"
+              >
+                <LogOut size={16} strokeWidth={2} />
+              </button>
+              <div className="transformable-avatar__content">
+                <ProfileCard
+                  user={user}
+                  onLogout={() => {}}
+                  onSettings={onSettings}
+                />
+              </div>
+            </>
           )}
         </div>
       </button>

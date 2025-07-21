@@ -13,6 +13,7 @@ import landingEn from "../locales/en/landing.json";
 import authEn from "../locales/en/auth.json";
 import navigationEn from "../locales/en/navigation.json";
 import howItWorksEn from "../locales/en/how-it-works.json";
+import settingsEn from "../locales/en/settings.json";
 
 import commonId from "../locales/id/common.json";
 import dashboardId from "../locales/id/dashboard.json";
@@ -23,6 +24,7 @@ import landingId from "../locales/id/landing.json";
 import authId from "../locales/id/auth.json";
 import navigationId from "../locales/id/navigation.json";
 import howItWorksId from "../locales/id/how-it-works.json";
+import settingsId from "../locales/id/settings.json";
 
 // Type untuk translation modules
 export type TranslationModule =
@@ -34,7 +36,8 @@ export type TranslationModule =
   | "landing"
   | "auth"
   | "navigation"
-  | "howitworks";
+  | "howitworks"
+  | "settings";
 
 // Translation resources
 const resources = {
@@ -48,6 +51,7 @@ const resources = {
     auth: authEn,
     navigation: navigationEn,
     howitworks: howItWorksEn,
+    settings: settingsEn,
   },
   id: {
     common: commonId,
@@ -59,6 +63,7 @@ const resources = {
     auth: authId,
     navigation: navigationId,
     howitworks: howItWorksId,
+    settings: settingsId,
   },
 };
 

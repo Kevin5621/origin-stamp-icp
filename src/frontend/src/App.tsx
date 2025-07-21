@@ -27,6 +27,7 @@ import FinalizationPage from "./pages/dashboard/FinalizationPage";
 import VerificationPage from "./pages/dashboard/VerificationPage";
 import CertificatesPage from "./pages/dashboard/CertificatesPage";
 import AnalyticsPage from "./pages/dashboard/AnalyticsPage";
+import SettingsPage from "./pages/SettingsPage";
 
 // Component untuk menentukan apakah navbar harus ditampilkan
 function NavigationWrapper() {
@@ -106,6 +107,14 @@ function MainContentWrapper() {
           element={
             <ProtectedRoute>
               <AnalyticsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage />
             </ProtectedRoute>
           }
         />

@@ -1,20 +1,40 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { getInitials } from "../../utils/userUtils";
+import { Settings } from "lucide-react";
 
 interface User {
   username: string;
   loginTime: string;
+  loginMethod?: "username" | "icp" | "google";
 }
 
 interface ProfileCardProps {
   user: User;
   onLogout: () => void;
+  onSettings: () => void;
 }
 
-export const ProfileCard: React.FC<ProfileCardProps> = ({ user, onLogout }) => {
-  const { t } = useTranslation();
+export const ProfileCard: React.FC<ProfileCardProps> = ({
+  user,
+  onLogout,
+  onSettings,
+}) => {
+  const { t } = useTranslation("common");
   const initials = getInitials(user.username);
+
+  const getLoginMethodLabel = (method?: string) => {
+    switch (method) {
+      case "username":
+        return t("login_method_username");
+      case "icp":
+        return t("login_method_icp");
+      case "google":
+        return t("login_method_google");
+      default:
+        return t("login_method_unknown");
+    }
+  };
 
   return (
     <div className="profile-card">
@@ -34,6 +54,12 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ user, onLogout }) => {
           <span className="profile-card__value">{user.username}</span>
         </div>
         <div className="profile-card__credential">
+          <span className="profile-card__label">{t("login_method")}:</span>
+          <span className="profile-card__value">
+            {getLoginMethodLabel(user.loginMethod)}
+          </span>
+        </div>
+        <div className="profile-card__credential">
           <span className="profile-card__label">{t("login_time")}:</span>
           <span className="profile-card__value">{user.loginTime}</span>
         </div>
@@ -41,25 +67,12 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ user, onLogout }) => {
 
       <div className="profile-card__actions">
         <button
-          onClick={onLogout}
-          className="profile-card__logout-btn"
-          aria-label={t("logout")}
+          onClick={onSettings}
+          className="profile-card__settings-btn"
+          aria-label={t("settings")}
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16,17 21,12 16,7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
-          <span>{t("logout")}</span>
+          <Settings size={16} strokeWidth={2} />
+          <span>{t("settings")}</span>
         </button>
       </div>
     </div>
