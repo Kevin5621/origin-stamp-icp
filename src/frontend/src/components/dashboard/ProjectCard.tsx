@@ -4,7 +4,6 @@ import {
   Clock,
   CheckCircle,
   Edit3,
-  Home,
   BarChart3,
   FileText,
   Calendar,
@@ -220,41 +219,45 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       </div>
 
       <div className="project-actions">
-        <button
-          className="project-action-btn project-action-btn--primary"
-          onClick={() => handleClick(safeProject.karya_id)}
-          aria-label="Lihat detail karya"
-        >
-          <Eye size={14} strokeWidth={2} />
-          <span>Lihat Detail</span>
-        </button>
+        <div className="project-actions-row">
+          <button
+            className="project-action-btn project-action-btn--primary"
+            onClick={() => handleClick(safeProject.karya_id)}
+            aria-label="Lihat detail karya"
+          >
+            <Eye size={14} strokeWidth={2} />
+            <span>Lihat Detail</span>
+          </button>
 
-        <button
-          className="project-action-btn project-action-btn--secondary"
-          onClick={() => handleClick(safeProject.karya_id)}
-          aria-label="Lihat sertifikat"
-        >
-          <FileText size={14} strokeWidth={2} />
-          <span>Sertifikat</span>
-        </button>
+          <button
+            className="project-action-btn project-action-btn--secondary"
+            onClick={() => handleClick(safeProject.karya_id)}
+            aria-label="Lihat sertifikat"
+          >
+            <FileText size={14} strokeWidth={2} />
+            <span>Sertifikat</span>
+          </button>
+        </div>
 
-        <button
-          className="project-action-btn project-action-btn--secondary"
-          onClick={() => handleClick(safeProject.karya_id)}
-          aria-label="Analytics karya"
-        >
-          <BarChart3 size={14} strokeWidth={2} />
-          <span>Analytics</span>
-        </button>
+        <div className="project-actions-row">
+          <button
+            className="project-action-btn project-action-btn--secondary"
+            onClick={() => handleClick(safeProject.karya_id)}
+            aria-label="Analytics karya"
+          >
+            <BarChart3 size={14} strokeWidth={2} />
+            <span>Analytics</span>
+          </button>
 
-        <button
-          className="project-action-btn project-action-btn--secondary"
-          onClick={() => handleClick(safeProject.karya_id)}
-          aria-label="Pengaturan karya"
-        >
-          <Settings size={14} strokeWidth={2} />
-          <span>Pengaturan</span>
-        </button>
+          <button
+            className="project-action-btn project-action-btn--secondary"
+            onClick={() => handleClick(safeProject.karya_id)}
+            aria-label="Pengaturan karya"
+          >
+            <Settings size={14} strokeWidth={2} />
+            <span>Pengaturan</span>
+          </button>
+        </div>
       </div>
     </div>
   );
