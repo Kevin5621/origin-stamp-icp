@@ -1,0 +1,113 @@
+// Error Boundary Component
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 24px;
+  background: var(--surface-color);
+  border-radius: 12px;
+  border: 2px solid var(--error-color);
+  margin: 16px 0;
+
+  .error-boundary-content {
+    text-align: center;
+    max-width: 400px;
+
+    svg {
+      color: var(--error-color);
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0 0 16px 0;
+      line-height: 1.5;
+    }
+
+    .error-retry-btn {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--accent-hover-color);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    .error-details {
+      margin-top: 16px;
+      text-align: left;
+
+      summary {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 4px;
+        background: var(--border-color);
+        margin-bottom: 8px;
+
+        &:hover {
+          background: var(--accent-color);
+          color: white;
+        }
+      }
+
+      pre {
+        font-size: 0.75rem;
+        color: var(--error-color);
+        background: var(--error-bg-color, #fef2f2);
+        padding: 12px;
+        border-radius: 4px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        margin: 0;
+        border: 1px solid var(--error-color);
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .error-boundary {
+    padding: 16px;
+    margin: 8px 0;
+
+    .error-boundary-content {
+      h3 {
+        font-size: 1.125rem;
+      }
+
+      p {
+        font-size: 0.8rem;
+      }
+
+      .error-retry-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
