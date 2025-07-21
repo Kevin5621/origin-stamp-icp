@@ -12,6 +12,7 @@ import analyticsEn from "../locales/en/analytics.json";
 import landingEn from "../locales/en/landing.json";
 import authEn from "../locales/en/auth.json";
 import navigationEn from "../locales/en/navigation.json";
+import howItWorksEn from "../locales/en/how-it-works.json";
 
 import commonId from "../locales/id/common.json";
 import dashboardId from "../locales/id/dashboard.json";
@@ -21,6 +22,7 @@ import analyticsId from "../locales/id/analytics.json";
 import landingId from "../locales/id/landing.json";
 import authId from "../locales/id/auth.json";
 import navigationId from "../locales/id/navigation.json";
+import howItWorksId from "../locales/id/how-it-works.json";
 
 // Type untuk translation modules
 export type TranslationModule =
@@ -31,7 +33,8 @@ export type TranslationModule =
   | "analytics"
   | "landing"
   | "auth"
-  | "navigation";
+  | "navigation"
+  | "howitworks";
 
 // Translation resources
 const resources = {
@@ -44,6 +47,7 @@ const resources = {
     landing: landingEn,
     auth: authEn,
     navigation: navigationEn,
+    howitworks: howItWorksEn,
   },
   id: {
     common: commonId,
@@ -54,6 +58,7 @@ const resources = {
     landing: landingId,
     auth: authId,
     navigation: navigationId,
+    howitworks: howItWorksId,
   },
 };
 
@@ -103,6 +108,7 @@ export const getAvailableModules = (): TranslationModule[] => {
     "landing",
     "auth",
     "navigation",
+    "howitworks",
   ];
 };
 
