@@ -48,5 +48,15 @@
   "close_modal": "Tutup Modal",
   "online": "Daring",
   "username": "Nama Pengguna",
-  "login_time": "Waktu Masuk"
+  "login_time": "Waktu Masuk",
+  "settings": "Pengaturan",
+  "back": "Kembali",
+  "login_method": "Metode Login",
+  "login_method_username": "Username & Password",
+  "login_method_icp": "ICP Identity",
+  "login_method_google": "Google",
+  "login_method_unknown": "Tidak Diketahui",
+  "email": "Email",
+  "icp_principal": "ICP Principal",
+  "confirm_delete_account": "Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan."
 }

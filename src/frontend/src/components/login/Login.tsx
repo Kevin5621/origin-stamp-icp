@@ -13,7 +13,7 @@ interface LoginProps {
 }
 
 export function Login({ className = "" }: LoginProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const {
     user,
@@ -232,6 +232,10 @@ export function Login({ className = "" }: LoginProps) {
           isExpanded={isProfileExpanded}
           onToggle={handleProfileToggle}
           onLogout={handleLogout}
+          onSettings={() => {
+            setIsProfileExpanded(false);
+            navigate("/settings");
+          }}
           className={className}
         />
       </div>

@@ -14,7 +14,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onBack,
   onLoginSuccess,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

@@ -13,7 +13,7 @@ interface User {
   principal?: string; // Add principal for Internet Identity
   email?: string; // Add email for Google authentication
   picture?: string; // Add profile picture for Google authentication
-  authType?: "custom" | "internet-identity" | "google"; // Track authentication method
+  loginMethod?: "username" | "icp" | "google"; // Track authentication method
 }
 
 interface AuthContextType {
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             username: `User ${principal.slice(0, 8)}...`,
             loginTime: new Date().toLocaleString(),
             principal,
-            authType: "internet-identity" as const,
+            loginMethod: "icp" as const,
           };
           setUser(userData);
           localStorage.setItem("auth-user", JSON.stringify(userData));
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const userData = {
       username,
       loginTime: new Date().toLocaleString(),
-      authType: "custom" as const,
+      loginMethod: "username" as const,
     };
     setUser(userData);
     localStorage.setItem("auth-user", JSON.stringify(userData));
@@ -99,7 +99,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       username: `User ${principal.slice(0, 8)}...`,
       loginTime: new Date().toLocaleString(),
       principal,
-      authType: "internet-identity" as const,
+      loginMethod: "icp" as const,
     };
     setUser(userData);
     localStorage.setItem("auth-user", JSON.stringify(userData));
@@ -116,14 +116,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       loginTime: new Date().toLocaleString(),
       email: userInfo.email,
       picture: userInfo.picture,
-      authType: "google" as const,
+      loginMethod: "google" as const,
     };
     setUser(userData);
     localStorage.setItem("auth-user", JSON.stringify(userData));
   };
 
   const logout = async () => {
-    if (authClient && user?.authType === "internet-identity") {
+    if (authClient && user?.loginMethod === "icp") {
       await authClient.logout();
     }
     setUser(null);
