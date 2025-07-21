@@ -274,7 +274,7 @@ export function Login({ className = "" }: LoginProps) {
                         aria-label={t("login_with_internet_identity")}
                       >
                         <img
-                          src="/assets/ii-logo.svg"
+                          src="/public/assets/ii-logo.svg"
                           alt=""
                           className="login-btn-icon"
                           aria-hidden="true"
@@ -288,7 +288,7 @@ export function Login({ className = "" }: LoginProps) {
                         aria-label={t("login_with_google")}
                       >
                         <img
-                          src="/assets/google-logo.svg"
+                          src="/public/assets/google-logo.svg"
                           alt=""
                           className="login-btn-icon"
                           aria-hidden="true"
@@ -306,7 +306,7 @@ export function Login({ className = "" }: LoginProps) {
                         aria-label={t("signup_with_google")}
                       >
                         <img
-                          src="/assets/google-logo.svg"
+                          src="/public/assets/google-logo.svg"
                           alt=""
                           className="login-btn-icon"
                           aria-hidden="true"
