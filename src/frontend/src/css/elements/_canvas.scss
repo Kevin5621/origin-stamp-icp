@@ -26,49 +26,7 @@ canvas {
   max-height: none;
 }
 
-/* =============================================================================
-   3D MODEL CONTAINER ELEMENT
-   ============================================================================= */
 
-.landing-right {
-  width: 100% !important;
-  height: 100% !important;
-  overflow: visible !important;
-  margin: 0;
-  padding: 0;
-
-  /* Disable containment for 3D content */
-  contain: none;
-
-  canvas {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;
-    border-radius: 1rem;
-    /* Enhanced rendering for scaling */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    /* Prevent canvas from adding scroll */
-    max-width: none;
-    max-height: none;
-    transform: translateZ(0);
-  }
-
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    /* CRITICAL: Allow 3D content to overflow during animation */
-    overflow: visible !important;
-    position: relative;
-    margin: 0;
-    padding: 0;
-    /* Disable containment */
-    contain: none;
-  }
-}
 
 /* =============================================================================
    RESPONSIVE DESIGN

@@ -20,14 +20,12 @@ src/frontend/src/css/
 │   └── _canvas.scss         # Canvas and drawing elements
 ├── objects/                  # Layer 5: Objects
 │   ├── _layout.scss         # Layout patterns, grid systems
-│   ├── _bento.scss          # Bento grid layouts
-│   └── _dolly-zoom.scss     # Dolly zoom animation objects
+│   └── _bento.scss          # Bento grid layouts
 ├── components/               # Layer 6: Components
 │   ├── _analytics.scss      # Analytics page components
 │   ├── _buttons.scss        # Button components
 │   ├── _certificates.scss   # Certificates page components
 │   ├── _dashboard.scss      # Dashboard components
-│   ├── _dolly-zoom.scss     # Dolly zoom components
 │   ├── _forms.scss          # Form components
 │   ├── _header.scss         # Header components
 │   ├── _landing.scss        # Landing page components
@@ -157,13 +155,12 @@ input[type="text"] {
 
 ### Layer 5: Objects
 
-**Files:** `objects/_layout.scss`, `objects/_bento.scss`, `objects/_dolly-zoom.scss`
+**Files:** `objects/_layout.scss`, `objects/_bento.scss`
 
 Layer ini berisi layout patterns dan structural components:
 
 - **Layout Objects**: Grid systems, containers
 - **Bento Grid**: Modern card-based layouts
-- **Dolly Zoom**: Animation containers and patterns
 - **Navigation Objects**: Menu structures
 
 ```scss
@@ -294,12 +291,7 @@ Layer ini berisi reusable UI components:
 - Background patterns
 - Depth and elevation
 
-##### `_dolly-zoom.scss`
 
-- Dolly zoom animation containers
-- Scroll indicators
-- 3D object containers
-- Animation states
 
 ### Layer 7: Utilities
 

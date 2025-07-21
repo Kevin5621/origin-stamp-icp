@@ -107,21 +107,7 @@
     gap: var(--spacing-sm);
   }
 
-  /* Dolly zoom adjustments */
-  .dolly-zoom-content-wrapper {
-    max-width: 400px;
-    max-height: 400px;
-    height: 60vh;
-  }
 
-  .scroll-indicator {
-    font-size: clamp(10px, 2vw, 12px);
-    bottom: 15px;
-
-    div {
-      font-size: clamp(11px, 2.2vw, 12px);
-    }
-  }
 }
 
 /* =============================================================================
@@ -146,24 +132,7 @@
     margin-top: var(--spacing-vh-sm);
   }
 
-  /* Dolly zoom adjustments */
-  .dolly-zoom-left-section {
-    width: 100vw;
-    padding-left: var(--spacing-vw-md);
-    justify-content: center;
-    text-align: center;
-  }
 
-  .dolly-zoom-right-section {
-    width: 100vw;
-    top: 60%;
-    padding-right: var(--spacing-vw-md);
-  }
-
-  .dolly-zoom-left-section .landing-left {
-    align-items: center;
-    text-align: center;
-  }
 }
 
 /* =============================================================================

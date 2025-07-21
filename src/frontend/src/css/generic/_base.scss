@@ -15,7 +15,7 @@ html {
   /* Prevent unwanted zoom on mobile */
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
-  /* Smooth scrolling for GSAP animations */
+  /* Smooth scrolling */
   scroll-behavior: smooth;
 }
 
@@ -27,7 +27,7 @@ body {
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden;
-  /* CRITICAL: Keep overflow-y auto for ScrollTrigger */
+  /* Keep overflow-y auto for smooth scrolling */
   overflow-y: auto;
   position: relative;
 }
@@ -150,32 +150,4 @@ body {
   }
 }
 
-/* =============================================================================
-   GSAP PIN-SPACER FIXES
-   ============================================================================= */
 
-/* Remove empty space created by GSAP pin-spacer */
-.gsap-pin-spacer {
-  /* No additional height */
-  height: 0 !important;
-  min-height: 0 !important;
-  max-height: 0 !important;
-
-  /* Remove margin and padding */
-  margin: 0 !important;
-  padding: 0 !important;
-
-  /* No border or outline */
-  border: none !important;
-  outline: none !important;
-
-  /* Display none to truly remove space */
-  display: none !important;
-}
-
-/* Alternative if display: none causes issues with GSAP */
-.gsap-pin-spacer[style*="height"] {
-  height: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}

@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import ThreeModelViewer from "../../components/ThreeModelViewer";
-import DollyZoomContainer from "../../components/DollyZoomContainer";
 import { TypingEffect } from "../../utils";
 import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
@@ -17,7 +16,6 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [showButton, setShowButton] = useState(false);
-  const [showShadow, setShowShadow] = useState(false);
   const [show3DModel, setShow3DModel] = useState(false);
   const currentTheme = useTheme();
 
@@ -36,85 +34,96 @@ const LandingPage: React.FC = () => {
   const handleTypingComplete = () => {
     setShowButton(true);
     setTimeout(() => {
-      setShowShadow(true);
+      setShow3DModel(true);
     }, 800);
   };
 
-  useEffect(() => {
-    // Mulai render 3D model setelah shadow animation selesai
-    if (showShadow) {
-      const timer = setTimeout(() => {
-        setShow3DModel(true);
-      }, 800);
-
-      return () => clearTimeout(timer);
-    }
-  }, [showShadow]);
-
-  const handleAnimationComplete = () => {
-    console.log("Dolly Zoom animation completed");
-    // Optional: Navigate to next page or show additional content
-  };
-
   return (
-    <DollyZoomContainer
-      theme={currentTheme}
-      onAnimationComplete={handleAnimationComplete}
-      leftSection={
-        <div className="landing-left">
-          <h1 id="welcome-title" className="landing-title">
-            <TypingEffect
-              text={t("welcome_message")}
-              speed={50}
-              delay={100}
-              className="landing-title"
-              onComplete={handleTypingComplete}
-            />
-          </h1>
-          {/* Wireframe Get Started Button is directly below welcome_message */}
-          <div
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        position: "relative",
+        background: "var(--color-surface)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
+    >
+      {/* 3D Model di tengah */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 1,
+        }}
+      >
+        {show3DModel && (
+          <ThreeModelViewer
+            src="/woman-statue.glb"
+            enableInteraction={false}
+            enableRotation={true}
+            theme={currentTheme}
+          />
+        )}
+      </div>
+
+      {/* Content overlay */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 10,
+          textAlign: "center",
+          color: "var(--color-text-primary)",
+          maxWidth: "600px",
+          padding: "2rem",
+        }}
+      >
+        <h1 id="welcome-title" className="landing-title">
+          <TypingEffect
+            text={t("welcome_message")}
+            speed={50}
+            delay={100}
+            className="landing-title"
+            onComplete={handleTypingComplete}
+          />
+        </h1>
+        
+        {/* Wireframe Get Started Button */}
+        <div
+          style={{
+            opacity: showButton ? 1 : 0,
+            transition: "opacity 0.5s ease-in-out",
+            visibility: showButton ? "visible" : "hidden",
+            marginTop: "2rem",
+          }}
+        >
+          <button
+            type="button"
+            className="btn-wireframe"
+            aria-label={t("get_started_button")}
             style={{
-              opacity: showButton ? 1 : 0,
-              transition: "opacity 0.5s ease-in-out",
-              visibility: showButton ? "visible" : "hidden",
+              position: "relative",
+              zIndex: 100,
+              pointerEvents: "auto",
+            }}
+            onClick={() => {
+              if (isAuthenticated) {
+                navigate("/dashboard");
+              } else {
+                navigate("/login");
+              }
             }}
           >
-            <button
-              type="button"
-              className="btn-wireframe"
-              aria-label={t("get_started_button")}
-              style={{
-                position: "relative",
-                zIndex: 100,
-                pointerEvents: "auto",
-              }}
-              onClick={() => {
-                if (isAuthenticated) {
-                  navigate("/dashboard");
-                } else {
-                  navigate("/login");
-                }
-              }}
-            >
-              {t("get_started_button")}
-            </button>
-          </div>
+            {t("get_started_button")}
+          </button>
         </div>
-      }
-      rightSection={
-        <div className="landing-right">
-          {/* 3D Model Viewer positioned on right side */}
-          {show3DModel && (
-            <ThreeModelViewer
-              src="/woman-statue.glb"
-              enableInteraction={false}
-              enableRotation={true}
-              theme={currentTheme}
-            />
-          )}
-        </div>
-      }
-    />
+      </div>
+    </div>
   );
 };
 
