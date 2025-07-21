@@ -8,45 +8,45 @@
      ============================================================================= */
 
   /* Light Theme Colors */
-  --color-primary-bg: #e0e5ec;
-  --color-primary-text: #4d5b70;
+  --color-primary-bg: #f8fafc;
+  --color-primary-text: #1e293b;
   --color-surface: var(--color-primary-bg);
   --color-on-surface: var(--color-primary-text);
   --color-text-primary: var(--color-primary-text);
-  --color-text-secondary: var(--color-primary-text);
+  --color-text-secondary: #475569;
 
   /* RGB Values for Surface Colors */
-  --color-surface-rgb: 224, 229, 236;
+  --color-surface-rgb: 248, 250, 252;
 
   /* Shadow Colors for Neumorphic Design */
-  --color-shadow-dark: #a3a3a3;
+  --color-shadow-dark: #cbd5e1;
   --color-shadow-light: #ffffff;
 
   /* Interactive States */
-  --color-hover-overlay: rgba(160, 181, 204, 0.1);
+  --color-hover-overlay: rgba(148, 163, 184, 0.1);
 
   /* Status Colors */
-  --color-error: #c53030;
-  --color-error-bg: #fed7d7;
-  --color-success: #38a169;
-  --color-warning: #d69e2e;
-  --color-info: #3182ce;
+  --color-error: #dc2626;
+  --color-error-bg: #fef2f2;
+  --color-success: #16a34a;
+  --color-warning: #ca8a04;
+  --color-info: #2563eb;
 
   /* RGB Values for Status Colors */
-  --color-error-rgb: 197, 48, 48;
-  --color-success-rgb: 56, 161, 105;
-  --color-warning-rgb: 214, 158, 46;
-  --color-info-rgb: 49, 130, 206;
+  --color-error-rgb: 220, 38, 38;
+  --color-success-rgb: 22, 163, 74;
+  --color-warning-rgb: 202, 138, 4;
+  --color-info-rgb: 37, 99, 235;
 
   /* Additional Colors */
-  --color-secondary: #6b7280;
-  --color-border: #d1d5db;
-  --color-text-tertiary: #9ca3af;
-  --color-surface-disabled: #f3f4f6;
-  --color-primary-rgb: 77, 91, 112;
+  --color-secondary: #64748b;
+  --color-border: #e2e8f0;
+  --color-text-tertiary: #64748b;
+  --color-surface-disabled: #f1f5f9;
+  --color-primary-rgb: 30, 41, 59;
 
   /* RGB Values for Additional Colors */
-  --color-border-rgb: 209, 213, 219;
+  --color-border-rgb: 226, 232, 240;
 
   /* Animation States */
   --color-recording: #e53e3e;
