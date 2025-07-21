@@ -69,5 +69,14 @@
   "delete": "Delete",
   "close": "Close",
   "open_notifications": "Open notifications",
-  "close_notifications": "Close notifications"
+  "close_notifications": "Close notifications",
+  "error_network": "Network connection issue. Please check your internet connection.",
+  "error_invalid_data": "Invalid data received. Please try again.",
+  "error_unauthorized": "Your session has expired. Please login again.",
+  "error_forbidden": "You don't have permission to perform this action.",
+  "error_not_found": "The requested data was not found.",
+  "error_server": "Server error occurred. Please try again later.",
+  "error_timeout": "Request took too long. Please try again.",
+  "error_unknown": "An unknown error occurred. Please try again.",
+  "error_critical": "Critical Error"
 }

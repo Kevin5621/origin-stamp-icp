@@ -69,5 +69,14 @@
   "delete": "Hapus",
   "close": "Tutup",
   "open_notifications": "Buka notifikasi",
-  "close_notifications": "Tutup notifikasi"
+  "close_notifications": "Tutup notifikasi",
+  "error_network": "Koneksi jaringan bermasalah. Silakan cek koneksi internet Anda.",
+  "error_invalid_data": "Data yang diterima tidak valid. Silakan coba lagi.",
+  "error_unauthorized": "Sesi Anda telah berakhir. Silakan login kembali.",
+  "error_forbidden": "Anda tidak memiliki izin untuk melakukan aksi ini.",
+  "error_not_found": "Data yang dicari tidak ditemukan.",
+  "error_server": "Terjadi kesalahan pada server. Silakan coba lagi nanti.",
+  "error_timeout": "Permintaan memakan waktu terlalu lama. Silakan coba lagi.",
+  "error_unknown": "Terjadi kesalahan yang tidak diketahui. Silakan coba lagi.",
+  "error_critical": "Kesalahan Kritis"
 }
