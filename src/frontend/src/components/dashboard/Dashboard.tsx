@@ -102,7 +102,12 @@ const Dashboard: React.FC<DashboardProps> = ({
             className="btn-new-project"
             aria-label="Create new project"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="btn-icon"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
