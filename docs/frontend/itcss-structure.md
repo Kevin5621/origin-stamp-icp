@@ -291,8 +291,6 @@ Layer ini berisi reusable UI components:
 - Background patterns
 - Depth and elevation
 
-
-
 ### Layer 7: Utilities
 
 **Files:** `utilities/_utilities.scss`, `utilities/_responsive.scss`, `utilities/_performance.scss`, `utilities/_legacy.scss`
