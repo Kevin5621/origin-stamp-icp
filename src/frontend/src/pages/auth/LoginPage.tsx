@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginForm } from "../../components/login/LoginForm";
 import { useTranslation } from "react-i18next";
+import { AuthClient } from "@dfinity/auth-client";
+import { googleAuthService } from "../../services/googleAuth";
 
 /**
  * Login Page - Halaman login
@@ -10,8 +12,12 @@ import { useTranslation } from "react-i18next";
  */
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const { t } = useTranslation("common");
+  const { 
+    isAuthenticated, 
+    loginWithInternetIdentity, 
+    loginWithGoogle 
+  } = useAuth();
   const [showCustomLogin, setShowCustomLogin] = useState(false);
 
   // Redirect jika sudah login
@@ -33,22 +39,67 @@ const LoginPage: React.FC = () => {
     setShowCustomLogin(true);
   };
 
-  // TODO: Implement login with ICP (Internet Computer Protocol)
-  const handleInternetIdentityLogin = () => {
-    // TODO: Add logic for authenticating with Internet Identity (ICP)
-    navigate("/dashboard");
+  // Implement login with ICP (Internet Computer Protocol)
+  const handleInternetIdentityLogin = async () => {
+    try {
+      // Create AuthClient instance
+      const authClient = await AuthClient.create();
+
+      // Check if already authenticated
+      const isAuthenticated = await authClient.isAuthenticated();
+      if (isAuthenticated) {
+        const identity = authClient.getIdentity();
+        const principal = identity.getPrincipal().toString();
+        loginWithInternetIdentity(principal);
+        navigate("/dashboard");
+        return;
+      }
+
+      // Start login process
+      await authClient.login({
+        identityProvider: "https://identity.ic0.app",
+        windowOpenerFeatures:
+          "toolbar=0,location=0,menubar=0,width=500,height=500,left=100,top=100",
+        onSuccess: () => {
+          console.log("Internet Identity login successful");
+          const identity = authClient.getIdentity();
+          const principal = identity.getPrincipal().toString();
+          loginWithInternetIdentity(principal);
+          navigate("/dashboard");
+        },
+        onError: (error) => {
+          console.error("Internet Identity login failed:", error);
+          // Keep page open on error so user can try again
+        },
+      });
+    } catch (error) {
+      console.error("Error during Internet Identity login:", error);
+      // Keep page open on error so user can try again
+    }
   };
 
-  // TODO: Implement login with Gmail (Google)
-  const handleGoogleLogin = () => {
-    // TODO: Add logic for authenticating with Google (Gmail)
-    navigate("/dashboard");
+  // Implement login with Gmail (Google)
+  const handleGoogleLogin = async () => {
+    try {
+      const userInfo = await googleAuthService.signIn();
+      loginWithGoogle(userInfo);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google login failed:", error);
+      // Keep page open on error so user can try again
+    }
   };
 
-  // TODO: Implement registration with Gmail (Google)
-  const handleGoogleSignup = () => {
-    // TODO: Add logic for registering a new user with Google (Gmail)
-    navigate("/dashboard");
+  // Implement registration with Gmail (Google)
+  const handleGoogleSignup = async () => {
+    try {
+      const userInfo = await googleAuthService.signUp();
+      loginWithGoogle(userInfo);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google signup failed:", error);
+      // Keep page open on error so user can try again
+    }
   };
 
   return (
@@ -69,7 +120,7 @@ const LoginPage: React.FC = () => {
                     className="login-btn login-btn--icp"
                   >
                     <img
-                      src="/public/assets/ii-logo.svg"
+                      src="/assets/ii-logo.svg"
                       alt="ICP"
                       className="login-btn-icon"
                     />
@@ -80,7 +131,7 @@ const LoginPage: React.FC = () => {
                     className="login-btn login-btn--google"
                   >
                     <img
-                      src="/public/assets/google-logo.svg"
+                      src="/assets/google-logo.svg"
                       alt="Google"
                       className="login-btn-icon"
                     />
@@ -92,7 +143,7 @@ const LoginPage: React.FC = () => {
                     className="login-btn login-btn--signup"
                   >
                     <img
-                      src="/public/assets/google-logo.svg"
+                      src="/assets/google-logo.svg"
                       alt="Google"
                       className="login-btn-icon"
                     />
