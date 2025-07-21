@@ -1,6 +1,7 @@
-/* Profile Components - ITCSS Components Layer */
+/* =============================================================================
+   TRANSFORMABLE AVATAR
+   ============================================================================= */
 
-/* Transformable Avatar - Animasi transformasi dari lingkaran ke card */
 .transformable-avatar {
   position: relative;
   z-index: 1000;
@@ -8,6 +9,7 @@
   width: 3rem;
   height: 3rem;
   flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .transformable-avatar__button {
@@ -71,21 +73,24 @@
   will-change: transform, opacity;
 }
 
-/* State expanded - transformasi lingkaran menjadi card */
+/* =============================================================================
+   EXPANDED STATE
+   ============================================================================= */
+
 .transformable-avatar--expanded .transformable-avatar__circle {
   position: absolute;
   top: 0;
   right: 0;
-  width: 380px;
+  width: 320px;
   height: auto;
-  min-height: 420px;
+  min-height: 400px;
   border-radius: 16px;
-  padding: 32px;
+  padding: 24px;
   box-shadow:
     12px 12px 24px var(--color-shadow-dark),
     -12px -12px 24px var(--color-shadow-light);
   transform: scale(1);
-  z-index: 1001;
+  z-index: 1002;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -118,9 +123,9 @@
   flex-direction: column;
   justify-content: space-between;
   z-index: 3;
-  padding: 32px;
+  padding: 24px;
   box-sizing: border-box;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.3s ease;
   will-change: opacity;
 }
 
@@ -129,7 +134,10 @@
   opacity: 1;
 }
 
-/* Profile Card Styles */
+/* =============================================================================
+   PROFILE CARD
+   ============================================================================= */
+
 .profile-card {
   width: 100%;
   height: 100%;
@@ -246,73 +254,6 @@
   border-top: 1px solid var(--color-border);
 }
 
-.profile-card__logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 28px;
-  background-color: var(--color-surface);
-  color: var(--color-error);
-  border: none;
-  border-radius: 12px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    4px 4px 8px var(--color-shadow-dark),
-    -4px -4px 8px var(--color-shadow-light);
-  width: 100%;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.profile-card__logout-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transition: left 0.5s ease;
-}
-
-.profile-card__logout-btn:hover::before {
-  left: 100%;
-}
-
-.profile-card__logout-btn:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    6px 6px 12px var(--color-shadow-dark),
-    -6px -6px 12px var(--color-shadow-light);
-}
-
-.profile-card__logout-btn:active {
-  transform: translateY(0);
-  box-shadow:
-    inset 2px 2px 4px var(--color-shadow-dark),
-    inset -2px -2px 4px var(--color-shadow-light);
-}
-
-.profile-card__logout-btn svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
-}
-
-.profile-card__logout-btn:hover svg {
-  transform: translateX(2px);
-}
-
-/* Settings Button */
 .profile-card__settings-btn {
   background: var(--color-surface);
   color: var(--color-on-surface);
@@ -380,13 +321,6 @@
   transform: rotate(90deg);
 }
 
-/* Profile container untuk isolation */
-.profile-container {
-  position: relative;
-  z-index: 1000;
-  isolation: isolate;
-}
-
 .profile-card__logout-btn--floating {
   position: absolute;
   top: 16px;
@@ -410,12 +344,15 @@
   display: none;
 }
 
-/* Responsive Design */
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
 @media (max-width: 768px) {
   .transformable-avatar--expanded .transformable-avatar__circle {
-    width: 340px;
+    width: 280px;
     right: 0;
-    padding: 24px;
+    padding: 20px;
   }
 
   .transformable-avatar__content {
@@ -452,8 +389,7 @@
     margin-top: 20px;
   }
 
-  .profile-card__settings-btn,
-  .profile-card__logout-btn {
+  .profile-card__settings-btn {
     padding: 14px 24px;
   }
-}
+} 

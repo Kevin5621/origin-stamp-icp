@@ -14,6 +14,7 @@ import {
   FloatingHeader,
 } from "./components";
 import LanguageToggle from "./components/ui/LanguageToggle";
+import { NotificationButton } from "./components/common/NotificationButton";
 import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
@@ -134,9 +135,10 @@ function App() {
       <ToastProvider>
         <BrowserRouter>
           <FloatingHeader className="app-floating-header">
-            <Login />
-            <ThemeToggle />
+            <NotificationButton />
             <LanguageToggle />
+            <ThemeToggle />
+            <Login />
           </FloatingHeader>
 
           <MainContentWrapper />

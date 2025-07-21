@@ -60,5 +60,14 @@
   "icp_principal": "ICP Principal",
   "confirm_delete_account": "Are you sure you want to delete your account? This action cannot be undone.",
   "logout_success": "Successfully logged out from application",
-  "close_toast": "Close notification"
+  "close_toast": "Close notification",
+  "notifications": "Notifications",
+  "no_notifications": "No notifications",
+  "mark_as_read": "Mark as read",
+  "mark_all_as_read": "Mark all as read",
+  "clear_all": "Clear all",
+  "delete": "Delete",
+  "close": "Close",
+  "open_notifications": "Open notifications",
+  "close_notifications": "Close notifications"
 }
