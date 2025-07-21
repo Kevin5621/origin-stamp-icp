@@ -17,7 +17,9 @@ const DashboardPage: React.FC = () => {
   });
   const [projects, setProjects] = useState<KaryaWithLogs[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedFilter, setSelectedFilter] = useState<"all" | "active" | "completed">("all");
+  const [selectedFilter, setSelectedFilter] = useState<
+    "all" | "active" | "completed"
+  >("all");
   const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
 
   // Load data dari KaryaService
