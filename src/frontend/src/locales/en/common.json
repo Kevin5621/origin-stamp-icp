@@ -45,6 +45,7 @@
   "logout": "Logout",
   "open_profile": "Open Profile",
   "close_profile": "Close Profile",
+  "close_modal": "Close Modal",
   "online": "Online",
   "username": "Username",
   "login_time": "Login Time"

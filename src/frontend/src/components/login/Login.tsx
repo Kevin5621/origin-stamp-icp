@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginForm } from "./LoginForm";
 import { useAuth } from "../../contexts/AuthContext";
 import { TransformableAvatar } from "../profile/TransformableAvatar";
+import { AuthClient } from "@dfinity/auth-client";
 
 interface LoginProps {
   readonly className?: string;
@@ -13,7 +14,8 @@ interface LoginProps {
 export function Login({ className = "" }: LoginProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, loginWithInternetIdentity } =
+    useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCustomLogin, setShowCustomLogin] = useState(false);
   const [isProfileExpanded, setIsProfileExpanded] = useState(false);
@@ -148,11 +150,46 @@ export function Login({ className = "" }: LoginProps) {
     setIsProfileExpanded(!isProfileExpanded);
   }, [isProfileExpanded]);
 
-  // TODO: Implement login with ICP (Internet Computer Protocol)
-  const handleInternetIdentityLogin = useCallback(() => {
-    // TODO: Add logic for authenticating with Internet Identity (ICP)
-    handleCloseModal();
-  }, [handleCloseModal]);
+  // Implement login with ICP (Internet Computer Protocol)
+  const handleInternetIdentityLogin = useCallback(async () => {
+    try {
+      // Create AuthClient instance
+      const authClient = await AuthClient.create();
+
+      // Check if already authenticated
+      const isAuthenticated = await authClient.isAuthenticated();
+      if (isAuthenticated) {
+        const identity = authClient.getIdentity();
+        const principal = identity.getPrincipal().toString();
+        loginWithInternetIdentity(principal);
+        handleCloseModal();
+        navigate("/dashboard");
+        return;
+      }
+
+      // Start login process
+      await authClient.login({
+        identityProvider: "https://identity.ic0.app",
+        windowOpenerFeatures:
+          "toolbar=0,location=0,menubar=0,width=500,height=500,left=100,top=100",
+        onSuccess: () => {
+          console.log("Internet Identity login successful");
+          const identity = authClient.getIdentity();
+          const principal = identity.getPrincipal().toString();
+          loginWithInternetIdentity(principal);
+          handleCloseModal();
+          navigate("/dashboard");
+        },
+        onError: (error) => {
+          console.error("Internet Identity login failed:", error);
+          // Keep modal open on error so user can try again
+        },
+      });
+    } catch (error) {
+      console.error("Error during Internet Identity login:", error);
+      // Keep modal open on error so user can try again
+    }
+  }, [handleCloseModal, navigate, loginWithInternetIdentity]);
 
   // TODO: Implement login with Gmail (Google)
   const handleGoogleLogin = useCallback(() => {
@@ -273,7 +310,7 @@ export function Login({ className = "" }: LoginProps) {
                         aria-label={t("login_with_internet_identity")}
                       >
                         <img
-                          src="/public/assets/ii-logo.svg"
+                          src="/assets/ii-logo.svg"
                           alt=""
                           className="login-btn-icon"
                           aria-hidden="true"
@@ -287,7 +324,7 @@ export function Login({ className = "" }: LoginProps) {
                         aria-label={t("login_with_google")}
                       >
                         <img
-                          src="/public/assets/google-logo.svg"
+                          src="/assets/google-logo.svg"
                           alt=""
                           className="login-btn-icon"
                           aria-hidden="true"
@@ -305,7 +342,7 @@ export function Login({ className = "" }: LoginProps) {
                         aria-label={t("signup_with_google")}
                       >
                         <img
-                          src="/public/assets/google-logo.svg"
+                          src="/assets/google-logo.svg"
                           alt=""
                           className="login-btn-icon"
                           aria-hidden="true"

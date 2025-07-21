@@ -5,17 +5,22 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import { AuthClient } from "@dfinity/auth-client";
 
 interface User {
   username: string;
   loginTime: string;
+  principal?: string; // Add principal for Internet Identity
+  authType?: "custom" | "internet-identity"; // Track authentication method
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   login: (username: string) => void;
+  loginWithInternetIdentity: (principal: string) => void;
   logout: () => void;
+  authClient: AuthClient | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +31,37 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [authClient, setAuthClient] = useState<AuthClient | null>(null);
+
+  // Initialize AuthClient
+  useEffect(() => {
+    const initAuthClient = async () => {
+      try {
+        const client = await AuthClient.create();
+        setAuthClient(client);
+
+        // Check if user is already authenticated with Internet Identity
+        const isAuthenticated = await client.isAuthenticated();
+        if (isAuthenticated) {
+          const identity = client.getIdentity();
+          const principal = identity.getPrincipal().toString();
+
+          const userData = {
+            username: `User ${principal.slice(0, 8)}...`,
+            loginTime: new Date().toLocaleString(),
+            principal,
+            authType: "internet-identity" as const,
+          };
+          setUser(userData);
+          localStorage.setItem("auth-user", JSON.stringify(userData));
+        }
+      } catch (error) {
+        console.error("Error initializing AuthClient:", error);
+      }
+    };
+
+    initAuthClient();
+  }, []);
 
   // Load user from localStorage on mount
   useEffect(() => {
@@ -44,12 +80,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const userData = {
       username,
       loginTime: new Date().toLocaleString(),
+      authType: "custom" as const,
     };
     setUser(userData);
     localStorage.setItem("auth-user", JSON.stringify(userData));
   };
 
-  const logout = () => {
+  const loginWithInternetIdentity = (principal: string) => {
+    const userData = {
+      username: `User ${principal.slice(0, 8)}...`,
+      loginTime: new Date().toLocaleString(),
+      principal,
+      authType: "internet-identity" as const,
+    };
+    setUser(userData);
+    localStorage.setItem("auth-user", JSON.stringify(userData));
+  };
+
+  const logout = async () => {
+    if (authClient && user?.authType === "internet-identity") {
+      await authClient.logout();
+    }
     setUser(null);
     localStorage.removeItem("auth-user");
   };
@@ -58,7 +109,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     isAuthenticated: !!user,
     login,
+    loginWithInternetIdentity,
     logout,
+    authClient,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
