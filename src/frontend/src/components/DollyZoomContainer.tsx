@@ -15,7 +15,7 @@ interface DollyZoomContainerProps {
 const DollyZoomContainer: React.FC<DollyZoomContainerProps> = ({
   leftSection,
   rightSection,
-  theme = "light",
+  theme: _theme = "light",
   onAnimationComplete,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
