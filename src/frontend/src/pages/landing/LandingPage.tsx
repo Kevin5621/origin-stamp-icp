@@ -21,7 +21,7 @@ const LandingPage: React.FC = () => {
   const [show3DModel, setShow3DModel] = useState(false);
   const currentTheme = useTheme();
   const lenis = useLandingLenis();
-  
+
   // Initialize cursor spotlight effect
   useCursorSpotlight();
 
