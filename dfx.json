@@ -1,11 +1,6 @@
 {
   "canisters": {
-    "llm": {
-      "type": "pull",
-      "id": "w36hm-eqaaa-aaaal-qr76a-cai"
-    },
     "backend": {
-      "dependencies": ["llm"],
       "candid": "src/backend/backend.did",
       "package": "backend",
       "type": "custom",

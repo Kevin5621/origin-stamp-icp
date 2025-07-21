@@ -103,7 +103,8 @@ fn generate_upload_url(session_id: String, file_data: UploadFileData) -> Result<
 
 ```bash
 dfx canister call backend generate_upload_url '("1a2b3c4d5e", record { filename="process1.jpg"; content_type="image/jpeg"; file_size=2048000 })'
-# Result: (variant { Ok = "https://example.com/upload/1a2b3c4d5e/process1.jpg" })
+# Result: (variant { Ok = "https://your-bucket.s3.your-region.amazonaws.com/1a2b3c4d5e/process1.jpg" })
+# Or with custom endpoint: (variant { Ok = "https://your-s3-endpoint.com/your-bucket/1a2b3c4d5e/process1.jpg" })
 ```
 
 ### Upload Photo to Session

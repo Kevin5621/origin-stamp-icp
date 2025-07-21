@@ -109,13 +109,22 @@ dfx canister call backend get_s3_config_status
 fn generate_upload_url(session_id: String, file_data: UploadFileData) -> Result<String, String>
 ```
 
-**Current Implementation**: Returns placeholder URL
+**Current Implementation**: Uses S3 configuration to generate proper S3 URLs
 
 ```rust
-Ok(format!(
-    "https://example.com/upload/{}/{}",
-    session_id, file_data.filename
-))
+S3_CONFIG.with(|config| {
+    match config.borrow().as_ref() {
+        Some(s3_config) => {
+            let base_url = s3_config.endpoint
+                .as_ref()
+                .unwrap_or(&format!("https://{}.s3.{}.amazonaws.com", s3_config.bucket_name, s3_config.region));
+
+            let object_key = format!("{}/{}", session_id, file_data.filename);
+            Ok(format!("{}/{}", base_url, object_key))
+        }
+        None => Err("S3 configuration not found. Please configure S3 settings first.".to_string())
+    }
+})
 ```
 
 **Full Implementation (Future)**:
