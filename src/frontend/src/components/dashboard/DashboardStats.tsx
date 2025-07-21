@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, Award, Clock, DollarSign } from "lucide-react";
-import StatCard from "./StatCard";
 
 interface ProjectStats {
   completedProjects: number;
@@ -37,41 +36,59 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ stats }) => {
 
   return (
     <div className="dashboard-stats">
-      <StatCard
-        icon={<CheckCircle size={24} strokeWidth={2} />}
-        value={stats.completedProjects}
-        label={t("completed_projects_label")}
-        index={0}
-        variant="success"
+      <div
+        className="stat-card stat-card--completed"
         onClick={handleCompletedProjectsClick}
-      />
+      >
+        <div className="stat-card-icon">
+          <CheckCircle size={24} strokeWidth={2} />
+        </div>
+        <div className="stat-card-content">
+          <div className="stat-card-value">{stats.completedProjects}</div>
+          <div className="stat-card-label">{t("completed_projects_label")}</div>
+        </div>
+      </div>
 
-      <StatCard
-        icon={<Award size={24} strokeWidth={2} />}
-        value={stats.certificatesIssued}
-        label={t("certificates_issued_label")}
-        index={1}
-        variant="primary"
+      <div
+        className="stat-card stat-card--certificates"
         onClick={handleCertificatesClick}
-      />
+      >
+        <div className="stat-card-icon">
+          <Award size={24} strokeWidth={2} />
+        </div>
+        <div className="stat-card-content">
+          <div className="stat-card-value">{stats.certificatesIssued}</div>
+          <div className="stat-card-label">
+            {t("certificates_issued_label")}
+          </div>
+        </div>
+      </div>
 
-      <StatCard
-        icon={<Clock size={24} strokeWidth={2} />}
-        value={stats.activeSessions}
-        label={t("active_sessions_label")}
-        index={2}
-        variant="warning"
+      <div
+        className="stat-card stat-card--active"
         onClick={handleActiveSessionsClick}
-      />
+      >
+        <div className="stat-card-icon">
+          <Clock size={24} strokeWidth={2} />
+        </div>
+        <div className="stat-card-content">
+          <div className="stat-card-value">{stats.activeSessions}</div>
+          <div className="stat-card-label">{t("active_sessions_label")}</div>
+        </div>
+      </div>
 
-      <StatCard
-        icon={<DollarSign size={24} strokeWidth={2} />}
-        value={`$${stats.totalValue}`}
-        label={t("total_value_label")}
-        index={3}
-        variant="info"
+      <div
+        className="stat-card stat-card--value"
         onClick={handleTotalValueClick}
-      />
+      >
+        <div className="stat-card-icon">
+          <DollarSign size={24} strokeWidth={2} />
+        </div>
+        <div className="stat-card-content">
+          <div className="stat-card-value">${stats.totalValue}</div>
+          <div className="stat-card-label">{t("total_value_label")}</div>
+        </div>
+      </div>
     </div>
   );
 };

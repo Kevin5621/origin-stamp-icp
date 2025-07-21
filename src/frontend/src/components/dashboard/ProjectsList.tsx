@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import ProjectCard from "./ProjectCard";
 import EmptyState from "./EmptyState";
+import { Plus } from "lucide-react";
 
 interface RecentProject {
   id: string;
@@ -31,25 +32,9 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
       <EmptyState
         title={t("no_projects_title")}
         description={t("no_projects_description")}
-        hint={t("start_verification_journey_hint")}
         actionButton={
-          <button
-            onClick={onNewProject}
-            className="btn-new-project wireframe-button primary"
-          >
-            <svg
-              className="btn-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
+          <button onClick={onNewProject} className="btn-new-project">
+            <Plus size={16} strokeWidth={2} />
             <span>{t("new_project_button")}</span>
           </button>
         }
@@ -58,9 +43,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
   }
 
   return (
-    <div
-      className={`projects-list ${viewMode === "grid" ? "projects-grid-view" : ""}`}
-    >
+    <div className="projects-grid">
       {projects.map((project, index) => (
         <ProjectCard
           key={project.id}
