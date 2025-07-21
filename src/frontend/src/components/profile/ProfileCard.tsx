@@ -17,7 +17,6 @@ interface ProfileCardProps {
 
 export const ProfileCard: React.FC<ProfileCardProps> = ({
   user,
-  onLogout,
   onSettings,
 }) => {
   const { t } = useTranslation("common");

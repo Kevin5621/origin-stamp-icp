@@ -150,13 +150,17 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case "success":
-        return <CheckCircle size={16} style={{ color: 'var(--color-success)' }} />;
+        return (
+          <CheckCircle size={16} style={{ color: "var(--color-success)" }} />
+        );
       case "warning":
-        return <AlertCircle size={16} style={{ color: 'var(--color-warning)' }} />;
+        return (
+          <AlertCircle size={16} style={{ color: "var(--color-warning)" }} />
+        );
       case "error":
-        return <X size={16} style={{ color: 'var(--color-error)' }} />;
+        return <X size={16} style={{ color: "var(--color-error)" }} />;
       default:
-        return <Info size={16} style={{ color: 'var(--color-info)' }} />;
+        return <Info size={16} style={{ color: "var(--color-info)" }} />;
     }
   };
 

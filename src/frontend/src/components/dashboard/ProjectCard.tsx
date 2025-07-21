@@ -81,19 +81,31 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
       </div>
 
       <div className="project-actions">
-        <button className="project-action-btn">
+        <button
+          className="project-action-btn"
+          onClick={() => onClick(project.id)}
+        >
           <BarChart3 size={12} strokeWidth={2} />
           <span>Dashboard</span>
         </button>
-        <button className="project-action-btn">
+        <button
+          className="project-action-btn"
+          onClick={() => onClick(project.id)}
+        >
           <FileText size={12} strokeWidth={2} />
           <span>View Certificates</span>
         </button>
-        <button className="project-action-btn">
+        <button
+          className="project-action-btn"
+          onClick={() => onClick(project.id)}
+        >
           <BarChart3 size={12} strokeWidth={2} />
           <span>Analytics</span>
         </button>
-        <button className="project-action-btn">
+        <button
+          className="project-action-btn"
+          onClick={() => onClick(project.id)}
+        >
           <Home size={12} strokeWidth={2} />
           <span>Home</span>
         </button>

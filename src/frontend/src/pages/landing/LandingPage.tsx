@@ -6,7 +6,6 @@ import ThreeModelViewer from "../../components/ThreeModelViewer";
 import { TypingEffect } from "../../utils";
 import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
-import { useLandingLenis, scrollToElement } from "../../hooks/useLenis";
 import { useCursorSpotlight } from "../../hooks/useCursorSpotlight";
 
 /**
@@ -20,7 +19,6 @@ const LandingPage: React.FC = () => {
   const [showButton, setShowButton] = useState(false);
   const [show3DModel, setShow3DModel] = useState(false);
   const currentTheme = useTheme();
-  const lenis = useLandingLenis();
 
   // Initialize cursor spotlight effect
   useCursorSpotlight();

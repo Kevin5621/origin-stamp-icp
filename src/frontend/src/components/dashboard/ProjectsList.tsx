@@ -21,7 +21,6 @@ interface ProjectsListProps {
 
 const ProjectsList: React.FC<ProjectsListProps> = ({
   projects,
-  viewMode,
   onProjectClick,
   onNewProject,
 }) => {
