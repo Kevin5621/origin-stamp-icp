@@ -95,7 +95,7 @@ const HowItWorksPage: React.FC = () => {
             type="button"
             className="how-it-works-back-btn"
             onClick={handleBackToLanding}
-            aria-label="Back to Home"
+            aria-label={t("back_to_home")}
           >
             <svg
               width="20"
@@ -107,7 +107,7 @@ const HowItWorksPage: React.FC = () => {
             >
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-            <span>Home</span>
+            <span>{t("home")}</span>
           </button>
         </div>
       </nav>
@@ -121,7 +121,9 @@ const HowItWorksPage: React.FC = () => {
       >
         <div className="how-it-works-hero-content">
           <div className="how-it-works-hero-badge">
-            <span className="how-it-works-hero-badge-text">How It Works</span>
+            <span className="how-it-works-hero-badge-text">
+              {t("how_it_works")}
+            </span>
           </div>
           <h1 className="how-it-works-title">{t("page_title")}</h1>
           <p className="how-it-works-subtitle">{t("page_subtitle")}</p>
@@ -538,7 +540,9 @@ const HowItWorksPage: React.FC = () => {
                   <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
                 </svg>
               </div>
-              <h3 className="how-it-works-result-title">View Key Stats</h3>
+              <h3 className="how-it-works-result-title">
+                {t("view_key_stats")}
+              </h3>
               <p className="how-it-works-result-description">
                 {t("final_result_stat_1")}
               </p>
@@ -557,7 +561,9 @@ const HowItWorksPage: React.FC = () => {
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
               </div>
-              <h3 className="how-it-works-result-title">Explore Timeline</h3>
+              <h3 className="how-it-works-result-title">
+                {t("explore_timeline")}
+              </h3>
               <p className="how-it-works-result-description">
                 {t("final_result_stat_2")}
               </p>
@@ -576,7 +582,9 @@ const HowItWorksPage: React.FC = () => {
                   <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
                 </svg>
               </div>
-              <h3 className="how-it-works-result-title">Cross-Reference</h3>
+              <h3 className="how-it-works-result-title">
+                {t("cross_reference")}
+              </h3>
               <p className="how-it-works-result-description">
                 {t("final_result_stat_3")}
               </p>
@@ -597,8 +605,7 @@ const HowItWorksPage: React.FC = () => {
             <div className="how-it-works-cta-content">
               <h2 className="how-it-works-cta-title">{t("cta_title")}</h2>
               <p className="how-it-works-cta-description">
-                Mulai perjalanan Anda dengan OriginStamp dan buat karya yang
-                dapat dipercaya.
+                {t("start_your_journey")}
               </p>
 
               <div className="how-it-works-cta-actions">
