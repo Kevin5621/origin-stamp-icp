@@ -82,6 +82,7 @@
   will-change: transform, box-shadow;
   position: relative;
   isolation: isolate;
+  flex-wrap: nowrap;
 
   /* Hover effect untuk memberikan feedback visual */
   &:hover {
@@ -98,7 +99,7 @@
     position: relative;
     z-index: 1;
     flex-shrink: 0;
-    transform: none !important;
+    transition: transform 0.3s ease;
   }
 
   .profile-container {
@@ -106,6 +107,8 @@
     position: relative;
     z-index: 2;
   }
+
+
 }
 
 /* =============================================================================

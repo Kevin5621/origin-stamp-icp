@@ -60,5 +60,14 @@
   "icp_principal": "ICP Principal",
   "confirm_delete_account": "Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan.",
   "logout_success": "Berhasil keluar dari aplikasi",
-  "close_toast": "Tutup notifikasi"
+  "close_toast": "Tutup notifikasi",
+  "notifications": "Notifikasi",
+  "no_notifications": "Tidak ada notifikasi",
+  "mark_as_read": "Tandai sebagai dibaca",
+  "mark_all_as_read": "Tandai semua sebagai dibaca",
+  "clear_all": "Hapus semua",
+  "delete": "Hapus",
+  "close": "Tutup",
+  "open_notifications": "Buka notifikasi",
+  "close_notifications": "Tutup notifikasi"
 }

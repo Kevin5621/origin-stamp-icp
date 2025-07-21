@@ -263,7 +263,7 @@ export function Login({ className = "" }: LoginProps) {
       <button
         ref={loginButtonRef}
         onClick={handleOpenModal}
-        className={`btn-login-circular ${className}`.trim()}
+        className={`btn-login-circular ${isModalOpen ? "btn-login-circular--expanded" : ""} ${className}`.trim()}
         aria-label={t("login_signup")}
         title={t("login_signup")}
         aria-expanded={isModalOpen}
