@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginForm } from "./LoginForm";
 import { useAuth } from "../../contexts/AuthContext";
 import { TransformableAvatar } from "../profile/TransformableAvatar";
+import { AuthClient } from "@dfinity/auth-client";
 
 interface LoginProps {
   readonly className?: string;
@@ -93,9 +94,15 @@ export function Login({ className = "" }: LoginProps) {
   };
 
   // TODO: Implement login with ICP (Internet Computer Protocol)
-  const handleInternetIdentityLogin = () => {
-    // TODO: Add logic for authenticating with Internet Identity (ICP)
-    handleCloseModal();
+  const handleInternetIdentityLogin = async () => {
+    const authClient = await AuthClient.create();
+    await authClient.login({
+      identityProvider: "https://identity.ic0.app",
+      onSuccess: async () => {
+        handleCloseModal();
+        navigate("/dashboard");
+      },
+    });
   };
 
   // TODO: Implement login with Gmail (Google)
