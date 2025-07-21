@@ -227,7 +227,7 @@
 }
 
 .landing-step::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -261,7 +261,9 @@
 .landing-step:hover::before {
   opacity: 1;
   transform: scale(1);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
 }
 
 .landing-step-content {
@@ -288,7 +290,9 @@
   font-size: 1.5rem;
   margin-bottom: var(--spacing-md);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .landing-step:hover .landing-step-number {
@@ -347,7 +351,7 @@
 }
 
 .landing-feature::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -381,7 +385,9 @@
 .landing-feature:hover::before {
   opacity: 1;
   transform: scale(1);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
 }
 
 .landing-feature-content {

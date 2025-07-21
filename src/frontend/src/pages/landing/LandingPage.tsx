@@ -21,7 +21,7 @@ const LandingPage: React.FC = () => {
   const [show3DModel, setShow3DModel] = useState(false);
   const currentTheme = useTheme();
   const lenis = useLandingLenis();
-  
+
   // Initialize cursor spotlight effect
   useCursorSpotlight();
 
@@ -82,7 +82,7 @@ const LandingPage: React.FC = () => {
               onComplete={handleTypingComplete}
             />
           </h1>
-          
+
           <p className="landing-subtitle">{t("hero_subtitle")}</p>
 
           {/* Hero Buttons */}
@@ -100,7 +100,7 @@ const LandingPage: React.FC = () => {
             >
               {t("get_started_button")}
             </button>
-            
+
             <button
               type="button"
               className="btn-wireframe"
@@ -162,7 +162,7 @@ const LandingPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            
+
             <div className="landing-step">
               <div className="landing-step-content">
                 <div className="landing-step-number">2</div>
@@ -172,7 +172,7 @@ const LandingPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            
+
             <div className="landing-step">
               <div className="landing-step-content">
                 <div className="landing-step-number">3</div>
@@ -195,29 +195,35 @@ const LandingPage: React.FC = () => {
           <h2 className="landing-section-title">
             {t("why_originstamp_title")}
           </h2>
-          
+
           <div className="landing-features">
             <div className="landing-feature">
               <div className="landing-feature-content">
-                <h3 className="landing-feature-title">{t("feature_1_title")}</h3>
+                <h3 className="landing-feature-title">
+                  {t("feature_1_title")}
+                </h3>
                 <p className="landing-feature-description">
                   {t("feature_1_description")}
                 </p>
               </div>
             </div>
-            
+
             <div className="landing-feature">
               <div className="landing-feature-content">
-                <h3 className="landing-feature-title">{t("feature_2_title")}</h3>
+                <h3 className="landing-feature-title">
+                  {t("feature_2_title")}
+                </h3>
                 <p className="landing-feature-description">
                   {t("feature_2_description")}
                 </p>
               </div>
             </div>
-            
+
             <div className="landing-feature">
               <div className="landing-feature-content">
-                <h3 className="landing-feature-title">{t("feature_3_title")}</h3>
+                <h3 className="landing-feature-title">
+                  {t("feature_3_title")}
+                </h3>
                 <p className="landing-feature-description">
                   {t("feature_3_description")}
                 </p>
@@ -237,7 +243,7 @@ const LandingPage: React.FC = () => {
           <p className="landing-section-description">
             {t("final_cta_description")}
           </p>
-          
+
           <div style={{ marginTop: "2rem" }}>
             <button
               type="button"
