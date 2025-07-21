@@ -4,8 +4,7 @@ import DashboardStats from "./DashboardStats";
 import LoadingSkeleton from "./LoadingSkeleton";
 import ToastContainer from "../common/ToastContainer";
 import { useToast } from "../../hooks/useToast";
-import { KaryaService } from "../../services/artService";
-import { useEffect, useState } from "react";
+import { KaryaWithLogs } from "../../types/karya";
 
 interface ProjectStats {
   completedProjects: number;
@@ -16,6 +15,10 @@ interface ProjectStats {
 
 interface DashboardProps {
   isLoading?: boolean;
+  stats: ProjectStats;
+  projects: KaryaWithLogs[];
+  selectedFilter: "all" | "active" | "completed";
+  viewMode: "list" | "grid";
   onNewProject: () => void;
   onProjectClick: (karyaId: string) => void;
   onSearch: (query: string) => void;
@@ -26,6 +29,10 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({
   isLoading: externalLoading,
+  stats,
+  projects,
+  selectedFilter,
+  viewMode,
   onNewProject,
   onProjectClick,
   onSearch,
@@ -34,53 +41,16 @@ const Dashboard: React.FC<DashboardProps> = ({
   onFilterChange,
 }) => {
   const { toasts, removeToast } = useToast();
-  const [stats, setStats] = useState<ProjectStats>({
-    completedProjects: 0,
-    certificatesIssued: 0,
-    activeSessions: 0,
-    totalValue: 0,
-  });
-  const [selectedFilter, setSelectedFilter] = useState<
-    "all" | "active" | "completed"
-  >("all");
-  const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
-  const [isLoadingStats, setIsLoadingStats] = useState(true);
-
-  // Load stats
-  useEffect(() => {
-    const loadStats = async () => {
-      try {
-        setIsLoadingStats(true);
-        const userId = "user-001"; // TODO: Get from auth context
-        const karyaStats = await KaryaService.getKaryaStats(userId);
-
-        setStats({
-          completedProjects: karyaStats.completed,
-          certificatesIssued: karyaStats.completed, // Assuming completed projects have certificates
-          activeSessions: karyaStats.active,
-          totalValue: karyaStats.totalLogs * 100, // Mock value calculation
-        });
-      } catch (error) {
-        console.error("Error loading stats:", error);
-      } finally {
-        setIsLoadingStats(false);
-      }
-    };
-
-    loadStats();
-  }, []);
 
   const handleFilterChange = (filter: "all" | "active" | "completed") => {
-    setSelectedFilter(filter);
     onFilterChange(filter);
   };
 
   const handleViewChange = (view: "list" | "grid") => {
-    setViewMode(view);
     onViewChange(view);
   };
 
-  if (externalLoading || isLoadingStats) {
+  if (externalLoading) {
     return <LoadingSkeleton />;
   }
 
@@ -128,6 +98,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Main Content */}
       <main className="dashboard-main">
         <DashboardMain
+          projects={projects}
           selectedFilter={selectedFilter}
           viewMode={viewMode}
           onNewProject={onNewProject}

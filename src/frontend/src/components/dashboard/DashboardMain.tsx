@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SearchFilter from "./SearchFilter";
 import QuickActions from "./QuickActions";
 import FilterTabs from "./FilterTabs";
 import ProjectsList from "./ProjectsList";
-import { KaryaWithLogs, KaryaFilter } from "../../types/karya";
-import { KaryaService } from "../../services/artService";
+import { KaryaWithLogs } from "../../types/karya";
 
 interface DashboardMainProps {
+  projects: KaryaWithLogs[];
   selectedFilter: "all" | "active" | "completed";
   viewMode: "list" | "grid";
   onNewProject: () => void;
@@ -18,6 +18,7 @@ interface DashboardMainProps {
 }
 
 const DashboardMain: React.FC<DashboardMainProps> = ({
+  projects,
   selectedFilter,
   viewMode,
   onNewProject,
@@ -27,51 +28,9 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
   onViewChange,
   onFilterChange,
 }) => {
-  const [projects, setProjects] = useState<KaryaWithLogs[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  // Load projects from KaryaService
-  useEffect(() => {
-    const loadProjects = async () => {
-      try {
-        setIsLoading(true);
-        const userId = "user-001"; // TODO: Get from auth context
-
-        // Convert filter to KaryaFilter
-        const filter: KaryaFilter = {};
-        if (selectedFilter !== "all") {
-          filter.status = selectedFilter as "draft" | "active" | "completed";
-        }
-        if (searchQuery) {
-          filter.search = searchQuery;
-        }
-
-        const karyaData = await KaryaService.getKaryaByUser(userId, filter);
-        setProjects(karyaData);
-      } catch (error) {
-        console.error("Error loading projects:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadProjects();
-  }, [selectedFilter, searchQuery]);
-
   const handleSearch = (query: string) => {
-    setSearchQuery(query);
     onSearch(query);
   };
-
-  if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Memuat karya...</p>
-      </div>
-    );
-  }
 
   return (
     <>

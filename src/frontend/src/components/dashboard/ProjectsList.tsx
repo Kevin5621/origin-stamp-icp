@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import ProjectCard from "./ProjectCard";
 import EmptyState from "./EmptyState";
 import { Plus } from "lucide-react";
-import { Karya } from "../../types/karya";
+import { KaryaWithLogs } from "../../types/karya";
 import ErrorBoundary from "../common/ErrorBoundary";
 
 interface ProjectsListProps {
-  projects: Karya[];
+  projects: KaryaWithLogs[];
   onProjectClick: (karyaId: string) => void;
   onNewProject: () => void;
 }
