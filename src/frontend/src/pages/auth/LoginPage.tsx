@@ -69,7 +69,7 @@ const LoginPage: React.FC = () => {
                     className="login-btn login-btn--icp"
                   >
                     <img
-                      src="/assets/ii-logo.svg"
+                      src="/public/assets/ii-logo.svg"
                       alt="ICP"
                       className="login-btn-icon"
                     />
@@ -80,7 +80,7 @@ const LoginPage: React.FC = () => {
                     className="login-btn login-btn--google"
                   >
                     <img
-                      src="/assets/google-logo.svg"
+                      src="/public/assets/google-logo.svg"
                       alt="Google"
                       className="login-btn-icon"
                     />
@@ -92,7 +92,7 @@ const LoginPage: React.FC = () => {
                     className="login-btn login-btn--signup"
                   >
                     <img
-                      src="/assets/google-logo.svg"
+                      src="/public/assets/google-logo.svg"
                       alt="Google"
                       className="login-btn-icon"
                     />
