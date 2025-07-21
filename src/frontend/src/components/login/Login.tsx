@@ -82,7 +82,6 @@ export function Login({ className = "" }: LoginProps) {
   // Prevent body scroll saat modal terbuka - dengan optimasi
   useEffect(() => {
     if (isModalOpen && !bodyScrollLockRef.current) {
-      const originalStyle = window.getComputedStyle(document.body);
       const scrollBarWidth =
         window.innerWidth - document.documentElement.clientWidth;
 
