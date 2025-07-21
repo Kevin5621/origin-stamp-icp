@@ -38,23 +38,29 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
   return (
     <>
       {/* Quick Actions Section */}
-      <section className="content-section">
+      <div className="content-section">
+        <div className="section-header">
+          <h2 className="section-title">Quick Actions</h2>
+          <p className="section-subtitle">Quick access to main features</p>
+        </div>
         <QuickActions onNewProject={onNewProject} />
-      </section>
+      </div>
 
       {/* Projects Section */}
-      <section className="content-section">
+      <div className="content-section">
         <div className="section-header">
-          <h3 className="section-title">Recent Projects</h3>
+          <h2 className="section-title">Recent Projects</h2>
         </div>
 
         {/* Search and Filter */}
-        <SearchFilter
-          onSearch={onSearch}
-          onSort={onSort}
-          onViewChange={onViewChange}
-          currentView={viewMode}
-        />
+        <div className="projects-header">
+          <SearchFilter
+            onSearch={onSearch}
+            onSort={onSort}
+            onViewChange={onViewChange}
+            currentView={viewMode}
+          />
+        </div>
 
         {/* Filter Tabs */}
         <FilterTabs
@@ -69,7 +75,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
           onProjectClick={onProjectClick}
           onNewProject={onNewProject}
         />
-      </section>
+      </div>
     </>
   );
 };

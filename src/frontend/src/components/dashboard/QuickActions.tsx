@@ -1,8 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Plus, FileCheck, BarChart3 } from "lucide-react";
-import QuickActionCard from "./QuickActionCard";
+import { Plus, FileCheck, BarChart3, ArrowRight } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 
 interface QuickActionsProps {
@@ -21,38 +20,48 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onNewProject }) => {
   };
 
   return (
-    <section className="quick-actions-section">
-      <div className="quick-actions-header">
-        <h3 className="quick-actions-title">{t("quick_actions_title")}</h3>
-        <p className="quick-actions-subtitle">{t("quick_actions_subtitle")}</p>
+    <div className="quick-actions">
+      <div className="quick-action-card" onClick={onNewProject}>
+        <div className="quick-action-icon">
+          <Plus size={24} strokeWidth={2} />
+        </div>
+        <div className="quick-action-content">
+          <div className="quick-action-title">{t("new_project_button")}</div>
+          <div className="quick-action-description">
+            {t("new_project_description")}
+          </div>
+        </div>
+        <ArrowRight size={20} strokeWidth={2} className="quick-action-arrow" />
       </div>
 
-      <div className="quick-actions-grid">
-        <QuickActionCard
-          icon={<Plus size={24} strokeWidth={2} />}
-          title={t("new_project_button")}
-          description={t("new_project_description")}
-          onClick={onNewProject}
-          variant="primary"
-        />
-
-        <QuickActionCard
-          icon={<FileCheck size={24} strokeWidth={2} />}
-          title={t("view_certificates_title")}
-          description={t("view_certificates_description")}
-          onClick={handleCertificatesClick}
-          variant="secondary"
-        />
-
-        <QuickActionCard
-          icon={<BarChart3 size={24} strokeWidth={2} />}
-          title={t("analytics_title")}
-          description={t("analytics_description")}
-          onClick={() => navigate("/analytics")}
-          variant="secondary"
-        />
+      <div className="quick-action-card" onClick={handleCertificatesClick}>
+        <div className="quick-action-icon">
+          <FileCheck size={24} strokeWidth={2} />
+        </div>
+        <div className="quick-action-content">
+          <div className="quick-action-title">
+            {t("view_certificates_title")}
+          </div>
+          <div className="quick-action-description">
+            {t("view_certificates_description")}
+          </div>
+        </div>
+        <ArrowRight size={20} strokeWidth={2} className="quick-action-arrow" />
       </div>
-    </section>
+
+      <div className="quick-action-card" onClick={() => navigate("/analytics")}>
+        <div className="quick-action-icon">
+          <BarChart3 size={24} strokeWidth={2} />
+        </div>
+        <div className="quick-action-content">
+          <div className="quick-action-title">{t("analytics_title")}</div>
+          <div className="quick-action-description">
+            {t("analytics_description")}
+          </div>
+        </div>
+        <ArrowRight size={20} strokeWidth={2} className="quick-action-arrow" />
+      </div>
+    </div>
   );
 };
 
