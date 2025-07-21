@@ -3,19 +3,12 @@ import { useTranslation } from "react-i18next";
 import ProjectCard from "./ProjectCard";
 import EmptyState from "./EmptyState";
 import { Plus } from "lucide-react";
-
-interface RecentProject {
-  id: string;
-  title: string;
-  status: "active" | "completed" | "draft";
-  lastModified: Date;
-  progress: number;
-}
+import { Karya } from "../../types/karya";
+import ErrorBoundary from "../common/ErrorBoundary";
 
 interface ProjectsListProps {
-  projects: RecentProject[];
-  viewMode: "list" | "grid";
-  onProjectClick: (projectId: string) => void;
+  projects: Karya[];
+  onProjectClick: (karyaId: string) => void;
   onNewProject: () => void;
 }
 
@@ -29,12 +22,15 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
   if (projects.length === 0) {
     return (
       <EmptyState
-        title={t("no_projects_title")}
-        description={t("no_projects_description")}
+        title={t("no_projects_title", "Belum Ada Karya")}
+        description={t(
+          "no_projects_description",
+          "Mulai membuat karya pertama Anda untuk mendapatkan sertifikat OriginStamp",
+        )}
         actionButton={
           <button onClick={onNewProject} className="btn-new-project">
             <Plus size={16} strokeWidth={2} />
-            <span>{t("new_project_button")}</span>
+            <span>{t("new_project_button", "Buat Karya Baru")}</span>
           </button>
         }
       />
@@ -44,12 +40,22 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
   return (
     <div className="projects-grid">
       {projects.map((project, index) => (
-        <ProjectCard
-          key={project.id}
-          project={project}
-          onClick={onProjectClick}
-          index={index}
-        />
+        <ErrorBoundary
+          key={project.karya_id}
+          fallback={
+            <div className="project-card project-card--error">
+              <div className="project-error">
+                <p>Gagal memuat karya: {project.nama_karya}</p>
+              </div>
+            </div>
+          }
+        >
+          <ProjectCard
+            project={project}
+            onClick={onProjectClick}
+            index={index}
+          />
+        </ErrorBoundary>
       ))}
     </div>
   );

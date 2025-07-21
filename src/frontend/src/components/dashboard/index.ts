@@ -15,8 +15,22 @@ export { default as ProjectsList } from "./ProjectsList";
 export { default as ProjectCard } from "./ProjectCard";
 export { default as StatCard } from "./StatCard";
 export { default as EmptyState } from "./EmptyState";
+export { default as ProcessTimeline } from "./ProcessTimeline";
 
-// Types
+// Re-export types from karya types
+export type {
+  Karya,
+  KaryaWithLogs,
+  LogProses,
+  StatusKarya,
+  JenisLog,
+  KaryaFilter,
+  CreateKaryaRequest,
+  UpdateKaryaStatusRequest,
+  AddLogProsesRequest,
+} from "../../types/karya";
+
+// Legacy types for backward compatibility
 export interface ProjectStats {
   completedProjects: number;
   certificatesIssued: number;
@@ -24,6 +38,7 @@ export interface ProjectStats {
   totalValue: number;
 }
 
+// Deprecated - use KaryaWithLogs instead
 export interface RecentProject {
   id: string;
   title: string;

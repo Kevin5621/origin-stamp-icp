@@ -4,6 +4,8 @@ import DashboardStats from "./DashboardStats";
 import LoadingSkeleton from "./LoadingSkeleton";
 import ToastContainer from "../common/ToastContainer";
 import { useToast } from "../../hooks/useToast";
+import { KaryaService } from "../../services/artService";
+import { useEffect, useState } from "react";
 
 interface ProjectStats {
   completedProjects: number;
@@ -12,22 +14,10 @@ interface ProjectStats {
   totalValue: number;
 }
 
-interface RecentProject {
-  id: string;
-  title: string;
-  status: "active" | "completed" | "draft";
-  lastModified: Date;
-  progress: number;
-}
-
 interface DashboardProps {
-  isLoading: boolean;
-  stats: ProjectStats;
-  projects: RecentProject[];
-  selectedFilter: "all" | "active" | "completed";
-  viewMode: "list" | "grid";
+  isLoading?: boolean;
   onNewProject: () => void;
-  onProjectClick: (projectId: string) => void;
+  onProjectClick: (karyaId: string) => void;
   onSearch: (query: string) => void;
   onSort: (sortBy: string) => void;
   onViewChange: (view: "list" | "grid") => void;
@@ -35,11 +25,7 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
-  isLoading,
-  stats,
-  projects,
-  selectedFilter,
-  viewMode,
+  isLoading: externalLoading,
   onNewProject,
   onProjectClick,
   onSearch,
@@ -48,8 +34,53 @@ const Dashboard: React.FC<DashboardProps> = ({
   onFilterChange,
 }) => {
   const { toasts, removeToast } = useToast();
+  const [stats, setStats] = useState<ProjectStats>({
+    completedProjects: 0,
+    certificatesIssued: 0,
+    activeSessions: 0,
+    totalValue: 0,
+  });
+  const [selectedFilter, setSelectedFilter] = useState<
+    "all" | "active" | "completed"
+  >("all");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
 
-  if (isLoading) {
+  // Load stats
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        setIsLoadingStats(true);
+        const userId = "user-001"; // TODO: Get from auth context
+        const karyaStats = await KaryaService.getKaryaStats(userId);
+
+        setStats({
+          completedProjects: karyaStats.completed,
+          certificatesIssued: karyaStats.completed, // Assuming completed projects have certificates
+          activeSessions: karyaStats.active,
+          totalValue: karyaStats.totalLogs * 100, // Mock value calculation
+        });
+      } catch (error) {
+        console.error("Error loading stats:", error);
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+
+    loadStats();
+  }, []);
+
+  const handleFilterChange = (filter: "all" | "active" | "completed") => {
+    setSelectedFilter(filter);
+    onFilterChange(filter);
+  };
+
+  const handleViewChange = (view: "list" | "grid") => {
+    setViewMode(view);
+    onViewChange(view);
+  };
+
+  if (externalLoading || isLoadingStats) {
     return <LoadingSkeleton />;
   }
 
@@ -92,18 +123,18 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Main Content */}
       <main className="dashboard-main">
         <DashboardMain
-          projects={projects}
           selectedFilter={selectedFilter}
           viewMode={viewMode}
           onNewProject={onNewProject}
           onProjectClick={onProjectClick}
           onSearch={onSearch}
           onSort={onSort}
-          onViewChange={onViewChange}
-          onFilterChange={onFilterChange}
+          onViewChange={handleViewChange}
+          onFilterChange={handleFilterChange}
         />
       </main>
 
+      {/* Toast Container */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
