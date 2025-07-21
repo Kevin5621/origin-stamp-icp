@@ -1,6 +1,5 @@
 // Dashboard Components
 export { default as Dashboard } from "./Dashboard";
-export { default as DashboardContainer } from "./DashboardContainer";
 export { default as DashboardHeader } from "./DashboardHeader";
 export { default as DashboardMain } from "./DashboardMain";
 export { default as DashboardStats } from "./DashboardStats";
