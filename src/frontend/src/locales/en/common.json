@@ -58,5 +58,7 @@
   "login_method_unknown": "Unknown",
   "email": "Email",
   "icp_principal": "ICP Principal",
-  "confirm_delete_account": "Are you sure you want to delete your account? This action cannot be undone."
+  "confirm_delete_account": "Are you sure you want to delete your account? This action cannot be undone.",
+  "logout_success": "Successfully logged out from application",
+  "close_toast": "Close notification"
 }

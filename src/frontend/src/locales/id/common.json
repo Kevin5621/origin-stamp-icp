@@ -58,5 +58,7 @@
   "login_method_unknown": "Tidak Diketahui",
   "email": "Email",
   "icp_principal": "ICP Principal",
-  "confirm_delete_account": "Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan."
+  "confirm_delete_account": "Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan.",
+  "logout_success": "Berhasil keluar dari aplikasi",
+  "close_toast": "Tutup notifikasi"
 }

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LoginForm } from "./LoginForm";
 import { useAuth } from "../../contexts/AuthContext";
+import { useToastContext } from "../../contexts/ToastContext";
 import { TransformableAvatar } from "../profile/TransformableAvatar";
 import { AuthClient } from "@dfinity/auth-client";
 import { googleAuthService } from "../../services/googleAuth";
@@ -15,6 +16,7 @@ interface LoginProps {
 export function Login({ className = "" }: LoginProps) {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
+  const { success, error } = useToastContext();
   const {
     user,
     isAuthenticated,
@@ -150,7 +152,8 @@ export function Login({ className = "" }: LoginProps) {
   const handleLogout = useCallback(() => {
     logout();
     setIsProfileExpanded(false);
-  }, [logout]);
+    success(t("logout_success"));
+  }, [logout, success, t]);
 
   const handleProfileToggle = useCallback(() => {
     setIsProfileExpanded(!isProfileExpanded);
@@ -185,9 +188,17 @@ export function Login({ className = "" }: LoginProps) {
           loginWithInternetIdentity(principal);
           handleCloseModal();
           navigate("/dashboard");
+          success(
+            t("login_success", {
+              username: `User ${principal.slice(0, 8)}...`,
+            }),
+          );
         },
-        onError: (error) => {
-          console.error("Internet Identity login failed:", error);
+        onError: (err) => {
+          console.error("Internet Identity login failed:", err);
+          error(
+            t("login_failed", { message: "Internet Identity login failed" }),
+          );
           // Keep modal open on error so user can try again
         },
       });
@@ -204,11 +215,13 @@ export function Login({ className = "" }: LoginProps) {
       loginWithGoogle(userInfo);
       handleCloseModal();
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Google login failed:", error);
+      success(t("login_success", { username: userInfo.name }));
+    } catch (err) {
+      console.error("Google login failed:", err);
+      error(t("login_failed", { message: "Google login failed" }));
       // Keep modal open on error so user can try again
     }
-  }, [handleCloseModal, navigate, loginWithGoogle]);
+  }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
 
   // Implement registration with Gmail (Google)
   const handleGoogleSignup = useCallback(async () => {
@@ -217,11 +230,13 @@ export function Login({ className = "" }: LoginProps) {
       loginWithGoogle(userInfo);
       handleCloseModal();
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Google signup failed:", error);
+      success(t("register_success"));
+    } catch (err) {
+      console.error("Google signup failed:", err);
+      error(t("register_failed", { message: "Google signup failed" }));
       // Keep modal open on error so user can try again
     }
-  }, [handleCloseModal, navigate, loginWithGoogle]);
+  }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
 
   // Render transformable avatar jika sudah login
   if (isAuthenticated && user) {
