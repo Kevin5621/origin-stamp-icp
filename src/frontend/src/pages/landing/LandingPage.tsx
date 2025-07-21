@@ -92,7 +92,7 @@ const LandingPage: React.FC = () => {
             onComplete={handleTypingComplete}
           />
         </h1>
-        
+
         {/* Wireframe Get Started Button */}
         <div
           style={{
