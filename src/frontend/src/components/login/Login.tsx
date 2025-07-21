@@ -6,6 +6,7 @@ import { LoginForm } from "./LoginForm";
 import { useAuth } from "../../contexts/AuthContext";
 import { TransformableAvatar } from "../profile/TransformableAvatar";
 import { AuthClient } from "@dfinity/auth-client";
+import { googleAuthService } from "../../services/googleAuth";
 
 interface LoginProps {
   readonly className?: string;
@@ -14,8 +15,13 @@ interface LoginProps {
 export function Login({ className = "" }: LoginProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout, loginWithInternetIdentity } =
-    useAuth();
+  const {
+    user,
+    isAuthenticated,
+    logout,
+    loginWithInternetIdentity,
+    loginWithGoogle,
+  } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCustomLogin, setShowCustomLogin] = useState(false);
   const [isProfileExpanded, setIsProfileExpanded] = useState(false);
@@ -191,17 +197,31 @@ export function Login({ className = "" }: LoginProps) {
     }
   }, [handleCloseModal, navigate, loginWithInternetIdentity]);
 
-  // TODO: Implement login with Gmail (Google)
-  const handleGoogleLogin = useCallback(() => {
-    // TODO: Add logic for authenticating with Google (Gmail)
-    handleCloseModal();
-  }, [handleCloseModal]);
+  // Implement login with Gmail (Google)
+  const handleGoogleLogin = useCallback(async () => {
+    try {
+      const userInfo = await googleAuthService.signIn();
+      loginWithGoogle(userInfo);
+      handleCloseModal();
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google login failed:", error);
+      // Keep modal open on error so user can try again
+    }
+  }, [handleCloseModal, navigate, loginWithGoogle]);
 
-  // TODO: Implement registration with Gmail (Google)
-  const handleGoogleSignup = useCallback(() => {
-    // TODO: Add logic for registering a new user with Google (Gmail)
-    handleCloseModal();
-  }, [handleCloseModal]);
+  // Implement registration with Gmail (Google)
+  const handleGoogleSignup = useCallback(async () => {
+    try {
+      const userInfo = await googleAuthService.signUp();
+      loginWithGoogle(userInfo);
+      handleCloseModal();
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google signup failed:", error);
+      // Keep modal open on error so user can try again
+    }
+  }, [handleCloseModal, navigate, loginWithGoogle]);
 
   // Render transformable avatar jika sudah login
   if (isAuthenticated && user) {

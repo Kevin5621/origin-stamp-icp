@@ -11,7 +11,9 @@ interface User {
   username: string;
   loginTime: string;
   principal?: string; // Add principal for Internet Identity
-  authType?: "custom" | "internet-identity"; // Track authentication method
+  email?: string; // Add email for Google authentication
+  picture?: string; // Add profile picture for Google authentication
+  authType?: "custom" | "internet-identity" | "google"; // Track authentication method
 }
 
 interface AuthContextType {
@@ -19,7 +21,13 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (username: string) => void;
   loginWithInternetIdentity: (principal: string) => void;
-  logout: () => void;
+  loginWithGoogle: (userInfo: {
+    id: string;
+    name: string;
+    email: string;
+    picture: string;
+  }) => void;
+  logout: () => Promise<void>;
   authClient: AuthClient | null;
 }
 
@@ -97,6 +105,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem("auth-user", JSON.stringify(userData));
   };
 
+  const loginWithGoogle = (userInfo: {
+    id: string;
+    name: string;
+    email: string;
+    picture: string;
+  }) => {
+    const userData = {
+      username: userInfo.name,
+      loginTime: new Date().toLocaleString(),
+      email: userInfo.email,
+      picture: userInfo.picture,
+      authType: "google" as const,
+    };
+    setUser(userData);
+    localStorage.setItem("auth-user", JSON.stringify(userData));
+  };
+
   const logout = async () => {
     if (authClient && user?.authType === "internet-identity") {
       await authClient.logout();
@@ -110,6 +135,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
     login,
     loginWithInternetIdentity,
+    loginWithGoogle,
     logout,
     authClient,
   };
