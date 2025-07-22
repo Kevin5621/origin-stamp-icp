@@ -1,5 +1,9 @@
 import type { TestProject } from "vitest/node";
 import { PocketIcServer } from "@dfinity/pic";
+import { config } from "dotenv";
+
+// Load environment variables
+config();
 
 let pic: PocketIcServer | undefined;
 

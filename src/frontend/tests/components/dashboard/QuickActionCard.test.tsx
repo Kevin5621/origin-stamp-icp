@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "../../utils/testUtils";
 import QuickActionCard from "../../../src/components/dashboard/QuickActionCard";
 
 describe("QuickActionCard Component", () => {

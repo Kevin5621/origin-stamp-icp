@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../utils/testUtils";
 import { ErrorDisplay } from "../../../src/components/ui/ErrorDisplay";
 
 describe("ErrorDisplay Component", () => {

@@ -193,21 +193,25 @@ fn create_physical_art_session(
 
 // Generate upload URL using S3 configuration
 #[ic_cdk::update]
-fn generate_upload_url(session_id: String, file_data: UploadFileData) -> Result<String, String> {
+fn generate_upload_url(_session_id: String, file_data: UploadFileData) -> Result<String, String> {
     S3_CONFIG.with(|config| {
         match config.borrow().as_ref() {
             Some(s3_config) => {
                 let base_url = match &s3_config.endpoint {
-                    Some(endpoint) => endpoint.clone(),
+                    Some(endpoint) => {
+                        // Remove trailing slash from endpoint if present
+                        let endpoint = endpoint.trim_end_matches('/');
+                        format!("{}/{}", endpoint, s3_config.bucket_name)
+                    }
                     None => format!(
                         "https://{}.s3.{}.amazonaws.com",
                         s3_config.bucket_name, s3_config.region
                     ),
                 };
 
-                // Generate S3 object URL
-                let object_key = format!("{}/{}", session_id, file_data.filename);
-                Ok(format!("{base_url}/{object_key}"))
+                // Generate S3 object URL (without session ID in path)
+                let object_key = file_data.filename;
+                Ok(format!("{}/{}", base_url, object_key))
             }
             None => {
                 Err("S3 configuration not found. Please configure S3 settings first.".to_string())

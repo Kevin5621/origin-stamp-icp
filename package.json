@@ -30,6 +30,7 @@
   "license": "ISC",
   "devDependencies": {
     "@dfinity/pic": "^0.13.1",
+    "@testing-library/dom": "^10.4.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22.14.1",
     "cross-fetch": "^4.1.0",
@@ -46,6 +47,8 @@
     "@react-three/fiber": "^9.2.0",
     "@studio-freight/lenis": "^1.0.42",
     "@types/three": "^0.178.1",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^17.2.0",
     "google-auth-library": "^10.1.0",
     "react-router-dom": "^7.7.0",
     "three": "^0.178.0"
