@@ -212,11 +212,7 @@ const S3ConfigPanel: React.FC = () => {
         )}
 
         <div className="form-actions">
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="btn-save wireframe-button primary"
-          >
+          <button type="submit" disabled={isLoading} className="btn-save">
             {isLoading ? (
               <>
                 <div className="loading-spinner small"></div>

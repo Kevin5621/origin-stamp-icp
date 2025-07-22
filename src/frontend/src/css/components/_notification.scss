@@ -4,7 +4,6 @@
 
 .transformable-notification {
   position: relative;
-  z-index: 1000;
   isolation: isolate;
   width: 3rem;
   height: 3rem;
@@ -24,28 +23,26 @@
 }
 
 .transformable-notification__circle {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  box-shadow: var(--shadow-neumorphic-sm);
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  background-color: var(--color-surface);
-  color: var(--color-on-surface);
+  border: none;
+  cursor: pointer;
+  transition: var(--theme-transition);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.025em;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    6px 6px 12px var(--color-shadow-dark),
-    -6px -6px 12px var(--color-shadow-light);
-  position: relative;
-  overflow: visible;
-  transform-origin: center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, width, height, border-radius;
-  transform: scale(1);
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    box-shadow: var(--shadow-inset);
+  }
 }
 
 .transformable-notification__circle:hover {
