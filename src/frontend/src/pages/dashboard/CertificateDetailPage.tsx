@@ -18,9 +18,9 @@ import {
   QrCode,
   ExternalLink,
   Printer,
-  Twitter,
-  Facebook,
-  Linkedin,
+  MessageCircle,
+  Share,
+  Building2,
 } from "lucide-react";
 import { KaryaService } from "../../services/artService";
 import { KaryaWithLogs } from "../../types/karya";
@@ -664,7 +664,7 @@ const CertificateDetailPage: React.FC = () => {
                     {certificateData.metadata.creation_tools.map(
                       (tool, index) => (
                         <div
-                          key={index}
+                          key={`tool-${index}-${tool}`}
                           className="certificate-detail-page__tool-item"
                         >
                           <span>{tool}</span>
@@ -708,14 +708,13 @@ const CertificateDetailPage: React.FC = () => {
                     <Button
                       variant="secondary"
                       size="small"
-                      onClick={() =>
-                        window.open(
-                          `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out this verified artwork: ${certificateData.verification_url}`)}`,
-                          "_blank",
-                        )
-                      }
+                      onClick={() => {
+                        const tweetText = `Check out this verified artwork: ${certificateData.verification_url}`;
+                        const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+                        window.open(tweetUrl, "_blank");
+                      }}
                     >
-                      <Twitter size={16} />
+                      <MessageCircle size={16} />
                       <span>Twitter</span>
                     </Button>
                     <Button
@@ -728,7 +727,7 @@ const CertificateDetailPage: React.FC = () => {
                         )
                       }
                     >
-                      <Facebook size={16} />
+                      <Share size={16} />
                       <span>Facebook</span>
                     </Button>
                     <Button
@@ -741,7 +740,7 @@ const CertificateDetailPage: React.FC = () => {
                         )
                       }
                     >
-                      <Linkedin size={16} />
+                      <Building2 size={16} />
                       <span>LinkedIn</span>
                     </Button>
                   </div>

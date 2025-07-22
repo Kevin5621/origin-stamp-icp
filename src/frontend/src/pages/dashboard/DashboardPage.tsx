@@ -27,7 +27,7 @@ const DashboardPage: React.FC = () => {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const userId = "user-001"; // TODO: Get from auth context
+        const userId = "user-001"; // TODO: Get from auth context when implemented
 
         // Load stats
         const karyaStats = await KaryaService.getKaryaStats(userId);

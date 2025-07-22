@@ -69,11 +69,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           className: "project-status--completed",
         };
       case "draft":
-        return {
-          icon: <Edit3 size={12} strokeWidth={2} />,
-          label: t("status_draft"),
-          className: "project-status--draft",
-        };
       default:
         return {
           icon: <Edit3 size={12} strokeWidth={2} />,
