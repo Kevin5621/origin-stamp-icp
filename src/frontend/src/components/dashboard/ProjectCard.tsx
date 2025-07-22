@@ -179,6 +179,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     }, "handleAnalyticsClick");
   };
 
+  const handleCertificateClick = (karyaId: string) => {
+    safeExecute(() => {
+      navigate(`/certificate/${karyaId}`);
+    }, "handleCertificateClick");
+  };
+
   return (
     <div className="project-card">
       <div className="project-header">
@@ -250,7 +256,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
           <button
             className="project-action-btn project-action-btn--secondary"
-            onClick={() => handleClick(safeProject.karya_id)}
+            onClick={() => handleCertificateClick(safeProject.karya_id)}
             aria-label={t("view_certificate_aria_label")}
           >
             <FileText size={14} strokeWidth={2} />
