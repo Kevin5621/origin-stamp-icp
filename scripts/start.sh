@@ -73,6 +73,7 @@ while true; do
     npm install || true
     popd > /dev/null
     dfx deploy
+    bash scripts/setup-s3.sh || true
 done &
 
 # Start frontend dev server

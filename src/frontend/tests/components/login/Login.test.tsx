@@ -1,8 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "../../utils/testUtils";
 import { Login } from "../../../src/components/login/Login";
-import { AuthProvider } from "../../../src/contexts/AuthContext";
-import { MemoryRouter } from "react-router-dom";
 import { googleAuthService } from "../../../src/services/googleAuth";
 
 // Mock the createPortal to render content in the test DOM
@@ -58,13 +56,7 @@ describe("Login Component", () => {
   });
 
   const renderLoginComponent = () => {
-    return render(
-      <MemoryRouter>
-        <AuthProvider>
-          <Login />
-        </AuthProvider>
-      </MemoryRouter>,
-    );
+    return render(<Login />);
   };
 
   it("renders the login button when not authenticated", () => {
