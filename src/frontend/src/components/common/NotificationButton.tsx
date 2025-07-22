@@ -188,102 +188,101 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
               {unreadCount}
             </span>
           )}
+        </div>
+      </button>
 
-          <div className="transformable-notification__content">
-            <div className="notification-panel">
-              <div className="notification-panel__header">
-                <h3 className="notification-panel__title">
-                  {t("notifications")}
-                  {unreadCount > 0 && (
-                    <span className="notification-panel__count">
-                      ({unreadCount})
-                    </span>
-                  )}
-                </h3>
-                <div className="notification-panel__actions">
-                  {unreadCount > 0 && (
-                    <button
-                      onClick={handleMarkAllAsRead}
-                      className="notification-panel__action-btn"
-                      title={t("mark_all_as_read")}
-                    >
-                      <Check size={16} />
-                    </button>
-                  )}
-                  {notifications.length > 0 && (
-                    <button
-                      onClick={handleClearAll}
-                      className="notification-panel__action-btn"
-                      title={t("clear_all")}
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="notification-panel__list">
-                {notifications.length === 0 ? (
-                  <div className="notification-panel__empty">
-                    <Bell
-                      size={48}
-                      className="notification-panel__empty-icon"
-                    />
-                    <p className="notification-panel__empty-text">
-                      {t("no_notifications")}
-                    </p>
-                  </div>
-                ) : (
-                  notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`notification-panel__item ${!notification.isRead ? "notification-panel__item--unread" : ""}`}
-                    >
-                      <div className="notification-panel__item-icon">
-                        {getNotificationIcon(notification.type)}
-                      </div>
-                      <div className="notification-panel__item-content">
-                        <div className="notification-panel__item-header">
-                          <h4 className="notification-panel__item-title">
-                            {notification.title}
-                          </h4>
-                          <span className="notification-panel__item-time">
-                            <Clock size={12} />
-                            {formatTimestamp(notification.timestamp)}
-                          </span>
-                        </div>
-                        <p className="notification-panel__item-message">
-                          {notification.message}
-                        </p>
-                      </div>
-                      <div className="notification-panel__item-actions">
-                        {!notification.isRead && (
-                          <button
-                            onClick={() => handleMarkAsRead(notification.id)}
-                            className="notification-panel__item-action"
-                            title={t("mark_as_read")}
-                          >
-                            <Check size={14} />
-                          </button>
-                        )}
-                        <button
-                          onClick={() =>
-                            handleDeleteNotification(notification.id)
-                          }
-                          className="notification-panel__item-action"
-                          title={t("delete")}
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  ))
+      {isExpanded && (
+        <div className="transformable-notification__content">
+          <div className="notification-panel">
+            <div className="notification-panel__header">
+              <h3 className="notification-panel__title">
+                {t("notifications")}
+                {unreadCount > 0 && (
+                  <span className="notification-panel__count">
+                    ({unreadCount})
+                  </span>
+                )}
+              </h3>
+              <div className="notification-panel__actions">
+                {unreadCount > 0 && (
+                  <button
+                    onClick={handleMarkAllAsRead}
+                    className="notification-panel__action-btn"
+                    title={t("mark_all_as_read")}
+                  >
+                    <Check size={16} />
+                  </button>
+                )}
+                {notifications.length > 0 && (
+                  <button
+                    onClick={handleClearAll}
+                    className="notification-panel__action-btn"
+                    title={t("clear_all")}
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 )}
               </div>
             </div>
+
+            <div className="notification-panel__list">
+              {notifications.length === 0 ? (
+                <div className="notification-panel__empty">
+                  <Bell size={48} className="notification-panel__empty-icon" />
+                  <p className="notification-panel__empty-text">
+                    {t("no_notifications")}
+                  </p>
+                </div>
+              ) : (
+                notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className={`notification-panel__item ${!notification.isRead ? "notification-panel__item--unread" : ""}`}
+                  >
+                    <div className="notification-panel__item-icon">
+                      {getNotificationIcon(notification.type)}
+                    </div>
+                    <div className="notification-panel__item-content">
+                      <div className="notification-panel__item-header">
+                        <h4 className="notification-panel__item-title">
+                          {notification.title}
+                        </h4>
+                        <span className="notification-panel__item-time">
+                          <Clock size={12} />
+                          {formatTimestamp(notification.timestamp)}
+                        </span>
+                      </div>
+                      <p className="notification-panel__item-message">
+                        {notification.message}
+                      </p>
+                    </div>
+                    <div className="notification-panel__item-actions">
+                      {!notification.isRead && (
+                        <button
+                          onClick={() => handleMarkAsRead(notification.id)}
+                          className="notification-panel__item-action"
+                          title={t("mark_as_read")}
+                        >
+                          <Check size={14} />
+                        </button>
+                      )}
+                      <button
+                        onClick={() =>
+                          handleDeleteNotification(notification.id)
+                        }
+                        className="notification-panel__item-action"
+                        title={t("delete")}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
-      </button>
+      )}
     </div>
   );
 };

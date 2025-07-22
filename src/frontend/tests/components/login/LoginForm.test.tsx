@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "../../utils/testUtils";
 import { LoginForm } from "../../../src/components/login/LoginForm";
-import { AuthProvider } from "../../../src/contexts/AuthContext";
 import { backendService } from "../../../src/services/backendService";
 
 // Mock backendService
@@ -22,9 +21,7 @@ describe("LoginForm Component", () => {
 
   const renderLoginForm = () => {
     return render(
-      <AuthProvider>
-        <LoginForm onBack={onBack} onLoginSuccess={onLoginSuccess} />
-      </AuthProvider>,
+      <LoginForm onBack={onBack} onLoginSuccess={onLoginSuccess} />,
     );
   };
 
