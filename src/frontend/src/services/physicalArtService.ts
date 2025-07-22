@@ -1,4 +1,5 @@
 import { backend } from "../../../declarations/backend";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 // Types for Physical Art Session
 export interface PhysicalArtSession {
@@ -58,75 +59,77 @@ export class PhysicalArtService {
   }
 
   /**
-   * Generate presigned URL for file upload
-   */
-  static async generateUploadUrl(
-    sessionId: string,
-    filename: string,
-    contentType: string,
-  ): Promise<string> {
-    try {
-      const uploadFileData = {
-        filename,
-        content_type: contentType,
-        file_size: BigInt(0), // We'll set actual size during upload
-      };
-
-      const result = await backend.generate_upload_url(
-        sessionId,
-        uploadFileData,
-      );
-
-      if ("Ok" in result) {
-        return result.Ok;
-      } else {
-        throw new Error(result.Err);
-      }
-    } catch (error) {
-      console.error("Failed to generate upload URL:", error);
-      throw error;
-    }
-  }
-
-  /**
-   * Upload file to S3 and record in session
+   * Upload file to S3 and record in session using AWS S3 API
    */
   static async uploadPhoto(
     sessionId: string,
     file: File,
   ): Promise<UploadResult> {
     try {
-      // Generate upload URL
-      const uploadUrl = await this.generateUploadUrl(
-        sessionId,
-        file.name,
-        file.type,
-      );
+      // Get S3 configuration
+      const s3Config = await this.getS3ConfigFromBackend();
 
-      // Upload file to S3 (or S3-compatible storage)
-      const uploadResponse = await fetch(uploadUrl, {
-        method: "PUT",
-        body: file,
-        headers: {
-          "Content-Type": file.type,
+      if (!s3Config) {
+        throw new Error("S3 configuration not found");
+      }
+
+      // Create S3 client
+      const s3Client = new S3Client({
+        region: s3Config.region,
+        credentials: {
+          accessKeyId: s3Config.access_key_id,
+          secretAccessKey: s3Config.secret_access_key,
         },
+        ...(s3Config.endpoint &&
+        Array.isArray(s3Config.endpoint) &&
+        s3Config.endpoint.length > 0
+          ? { endpoint: s3Config.endpoint[0] }
+          : s3Config.endpoint && typeof s3Config.endpoint === "string"
+            ? { endpoint: s3Config.endpoint }
+            : {}),
       });
 
-      if (!uploadResponse.ok) {
-        throw new Error(`Upload failed: ${uploadResponse.statusText}`);
-      }
+      // Generate unique key for the file
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const fileKey = `physical-art/${sessionId}/${timestamp}-${file.name}`;
+
+      // Convert file to ArrayBuffer for upload
+      const fileBuffer = await file.arrayBuffer();
+
+      // Create PutObject command
+      const putCommand = new PutObjectCommand({
+        Bucket: s3Config.bucket_name,
+        Key: fileKey,
+        Body: new Uint8Array(fileBuffer),
+        ContentType: file.type,
+        ContentLength: file.size,
+      });
+
+      // Upload to S3
+      await s3Client.send(putCommand);
+
+      // Construct the file URL
+      const fileUrl =
+        s3Config.endpoint &&
+        Array.isArray(s3Config.endpoint) &&
+        s3Config.endpoint.length > 0
+          ? `${s3Config.endpoint[0]}/${s3Config.bucket_name}/${fileKey}`
+          : s3Config.endpoint && typeof s3Config.endpoint === "string"
+            ? `${s3Config.endpoint}/${s3Config.bucket_name}/${fileKey}`
+            : `https://${s3Config.bucket_name}.s3.${s3Config.region}.amazonaws.com/${fileKey}`;
 
       // Record the uploaded file in the session
       const recordResult = await backend.upload_photo_to_session(
         sessionId,
-        uploadUrl,
+        fileUrl,
       );
 
       if ("Ok" in recordResult && recordResult.Ok) {
         return {
           success: true,
           message: "Photo uploaded successfully",
-          file_url: uploadUrl,
+          file_url: fileUrl,
+          file_id: fileKey,
         };
       } else {
         throw new Error("Failed to record uploaded photo");
@@ -294,6 +297,19 @@ export class PhysicalArtService {
     });
 
     return { valid, invalid };
+  }
+
+  /**
+   * Get S3 configuration from backend
+   */
+  private static async getS3ConfigFromBackend(): Promise<any | null> {
+    try {
+      const result = await backend.get_s3_config();
+      return result.length > 0 && result[0] ? result[0] : null;
+    } catch (error) {
+      console.error("Failed to get S3 config:", error);
+      return null;
+    }
   }
 }
 

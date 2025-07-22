@@ -66,17 +66,16 @@ echo "🚀 Deploying canisters..."
 dfx deploy
 
 while true; do
-    sleep 2700
     git pull origin main || true
     npm install || true
     pushd src/frontend/ > /dev/null
     npm install || true
     popd > /dev/null
     dfx deploy
+    sleep 5
     bash scripts/setup-s3.sh || true
-done &
-
-# Start frontend dev server
-echo "🌐 Starting frontend..."
-cd src/frontend/
-npm start
+    echo "🌐 Starting frontend..."
+    pushd src/frontend/ > /dev/null
+    timeout 2700 npm start
+    popd > /dev/null
+done

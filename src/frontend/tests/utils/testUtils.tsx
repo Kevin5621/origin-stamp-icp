@@ -1,5 +1,7 @@
 import React from "react";
 import { render, RenderOptions } from "@testing-library/react";
+import { screen, fireEvent, waitFor } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { AuthProvider } from "../../src/contexts/AuthContext";
 import { ToastProvider } from "../../src/contexts/ToastContext";
@@ -23,6 +25,7 @@ const customRender = (
 
 // Re-export everything
 export * from "@testing-library/react";
+export * from "@testing-library/dom";
 
-// Override render method
-export { customRender as render };
+// Override render method and export specific functions
+export { customRender as render, screen, fireEvent, waitFor, userEvent };
