@@ -18,15 +18,10 @@ import { useErrorHandler } from "../../hooks/useErrorHandler";
 
 interface ProjectCardProps {
   project: KaryaWithLogs;
-  onClick: (karyaId: string) => void;
   index: number;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({
-  project,
-  onClick,
-  index,
-}) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const { t } = useTranslation();
   const { t: tCommon } = useTranslation();
   const navigate = useNavigate();
@@ -167,12 +162,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     }
   };
 
-  const handleClick = (karyaId: string) => {
-    safeExecute(() => {
-      onClick(karyaId);
-    }, "handleClick");
-  };
-
   const handleAnalyticsClick = (karyaId: string) => {
     safeExecute(() => {
       navigate(`/analytics/${karyaId}`);
@@ -183,6 +172,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     safeExecute(() => {
       navigate(`/certificate/${karyaId}`);
     }, "handleCertificateClick");
+  };
+
+  const handleDetailClick = (karyaId: string) => {
+    safeExecute(() => {
+      navigate(`/karya/${karyaId}`);
+    }, "handleDetailClick");
   };
 
   return (
@@ -247,7 +242,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         <div className="project-actions-row">
           <button
             className="project-action-btn project-action-btn--primary"
-            onClick={() => handleClick(safeProject.karya_id)}
+            onClick={() => handleDetailClick(safeProject.karya_id)}
             aria-label={t("view_detail_aria_label")}
           >
             <Eye size={14} strokeWidth={2} />

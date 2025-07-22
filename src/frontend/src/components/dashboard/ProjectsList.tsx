@@ -8,13 +8,11 @@ import ErrorBoundary from "../common/ErrorBoundary";
 
 interface ProjectsListProps {
   projects: KaryaWithLogs[];
-  onProjectClick: (karyaId: string) => void;
   onNewProject: () => void;
 }
 
 const ProjectsList: React.FC<ProjectsListProps> = ({
   projects,
-  onProjectClick,
   onNewProject,
 }) => {
   const { t } = useTranslation();
@@ -50,11 +48,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({
             </div>
           }
         >
-          <ProjectCard
-            project={project}
-            onClick={onProjectClick}
-            index={index}
-          />
+          <ProjectCard project={project} index={index} />
         </ErrorBoundary>
       ))}
     </div>

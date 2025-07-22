@@ -56,12 +56,6 @@ const DashboardPage: React.FC = () => {
     navigate("/session");
   };
 
-  const handleProjectClick = (karyaId: string) => {
-    // TODO: Navigate to project detail page
-    console.log("Opening project:", karyaId);
-    navigate(`/dashboard/project/${karyaId}`);
-  };
-
   const handleSearch = (query: string) => {
     console.log("Searching for:", query);
   };
@@ -97,7 +91,6 @@ const DashboardPage: React.FC = () => {
       selectedFilter={selectedFilter}
       viewMode={viewMode}
       onNewProject={handleNewProject}
-      onProjectClick={handleProjectClick}
       onSearch={handleSearch}
       onSort={handleSort}
       onViewChange={handleViewChange}
