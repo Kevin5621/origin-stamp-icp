@@ -20,7 +20,6 @@ interface DashboardProps {
   selectedFilter: "all" | "active" | "completed";
   viewMode: "list" | "grid";
   onNewProject: () => void;
-  onProjectClick: (karyaId: string) => void;
   onSearch: (query: string) => void;
   onSort: (sortBy: string) => void;
   onViewChange: (view: "list" | "grid") => void;
@@ -34,7 +33,6 @@ const Dashboard: React.FC<DashboardProps> = ({
   selectedFilter,
   viewMode,
   onNewProject,
-  onProjectClick,
   onSearch,
   onSort,
   onViewChange,
@@ -102,7 +100,6 @@ const Dashboard: React.FC<DashboardProps> = ({
           selectedFilter={selectedFilter}
           viewMode={viewMode}
           onNewProject={onNewProject}
-          onProjectClick={onProjectClick}
           onSearch={onSearch}
           onSort={onSort}
           onViewChange={handleViewChange}

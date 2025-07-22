@@ -31,6 +31,7 @@ import CertificatesPage from "./pages/dashboard/CertificatesPage";
 import AnalyticsPage from "./pages/dashboard/AnalyticsPage";
 import AnalyticsDetailPage from "./pages/dashboard/AnalyticsDetailPage";
 import CertificateDetailPage from "./pages/dashboard/CertificateDetailPage";
+import KaryaDetailPage from "./pages/dashboard/KaryaDetailPage";
 import SettingsPage from "./pages/SettingsPage";
 
 // Component untuk menentukan apakah navbar harus ditampilkan
@@ -127,6 +128,14 @@ function MainContentWrapper() {
           element={
             <ProtectedRoute>
               <CertificateDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/karya/:karyaId"
+          element={
+            <ProtectedRoute>
+              <KaryaDetailPage />
             </ProtectedRoute>
           }
         />
