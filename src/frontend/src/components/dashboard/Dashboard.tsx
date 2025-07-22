@@ -6,6 +6,9 @@ import ToastContainer from "../common/ToastContainer";
 import { useToast } from "../../hooks/useToast";
 import { KaryaWithLogs } from "../../types/karya";
 
+type FilterType = "all" | "active" | "completed";
+type ViewModeType = "list" | "grid";
+
 interface ProjectStats {
   completedProjects: number;
   certificatesIssued: number;
@@ -17,13 +20,13 @@ interface DashboardProps {
   isLoading?: boolean;
   stats: ProjectStats;
   projects: KaryaWithLogs[];
-  selectedFilter: "all" | "active" | "completed";
-  viewMode: "list" | "grid";
+  selectedFilter: FilterType;
+  viewMode: ViewModeType;
   onNewProject: () => void;
   onSearch: (query: string) => void;
   onSort: (sortBy: string) => void;
-  onViewChange: (view: "list" | "grid") => void;
-  onFilterChange: (filter: "all" | "active" | "completed") => void;
+  onViewChange: (view: ViewModeType) => void;
+  onFilterChange: (filter: FilterType) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -40,11 +43,11 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   const { toasts, removeToast } = useToast();
 
-  const handleFilterChange = (filter: "all" | "active" | "completed") => {
+  const handleFilterChange = (filter: FilterType) => {
     onFilterChange(filter);
   };
 
-  const handleViewChange = (view: "list" | "grid") => {
+  const handleViewChange = (view: ViewModeType) => {
     onViewChange(view);
   };
 

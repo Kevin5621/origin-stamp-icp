@@ -436,8 +436,8 @@ const KaryaDetailPage: React.FC = () => {
           <Card className="karya-detail-page__tags-card">
             <h3>{t("tags")}</h3>
             <div className="karya-detail-page__tags">
-              {detailData.tags.map((tag, index) => (
-                <span key={index} className="karya-detail-page__tag">
+                                  {detailData.tags.map((tag, index) => (
+                      <span key={`tag-${index}-${tag}`} className="karya-detail-page__tag">
                   #{tag}
                 </span>
               ))}
@@ -726,7 +726,7 @@ const KaryaDetailPage: React.FC = () => {
                   <div className="karya-detail-page__materials-list">
                     {detailData.materials.map((material, index) => (
                       <div
-                        key={index}
+                        key={`material-${index}-${material}`}
                         className="karya-detail-page__material-item"
                       >
                         <span>{material}</span>
@@ -740,7 +740,7 @@ const KaryaDetailPage: React.FC = () => {
                   <div className="karya-detail-page__techniques-list">
                     {detailData.techniques.map((technique, index) => (
                       <div
-                        key={index}
+                        key={`technique-${index}-${technique}`}
                         className="karya-detail-page__technique-item"
                       >
                         <span>{technique}</span>
@@ -754,7 +754,7 @@ const KaryaDetailPage: React.FC = () => {
                   <div className="karya-detail-page__collaborators-list">
                     {detailData.collaborators.map((collaborator, index) => (
                       <div
-                        key={index}
+                        key={`collaborator-${index}-${collaborator}`}
                         className="karya-detail-page__collaborator-item"
                       >
                         <User size={16} />
@@ -773,7 +773,7 @@ const KaryaDetailPage: React.FC = () => {
                   <div className="karya-detail-page__performance-list">
                     {detailData.performance_metrics.map((metric, index) => (
                       <div
-                        key={index}
+                        key={`performance-${index}-${metric.metric}`}
                         className="karya-detail-page__performance-item"
                       >
                         <div className="karya-detail-page__performance-info">
@@ -801,7 +801,7 @@ const KaryaDetailPage: React.FC = () => {
                   <div className="karya-detail-page__revisions-list">
                     {detailData.revision_history.map((revision, index) => (
                       <div
-                        key={index}
+                        key={`revision-${index}-${revision.version}`}
                         className="karya-detail-page__revision-item"
                       >
                         <div className="karya-detail-page__revision-header">

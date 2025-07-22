@@ -238,7 +238,7 @@ const AnalyticsDetailPage: React.FC = () => {
                 <div className="analytics-detail-page__chart-line">
                   {analyticsData.price_history.map((point, index) => (
                     <div
-                      key={index}
+                      key={`price-point-${index}-${point.date}`}
                       className="analytics-detail-page__chart-point"
                       style={{
                         left: `${(index / (analyticsData.price_history.length - 1)) * 100}%`,
@@ -447,7 +447,7 @@ const AnalyticsDetailPage: React.FC = () => {
                   <div className="analytics-detail-page__performance-list">
                     {analyticsData.performance_metrics.map((metric, index) => (
                       <div
-                        key={index}
+                        key={`performance-${index}-${metric.metric}`}
                         className="analytics-detail-page__performance-item"
                       >
                         <div className="analytics-detail-page__performance-info">
@@ -482,7 +482,7 @@ const AnalyticsDetailPage: React.FC = () => {
                     {analyticsData.audience_demographics.age_groups.map(
                       (group, index) => (
                         <div
-                          key={index}
+                          key={`age-group-${index}-${group.age}`}
                           className="analytics-detail-page__audience-bar"
                         >
                           <div className="analytics-detail-page__audience-bar-label">
@@ -507,7 +507,7 @@ const AnalyticsDetailPage: React.FC = () => {
                     {analyticsData.audience_demographics.locations.map(
                       (location, index) => (
                         <div
-                          key={index}
+                          key={`location-${index}-${location.location}`}
                           className="analytics-detail-page__audience-item"
                         >
                           <span>{location.location}</span>
