@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   Clock,
   CheckCircle,
@@ -11,7 +12,6 @@ import {
   Music,
   Hammer,
   Eye,
-  Settings,
 } from "lucide-react";
 import { KaryaWithLogs } from "../../types/karya";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
@@ -29,6 +29,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   const { t } = useTranslation();
   const { t: tCommon } = useTranslation();
+  const navigate = useNavigate();
   const { handleError, safeExecute } = useErrorHandler({
     context: `ProjectCard-${index}`,
   });
@@ -172,6 +173,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     }, "handleClick");
   };
 
+  const handleAnalyticsClick = (karyaId: string) => {
+    safeExecute(() => {
+      navigate(`/analytics/${karyaId}`);
+    }, "handleAnalyticsClick");
+  };
+
   return (
     <div className="project-card">
       <div className="project-header">
@@ -254,7 +261,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         <div className="project-actions-row">
           <button
             className="project-action-btn project-action-btn--secondary"
-            onClick={() => handleClick(safeProject.karya_id)}
+            onClick={() => handleAnalyticsClick(safeProject.karya_id)}
             aria-label={t("view_analytics_aria_label")}
           >
             <BarChart3 size={14} strokeWidth={2} />

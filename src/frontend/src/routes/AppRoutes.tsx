@@ -7,6 +7,7 @@ import DashboardPage from "../pages/dashboard/DashboardPage";
 import SessionPage from "../pages/dashboard/SessionPage";
 import FinalizationPage from "../pages/dashboard/FinalizationPage";
 import VerificationPage from "../pages/dashboard/VerificationPage";
+import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
 import AdminPage from "../pages/admin/AdminPage";
 import SettingsPage from "../pages/SettingsPage";
 
@@ -51,6 +52,14 @@ export const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <VerificationPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/analytics/:karyaId"
+        element={
+          <ProtectedRoute>
+            <AnalyticsDetailPage />
           </ProtectedRoute>
         }
       />
