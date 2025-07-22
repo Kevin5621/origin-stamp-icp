@@ -436,8 +436,11 @@ const KaryaDetailPage: React.FC = () => {
           <Card className="karya-detail-page__tags-card">
             <h3>{t("tags")}</h3>
             <div className="karya-detail-page__tags">
-                                  {detailData.tags.map((tag, index) => (
-                      <span key={`tag-${index}-${tag}`} className="karya-detail-page__tag">
+              {detailData.tags.map((tag, index) => (
+                <span
+                  key={`tag-${index}-${tag}`}
+                  className="karya-detail-page__tag"
+                >
                   #{tag}
                 </span>
               ))}
