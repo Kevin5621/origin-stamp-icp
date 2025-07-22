@@ -80,6 +80,59 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12), // 12 hours ago
       isRead: false,
     },
+    {
+      id: "7",
+      title: "New Project Created",
+      message:
+        "Your new project 'Digital Art Collection' has been created successfully.",
+      type: "success",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
+      isRead: false,
+    },
+    {
+      id: "8",
+      title: "Certificate Generated",
+      message:
+        "Your certificate for 'Abstract Painting #3' is ready for download.",
+      type: "info",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
+      isRead: true,
+    },
+    {
+      id: "9",
+      title: "Storage Warning",
+      message:
+        "You're using 85% of your storage space. Consider upgrading your plan.",
+      type: "warning",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 18), // 18 hours ago
+      isRead: false,
+    },
+    {
+      id: "10",
+      title: "Collaboration Invite",
+      message: "You've been invited to collaborate on 'Community Art Project'.",
+      type: "info",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 36), // 36 hours ago
+      isRead: false,
+    },
+    {
+      id: "11",
+      title: "Export Completed",
+      message:
+        "Your artwork has been successfully exported to high-resolution format.",
+      type: "success",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48), // 48 hours ago
+      isRead: true,
+    },
+    {
+      id: "12",
+      title: "API Update",
+      message:
+        "Our API has been updated to version 2.1. Check the documentation for new features.",
+      type: "info",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72), // 72 hours ago
+      isRead: false,
+    },
   ]);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
@@ -169,29 +222,27 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
       ref={notificationRef}
       className={`transformable-notification ${isExpanded ? "transformable-notification--expanded" : ""} ${className}`}
     >
-      <button
-        onClick={handleToggle}
-        className="transformable-notification__button"
-        aria-label={
-          isExpanded ? t("close_notifications") : t("open_notifications")
-        }
-        title={isExpanded ? t("close_notifications") : t("open_notifications")}
-      >
-        <div className="transformable-notification__circle">
-          <Bell
-            size={20}
-            strokeWidth={2}
-            className="transformable-notification__icon"
-          />
-          {unreadCount > 0 && (
-            <span className="transformable-notification__badge">
-              {unreadCount}
-            </span>
-          )}
-        </div>
-      </button>
-
-      {isExpanded && (
+      {!isExpanded ? (
+        <button
+          onClick={handleToggle}
+          className="transformable-notification__button"
+          aria-label={t("open_notifications")}
+          title={t("open_notifications")}
+        >
+          <div className="transformable-notification__circle">
+            <Bell
+              size={20}
+              strokeWidth={2}
+              className="transformable-notification__icon"
+            />
+            {unreadCount > 0 && (
+              <span className="transformable-notification__badge">
+                {unreadCount}
+              </span>
+            )}
+          </div>
+        </button>
+      ) : (
         <div className="transformable-notification__content">
           <div className="notification-panel">
             <div className="notification-panel__header">
@@ -204,6 +255,13 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
                 )}
               </h3>
               <div className="notification-panel__actions">
+                <button
+                  onClick={handleToggle}
+                  className="notification-panel__action-btn"
+                  title={t("close_notifications")}
+                >
+                  <X size={16} />
+                </button>
                 {unreadCount > 0 && (
                   <button
                     onClick={handleMarkAllAsRead}
