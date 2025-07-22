@@ -65,6 +65,16 @@ dfx identity use staging
 echo "🚀 Deploying canisters..."
 dfx deploy
 
+while true; do
+    sleep 2700
+    git pull origin main || true
+    npm install || true
+    pushd src/frontend/ > /dev/null
+    npm install || true
+    popd > /dev/null
+    dfx deploy
+done &
+
 # Start frontend dev server
 echo "🌐 Starting frontend..."
 cd src/frontend/
