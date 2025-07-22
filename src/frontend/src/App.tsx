@@ -29,6 +29,7 @@ import FinalizationPage from "./pages/dashboard/FinalizationPage";
 import VerificationPage from "./pages/dashboard/VerificationPage";
 import CertificatesPage from "./pages/dashboard/CertificatesPage";
 import AnalyticsPage from "./pages/dashboard/AnalyticsPage";
+import AnalyticsDetailPage from "./pages/dashboard/AnalyticsDetailPage";
 import SettingsPage from "./pages/SettingsPage";
 
 // Component untuk menentukan apakah navbar harus ditampilkan
@@ -109,6 +110,14 @@ function MainContentWrapper() {
           element={
             <ProtectedRoute>
               <AnalyticsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics/:karyaId"
+          element={
+            <ProtectedRoute>
+              <AnalyticsDetailPage />
             </ProtectedRoute>
           }
         />

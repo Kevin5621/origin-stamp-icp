@@ -338,4 +338,86 @@ export class KaryaService {
       totalLogs: karya.reduce((sum, k) => sum + (k.log_count || 0), 0),
     };
   }
+
+  // Mendapatkan data analisis untuk karya tertentu
+  static async getKaryaAnalytics(karyaId: string) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const karya = mockKaryaData.find((k) => k.karya_id === karyaId);
+    if (!karya) return null;
+
+    // Generate mock analytics data berdasarkan karya
+    const baseValue = 1000 + Math.random() * 5000;
+    const priceHistory = [];
+    const startDate = new Date(karya.waktu_mulai);
+
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + i);
+      const trend = Math.sin(i * 0.2) * 0.3 + 1;
+      const value = baseValue * trend * (0.8 + Math.random() * 0.4);
+
+      priceHistory.push({
+        date: date.toISOString().split("T")[0],
+        value: Math.round(value),
+        volume: Math.round(Math.random() * 100 + 50),
+      });
+    }
+
+    return {
+      karya_id: karyaId,
+      views: Math.round(5000 + Math.random() * 15000),
+      engagement: Math.round(60 + Math.random() * 30),
+      completion_rate: Math.round(70 + Math.random() * 25),
+      avg_session_duration: Math.round(120 + Math.random() * 300),
+      price_history: priceHistory,
+      performance_metrics: [
+        {
+          metric: "Verification Score",
+          value: Math.round(85 + Math.random() * 15),
+          change: Math.round(-5 + Math.random() * 10),
+          trend: Math.random() > 0.5 ? "up" : "down",
+        },
+        {
+          metric: "Authenticity Rating",
+          value: Math.round(90 + Math.random() * 10),
+          change: Math.round(-3 + Math.random() * 6),
+          trend: "up",
+        },
+        {
+          metric: "Community Trust",
+          value: Math.round(75 + Math.random() * 20),
+          change: Math.round(-8 + Math.random() * 16),
+          trend: Math.random() > 0.5 ? "up" : "down",
+        },
+        {
+          metric: "Market Demand",
+          value: Math.round(60 + Math.random() * 35),
+          change: Math.round(-10 + Math.random() * 20),
+          trend: Math.random() > 0.5 ? "up" : "down",
+        },
+      ],
+      audience_demographics: {
+        age_groups: [
+          { age: "18-24", percentage: 25 },
+          { age: "25-34", percentage: 35 },
+          { age: "35-44", percentage: 20 },
+          { age: "45+", percentage: 20 },
+        ],
+        locations: [
+          { location: "Indonesia", percentage: 45 },
+          { location: "Malaysia", percentage: 20 },
+          { location: "Singapore", percentage: 15 },
+          { location: "Other", percentage: 20 },
+        ],
+        interests: [
+          { interest: "Art & Design", percentage: 40 },
+          { interest: "Technology", percentage: 25 },
+          { interest: "Culture", percentage: 20 },
+          { interest: "Education", percentage: 15 },
+        ],
+      },
+      verification_score: Math.round(85 + Math.random() * 15),
+    };
+  }
 }
