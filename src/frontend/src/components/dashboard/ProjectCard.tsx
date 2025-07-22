@@ -28,6 +28,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   index,
 }) => {
   const { t } = useTranslation();
+  const { t: tCommon } = useTranslation();
   const { handleError, safeExecute } = useErrorHandler({
     context: `ProjectCard-${index}`,
   });
@@ -37,7 +38,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     return (
       <div className="project-card project-card--error">
         <div className="project-error">
-          <p>Data karya tidak tersedia</p>
+          <p>{t("project_data_unavailable")}</p>
         </div>
       </div>
     );
@@ -46,14 +47,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   // Fallback values untuk mencegah error
   const safeProject = {
     karya_id: project.karya_id || `karya-${index}`,
-    nama_karya: project.nama_karya || "Karya Tanpa Nama",
-    deskripsi: project.deskripsi || "Tidak ada deskripsi",
+    nama_karya: project.nama_karya || t("project_no_name"),
+    deskripsi: project.deskripsi || t("project_no_description"),
     tipe_karya: project.tipe_karya || "other",
-    format_file: project.format_file || "unknown",
+    format_file: project.format_file || t("format_label").toLowerCase(),
     status_karya: project.status_karya || "draft",
     waktu_mulai: project.waktu_mulai || new Date(),
     waktu_selesai: project.waktu_selesai,
-    user_id: project.user_id || "unknown",
+    user_id: project.user_id || tCommon("login_method_unknown").toLowerCase(),
     log_count: project.log_count || 0,
   };
 
@@ -62,25 +63,25 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       case "active":
         return {
           icon: <Clock size={12} strokeWidth={2} />,
-          label: t("status_active", "Sedang Berlangsung"),
+          label: t("status_active"),
           className: "project-status--active",
         };
       case "completed":
         return {
           icon: <CheckCircle size={12} strokeWidth={2} />,
-          label: t("status_completed", "Selesai"),
+          label: t("status_completed"),
           className: "project-status--completed",
         };
       case "draft":
         return {
           icon: <Edit3 size={12} strokeWidth={2} />,
-          label: t("status_draft", "Draft"),
+          label: t("status_draft"),
           className: "project-status--draft",
         };
       default:
         return {
           icon: <Edit3 size={12} strokeWidth={2} />,
-          label: t("status_draft", "Draft"),
+          label: t("status_draft"),
           className: "project-status--draft",
         };
     }
@@ -102,17 +103,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const getTipeKaryaLabel = (tipe: string) => {
     switch (tipe) {
       case "painting":
-        return "Lukisan";
+        return t("project_type_painting");
       case "sculpture":
-        return "Patung";
+        return t("project_type_sculpture");
       case "audio":
-        return "Audio";
+        return t("project_type_audio");
       case "digital":
-        return "Digital";
+        return t("project_type_digital");
       case "photography":
-        return "Fotografi";
+        return t("project_type_photography");
       case "craft":
-        return "Kerajinan";
+        return t("project_type_craft");
+      case "other":
+        return t("project_type_other");
       default:
         return tipe;
     }
@@ -123,7 +126,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const formatDate = (date: Date) => {
     try {
       if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
-        return "Tanggal tidak valid";
+        return t("invalid_date");
       }
       return date.toLocaleDateString("id-ID", {
         day: "numeric",
@@ -132,7 +135,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       });
     } catch (error) {
       handleError(error as Error, "formatDate");
-      return "Tanggal tidak valid";
+      return t("invalid_date");
     }
   };
 
@@ -142,23 +145,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       const end = safeProject.waktu_selesai || new Date();
 
       if (!start || !(start instanceof Date) || isNaN(start.getTime())) {
-        return "Durasi tidak tersedia";
+        return t("duration_unavailable");
       }
 
       if (!end || !(end instanceof Date) || isNaN(end.getTime())) {
-        return "Sedang berlangsung";
+        return t("duration_ongoing");
       }
 
       const diffTime = Math.abs(end.getTime() - start.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-      if (diffDays === 1) return "1 hari";
-      if (diffDays < 7) return `${diffDays} hari`;
-      if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu`;
-      return `${Math.floor(diffDays / 30)} bulan`;
+      if (diffDays === 1) return `1 ${t("duration_day")}`;
+      if (diffDays < 7) return `${diffDays} ${t("duration_days")}`;
+      if (diffDays < 30)
+        return `${Math.floor(diffDays / 7)} ${t("duration_weeks")}`;
+      return `${Math.floor(diffDays / 30)} ${t("duration_months")}`;
     } catch (error) {
       handleError(error as Error, "getDuration");
-      return "Durasi tidak tersedia";
+      return t("duration_unavailable");
     }
   };
 
@@ -191,29 +195,37 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       <div className="project-meta">
         <div className="meta-item">
           <Calendar size={12} strokeWidth={2} />
-          <span>Mulai: {formatDate(safeProject.waktu_mulai)}</span>
+          <span>
+            {t("start_date_label")}: {formatDate(safeProject.waktu_mulai)}
+          </span>
         </div>
         {safeProject.waktu_selesai && (
           <div className="meta-item">
             <CheckCircle size={12} strokeWidth={2} />
-            <span>Selesai: {formatDate(safeProject.waktu_selesai)}</span>
+            <span>
+              {t("end_date_label")}: {formatDate(safeProject.waktu_selesai)}
+            </span>
           </div>
         )}
         <div className="meta-item">
           <Clock size={12} strokeWidth={2} />
-          <span>Durasi: {getDuration()}</span>
+          <span>
+            {t("duration_label")}: {getDuration()}
+          </span>
         </div>
         {safeProject.log_count !== undefined && (
           <div className="meta-item">
             <FileText size={12} strokeWidth={2} />
-            <span>{safeProject.log_count} log proses</span>
+            <span>
+              {safeProject.log_count} {t("process_logs_label")}
+            </span>
           </div>
         )}
       </div>
 
       <div className="project-info">
         <div className="info-item">
-          <span className="info-label">Format:</span>
+          <span className="info-label">{t("format_label")}:</span>
           <span className="info-value">{safeProject.format_file}</span>
         </div>
       </div>
@@ -223,19 +235,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           <button
             className="project-action-btn project-action-btn--primary"
             onClick={() => handleClick(safeProject.karya_id)}
-            aria-label="Lihat detail karya"
+            aria-label={t("view_detail_aria_label")}
           >
             <Eye size={14} strokeWidth={2} />
-            <span>Lihat Detail</span>
+            <span>{t("view_detail_button")}</span>
           </button>
 
           <button
             className="project-action-btn project-action-btn--secondary"
             onClick={() => handleClick(safeProject.karya_id)}
-            aria-label="Lihat sertifikat"
+            aria-label={t("view_certificate_aria_label")}
           >
             <FileText size={14} strokeWidth={2} />
-            <span>Sertifikat</span>
+            <span>{t("view_certificate_button")}</span>
           </button>
         </div>
 
@@ -243,19 +255,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           <button
             className="project-action-btn project-action-btn--secondary"
             onClick={() => handleClick(safeProject.karya_id)}
-            aria-label="Analytics karya"
+            aria-label={t("view_analytics_aria_label")}
           >
             <BarChart3 size={14} strokeWidth={2} />
-            <span>Analytics</span>
-          </button>
-
-          <button
-            className="project-action-btn project-action-btn--secondary"
-            onClick={() => handleClick(safeProject.karya_id)}
-            aria-label="Pengaturan karya"
-          >
-            <Settings size={14} strokeWidth={2} />
-            <span>Pengaturan</span>
+            <span>{t("view_analytics_button")}</span>
           </button>
         </div>
       </div>
