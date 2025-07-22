@@ -1,0 +1,406 @@
+/* =============================================================================
+   COMPONENTS: PHYSICAL ART SETUP
+   ============================================================================= */
+
+/* =============================================================================
+   SETUP CONTENT LAYOUT
+   ============================================================================= */
+
+.setup-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+/* =============================================================================
+   LOADING AND ERROR STATES
+   ============================================================================= */
+
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: var(--spacing-2xl) var(--spacing-md);
+}
+
+.loading-state .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top: 3px solid var(--color-text-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto var(--spacing-md);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error-state .error-icon {
+  color: var(--color-error);
+  margin-bottom: var(--spacing-md);
+}
+
+.error-state h3 {
+  color: var(--color-error);
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-state p {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* =============================================================================
+   SESSION CREATION SECTION
+   ============================================================================= */
+
+.session-creation {
+  background: var(--color-surface);
+  border: 2px solid var(--color-text-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-neumorphic-md);
+}
+
+.setup-section-title {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-primary);
+  border-bottom: 2px solid var(--color-text-primary);
+  padding-bottom: var(--spacing-sm);
+}
+
+.setup-description {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-xl);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+  display: block;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 2px solid var(--color-text-primary);
+  background: var(--color-surface);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: var(--transition-normal);
+  border-radius: var(--border-radius-md);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-info);
+  box-shadow: 0 0 0 3px rgba(var(--color-info-rgb), 0.1);
+}
+
+.form-input:disabled,
+.form-textarea:disabled {
+  background: var(--color-surface-disabled);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.btn-create-session {
+  @extend .btn-wireframe !optional;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.btn-create-session:disabled {
+  background: var(--color-text-tertiary);
+  border-color: var(--color-text-tertiary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* =============================================================================
+   UPLOAD SECTION
+   ============================================================================= */
+
+.upload-section {
+  background: var(--color-surface);
+  border: 2px solid var(--color-text-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-neumorphic-md);
+}
+
+.session-info {
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--color-text-primary);
+}
+
+.session-title {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+}
+
+.session-id {
+  font-family: var(--font-family-mono);
+  background: var(--color-primary-bg);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-sm);
+  word-break: break-all;
+  border-radius: var(--border-radius-sm);
+}
+
+.session-description {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* =============================================================================
+   UPLOAD AREA COMPONENT
+   ============================================================================= */
+
+.upload-area-container {
+  margin-bottom: var(--spacing-xl);
+}
+
+.upload-area {
+  border: 3px dashed var(--color-text-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  background: var(--color-surface);
+}
+
+.upload-area:hover {
+  border-color: var(--color-info);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-neumorphic-sm);
+}
+
+.upload-area svg {
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-primary);
+}
+
+.upload-area h4 {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+}
+
+.upload-area p {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.upload-info {
+  font-size: 0.875rem;
+  color: var(--color-text-tertiary) !important;
+  font-style: italic;
+}
+
+/* =============================================================================
+   UPLOAD PROGRESS SECTION
+   ============================================================================= */
+
+.upload-progress-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.upload-progress-section h4 {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--spacing-sm);
+}
+
+.progress-item {
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-md);
+  background: var(--color-surface);
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.filename {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  word-break: break-word;
+  flex: 1;
+  margin-right: var(--spacing-md);
+}
+
+.progress-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+}
+
+.status.uploading {
+  color: var(--color-info);
+}
+
+.status.completed {
+  color: var(--color-success);
+}
+
+.status.failed {
+  color: var(--color-error);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-info);
+  transition: width 0.3s ease;
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: var(--color-error);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition-normal);
+}
+
+.remove-button:hover {
+  background: var(--color-error);
+  color: white;
+}
+
+/* =============================================================================
+   UPLOADED PHOTOS SUMMARY
+   ============================================================================= */
+
+.uploaded-photos-summary {
+  background: rgba(var(--color-success-rgb), 0.1);
+  border: 2px solid var(--color-success);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.uploaded-photos-summary h4 {
+  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+}
+
+.uploaded-photos-summary p {
+  color: var(--color-success);
+  margin: 0;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .setup-content {
+    padding: var(--spacing-md);
+  }
+
+  .session-creation,
+  .upload-section {
+    padding: var(--spacing-lg);
+  }
+
+  .upload-area {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .progress-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .filename {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .setup-content {
+    padding: var(--spacing-sm);
+  }
+
+  .session-creation,
+  .upload-section {
+    padding: var(--spacing-md);
+  }
+
+  .btn-create-session {
+    width: 100%;
+    padding: var(--spacing-md);
+  }
+
+  .upload-area {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .upload-area h4 {
+    font-size: 1.125rem;
+  }
+
+  .progress-item {
+    padding: var(--spacing-sm);
+  }
+}

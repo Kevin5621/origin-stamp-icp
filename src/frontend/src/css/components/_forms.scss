@@ -382,7 +382,7 @@
 }
 
 .form-submit {
-  @extend .btn-wireframe;
+  @extend .btn-wireframe !optional;
   background-color: var(--color-primary-text);
   color: var(--color-surface);
   border-color: var(--color-primary-text);
@@ -401,7 +401,7 @@
 }
 
 .form-reset {
-  @extend .btn-wireframe;
+  @extend .btn-wireframe !optional;
   background-color: transparent;
   color: var(--color-text-secondary);
   border-color: var(--color-text-secondary);

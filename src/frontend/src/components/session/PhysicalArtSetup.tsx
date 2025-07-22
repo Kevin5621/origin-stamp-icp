@@ -226,7 +226,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
               value={artTitle}
               onChange={(e) => setArtTitle(e.target.value)}
               placeholder={t("enter_artwork_title")}
-              className="form-input wireframe-input"
+              className="form-input"
               disabled={isCreatingSession}
             />
           </div>
@@ -240,7 +240,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder={t("describe_your_artwork")}
-              className="form-textarea wireframe-input"
+              className="form-textarea"
               rows={3}
               disabled={isCreatingSession}
             />
