@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { Heart, Eye, Share2, CheckCircle } from "lucide-react";
+import {
+  Heart,
+  Eye,
+  Share2,
+  CheckCircle,
+  Zap,
+  Star,
+  ShoppingCart,
+  Clock,
+  TrendingUp,
+  Badge,
+} from "lucide-react";
 import type { NFT } from "../../types/marketplace";
 import { MarketplaceService } from "../../services/marketplaceService";
 
@@ -69,13 +80,24 @@ const NFTCard: React.FC<NFTCardProps> = ({
     switch (nft.status) {
       case "for_sale":
         return (
-          <span className="status-badge status-badge--for-sale">For Sale</span>
+          <span className="status-badge status-badge--for-sale">
+            <Zap size={14} />
+            For Sale
+          </span>
         );
       case "sold":
-        return <span className="status-badge status-badge--sold">Sold</span>;
+        return (
+          <span className="status-badge status-badge--sold">
+            <CheckCircle size={14} />
+            Sold
+          </span>
+        );
       case "auction":
         return (
-          <span className="status-badge status-badge--auction">Auction</span>
+          <span className="status-badge status-badge--auction">
+            <Clock size={14} />
+            Auction
+          </span>
         );
       default:
         return null;
@@ -83,97 +105,110 @@ const NFTCard: React.FC<NFTCardProps> = ({
   };
 
   return (
-    <div
-      className={`nft-card wireframe-card ${className}`}
-      onClick={handleCardClick}
-    >
-      {/* NFT Image */}
-      <div className="nft-card__image-container">
-        <img
-          src={nft.imageUrl}
-          alt={nft.title}
-          className="nft-card__image"
-          loading="lazy"
-        />
+    <div className={`nft-card wireframe-card ${className}`}>
+      <button
+        className="nft-card__clickable-area"
+        onClick={handleCardClick}
+        aria-label={`View NFT: ${nft.title}`}
+      >
+        {/* NFT Image */}
+        <div className="nft-card__image-container">
+          <img
+            src={nft.imageUrl}
+            alt={nft.title}
+            className="nft-card__image"
+            loading="lazy"
+          />
 
-        {/* OriginStamp Badge */}
-        {nft.originStamp.verified && (
-          <div className="nft-card__originstamp-badge">
-            <CheckCircle size={16} />
-            <span>OriginStamp</span>
-          </div>
-        )}
+          {/* OriginStamp Badge */}
+          {nft.originStamp.verified && (
+            <div className="nft-card__originstamp-badge">
+              <Badge size={16} />
+              <span>Verified</span>
+            </div>
+          )}
 
-        {/* Status Badge */}
-        {getStatusBadge()}
+          {/* Status Badge */}
+          {getStatusBadge()}
 
-        {/* Action Buttons */}
-        <div className="nft-card__actions">
-          <button
-            className="nft-card__action-btn"
-            onClick={handleLike}
-            disabled={isLoading}
-            aria-label={isLiked ? "Unlike" : "Like"}
-          >
-            <Heart size={18} className={isLiked ? "filled" : ""} />
-          </button>
+          {/* Action Buttons */}
+          <div className="nft-card__actions">
+            <button
+              className="nft-card__action-btn"
+              onClick={handleLike}
+              disabled={isLoading}
+              aria-label={isLiked ? "Unlike" : "Like"}
+            >
+              <Heart size={18} className={isLiked ? "filled" : ""} />
+            </button>
 
-          <button
-            className="nft-card__action-btn"
-            onClick={handleShare}
-            aria-label="Share"
-          >
-            <Share2 size={18} />
-          </button>
-        </div>
-      </div>
-
-      {/* NFT Info */}
-      <div className="nft-card__content">
-        <div className="nft-card__header">
-          <h3 className="nft-card__title">{nft.title}</h3>
-          <div className="nft-card__creator">
-            <img
-              src={nft.creator.avatar}
-              alt={nft.creator.username}
-              className="nft-card__creator-avatar"
-            />
-            <span className="nft-card__creator-name">
-              {nft.creator.username}
-              {nft.creator.verified && (
-                <CheckCircle size={14} className="verified-icon" />
-              )}
-            </span>
+            <button
+              className="nft-card__action-btn"
+              onClick={handleShare}
+              aria-label="Share"
+            >
+              <Share2 size={18} />
+            </button>
           </div>
         </div>
 
-        <div className="nft-card__stats">
-          <div className="nft-card__stat">
-            <Eye size={14} />
-            <span>{nft.views.toLocaleString()}</span>
+        {/* NFT Info */}
+        <div className="nft-card__content">
+          <div className="nft-card__header">
+            <h3 className="nft-card__title">{nft.title}</h3>
+            <div className="nft-card__creator">
+              <img
+                src={nft.creator.avatar}
+                alt={nft.creator.username}
+                className="nft-card__creator-avatar"
+              />
+              <span className="nft-card__creator-name">
+                {nft.creator.username}
+                {nft.creator.verified && (
+                  <CheckCircle size={14} className="verified-icon" />
+                )}
+              </span>
+            </div>
           </div>
-          <div className="nft-card__stat">
-            <Heart size={14} />
-            <span>{nft.likes.toLocaleString()}</span>
+
+          <div className="nft-card__stats">
+            <div className="nft-card__stat">
+              <Eye size={14} />
+              <span>{nft.views.toLocaleString()}</span>
+            </div>
+            <div className="nft-card__stat">
+              <Heart size={14} />
+              <span>{nft.likes.toLocaleString()}</span>
+            </div>
+            <div className="nft-card__stat">
+              <TrendingUp size={14} />
+              <span className="trending-text">Trending</span>
+            </div>
+          </div>
+
+          <div className="nft-card__price">
+            <div className="price-wrapper">
+              <Star size={16} className="price-icon" />
+              <span className="nft-card__price-amount">
+                {nft.price.amount} {nft.price.currency}
+              </span>
+            </div>
           </div>
         </div>
+      </button>
 
-        <div className="nft-card__price">
-          <span className="nft-card__price-amount">
-            {nft.price.amount} {nft.price.currency}
-          </span>
-        </div>
-
-        {/* Buy Button */}
-        {nft.status === "for_sale" && (
+      {/* Buy Button - Outside clickable area */}
+      {nft.status === "for_sale" && (
+        <div className="nft-card__footer">
           <button
             className="btn-wireframe btn-wireframe--primary nft-card__buy-btn"
             onClick={handleBuy}
           >
+            <ShoppingCart size={16} />
             Buy Now
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

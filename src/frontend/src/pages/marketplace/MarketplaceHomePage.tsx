@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Plus, TrendingUp, Users, DollarSign, Package } from "lucide-react";
+import {
+  Plus,
+  TrendingUp,
+  Users,
+  DollarSign,
+  Package,
+  Grid3X3,
+  List,
+  Sparkles,
+  Crown,
+  Zap,
+  Heart,
+  Eye,
+  ArrowRight,
+  Star,
+  Verified,
+} from "lucide-react";
 import NFTCard from "../../components/marketplace/NFTCard";
 import SearchBar from "../../components/marketplace/SearchBar";
 import { MarketplaceService } from "../../services/marketplaceService";
@@ -65,12 +81,19 @@ const MarketplaceHomePage: React.FC = () => {
   const renderLoadingSkeleton = () => (
     <div className="nft-grid">
       {Array.from({ length: 8 }).map((_, index) => (
-        <div key={index} className="nft-card-skeleton wireframe-card">
-          <div className="skeleton-image"></div>
+        <div
+          key={`skeleton-${index}`}
+          className="nft-card-skeleton wireframe-card"
+        >
+          <div className="skeleton-image">
+            <Package size={32} className="skeleton-icon" />
+          </div>
           <div className="skeleton-content">
             <div className="skeleton-title"></div>
             <div className="skeleton-text"></div>
-            <div className="skeleton-price"></div>
+            <div className="skeleton-price">
+              <Zap size={14} className="skeleton-price-icon" />
+            </div>
           </div>
         </div>
       ))}
@@ -100,161 +123,244 @@ const MarketplaceHomePage: React.FC = () => {
 
   return (
     <div className="marketplace-home">
-      {/* Hero Section */}
+      {/* Revolutionary Hero Section */}
       <section className="marketplace-hero">
-        <div className="marketplace-hero__content">
-          <h1 className="marketplace-hero__title">
-            {t("marketplace.hero.title", "Discover Unique Digital Art")}
-          </h1>
-          <p className="marketplace-hero__subtitle">
-            {t(
-              "marketplace.hero.subtitle",
-              "Explore verified digital artworks with OriginStamp certification. Each piece tells a unique story of creation.",
-            )}
-          </p>
+        <div className="hero-grid">
+          {/* Main Content Area */}
+          <div className="hero-main">
+            <div className="hero-badge">
+              <Verified size={14} />
+              <span>{t("marketplace.hero.badge", "Blockchain Certified")}</span>
+              <Sparkles size={12} />
+            </div>
 
-          <div className="marketplace-hero__search">
-            <SearchBar
-              onSearch={handleSearch}
-              placeholder={t(
-                "marketplace.hero.searchPlaceholder",
-                "Search for NFTs, collections, or creators...",
+            <h1 className="hero-title">
+              <div className="title-line">
+                <Crown size={32} className="title-icon" />
+                <span className="title-text">
+                  {t("marketplace.hero.title", "Digital")}
+                </span>
+              </div>
+              <div className="title-line title-accent">
+                <span className="title-text">
+                  {t("marketplace.hero.title2", "Art Universe")}
+                </span>
+                <Zap size={28} className="title-icon" />
+              </div>
+            </h1>
+
+            <p className="hero-description">
+              {t(
+                "marketplace.hero.subtitle",
+                "Immerse yourself in a curated universe of authenticated digital masterpieces. Every NFT tells a story of creativity, innovation, and blockchain-verified provenance.",
               )}
-              showFilters={true}
-            />
+            </p>
+
+            <div className="hero-search-section">
+              <SearchBar
+                onSearch={handleSearch}
+                placeholder={t(
+                  "marketplace.hero.searchPlaceholder",
+                  "Search artworks, creators, collections...",
+                )}
+                showFilters={true}
+              />
+            </div>
+
+            <div className="hero-actions">
+              <button className="btn-hero-primary" onClick={handleCreateNFT}>
+                <Plus size={18} />
+                <span>{t("marketplace.hero.createNFT", "Create Art")}</span>
+                <ArrowRight size={16} />
+              </button>
+
+              <button className="btn-hero-secondary">
+                <Eye size={18} />
+                <span>{t("marketplace.hero.explore", "Explore")}</span>
+              </button>
+            </div>
           </div>
 
-          <div className="marketplace-hero__actions">
-            <button
-              className="btn-wireframe btn-wireframe--primary"
-              onClick={handleCreateNFT}
-            >
-              <Plus size={20} />
-              {t("marketplace.hero.createNFT", "Create & Sell")}
-            </button>
+          {/* Featured Showcase */}
+          <div className="hero-showcase">
+            <div className="showcase-frame">
+              <div className="showcase-header">
+                <Star size={16} />
+                <span>
+                  {t("marketplace.hero.featured", "Curated Selection")}
+                </span>
+              </div>
+
+              <div className="featured-stack">
+                {featuredNFTs.slice(0, 3).map((nft, index) => (
+                  <button
+                    key={nft.id}
+                    className={`featured-item featured-item--${index}`}
+                    onClick={() => handleNFTClick(nft.id)}
+                    type="button"
+                  >
+                    <div className="featured-image">
+                      <img src={nft.imageUrl} alt={nft.title} />
+                      <div className="featured-overlay">
+                        <Heart size={12} />
+                      </div>
+                    </div>
+                    <div className="featured-details">
+                      <h4>{nft.title}</h4>
+                      <div className="featured-price">
+                        <DollarSign size={12} />
+                        <span>
+                          {nft.price.amount} {nft.price.currency}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Featured NFTs Carousel */}
-        <div className="marketplace-hero__featured">
-          <h3 className="marketplace-hero__featured-title">
-            {t("marketplace.hero.featured", "Featured NFTs")}
-          </h3>
-          <div className="featured-nfts-carousel">
-            {featuredNFTs.map((nft) => (
-              <div key={nft.id} className="featured-nft-card">
-                <img src={nft.imageUrl} alt={nft.title} />
-                <div className="featured-nft-info">
-                  <h4>{nft.title}</h4>
-                  <p>
-                    {nft.price.amount} {nft.price.currency}
-                  </p>
+      {/* Floating Stats Section */}
+      <section className="marketplace-stats">
+        <div className="stats-container">
+          <div className="stats-header">
+            <TrendingUp size={20} />
+            <h2>{t("marketplace.stats.title", "Live Market Data")}</h2>
+            <div className="stats-indicator">
+              <div className="pulse-dot"></div>
+              <span>Live</span>
+            </div>
+          </div>
+
+          <div className="stats-grid">
+            <div className="stat-cell stat-primary">
+              <div className="stat-visual">
+                <Package size={24} />
+                <div className="stat-bg-pattern"></div>
+              </div>
+              <div className="stat-data">
+                <div className="stat-number">15,420</div>
+                <div className="stat-label">
+                  {t("marketplace.stats.totalNFTs", "Total Artworks")}
+                </div>
+                <div className="stat-change positive">
+                  <TrendingUp size={12} />
+                  <span>+12%</span>
                 </div>
               </div>
-            ))}
+            </div>
+
+            <div className="stat-cell stat-secondary">
+              <div className="stat-visual">
+                <DollarSign size={24} />
+                <div className="stat-bg-pattern"></div>
+              </div>
+              <div className="stat-data">
+                <div className="stat-number">2.45M</div>
+                <div className="stat-label">
+                  {t("marketplace.stats.totalVolume", "Volume (ICP)")}
+                </div>
+                <div className="stat-change positive">
+                  <ArrowRight size={12} />
+                  <span>+8%</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="stat-cell stat-accent">
+              <div className="stat-visual">
+                <Users size={24} />
+                <div className="stat-bg-pattern"></div>
+              </div>
+              <div className="stat-data">
+                <div className="stat-number">8,920</div>
+                <div className="stat-label">
+                  {t("marketplace.stats.activeUsers", "Collectors")}
+                </div>
+                <div className="stat-change positive">
+                  <Heart size={12} />
+                  <span>+15%</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="stat-cell stat-info">
+              <div className="stat-visual">
+                <Zap size={24} />
+                <div className="stat-bg-pattern"></div>
+              </div>
+              <div className="stat-data">
+                <div className="stat-number">45.7K</div>
+                <div className="stat-label">
+                  {t("marketplace.stats.totalSales", "Transactions")}
+                </div>
+                <div className="stat-change positive">
+                  <Star size={12} />
+                  <span>+22%</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="marketplace-stats">
-        <div className="marketplace-stats__grid">
-          <div className="stat-card stat-primary">
-            <div className="stat-icon-wrapper">
-              <Package size={24} />
+      {/* Modern Gallery Section */}
+      <section className="marketplace-gallery">
+        <div className="gallery-container">
+          <div className="gallery-header">
+            <div className="header-main">
+              <div className="header-icon-group">
+                <Package size={20} />
+                <Sparkles size={16} />
+              </div>
+              <div className="header-text">
+                <h2>{t("marketplace.main.title", "Digital Art Gallery")}</h2>
+                <p>
+                  {t(
+                    "marketplace.main.subtitle",
+                    "Discover authenticated masterpieces",
+                  )}
+                </p>
+              </div>
             </div>
-            <div className="stat-content">
-              <div className="stat-value">15,420</div>
-              <div className="stat-label">
-                {t("marketplace.stats.totalNFTs", "Total NFTs")}
+
+            <div className="gallery-controls">
+              <div className="view-toggle">
+                <button
+                  className={`toggle-btn ${viewMode === "grid" ? "active" : ""}`}
+                  onClick={() => setViewMode("grid")}
+                >
+                  <Grid3X3 size={16} />
+                </button>
+                <button
+                  className={`toggle-btn ${viewMode === "list" ? "active" : ""}`}
+                  onClick={() => setViewMode("list")}
+                >
+                  <List size={16} />
+                </button>
               </div>
             </div>
           </div>
 
-          <div className="stat-card stat-secondary">
-            <div className="stat-icon-wrapper">
-              <DollarSign size={24} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-value">2.45M ICP</div>
-              <div className="stat-label">
-                {t("marketplace.stats.totalVolume", "Total Volume")}
+          <div className="gallery-content">
+            {loading && renderLoadingSkeleton()}
+            {!loading && nfts.length > 0 && (
+              <div className={`gallery-grid gallery-grid--${viewMode}`}>
+                {nfts.map((nft) => (
+                  <NFTCard
+                    key={nft.id}
+                    nft={nft}
+                    onNFTClick={handleNFTClick}
+                    onBuy={handleBuyNFT}
+                    className={viewMode === "list" ? "nft-card--list" : ""}
+                  />
+                ))}
               </div>
-            </div>
+            )}
+            {!loading && nfts.length === 0 && renderEmptyState()}
           </div>
-
-          <div className="stat-card stat-success">
-            <div className="stat-icon-wrapper">
-              <Users size={24} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-value">8,920</div>
-              <div className="stat-label">
-                {t("marketplace.stats.activeUsers", "Active Users")}
-              </div>
-            </div>
-          </div>
-
-          <div className="stat-card stat-info">
-            <div className="stat-icon-wrapper">
-              <TrendingUp size={24} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-value">45,670</div>
-              <div className="stat-label">
-                {t("marketplace.stats.totalSales", "Total Sales")}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="marketplace-main">
-        <div className="marketplace-main__header">
-          <h2 className="marketplace-main__title">
-            {t("marketplace.main.title", "Explore NFTs")}
-          </h2>
-
-          <div className="marketplace-main__controls">
-            <div className="view-mode-toggle">
-              <button
-                className={`view-mode-btn ${viewMode === "grid" ? "active" : ""}`}
-                onClick={() => setViewMode("grid")}
-                aria-label="Grid view"
-              >
-                <div className="grid-icon"></div>
-              </button>
-              <button
-                className={`view-mode-btn ${viewMode === "list" ? "active" : ""}`}
-                onClick={() => setViewMode("list")}
-                aria-label="List view"
-              >
-                <div className="list-icon"></div>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* NFT Grid */}
-        <div className="marketplace-main__content">
-          {loading ? (
-            renderLoadingSkeleton()
-          ) : nfts.length > 0 ? (
-            <div className={`nft-grid nft-grid--${viewMode}`}>
-              {nfts.map((nft) => (
-                <NFTCard
-                  key={nft.id}
-                  nft={nft}
-                  onNFTClick={handleNFTClick}
-                  onBuy={handleBuyNFT}
-                  className={viewMode === "list" ? "nft-card--list" : ""}
-                />
-              ))}
-            </div>
-          ) : (
-            renderEmptyState()
-          )}
         </div>
       </section>
     </div>

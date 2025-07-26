@@ -1,5 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, X, Filter } from "lucide-react";
+import {
+  Search,
+  X,
+  Filter,
+  Sparkles,
+  TrendingUp,
+  DollarSign,
+  Calendar,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface SearchBarProps {
