@@ -25,12 +25,12 @@
   &:hover {
     /* Force text color to be visible on hover */
     color: var(--color-surface) !important;
-    
+
     /* Ensure child text elements are also visible */
     * {
       color: var(--color-surface) !important;
     }
-    
+
     /* Specific text elements that should remain visible */
     .stat-number,
     .stat-label,
@@ -45,7 +45,7 @@
     .empty-description {
       color: var(--color-surface) !important;
     }
-    
+
     /* Keep success colors visible */
     .stat-change.positive {
       color: var(--color-success) !important;
@@ -68,11 +68,11 @@
   .stat-cell {
     &:hover {
       color: #000 !important;
-      
+
       * {
         color: #000 !important;
       }
-      
+
       .stat-number,
       .stat-label,
       .art-type-title,
@@ -86,7 +86,7 @@
       .empty-description {
         color: #000 !important;
       }
-      
+
       .stat-change.positive {
         color: var(--color-success) !important;
       }
@@ -97,7 +97,7 @@
 /* Form input specific hover fixes */
 .form-input-wireframe:hover {
   color: var(--color-primary-text) !important;
-  
+
   &::placeholder {
     color: var(--color-primary-text) !important;
     opacity: 0.6;
@@ -110,7 +110,7 @@
     background: var(--color-hover-overlay) !important;
     color: var(--color-primary-text) !important;
   }
-  
+
   &.active {
     background: var(--color-primary-text) !important;
     color: var(--color-surface) !important;
@@ -175,10 +175,10 @@
 .landing-feature,
 .how-it-works-result-card,
 .stat-cell {
-  transition: 
+  transition:
     background-color 0.3s ease,
     color 0.3s ease,
     border-color 0.3s ease,
     transform 0.3s ease,
     box-shadow 0.3s ease;
-} 
+}
