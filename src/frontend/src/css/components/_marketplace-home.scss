@@ -384,6 +384,8 @@
 
     &:hover {
       transform: translateY(-4px);
+      background: var(--color-primary-text);
+      color: var(--color-surface);
 
       &::after {
         content: "";
@@ -394,6 +396,15 @@
         bottom: -4px;
         background: var(--color-primary-text);
         z-index: -1;
+      }
+
+      .stat-number,
+      .stat-label {
+        color: var(--color-surface);
+      }
+
+      .stat-change.positive {
+        color: var(--color-success);
       }
     }
 

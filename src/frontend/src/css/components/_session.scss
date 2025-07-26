@@ -84,8 +84,8 @@
   overflow: hidden;
 
   &:hover {
-    background-color: var(--color-surface);
-    color: var(--color-primary-text);
+    background-color: var(--color-primary-text);
+    color: var(--color-surface) !important;
     border-color: var(--color-primary-text);
     transform: translateY(-4px);
     box-shadow:
@@ -96,7 +96,7 @@
     .art-type-title,
     .art-type-description,
     .feature-tag {
-      color: var(--color-primary-text) !important;
+      color: var(--color-surface) !important;
     }
   }
 
