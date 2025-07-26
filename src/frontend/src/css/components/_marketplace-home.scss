@@ -1,0 +1,242 @@
+// Marketplace Home Page
+// ==========================================================================
+
+.marketplace-home {
+  min-height: 100vh;
+}
+
+.marketplace-hero {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-primary-bg) 100%
+  );
+
+  &__content {
+    max-width: 800px;
+    margin: 0 auto 3rem;
+  }
+
+  &__title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-primary-text);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  &__subtitle {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  &__search {
+    margin-bottom: 2rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  &__featured {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__featured-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-primary-text);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+}
+
+.featured-nfts-carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  scroll-snap-type: x mandatory;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-primary-bg);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-primary-text);
+    border-radius: 4px;
+  }
+}
+
+.featured-nft-card {
+  flex: 0 0 250px;
+  scroll-snap-align: start;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .featured-nft-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(
+      transparent,
+      rgba(0, 0, 0, 0.8)
+    );
+    color: white;
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+  }
+}
+
+.marketplace-stats {
+  padding: 3rem 2rem;
+  background-color: var(--color-surface);
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+.marketplace-main {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--color-primary-text);
+  }
+
+  &__controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+}
+
+.view-mode-toggle {
+  display: flex;
+  border: 2px solid var(--color-primary-text);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.view-mode-btn {
+  background: transparent;
+  border: none;
+  padding: 0.75rem;
+  color: var(--color-primary-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover,
+  &.active {
+    background-color: var(--color-accent);
+    color: var(--color-surface);
+    border-color: var(--color-accent);
+  }
+
+  .grid-icon,
+  .list-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .grid-icon {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+
+    &::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background-color: currentColor;
+    }
+  }
+
+  .list-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    &::before {
+      content: '';
+      width: 12px;
+      height: 2px;
+      background-color: currentColor;
+    }
+  }
+}
+
+.nft-grid {
+  display: grid;
+  gap: 2rem;
+
+  &--grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  &--list {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+} 
