@@ -23,6 +23,7 @@
     "test": "npm run test:backend && npm run test:frontend",
     "test:frontend": "npm test --workspace=frontend",
     "test:backend": "dfx build && vitest run -c tests/vitest.config.ts",
+    "type-check": "npm run type-check --workspace=frontend",
     "prepare": "husky"
   },
   "keywords": [],
