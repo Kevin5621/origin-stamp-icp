@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   Share2,
@@ -10,12 +10,12 @@ import {
   DollarSign,
   Grid,
   List,
-  CheckCircle
-} from 'lucide-react';
-import NFTCard from '../../components/marketplace/NFTCard';
-import { MarketplaceService } from '../../services/marketplaceService';
-import { UserService } from '../../services/userService';
-import type { Collection, NFT } from '../../types/marketplace';
+  CheckCircle,
+} from "lucide-react";
+import NFTCard from "../../components/marketplace/NFTCard";
+import { MarketplaceService } from "../../services/marketplaceService";
+import { UserService } from "../../services/userService";
+import type { Collection, NFT } from "../../types/marketplace";
 
 const CollectionDetailPage: React.FC = () => {
   const { t } = useTranslation();
@@ -25,8 +25,10 @@ const CollectionDetailPage: React.FC = () => {
   const [collection, setCollection] = useState<Collection | null>(null);
   const [filteredNFTs, setFilteredNFTs] = useState<NFT[]>([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'price_low' | 'price_high' | 'popular'>('newest');
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [sortBy, setSortBy] = useState<
+    "newest" | "oldest" | "price_low" | "price_high" | "popular"
+  >("newest");
   const [isFollowing, setIsFollowing] = useState(false);
   const [following, setFollowing] = useState(false);
 
@@ -51,13 +53,16 @@ const CollectionDetailPage: React.FC = () => {
       if (collectionData) {
         setCollection(collectionData);
         setFilteredNFTs(collectionData.nfts);
-        
+
         // Check if following creator
-        const followStatus = await UserService.isFollowing('current-user', collectionData.creator.username);
+        const followStatus = await UserService.isFollowing(
+          "current-user",
+          collectionData.creator.username,
+        );
         setIsFollowing(followStatus);
       }
     } catch (error) {
-      console.error('Failed to load collection:', error);
+      console.error("Failed to load collection:", error);
     } finally {
       setLoading(false);
     }
@@ -70,19 +75,29 @@ const CollectionDetailPage: React.FC = () => {
 
     // Apply sorting
     switch (sortBy) {
-      case 'newest':
-        nfts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      case "newest":
+        nfts.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
         break;
-      case 'oldest':
-        nfts.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      case "oldest":
+        nfts.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        );
         break;
-      case 'price_low':
-        nfts.sort((a, b) => parseFloat(a.price.amount) - parseFloat(b.price.amount));
+      case "price_low":
+        nfts.sort(
+          (a, b) => parseFloat(a.price.amount) - parseFloat(b.price.amount),
+        );
         break;
-      case 'price_high':
-        nfts.sort((a, b) => parseFloat(b.price.amount) - parseFloat(a.price.amount));
+      case "price_high":
+        nfts.sort(
+          (a, b) => parseFloat(b.price.amount) - parseFloat(a.price.amount),
+        );
         break;
-      case 'popular':
+      case "popular":
         nfts.sort((a, b) => b.likes - a.likes);
         break;
     }
@@ -103,7 +118,7 @@ const CollectionDetailPage: React.FC = () => {
         setIsFollowing(true);
       }
     } catch (error) {
-      console.error('Failed to follow/unfollow creator:', error);
+      console.error("Failed to follow/unfollow creator:", error);
     } finally {
       setFollowing(false);
     }
@@ -124,7 +139,7 @@ const CollectionDetailPage: React.FC = () => {
       navigator.share({
         title: collection?.name,
         text: collection?.description,
-        url: window.location.href
+        url: window.location.href,
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
@@ -143,7 +158,10 @@ const CollectionDetailPage: React.FC = () => {
       </div>
       <div className="collection-content-skeleton">
         {[...Array(8)].map((_, index) => (
-          <div key={`collection-skeleton-nft-${index}`} className="skeleton-nft-card"></div>
+          <div
+            key={`collection-skeleton-nft-${index}`}
+            className="skeleton-nft-card"
+          ></div>
         ))}
       </div>
     </div>
@@ -156,13 +174,18 @@ const CollectionDetailPage: React.FC = () => {
   if (!collection) {
     return (
       <div className="collection-detail-error">
-        <h2>{t('marketplace.collection.notFound', 'Collection Not Found')}</h2>
-        <p>{t('marketplace.collection.notFoundDescription', 'The collection you are looking for does not exist or has been removed.')}</p>
+        <h2>{t("marketplace.collection.notFound", "Collection Not Found")}</h2>
+        <p>
+          {t(
+            "marketplace.collection.notFoundDescription",
+            "The collection you are looking for does not exist or has been removed.",
+          )}
+        </p>
         <button
           className="btn-wireframe btn-wireframe--primary"
-          onClick={() => navigate('/marketplace')}
+          onClick={() => navigate("/marketplace")}
         >
-          {t('marketplace.collection.backToMarketplace', 'Back to Marketplace')}
+          {t("marketplace.collection.backToMarketplace", "Back to Marketplace")}
         </button>
       </div>
     );
@@ -177,7 +200,7 @@ const CollectionDetailPage: React.FC = () => {
           onClick={() => navigate(-1)}
         >
           <ArrowLeft size={16} />
-          {t('marketplace.collection.back', 'Back')}
+          {t("marketplace.collection.back", "Back")}
         </button>
       </div>
 
@@ -194,7 +217,9 @@ const CollectionDetailPage: React.FC = () => {
         <div className="collection-detail__info">
           <div className="collection-detail__main-info">
             <h1 className="collection-detail__name">{collection.name}</h1>
-            <p className="collection-detail__description">{collection.description}</p>
+            <p className="collection-detail__description">
+              {collection.description}
+            </p>
 
             {/* Creator Info */}
             <button
@@ -209,7 +234,7 @@ const CollectionDetailPage: React.FC = () => {
               />
               <div className="collection-detail__creator-info">
                 <span className="collection-detail__creator-label">
-                  {t('marketplace.collection.createdBy', 'Created by')}
+                  {t("marketplace.collection.createdBy", "Created by")}
                 </span>
                 <span className="collection-detail__creator-name">
                   @{collection.creator.username}
@@ -223,28 +248,31 @@ const CollectionDetailPage: React.FC = () => {
             {/* Actions */}
             <div className="collection-detail__actions">
               <button
-                className={`btn-wireframe ${isFollowing ? 'btn-wireframe--secondary' : 'btn-wireframe--primary'}`}
+                className={`btn-wireframe ${isFollowing ? "btn-wireframe--secondary" : "btn-wireframe--primary"}`}
                 onClick={handleFollowCreator}
                 disabled={following}
               >
                 {(() => {
                   if (following) {
-                    return t('marketplace.collection.following', 'Following...');
+                    return t(
+                      "marketplace.collection.following",
+                      "Following...",
+                    );
                   }
                   if (isFollowing) {
-                    return t('marketplace.collection.unfollow', 'Unfollow');
+                    return t("marketplace.collection.unfollow", "Unfollow");
                   }
-                  return t('marketplace.collection.follow', 'Follow Creator');
+                  return t("marketplace.collection.follow", "Follow Creator");
                 })()}
               </button>
-              
+
               <button
                 className="btn-wireframe btn-wireframe--secondary"
                 onClick={handleShare}
                 aria-label="Share collection"
               >
                 <Share2 size={16} />
-                {t('marketplace.collection.share', 'Share')}
+                {t("marketplace.collection.share", "Share")}
               </button>
             </div>
           </div>
@@ -256,8 +284,12 @@ const CollectionDetailPage: React.FC = () => {
                 <Package size={24} />
               </div>
               <div className="stat-content">
-                <span className="stat-value">{collection.stats.totalItems.toLocaleString()}</span>
-                <span className="stat-label">{t('marketplace.collection.items', 'Items')}</span>
+                <span className="stat-value">
+                  {collection.stats.totalItems.toLocaleString()}
+                </span>
+                <span className="stat-label">
+                  {t("marketplace.collection.items", "Items")}
+                </span>
               </div>
             </div>
 
@@ -266,8 +298,12 @@ const CollectionDetailPage: React.FC = () => {
                 <Users size={24} />
               </div>
               <div className="stat-content">
-                <span className="stat-value">{collection.stats.owners.toLocaleString()}</span>
-                <span className="stat-label">{t('marketplace.collection.owners', 'Owners')}</span>
+                <span className="stat-value">
+                  {collection.stats.owners.toLocaleString()}
+                </span>
+                <span className="stat-label">
+                  {t("marketplace.collection.owners", "Owners")}
+                </span>
               </div>
             </div>
 
@@ -276,8 +312,12 @@ const CollectionDetailPage: React.FC = () => {
                 <DollarSign size={24} />
               </div>
               <div className="stat-content">
-                <span className="stat-value">{collection.stats.floorPrice}</span>
-                <span className="stat-label">{t('marketplace.collection.floorPrice', 'Floor Price')}</span>
+                <span className="stat-value">
+                  {collection.stats.floorPrice}
+                </span>
+                <span className="stat-label">
+                  {t("marketplace.collection.floorPrice", "Floor Price")}
+                </span>
               </div>
             </div>
 
@@ -286,8 +326,12 @@ const CollectionDetailPage: React.FC = () => {
                 <TrendingUp size={24} />
               </div>
               <div className="stat-content">
-                <span className="stat-value">{collection.stats.totalVolume}</span>
-                <span className="stat-label">{t('marketplace.collection.totalVolume', 'Total Volume')}</span>
+                <span className="stat-value">
+                  {collection.stats.totalVolume}
+                </span>
+                <span className="stat-label">
+                  {t("marketplace.collection.totalVolume", "Total Volume")}
+                </span>
               </div>
             </div>
           </div>
@@ -299,7 +343,7 @@ const CollectionDetailPage: React.FC = () => {
         {/* Content Header */}
         <div className="collection-detail__content-header">
           <h2 className="collection-detail__content-title">
-            {t('marketplace.collection.items', 'Items')} ({filteredNFTs.length})
+            {t("marketplace.collection.items", "Items")} ({filteredNFTs.length})
           </h2>
 
           <div className="collection-detail__controls">
@@ -309,25 +353,38 @@ const CollectionDetailPage: React.FC = () => {
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
             >
-              <option value="newest">{t('marketplace.collection.sortNewest', 'Newest')}</option>
-              <option value="oldest">{t('marketplace.collection.sortOldest', 'Oldest')}</option>
-              <option value="price_low">{t('marketplace.collection.sortPriceLow', 'Price: Low to High')}</option>
-              <option value="price_high">{t('marketplace.collection.sortPriceHigh', 'Price: High to Low')}</option>
-              <option value="popular">{t('marketplace.collection.sortPopular', 'Most Popular')}</option>
+              <option value="newest">
+                {t("marketplace.collection.sortNewest", "Newest")}
+              </option>
+              <option value="oldest">
+                {t("marketplace.collection.sortOldest", "Oldest")}
+              </option>
+              <option value="price_low">
+                {t("marketplace.collection.sortPriceLow", "Price: Low to High")}
+              </option>
+              <option value="price_high">
+                {t(
+                  "marketplace.collection.sortPriceHigh",
+                  "Price: High to Low",
+                )}
+              </option>
+              <option value="popular">
+                {t("marketplace.collection.sortPopular", "Most Popular")}
+              </option>
             </select>
 
             {/* View Mode Toggle */}
             <div className="view-mode-toggle">
               <button
-                className={`view-mode-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                onClick={() => setViewMode('grid')}
+                className={`view-mode-btn ${viewMode === "grid" ? "active" : ""}`}
+                onClick={() => setViewMode("grid")}
                 aria-label="Grid view"
               >
                 <Grid size={20} />
               </button>
               <button
-                className={`view-mode-btn ${viewMode === 'list' ? 'active' : ''}`}
-                onClick={() => setViewMode('list')}
+                className={`view-mode-btn ${viewMode === "list" ? "active" : ""}`}
+                onClick={() => setViewMode("list")}
                 aria-label="List view"
               >
                 <List size={20} />
@@ -345,7 +402,7 @@ const CollectionDetailPage: React.FC = () => {
                   key={nft.id}
                   nft={nft}
                   onNFTClick={handleNFTClick}
-                  className={viewMode === 'list' ? 'nft-card--list' : ''}
+                  className={viewMode === "list" ? "nft-card--list" : ""}
                 />
               ))}
             </div>
@@ -353,10 +410,13 @@ const CollectionDetailPage: React.FC = () => {
             <div className="empty-state">
               <Package size={64} className="empty-state__icon" />
               <h3 className="empty-state__title">
-                {t('marketplace.collection.noItems', 'No Items Found')}
+                {t("marketplace.collection.noItems", "No Items Found")}
               </h3>
               <p className="empty-state__description">
-                {t('marketplace.collection.noItemsDescription', 'This collection doesn\'t have any items yet.')}
+                {t(
+                  "marketplace.collection.noItemsDescription",
+                  "This collection doesn't have any items yet.",
+                )}
               </p>
             </div>
           )}

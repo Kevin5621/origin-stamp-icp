@@ -138,13 +138,16 @@ const LandingPage: React.FC = () => {
             <button
               type="button"
               className="btn-wireframe btn-wireframe--accent"
-              aria-label={t("explore_marketplace_button", "Explore Marketplace")}
+              aria-label={t(
+                "explore_marketplace_button",
+                "Explore Marketplace",
+              )}
               style={{
                 opacity: showButton ? 1 : 0,
                 transition: "opacity 0.5s ease-in-out",
                 visibility: showButton ? "visible" : "hidden",
               }}
-              onClick={() => navigate('/marketplace')}
+              onClick={() => navigate("/marketplace")}
             >
               {t("explore_marketplace_button", "Explore Marketplace")}
             </button>

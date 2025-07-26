@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Heart, Eye, Share2, CheckCircle } from 'lucide-react';
-import type { NFT } from '../../types/marketplace';
-import { MarketplaceService } from '../../services/marketplaceService';
+import React, { useState } from "react";
+import { Heart, Eye, Share2, CheckCircle } from "lucide-react";
+import type { NFT } from "../../types/marketplace";
+import { MarketplaceService } from "../../services/marketplaceService";
 
 interface NFTCardProps {
   nft: NFT;
@@ -18,7 +18,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
   onLike,
   onShare,
   onNFTClick,
-  className = ''
+  className = "",
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +26,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsLoading(true);
-    
+
     try {
       if (isLiked) {
         await MarketplaceService.unlikeNFT(nft.id);
@@ -36,7 +36,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
       setIsLiked(!isLiked);
       onLike?.(nft.id);
     } catch (error) {
-      console.error('Failed to like/unlike NFT:', error);
+      console.error("Failed to like/unlike NFT:", error);
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +48,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
       navigator.share({
         title: nft.title,
         text: nft.description,
-        url: window.location.href
+        url: window.location.href,
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
@@ -67,31 +67,35 @@ const NFTCard: React.FC<NFTCardProps> = ({
 
   const getStatusBadge = () => {
     switch (nft.status) {
-      case 'for_sale':
-        return <span className="status-badge status-badge--for-sale">For Sale</span>;
-      case 'sold':
+      case "for_sale":
+        return (
+          <span className="status-badge status-badge--for-sale">For Sale</span>
+        );
+      case "sold":
         return <span className="status-badge status-badge--sold">Sold</span>;
-      case 'auction':
-        return <span className="status-badge status-badge--auction">Auction</span>;
+      case "auction":
+        return (
+          <span className="status-badge status-badge--auction">Auction</span>
+        );
       default:
         return null;
     }
   };
 
   return (
-    <div 
+    <div
       className={`nft-card wireframe-card ${className}`}
       onClick={handleCardClick}
     >
       {/* NFT Image */}
       <div className="nft-card__image-container">
-        <img 
-          src={nft.imageUrl} 
+        <img
+          src={nft.imageUrl}
           alt={nft.title}
           className="nft-card__image"
           loading="lazy"
         />
-        
+
         {/* OriginStamp Badge */}
         {nft.originStamp.verified && (
           <div className="nft-card__originstamp-badge">
@@ -99,24 +103,21 @@ const NFTCard: React.FC<NFTCardProps> = ({
             <span>OriginStamp</span>
           </div>
         )}
-        
+
         {/* Status Badge */}
         {getStatusBadge()}
-        
+
         {/* Action Buttons */}
         <div className="nft-card__actions">
           <button
             className="nft-card__action-btn"
             onClick={handleLike}
             disabled={isLoading}
-            aria-label={isLiked ? 'Unlike' : 'Like'}
+            aria-label={isLiked ? "Unlike" : "Like"}
           >
-            <Heart 
-              size={18} 
-              className={isLiked ? 'filled' : ''}
-            />
+            <Heart size={18} className={isLiked ? "filled" : ""} />
           </button>
-          
+
           <button
             className="nft-card__action-btn"
             onClick={handleShare}
@@ -132,8 +133,8 @@ const NFTCard: React.FC<NFTCardProps> = ({
         <div className="nft-card__header">
           <h3 className="nft-card__title">{nft.title}</h3>
           <div className="nft-card__creator">
-            <img 
-              src={nft.creator.avatar} 
+            <img
+              src={nft.creator.avatar}
               alt={nft.creator.username}
               className="nft-card__creator-avatar"
             />
@@ -164,7 +165,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
         </div>
 
         {/* Buy Button */}
-        {nft.status === 'for_sale' && (
+        {nft.status === "for_sale" && (
           <button
             className="btn-wireframe btn-wireframe--primary nft-card__buy-btn"
             onClick={handleBuy}
@@ -177,4 +178,4 @@ const NFTCard: React.FC<NFTCardProps> = ({
   );
 };
 
-export default NFTCard; 
+export default NFTCard;

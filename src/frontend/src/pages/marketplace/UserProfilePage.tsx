@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import {
-  Grid,
-  List
-} from 'lucide-react';
-import NFTCard from '../../components/marketplace/NFTCard';
-import UserProfile from '../../components/marketplace/UserProfile';
-import { UserService } from '../../services/userService';
-import type { User, NFT, Collection } from '../../types/marketplace';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Grid, List } from "lucide-react";
+import NFTCard from "../../components/marketplace/NFTCard";
+import UserProfile from "../../components/marketplace/UserProfile";
+import { UserService } from "../../services/userService";
+import type { User, NFT, Collection } from "../../types/marketplace";
 
 const UserProfilePage: React.FC = () => {
   const { t } = useTranslation();
@@ -20,8 +17,10 @@ const UserProfilePage: React.FC = () => {
   const [ownedNFTs, setOwnedNFTs] = useState<NFT[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'created' | 'owned' | 'collections'>('created');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [activeTab, setActiveTab] = useState<
+    "created" | "owned" | "collections"
+  >("created");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [isFollowing, setIsFollowing] = useState(false);
   const [following, setFollowing] = useState(false);
 
@@ -36,13 +35,16 @@ const UserProfilePage: React.FC = () => {
 
     setLoading(true);
     try {
-      const [userProfile, created, owned, userCollections, followStatus] = await Promise.all([
-        UserService.getUserProfile(username),
-        UserService.getUserCreatedNFTs(username),
-        UserService.getUserOwnedNFTs(username),
-        UserService.getUserCollections(username),
-        UserService.isFollowing ? UserService.isFollowing('current-user', username) : Promise.resolve(false)
-      ]);
+      const [userProfile, created, owned, userCollections, followStatus] =
+        await Promise.all([
+          UserService.getUserProfile(username),
+          UserService.getUserCreatedNFTs(username),
+          UserService.getUserOwnedNFTs(username),
+          UserService.getUserCollections(username),
+          UserService.isFollowing
+            ? UserService.isFollowing("current-user", username)
+            : Promise.resolve(false),
+        ]);
 
       setUser(userProfile);
       setCreatedNFTs(created);
@@ -50,7 +52,7 @@ const UserProfilePage: React.FC = () => {
       setCollections(userCollections);
       setIsFollowing(followStatus);
     } catch (error) {
-      console.error('Failed to load user profile:', error);
+      console.error("Failed to load user profile:", error);
     } finally {
       setLoading(false);
     }
@@ -66,7 +68,7 @@ const UserProfilePage: React.FC = () => {
       }
       setIsFollowing(true);
     } catch (error) {
-      console.error('Failed to follow user:', error);
+      console.error("Failed to follow user:", error);
     } finally {
       setFollowing(false);
     }
@@ -82,7 +84,7 @@ const UserProfilePage: React.FC = () => {
       }
       setIsFollowing(false);
     } catch (error) {
-      console.error('Failed to unfollow user:', error);
+      console.error("Failed to unfollow user:", error);
     } finally {
       setFollowing(false);
     }
@@ -117,13 +119,18 @@ const UserProfilePage: React.FC = () => {
   if (!user) {
     return (
       <div className="user-profile-error">
-        <h1>{t('marketplace.profile.user_not_found', 'User not found')}</h1>
-        <p>{t('marketplace.profile.user_not_found_description', 'The user you are looking for does not exist.')}</p>
+        <h1>{t("marketplace.profile.user_not_found", "User not found")}</h1>
+        <p>
+          {t(
+            "marketplace.profile.user_not_found_description",
+            "The user you are looking for does not exist.",
+          )}
+        </p>
         <button
-          onClick={() => navigate('/marketplace')}
+          onClick={() => navigate("/marketplace")}
           className="btn-wireframe btn-wireframe--primary"
         >
-          {t('marketplace.profile.back_to_marketplace', 'Back to Marketplace')}
+          {t("marketplace.profile.back_to_marketplace", "Back to Marketplace")}
         </button>
       </div>
     );
@@ -142,100 +149,119 @@ const UserProfilePage: React.FC = () => {
       {/* Content Navigation */}
       <div className="user-profile-tabs">
         <button
-          onClick={() => setActiveTab('created')}
-          className={`user-profile-tab ${activeTab === 'created' ? 'active' : ''}`}
+          onClick={() => setActiveTab("created")}
+          className={`user-profile-tab ${activeTab === "created" ? "active" : ""}`}
         >
-          <span>{t('marketplace.profile.created_nfts', 'Created NFTs')} ({createdNFTs.length})</span>
+          <span>
+            {t("marketplace.profile.created_nfts", "Created NFTs")} (
+            {createdNFTs.length})
+          </span>
         </button>
         <button
-          onClick={() => setActiveTab('owned')}
-          className={`user-profile-tab ${activeTab === 'owned' ? 'active' : ''}`}
+          onClick={() => setActiveTab("owned")}
+          className={`user-profile-tab ${activeTab === "owned" ? "active" : ""}`}
         >
-          <span>{t('marketplace.profile.owned_nfts', 'Owned NFTs')} ({ownedNFTs.length})</span>
+          <span>
+            {t("marketplace.profile.owned_nfts", "Owned NFTs")} (
+            {ownedNFTs.length})
+          </span>
         </button>
         <button
-          onClick={() => setActiveTab('collections')}
-          className={`user-profile-tab ${activeTab === 'collections' ? 'active' : ''}`}
+          onClick={() => setActiveTab("collections")}
+          className={`user-profile-tab ${activeTab === "collections" ? "active" : ""}`}
         >
-          <span>{t('marketplace.profile.collections', 'Collections')} ({collections.length})</span>
+          <span>
+            {t("marketplace.profile.collections", "Collections")} (
+            {collections.length})
+          </span>
         </button>
       </div>
 
       {/* Content */}
       <div className="user-profile-content">
-        {activeTab === 'created' && (
+        {activeTab === "created" && (
           <div className="user-profile-nfts">
             <div className="user-profile-controls">
               <button
-                onClick={() => setViewMode('grid')}
-                className={`view-toggle ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode("grid")}
+                className={`view-toggle ${viewMode === "grid" ? "active" : ""}`}
               >
                 <Grid size={16} />
               </button>
               <button
-                onClick={() => setViewMode('list')}
-                className={`view-toggle ${viewMode === 'list' ? 'active' : ''}`}
+                onClick={() => setViewMode("list")}
+                className={`view-toggle ${viewMode === "list" ? "active" : ""}`}
               >
                 <List size={16} />
               </button>
             </div>
-            
+
             {createdNFTs.length === 0 ? (
               <div className="empty-state">
-                <p>{t('marketplace.profile.no_created_nfts', 'No NFTs created yet')}</p>
+                <p>
+                  {t(
+                    "marketplace.profile.no_created_nfts",
+                    "No NFTs created yet",
+                  )}
+                </p>
               </div>
             ) : (
-              <div className={`nfts-grid ${viewMode === 'list' ? 'nfts-list' : ''}`}>
+              <div
+                className={`nfts-grid ${viewMode === "list" ? "nfts-list" : ""}`}
+              >
                 {createdNFTs.map((nft) => (
-                  <NFTCard
-                    key={nft.id}
-                    nft={nft}
-                  />
+                  <NFTCard key={nft.id} nft={nft} />
                 ))}
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'owned' && (
+        {activeTab === "owned" && (
           <div className="user-profile-nfts">
             <div className="user-profile-controls">
               <button
-                onClick={() => setViewMode('grid')}
-                className={`view-toggle ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode("grid")}
+                className={`view-toggle ${viewMode === "grid" ? "active" : ""}`}
               >
                 <Grid size={16} />
               </button>
               <button
-                onClick={() => setViewMode('list')}
-                className={`view-toggle ${viewMode === 'list' ? 'active' : ''}`}
+                onClick={() => setViewMode("list")}
+                className={`view-toggle ${viewMode === "list" ? "active" : ""}`}
               >
                 <List size={16} />
               </button>
             </div>
-            
+
             {ownedNFTs.length === 0 ? (
               <div className="empty-state">
-                <p>{t('marketplace.profile.no_owned_nfts', 'No NFTs owned yet')}</p>
+                <p>
+                  {t("marketplace.profile.no_owned_nfts", "No NFTs owned yet")}
+                </p>
               </div>
             ) : (
-              <div className={`nfts-grid ${viewMode === 'list' ? 'nfts-list' : ''}`}>
+              <div
+                className={`nfts-grid ${viewMode === "list" ? "nfts-list" : ""}`}
+              >
                 {ownedNFTs.map((nft) => (
-                  <NFTCard
-                    key={nft.id}
-                    nft={nft}
-                  />
+                  <NFTCard key={nft.id} nft={nft} />
                 ))}
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'collections' && (
+        {activeTab === "collections" && (
           <div className="user-profile-collections">
             {collections.length === 0 ? (
               <div className="empty-state">
-                <p>{t('marketplace.profile.no_collections', 'No collections created yet')}</p>
+                <p>
+                  {t(
+                    "marketplace.profile.no_collections",
+                    "No collections created yet",
+                  )}
+                </p>
               </div>
             ) : (
               <div className="collections-grid">

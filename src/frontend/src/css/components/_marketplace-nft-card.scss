@@ -9,7 +9,7 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 
+    box-shadow:
       8px 8px 16px var(--color-shadow-dark),
       -8px -8px 16px var(--color-shadow-light);
     border-color: var(--color-accent);
@@ -213,4 +213,4 @@
     background-color: var(--color-warning);
     color: var(--color-surface);
   }
-} 
+}

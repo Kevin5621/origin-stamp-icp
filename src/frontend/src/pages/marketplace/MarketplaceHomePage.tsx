@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Plus, TrendingUp, Users, DollarSign, Package } from 'lucide-react';
-import NFTCard from '../../components/marketplace/NFTCard';
-import SearchBar from '../../components/marketplace/SearchBar';
-import { MarketplaceService } from '../../services/marketplaceService';
-import type { NFT, FilterOptions } from '../../types/marketplace';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Plus, TrendingUp, Users, DollarSign, Package } from "lucide-react";
+import NFTCard from "../../components/marketplace/NFTCard";
+import SearchBar from "../../components/marketplace/SearchBar";
+import { MarketplaceService } from "../../services/marketplaceService";
+import type { NFT, FilterOptions } from "../../types/marketplace";
 
 const MarketplaceHomePage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  
+
   const [nfts, setNfts] = useState<NFT[]>([]);
   const [featuredNFTs, setFeaturedNFTs] = useState<NFT[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Partial<FilterOptions>>({});
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   useEffect(() => {
     loadNFTs();
@@ -28,7 +28,7 @@ const MarketplaceHomePage: React.FC = () => {
       const data = await MarketplaceService.getNFTs(filters);
       setNfts(data);
     } catch (error) {
-      console.error('Failed to load NFTs:', error);
+      console.error("Failed to load NFTs:", error);
     } finally {
       setLoading(false);
     }
@@ -36,10 +36,10 @@ const MarketplaceHomePage: React.FC = () => {
 
   const loadFeaturedNFTs = async () => {
     try {
-      const data = await MarketplaceService.getNFTs({ sortBy: 'popular' });
+      const data = await MarketplaceService.getNFTs({ sortBy: "popular" });
       setFeaturedNFTs(data.slice(0, 5));
     } catch (error) {
-      console.error('Failed to load featured NFTs:', error);
+      console.error("Failed to load featured NFTs:", error);
     }
   };
 
@@ -59,10 +59,8 @@ const MarketplaceHomePage: React.FC = () => {
   };
 
   const handleCreateNFT = () => {
-    navigate('/marketplace/create');
+    navigate("/marketplace/create");
   };
-
-
 
   const renderLoadingSkeleton = () => (
     <div className="nft-grid">
@@ -83,16 +81,19 @@ const MarketplaceHomePage: React.FC = () => {
     <div className="empty-state">
       <Package size={64} className="empty-state__icon" />
       <h3 className="empty-state__title">
-        {t('marketplace.empty.title', 'No NFTs Found')}
+        {t("marketplace.empty.title", "No NFTs Found")}
       </h3>
       <p className="empty-state__description">
-        {t('marketplace.empty.description', 'Try adjusting your filters or search for something else.')}
+        {t(
+          "marketplace.empty.description",
+          "Try adjusting your filters or search for something else.",
+        )}
       </p>
       <button
         className="btn-wireframe btn-wireframe--primary"
         onClick={() => setFilters({})}
       >
-        {t('marketplace.empty.clearFilters', 'Clear Filters')}
+        {t("marketplace.empty.clearFilters", "Clear Filters")}
       </button>
     </div>
   );
@@ -103,16 +104,22 @@ const MarketplaceHomePage: React.FC = () => {
       <section className="marketplace-hero">
         <div className="marketplace-hero__content">
           <h1 className="marketplace-hero__title">
-            {t('marketplace.hero.title', 'Discover Unique Digital Art')}
+            {t("marketplace.hero.title", "Discover Unique Digital Art")}
           </h1>
           <p className="marketplace-hero__subtitle">
-            {t('marketplace.hero.subtitle', 'Explore verified digital artworks with OriginStamp certification. Each piece tells a unique story of creation.')}
+            {t(
+              "marketplace.hero.subtitle",
+              "Explore verified digital artworks with OriginStamp certification. Each piece tells a unique story of creation.",
+            )}
           </p>
-          
+
           <div className="marketplace-hero__search">
             <SearchBar
               onSearch={handleSearch}
-              placeholder={t('marketplace.hero.searchPlaceholder', 'Search for NFTs, collections, or creators...')}
+              placeholder={t(
+                "marketplace.hero.searchPlaceholder",
+                "Search for NFTs, collections, or creators...",
+              )}
               showFilters={true}
             />
           </div>
@@ -123,7 +130,7 @@ const MarketplaceHomePage: React.FC = () => {
               onClick={handleCreateNFT}
             >
               <Plus size={20} />
-              {t('marketplace.hero.createNFT', 'Create & Sell')}
+              {t("marketplace.hero.createNFT", "Create & Sell")}
             </button>
           </div>
         </div>
@@ -131,7 +138,7 @@ const MarketplaceHomePage: React.FC = () => {
         {/* Featured NFTs Carousel */}
         <div className="marketplace-hero__featured">
           <h3 className="marketplace-hero__featured-title">
-            {t('marketplace.hero.featured', 'Featured NFTs')}
+            {t("marketplace.hero.featured", "Featured NFTs")}
           </h3>
           <div className="featured-nfts-carousel">
             {featuredNFTs.map((nft) => (
@@ -139,7 +146,9 @@ const MarketplaceHomePage: React.FC = () => {
                 <img src={nft.imageUrl} alt={nft.title} />
                 <div className="featured-nft-info">
                   <h4>{nft.title}</h4>
-                  <p>{nft.price.amount} {nft.price.currency}</p>
+                  <p>
+                    {nft.price.amount} {nft.price.currency}
+                  </p>
                 </div>
               </div>
             ))}
@@ -157,7 +166,7 @@ const MarketplaceHomePage: React.FC = () => {
             <div className="stat-content">
               <div className="stat-value">15,420</div>
               <div className="stat-label">
-                {t('marketplace.stats.totalNFTs', 'Total NFTs')}
+                {t("marketplace.stats.totalNFTs", "Total NFTs")}
               </div>
             </div>
           </div>
@@ -169,7 +178,7 @@ const MarketplaceHomePage: React.FC = () => {
             <div className="stat-content">
               <div className="stat-value">2.45M ICP</div>
               <div className="stat-label">
-                {t('marketplace.stats.totalVolume', 'Total Volume')}
+                {t("marketplace.stats.totalVolume", "Total Volume")}
               </div>
             </div>
           </div>
@@ -181,7 +190,7 @@ const MarketplaceHomePage: React.FC = () => {
             <div className="stat-content">
               <div className="stat-value">8,920</div>
               <div className="stat-label">
-                {t('marketplace.stats.activeUsers', 'Active Users')}
+                {t("marketplace.stats.activeUsers", "Active Users")}
               </div>
             </div>
           </div>
@@ -193,7 +202,7 @@ const MarketplaceHomePage: React.FC = () => {
             <div className="stat-content">
               <div className="stat-value">45,670</div>
               <div className="stat-label">
-                {t('marketplace.stats.totalSales', 'Total Sales')}
+                {t("marketplace.stats.totalSales", "Total Sales")}
               </div>
             </div>
           </div>
@@ -204,21 +213,21 @@ const MarketplaceHomePage: React.FC = () => {
       <section className="marketplace-main">
         <div className="marketplace-main__header">
           <h2 className="marketplace-main__title">
-            {t('marketplace.main.title', 'Explore NFTs')}
+            {t("marketplace.main.title", "Explore NFTs")}
           </h2>
-          
+
           <div className="marketplace-main__controls">
             <div className="view-mode-toggle">
               <button
-                className={`view-mode-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                onClick={() => setViewMode('grid')}
+                className={`view-mode-btn ${viewMode === "grid" ? "active" : ""}`}
+                onClick={() => setViewMode("grid")}
                 aria-label="Grid view"
               >
                 <div className="grid-icon"></div>
               </button>
               <button
-                className={`view-mode-btn ${viewMode === 'list' ? 'active' : ''}`}
-                onClick={() => setViewMode('list')}
+                className={`view-mode-btn ${viewMode === "list" ? "active" : ""}`}
+                onClick={() => setViewMode("list")}
                 aria-label="List view"
               >
                 <div className="list-icon"></div>
@@ -239,7 +248,7 @@ const MarketplaceHomePage: React.FC = () => {
                   nft={nft}
                   onNFTClick={handleNFTClick}
                   onBuy={handleBuyNFT}
-                  className={viewMode === 'list' ? 'nft-card--list' : ''}
+                  className={viewMode === "list" ? "nft-card--list" : ""}
                 />
               ))}
             </div>
@@ -252,4 +261,4 @@ const MarketplaceHomePage: React.FC = () => {
   );
 };
 
-export default MarketplaceHomePage; 
+export default MarketplaceHomePage;

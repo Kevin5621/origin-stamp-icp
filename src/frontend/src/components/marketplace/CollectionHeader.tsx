@@ -1,5 +1,5 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Users,
   Package,
@@ -8,9 +8,9 @@ import {
   Share2,
   UserPlus,
   UserMinus,
-  CheckCircle
-} from 'lucide-react';
-import type { Collection } from '../../types/marketplace';
+  CheckCircle,
+} from "lucide-react";
+import type { Collection } from "../../types/marketplace";
 
 interface CollectionHeaderProps {
   collection: Collection;
@@ -27,16 +27,16 @@ const CollectionHeader: React.FC<CollectionHeaderProps> = ({
   onFollow,
   onUnfollow,
   onShare,
-  loading = false
+  loading = false,
 }) => {
   const { t } = useTranslation();
 
   const formatNumber = (num: number): string => {
     if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
+      return (num / 1000000).toFixed(1) + "M";
     }
     if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
+      return (num / 1000).toFixed(1) + "K";
     }
     return num.toString();
   };
@@ -54,18 +54,28 @@ const CollectionHeader: React.FC<CollectionHeaderProps> = ({
         <div className="collection-header__main">
           <div className="collection-header__info">
             <h1 className="collection-header__title">{collection.name}</h1>
-            <p className="collection-header__description">{collection.description}</p>
-            
+            <p className="collection-header__description">
+              {collection.description}
+            </p>
+
             {/* Creator Info */}
             <div className="collection-header__creator">
               <div className="collection-header__creator-avatar">
-                <img src={collection.creator.avatar} alt={collection.creator.username} />
+                <img
+                  src={collection.creator.avatar}
+                  alt={collection.creator.username}
+                />
                 {collection.creator.verified && (
-                  <CheckCircle size={16} className="collection-header__verified" />
+                  <CheckCircle
+                    size={16}
+                    className="collection-header__verified"
+                  />
                 )}
               </div>
               <div className="collection-header__creator-info">
-                <span className="collection-header__creator-label">{t('created_by')}</span>
+                <span className="collection-header__creator-label">
+                  {t("created_by")}
+                </span>
                 <span className="collection-header__creator-name">
                   @{collection.creator.username}
                 </span>
@@ -78,27 +88,27 @@ const CollectionHeader: React.FC<CollectionHeaderProps> = ({
             <button
               onClick={isFollowing ? onUnfollow : onFollow}
               disabled={loading}
-              className={`btn-wireframe ${isFollowing ? 'btn-wireframe--secondary' : 'btn-wireframe--primary'}`}
+              className={`btn-wireframe ${isFollowing ? "btn-wireframe--secondary" : "btn-wireframe--primary"}`}
             >
               {isFollowing ? (
                 <>
                   <UserMinus size={16} />
-                  <span>{t('unfollow')}</span>
+                  <span>{t("unfollow")}</span>
                 </>
               ) : (
                 <>
                   <UserPlus size={16} />
-                  <span>{t('follow_creator')}</span>
+                  <span>{t("follow_creator")}</span>
                 </>
               )}
             </button>
-            
+
             <button
               onClick={onShare}
               className="btn-wireframe btn-wireframe--secondary"
             >
               <Share2 size={16} />
-              <span>{t('share')}</span>
+              <span>{t("share")}</span>
             </button>
           </div>
         </div>
@@ -114,11 +124,11 @@ const CollectionHeader: React.FC<CollectionHeaderProps> = ({
                 {formatNumber(collection.stats.totalItems)}
               </span>
               <span className="collection-header__stat-label">
-                {t('items')}
+                {t("items")}
               </span>
             </div>
           </div>
-          
+
           <div className="collection-header__stat">
             <div className="collection-header__stat-icon">
               <Users size={20} />
@@ -128,11 +138,11 @@ const CollectionHeader: React.FC<CollectionHeaderProps> = ({
                 {formatNumber(collection.stats.owners)}
               </span>
               <span className="collection-header__stat-label">
-                {t('owners')}
+                {t("owners")}
               </span>
             </div>
           </div>
-          
+
           <div className="collection-header__stat">
             <div className="collection-header__stat-icon">
               <DollarSign size={20} />
@@ -142,11 +152,11 @@ const CollectionHeader: React.FC<CollectionHeaderProps> = ({
                 {collection.stats.floorPrice} ICP
               </span>
               <span className="collection-header__stat-label">
-                {t('floor_price')}
+                {t("floor_price")}
               </span>
             </div>
           </div>
-          
+
           <div className="collection-header__stat">
             <div className="collection-header__stat-icon">
               <TrendingUp size={20} />
@@ -156,7 +166,7 @@ const CollectionHeader: React.FC<CollectionHeaderProps> = ({
                 {collection.stats.totalVolume} ICP
               </span>
               <span className="collection-header__stat-label">
-                {t('total_volume')}
+                {t("total_volume")}
               </span>
             </div>
           </div>

@@ -11,9 +11,9 @@ export interface NFT {
   };
   price: {
     amount: string;
-    currency: 'ICP' | 'USD';
+    currency: "ICP" | "USD";
   };
-  status: 'for_sale' | 'sold' | 'auction';
+  status: "for_sale" | "sold" | "auction";
   originStamp: {
     certificateId: string;
     creationProcess: boolean;
@@ -63,10 +63,10 @@ export interface FilterOptions {
     min: number;
     max: number;
   };
-  status: 'all' | 'for_sale' | 'sold' | 'auction';
+  status: "all" | "for_sale" | "sold" | "auction";
   originStampVerified: boolean;
   creatorVerified: boolean;
-  sortBy: 'newest' | 'oldest' | 'price_low' | 'price_high' | 'popular';
+  sortBy: "newest" | "oldest" | "price_low" | "price_high" | "popular";
 }
 
 export interface SearchResult {
@@ -81,8 +81,8 @@ export interface CreateNFTData {
   title: string;
   description: string;
   price: string;
-  currency: 'ICP' | 'USD';
+  currency: "ICP" | "USD";
   tags: string[];
   collection?: string;
   file: File | null;
-} 
+}
