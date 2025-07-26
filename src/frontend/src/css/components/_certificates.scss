@@ -385,7 +385,7 @@
 
   &:hover {
     background-color: var(--color-primary-text);
-    color: var(--color-surface);
+    color: var(--color-surface) !important;
     border-color: var(--color-primary-text);
   }
 
@@ -457,7 +457,7 @@
 
   &:hover {
     background-color: var(--color-primary-text);
-    color: var(--color-surface);
+    color: var(--color-surface) !important;
     border-color: var(--color-primary-text);
   }
 }

@@ -87,6 +87,7 @@
   /* Hover effect untuk memberikan feedback visual */
   &:hover {
     transform: translateY(-1px);
+    background-color: rgba(var(--color-surface-rgb), 0.2);
   }
 
   /* Active state untuk memberikan feedback saat diklik */

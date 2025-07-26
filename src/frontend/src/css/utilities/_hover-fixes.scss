@@ -1,0 +1,184 @@
+/* =============================================================================
+   UTILITIES: HOVER TEXT FIXES
+   ============================================================================= */
+
+/* Global hover text visibility fixes */
+* {
+  &:hover {
+    /* Ensure text remains visible on hover for all elements */
+    color: inherit;
+  }
+}
+
+/* Button hover fixes */
+.btn-wireframe,
+.surface-wireframe,
+.form-input-wireframe,
+.action-btn,
+.project-action-btn,
+.art-type-card,
+.certificate-card,
+.landing-step,
+.landing-feature,
+.how-it-works-result-card,
+.stat-cell {
+  &:hover {
+    /* Force text color to be visible on hover */
+    color: var(--color-surface) !important;
+    
+    /* Ensure child text elements are also visible */
+    * {
+      color: var(--color-surface) !important;
+    }
+    
+    /* Specific text elements that should remain visible */
+    .stat-number,
+    .stat-label,
+    .art-type-title,
+    .art-type-description,
+    .feature-tag,
+    .landing-step-title,
+    .landing-step-description,
+    .how-it-works-result-title,
+    .how-it-works-result-description,
+    .empty-title,
+    .empty-description {
+      color: var(--color-surface) !important;
+    }
+    
+    /* Keep success colors visible */
+    .stat-change.positive {
+      color: var(--color-success) !important;
+    }
+  }
+}
+
+/* Dark theme specific hover fixes */
+[data-theme="dark"] {
+  .btn-wireframe,
+  .surface-wireframe,
+  .form-input-wireframe,
+  .action-btn,
+  .project-action-btn,
+  .art-type-card,
+  .certificate-card,
+  .landing-step,
+  .landing-feature,
+  .how-it-works-result-card,
+  .stat-cell {
+    &:hover {
+      color: #000 !important;
+      
+      * {
+        color: #000 !important;
+      }
+      
+      .stat-number,
+      .stat-label,
+      .art-type-title,
+      .art-type-description,
+      .feature-tag,
+      .landing-step-title,
+      .landing-step-description,
+      .how-it-works-result-title,
+      .how-it-works-result-description,
+      .empty-title,
+      .empty-description {
+        color: #000 !important;
+      }
+      
+      .stat-change.positive {
+        color: var(--color-success) !important;
+      }
+    }
+  }
+}
+
+/* Form input specific hover fixes */
+.form-input-wireframe:hover {
+  color: var(--color-primary-text) !important;
+  
+  &::placeholder {
+    color: var(--color-primary-text) !important;
+    opacity: 0.6;
+  }
+}
+
+/* Toggle button hover fixes */
+.toggle-btn {
+  &:hover {
+    background: var(--color-hover-overlay) !important;
+    color: var(--color-primary-text) !important;
+  }
+  
+  &.active {
+    background: var(--color-primary-text) !important;
+    color: var(--color-surface) !important;
+  }
+}
+
+/* Featured item hover fixes */
+.featured-item {
+  &:hover {
+    .featured-details h4,
+    .featured-price {
+      color: var(--color-primary-text) !important;
+    }
+  }
+}
+
+/* Hero button hover fixes */
+.btn-hero-primary,
+.btn-hero-secondary {
+  &:hover {
+    color: var(--color-surface) !important;
+  }
+}
+
+.btn-hero-primary:hover {
+  background: var(--color-accent) !important;
+  color: var(--color-surface) !important;
+}
+
+/* Notification hover fixes */
+.notification-panel__item {
+  &:hover {
+    .notification-panel__item-title,
+    .notification-panel__item-message {
+      color: var(--color-text-primary) !important;
+    }
+  }
+}
+
+/* Modal and overlay hover fixes */
+.modal-overlay,
+.toast {
+  &:hover {
+    color: inherit !important;
+  }
+}
+
+/* Ensure focus states maintain text visibility */
+*:focus-visible {
+  color: inherit !important;
+}
+
+/* Animation for smooth color transitions */
+.btn-wireframe,
+.surface-wireframe,
+.form-input-wireframe,
+.action-btn,
+.project-action-btn,
+.art-type-card,
+.certificate-card,
+.landing-step,
+.landing-feature,
+.how-it-works-result-card,
+.stat-cell {
+  transition: 
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+} 

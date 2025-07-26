@@ -20,6 +20,7 @@
 @use "utilities/_responsive.scss" as *;
 @use "utilities/_legacy.scss" as *;
 @use "utilities/_performance.scss" as *;
+@use "utilities/_hover-fixes.scss" as *;
 
 // ITCSS: Components
 @use "components/_surface.scss" as *;

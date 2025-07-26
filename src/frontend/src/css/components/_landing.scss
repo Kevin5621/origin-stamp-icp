@@ -311,6 +311,7 @@
 
 .landing-step:hover .landing-step-title {
   transform: translateY(-2px);
+  color: var(--color-primary-text);
 }
 
 .landing-step-description {
@@ -323,6 +324,7 @@
 
 .landing-step:hover .landing-step-description {
   transform: translateY(-1px);
+  color: var(--color-primary-text);
 }
 
 /* =============================================================================
