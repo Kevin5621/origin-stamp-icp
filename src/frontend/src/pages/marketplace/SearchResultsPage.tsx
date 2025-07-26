@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Search, Package, Users, FolderOpen } from 'lucide-react';
-import NFTCard from '../../components/marketplace/NFTCard';
-import { MarketplaceService } from '../../services/marketplaceService';
-import type { NFT, Collection, User } from '../../types/marketplace';
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Search, Package, Users, FolderOpen } from "lucide-react";
+import NFTCard from "../../components/marketplace/NFTCard";
+import { MarketplaceService } from "../../services/marketplaceService";
+import type { NFT, Collection, User } from "../../types/marketplace";
 
 const SearchResultsPage: React.FC = () => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  
+
   const [searchResults, setSearchResults] = useState<{
     nfts: NFT[];
     collections: Collection[];
     users: User[];
   }>({ nfts: [], collections: [], users: [] });
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'all' | 'nfts' | 'collections' | 'users'>('all');
+  const [activeTab, setActiveTab] = useState<
+    "all" | "nfts" | "collections" | "users"
+  >("all");
   const [totalResults, setTotalResults] = useState(0);
 
-  const query = searchParams.get('q') || '';
+  const query = searchParams.get("q") || "";
 
   useEffect(() => {
     if (query) {
@@ -35,11 +37,11 @@ const SearchResultsPage: React.FC = () => {
       setSearchResults({
         nfts: results.nfts,
         collections: results.collections,
-        users: results.users
+        users: results.users,
       });
       setTotalResults(results.total);
     } catch (error) {
-      console.error('Search failed:', error);
+      console.error("Search failed:", error);
     } finally {
       setLoading(false);
     }
@@ -80,16 +82,19 @@ const SearchResultsPage: React.FC = () => {
     <div className="search-results-empty">
       <Search size={64} className="empty-icon" />
       <h3 className="empty-title">
-        {t('marketplace.search.noResults', 'No results found')}
+        {t("marketplace.search.noResults", "No results found")}
       </h3>
       <p className="empty-description">
-        {t('marketplace.search.noResultsDescription', 'Try adjusting your search terms or browse our marketplace.')}
+        {t(
+          "marketplace.search.noResultsDescription",
+          "Try adjusting your search terms or browse our marketplace.",
+        )}
       </p>
       <button
         className="btn-wireframe btn-wireframe--primary"
-        onClick={() => navigate('/marketplace')}
+        onClick={() => navigate("/marketplace")}
       >
-        {t('marketplace.search.browseMarketplace', 'Browse Marketplace')}
+        {t("marketplace.search.browseMarketplace", "Browse Marketplace")}
       </button>
     </div>
   );
@@ -123,13 +128,18 @@ const SearchResultsPage: React.FC = () => {
             </div>
             <div className="collection-card__content">
               <h3 className="collection-card__title">{collection.name}</h3>
-              <p className="collection-card__description">{collection.description}</p>
+              <p className="collection-card__description">
+                {collection.description}
+              </p>
               <div className="collection-card__stats">
                 <span>{collection.stats.totalItems} items</span>
                 <span>{collection.stats.floorPrice} floor</span>
               </div>
               <div className="collection-card__creator">
-                <img src={collection.creator.avatar} alt={collection.creator.username} />
+                <img
+                  src={collection.creator.avatar}
+                  alt={collection.creator.username}
+                />
                 <span>{collection.creator.username}</span>
               </div>
             </div>
@@ -149,7 +159,11 @@ const SearchResultsPage: React.FC = () => {
             onClick={() => handleUserClick(user.username)}
           >
             <div className="user-card__header">
-              <img src={user.avatar} alt={user.username} className="user-card__avatar" />
+              <img
+                src={user.avatar}
+                alt={user.username}
+                className="user-card__avatar"
+              />
               <div className="user-card__info">
                 <h3 className="user-card__name">
                   {user.username}
@@ -160,16 +174,24 @@ const SearchResultsPage: React.FC = () => {
             </div>
             <div className="user-card__stats">
               <div className="user-card__stat">
-                <span className="stat-value">{user.followers.toLocaleString()}</span>
-                <span className="stat-label">{t('marketplace.search.followers', 'Followers')}</span>
+                <span className="stat-value">
+                  {user.followers.toLocaleString()}
+                </span>
+                <span className="stat-label">
+                  {t("marketplace.search.followers", "Followers")}
+                </span>
               </div>
               <div className="user-card__stat">
                 <span className="stat-value">{user.totalSales}</span>
-                <span className="stat-label">{t('marketplace.search.sales', 'Sales')}</span>
+                <span className="stat-label">
+                  {t("marketplace.search.sales", "Sales")}
+                </span>
               </div>
               <div className="user-card__stat">
                 <span className="stat-value">{user.totalVolume}</span>
-                <span className="stat-label">{t('marketplace.search.volume', 'Volume')}</span>
+                <span className="stat-label">
+                  {t("marketplace.search.volume", "Volume")}
+                </span>
               </div>
             </div>
           </div>
@@ -179,14 +201,15 @@ const SearchResultsPage: React.FC = () => {
   );
 
   const renderResults = () => {
-    if (activeTab === 'all') {
+    if (activeTab === "all") {
       return (
         <div className="search-results__all">
           {searchResults.nfts.length > 0 && (
             <section className="search-results__section">
               <h3 className="search-results__section-title">
                 <Package size={20} />
-                {t('marketplace.search.nfts', 'NFTs')} ({searchResults.nfts.length})
+                {t("marketplace.search.nfts", "NFTs")} (
+                {searchResults.nfts.length})
               </h3>
               {renderNFTs()}
             </section>
@@ -196,7 +219,8 @@ const SearchResultsPage: React.FC = () => {
             <section className="search-results__section">
               <h3 className="search-results__section-title">
                 <FolderOpen size={20} />
-                {t('marketplace.search.collections', 'Collections')} ({searchResults.collections.length})
+                {t("marketplace.search.collections", "Collections")} (
+                {searchResults.collections.length})
               </h3>
               {renderCollections()}
             </section>
@@ -206,7 +230,8 @@ const SearchResultsPage: React.FC = () => {
             <section className="search-results__section">
               <h3 className="search-results__section-title">
                 <Users size={20} />
-                {t('marketplace.search.users', 'Users')} ({searchResults.users.length})
+                {t("marketplace.search.users", "Users")} (
+                {searchResults.users.length})
               </h3>
               {renderUsers()}
             </section>
@@ -216,11 +241,11 @@ const SearchResultsPage: React.FC = () => {
     }
 
     switch (activeTab) {
-      case 'nfts':
+      case "nfts":
         return renderNFTs();
-      case 'collections':
+      case "collections":
         return renderCollections();
-      case 'users':
+      case "users":
         return renderUsers();
       default:
         return null;
@@ -232,7 +257,7 @@ const SearchResultsPage: React.FC = () => {
       <div className="search-results-page">
         <div className="search-results__header">
           <h1 className="search-results__title">
-            {t('marketplace.search.searching', 'Searching...')}
+            {t("marketplace.search.searching", "Searching...")}
           </h1>
         </div>
         {renderLoadingSkeleton()}
@@ -244,37 +269,39 @@ const SearchResultsPage: React.FC = () => {
     <div className="search-results-page">
       <div className="search-results__header">
         <h1 className="search-results__title">
-          {t('marketplace.search.resultsFor', 'Search results for')}: "{query}"
+          {t("marketplace.search.resultsFor", "Search results for")}: "{query}"
         </h1>
         <p className="search-results__subtitle">
-          {totalResults} {t('marketplace.search.resultsFound', 'results found')}
+          {totalResults} {t("marketplace.search.resultsFound", "results found")}
         </p>
 
         {/* Filter Tabs */}
         <div className="search-results__tabs">
           <button
-            className={`search-results__tab ${activeTab === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveTab('all')}
+            className={`search-results__tab ${activeTab === "all" ? "active" : ""}`}
+            onClick={() => setActiveTab("all")}
           >
-            {t('marketplace.search.all', 'All')} ({totalResults})
+            {t("marketplace.search.all", "All")} ({totalResults})
           </button>
           <button
-            className={`search-results__tab ${activeTab === 'nfts' ? 'active' : ''}`}
-            onClick={() => setActiveTab('nfts')}
+            className={`search-results__tab ${activeTab === "nfts" ? "active" : ""}`}
+            onClick={() => setActiveTab("nfts")}
           >
-            {t('marketplace.search.nfts', 'NFTs')} ({searchResults.nfts.length})
+            {t("marketplace.search.nfts", "NFTs")} ({searchResults.nfts.length})
           </button>
           <button
-            className={`search-results__tab ${activeTab === 'collections' ? 'active' : ''}`}
-            onClick={() => setActiveTab('collections')}
+            className={`search-results__tab ${activeTab === "collections" ? "active" : ""}`}
+            onClick={() => setActiveTab("collections")}
           >
-            {t('marketplace.search.collections', 'Collections')} ({searchResults.collections.length})
+            {t("marketplace.search.collections", "Collections")} (
+            {searchResults.collections.length})
           </button>
           <button
-            className={`search-results__tab ${activeTab === 'users' ? 'active' : ''}`}
-            onClick={() => setActiveTab('users')}
+            className={`search-results__tab ${activeTab === "users" ? "active" : ""}`}
+            onClick={() => setActiveTab("users")}
           >
-            {t('marketplace.search.users', 'Users')} ({searchResults.users.length})
+            {t("marketplace.search.users", "Users")} (
+            {searchResults.users.length})
           </button>
         </div>
       </div>
@@ -286,4 +313,4 @@ const SearchResultsPage: React.FC = () => {
   );
 };
 
-export default SearchResultsPage; 
+export default SearchResultsPage;

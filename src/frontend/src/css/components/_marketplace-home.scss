@@ -109,10 +109,7 @@
     left: 0;
     right: 0;
     padding: 1rem;
-    background: linear-gradient(
-      transparent,
-      rgba(0, 0, 0, 0.8)
-    );
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
     color: white;
 
     h4 {
@@ -203,7 +200,7 @@
     gap: 2px;
 
     &::before {
-      content: '';
+      content: "";
       width: 4px;
       height: 4px;
       background-color: currentColor;
@@ -216,7 +213,7 @@
     gap: 2px;
 
     &::before {
-      content: '';
+      content: "";
       width: 12px;
       height: 2px;
       background-color: currentColor;
@@ -239,4 +236,4 @@
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
-} 
+}

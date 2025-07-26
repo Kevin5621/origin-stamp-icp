@@ -211,7 +211,7 @@ fn generate_upload_url(_session_id: String, file_data: UploadFileData) -> Result
 
                 // Generate S3 object URL (without session ID in path)
                 let object_key = file_data.filename;
-                Ok(format!("{}/{}", base_url, object_key))
+                Ok(format!("{base_url}/{object_key}"))
             }
             None => {
                 Err("S3 configuration not found. Please configure S3 settings first.".to_string())

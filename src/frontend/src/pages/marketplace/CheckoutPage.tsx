@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   ShoppingCart,
   CheckCircle,
   AlertCircle,
-  Clock
-} from 'lucide-react';
-import { MarketplaceService } from '../../services/marketplaceService';
-import CheckoutForm from '../../components/marketplace/CheckoutForm';
-import type { NFT } from '../../types/marketplace';
+  Clock,
+} from "lucide-react";
+import { MarketplaceService } from "../../services/marketplaceService";
+import CheckoutForm from "../../components/marketplace/CheckoutForm";
+import type { NFT } from "../../types/marketplace";
 
 interface CheckoutItem {
   nft: NFT;
@@ -26,8 +26,8 @@ const CheckoutPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
-  const [transactionId, setTransactionId] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [transactionId, setTransactionId] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     loadCheckoutItems();
@@ -36,79 +36,82 @@ const CheckoutPage: React.FC = () => {
   const loadCheckoutItems = async () => {
     setLoading(true);
     try {
-      const nftIds = searchParams.get('items')?.split(',') || [];
-      
+      const nftIds = searchParams.get("items")?.split(",") || [];
+
       if (nftIds.length === 0) {
-        navigate('/marketplace');
+        navigate("/marketplace");
         return;
       }
 
       const checkoutItems: CheckoutItem[] = [];
-      
+
       for (const nftId of nftIds) {
         const nft = await MarketplaceService.getNFTById(nftId);
         if (nft) {
           checkoutItems.push({
             nft,
-            quantity: 1 // For now, NFTs are unique so quantity is always 1
+            quantity: 1, // For now, NFTs are unique so quantity is always 1
           });
         }
       }
 
       if (checkoutItems.length === 0) {
-        setError(t('no_valid_items_found'));
+        setError(t("no_valid_items_found"));
         return;
       }
 
       setItems(checkoutItems);
     } catch (error) {
-      console.error('Failed to load checkout items:', error);
-      setError(t('failed_to_load_items'));
+      console.error("Failed to load checkout items:", error);
+      setError(t("failed_to_load_items"));
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCheckout = async (paymentMethod: 'icp' | 'card', paymentDetails: any) => {
+  const handleCheckout = async (
+    paymentMethod: "icp" | "card",
+    paymentDetails: any,
+  ) => {
     setProcessing(true);
-    setError('');
+    setError("");
 
     try {
       // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       // Mock transaction
       const mockTransactionId = `tx_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-      
+
       // In a real app, this would call the payment service
-      console.log('Processing payment:', {
+      console.log("Processing payment:", {
         items,
         paymentMethod,
         paymentDetails,
-        transactionId: mockTransactionId
+        transactionId: mockTransactionId,
       });
 
       setTransactionId(mockTransactionId);
       setOrderComplete(true);
     } catch (error) {
-      console.error('Checkout failed:', error);
-      setError(t('checkout_failed'));
+      console.error("Checkout failed:", error);
+      setError(t("checkout_failed"));
     } finally {
       setProcessing(false);
     }
   };
 
   const handleBackToMarketplace = () => {
-    navigate('/marketplace');
+    navigate("/marketplace");
   };
 
   const handleViewTransaction = () => {
     // In a real app, this would navigate to a transaction detail page
-    console.log('View transaction:', transactionId);
+    console.log("View transaction:", transactionId);
   };
 
   const handleContinueShopping = () => {
-    navigate('/marketplace');
+    navigate("/marketplace");
   };
 
   if (loading) {
@@ -120,14 +123,14 @@ const CheckoutPage: React.FC = () => {
             className="btn-wireframe btn-wireframe--secondary"
           >
             <ArrowLeft size={20} />
-            <span>{t('back')}</span>
+            <span>{t("back")}</span>
           </button>
-          <h1 className="checkout-page__title">{t('checkout')}</h1>
+          <h1 className="checkout-page__title">{t("checkout")}</h1>
         </div>
-        
+
         <div className="checkout-page__loading">
           <Clock size={48} />
-          <p>{t('loading_checkout_items')}</p>
+          <p>{t("loading_checkout_items")}</p>
         </div>
       </div>
     );
@@ -142,20 +145,20 @@ const CheckoutPage: React.FC = () => {
             className="btn-wireframe btn-wireframe--secondary"
           >
             <ArrowLeft size={20} />
-            <span>{t('back_to_marketplace')}</span>
+            <span>{t("back_to_marketplace")}</span>
           </button>
-          <h1 className="checkout-page__title">{t('checkout')}</h1>
+          <h1 className="checkout-page__title">{t("checkout")}</h1>
         </div>
-        
+
         <div className="checkout-page__error">
           <AlertCircle size={48} />
-          <h2>{t('checkout_error')}</h2>
+          <h2>{t("checkout_error")}</h2>
           <p>{error}</p>
           <button
             onClick={handleBackToMarketplace}
             className="btn-wireframe btn-wireframe--primary"
           >
-            {t('back_to_marketplace')}
+            {t("back_to_marketplace")}
           </button>
         </div>
       </div>
@@ -169,40 +172,50 @@ const CheckoutPage: React.FC = () => {
           <div className="checkout-page__success-icon">
             <CheckCircle size={64} />
           </div>
-          
-          <h1 className="checkout-page__success-title">{t('order_completed')}</h1>
-          <p className="checkout-page__success-message">{t('order_success_message')}</p>
-          
+
+          <h1 className="checkout-page__success-title">
+            {t("order_completed")}
+          </h1>
+          <p className="checkout-page__success-message">
+            {t("order_success_message")}
+          </p>
+
           <div className="checkout-page__transaction-info wireframe-card">
-            <h3>{t('transaction_details')}</h3>
+            <h3>{t("transaction_details")}</h3>
             <div className="checkout-page__transaction-row">
-              <span>{t('transaction_id')}:</span>
+              <span>{t("transaction_id")}:</span>
               <code>{transactionId}</code>
             </div>
             <div className="checkout-page__transaction-row">
-              <span>{t('items_purchased')}:</span>
+              <span>{t("items_purchased")}:</span>
               <span>{items.length}</span>
             </div>
             <div className="checkout-page__transaction-row">
-              <span>{t('total_amount')}:</span>
+              <span>{t("total_amount")}:</span>
               <span>
-                {items.reduce((sum, item) => sum + parseFloat(item.nft.price.amount), 0).toFixed(3)} ICP
+                {items
+                  .reduce(
+                    (sum, item) => sum + parseFloat(item.nft.price.amount),
+                    0,
+                  )
+                  .toFixed(3)}{" "}
+                ICP
               </span>
             </div>
           </div>
-          
+
           <div className="checkout-page__success-actions">
             <button
               onClick={handleViewTransaction}
               className="btn-wireframe btn-wireframe--primary"
             >
-              {t('view_transaction')}
+              {t("view_transaction")}
             </button>
             <button
               onClick={handleContinueShopping}
               className="btn-wireframe btn-wireframe--secondary"
             >
-              {t('continue_shopping')}
+              {t("continue_shopping")}
             </button>
           </div>
         </div>
@@ -218,11 +231,11 @@ const CheckoutPage: React.FC = () => {
           className="btn-wireframe btn-wireframe--secondary"
         >
           <ArrowLeft size={20} />
-          <span>{t('back')}</span>
+          <span>{t("back")}</span>
         </button>
         <h1 className="checkout-page__title">
           <ShoppingCart size={24} />
-          {t('checkout')}
+          {t("checkout")}
         </h1>
       </div>
 
@@ -234,11 +247,13 @@ const CheckoutPage: React.FC = () => {
             loading={processing}
           />
         </div>
-        
+
         <div className="checkout-page__sidebar">
           <div className="checkout-page__summary wireframe-card">
-            <h3 className="checkout-page__summary-title">{t('order_summary')}</h3>
-            
+            <h3 className="checkout-page__summary-title">
+              {t("order_summary")}
+            </h3>
+
             <div className="checkout-page__summary-items">
               {items.map((item) => (
                 <div key={item.nft.id} className="checkout-page__summary-item">
@@ -255,36 +270,56 @@ const CheckoutPage: React.FC = () => {
                 </div>
               ))}
             </div>
-            
+
             <div className="checkout-page__summary-total">
               <div className="checkout-page__summary-row">
-                <span>{t('subtotal')}:</span>
+                <span>{t("subtotal")}:</span>
                 <span>
-                  {items.reduce((sum, item) => sum + parseFloat(item.nft.price.amount), 0).toFixed(3)} ICP
+                  {items
+                    .reduce(
+                      (sum, item) => sum + parseFloat(item.nft.price.amount),
+                      0,
+                    )
+                    .toFixed(3)}{" "}
+                  ICP
                 </span>
               </div>
               <div className="checkout-page__summary-row">
-                <span>{t('gas_fee')}:</span>
+                <span>{t("gas_fee")}:</span>
                 <span>0.001 ICP</span>
               </div>
               <div className="checkout-page__summary-row">
-                <span>{t('platform_fee')}:</span>
+                <span>{t("platform_fee")}:</span>
                 <span>
-                  {(items.reduce((sum, item) => sum + parseFloat(item.nft.price.amount), 0) * 0.025).toFixed(3)} ICP
+                  {(
+                    items.reduce(
+                      (sum, item) => sum + parseFloat(item.nft.price.amount),
+                      0,
+                    ) * 0.025
+                  ).toFixed(3)}{" "}
+                  ICP
                 </span>
               </div>
               <div className="checkout-page__summary-row checkout-page__summary-total-row">
-                <span>{t('total')}:</span>
+                <span>{t("total")}:</span>
                 <span>
-                  {(items.reduce((sum, item) => sum + parseFloat(item.nft.price.amount), 0) * 1.025 + 0.001).toFixed(3)} ICP
+                  {(
+                    items.reduce(
+                      (sum, item) => sum + parseFloat(item.nft.price.amount),
+                      0,
+                    ) *
+                      1.025 +
+                    0.001
+                  ).toFixed(3)}{" "}
+                  ICP
                 </span>
               </div>
             </div>
           </div>
-          
+
           <div className="checkout-page__security wireframe-card">
-            <h4>{t('secure_checkout')}</h4>
-            <p>{t('secure_checkout_description')}</p>
+            <h4>{t("secure_checkout")}</h4>
+            <p>{t("secure_checkout_description")}</p>
           </div>
         </div>
       </div>

@@ -1,12 +1,7 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  Globe,
-  UserPlus,
-  UserMinus,
-  CheckCircle
-} from 'lucide-react';
-import type { User } from '../../types/marketplace';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Globe, UserPlus, UserMinus, CheckCircle } from "lucide-react";
+import type { User } from "../../types/marketplace";
 
 interface UserProfileProps {
   user: User;
@@ -23,16 +18,16 @@ const UserProfile: React.FC<UserProfileProps> = ({
   onFollow,
   onUnfollow,
   isCurrentUser = false,
-  loading = false
+  loading = false,
 }) => {
   const { t } = useTranslation();
 
   const formatNumber = (num: number): string => {
     if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
+      return (num / 1000000).toFixed(1) + "M";
     }
     if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
+      return (num / 1000).toFixed(1) + "K";
     }
     return num.toString();
   };
@@ -44,7 +39,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
         <div className="user-profile__cover">
           <div className="user-profile__cover-pattern"></div>
         </div>
-        
+
         {/* Avatar and Basic Info */}
         <div className="user-profile__info">
           <div className="user-profile__avatar-section">
@@ -56,17 +51,18 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 </div>
               )}
             </div>
-            
+
             <div className="user-profile__main-info">
               <h1 className="user-profile__username">
                 @{user.username}
                 {user.verified && (
-                  <CheckCircle size={24} className="user-profile__verified-icon" />
+                  <CheckCircle
+                    size={24}
+                    className="user-profile__verified-icon"
+                  />
                 )}
               </h1>
-              {user.bio && (
-                <p className="user-profile__bio">{user.bio}</p>
-              )}
+              {user.bio && <p className="user-profile__bio">{user.bio}</p>}
             </div>
           </div>
 
@@ -76,17 +72,17 @@ const UserProfile: React.FC<UserProfileProps> = ({
               <button
                 onClick={isFollowing ? onUnfollow : onFollow}
                 disabled={loading}
-                className={`btn-wireframe ${isFollowing ? 'btn-wireframe--secondary' : 'btn-wireframe--primary'}`}
+                className={`btn-wireframe ${isFollowing ? "btn-wireframe--secondary" : "btn-wireframe--primary"}`}
               >
                 {isFollowing ? (
                   <>
                     <UserMinus size={16} />
-                    <span>{t('unfollow')}</span>
+                    <span>{t("unfollow")}</span>
                   </>
                 ) : (
                   <>
                     <UserPlus size={16} />
-                    <span>{t('follow')}</span>
+                    <span>{t("follow")}</span>
                   </>
                 )}
               </button>
@@ -101,43 +97,35 @@ const UserProfile: React.FC<UserProfileProps> = ({
           <span className="user-profile__stat-value">
             {formatNumber(user.followers)}
           </span>
-          <span className="user-profile__stat-label">
-            {t('followers')}
-          </span>
+          <span className="user-profile__stat-label">{t("followers")}</span>
         </div>
-        
+
         <div className="user-profile__stat">
           <span className="user-profile__stat-value">
             {formatNumber(user.following)}
           </span>
-          <span className="user-profile__stat-label">
-            {t('following')}
-          </span>
+          <span className="user-profile__stat-label">{t("following")}</span>
         </div>
-        
+
         <div className="user-profile__stat">
           <span className="user-profile__stat-value">
             {formatNumber(user.totalSales)}
           </span>
-          <span className="user-profile__stat-label">
-            {t('total_sales')}
-          </span>
+          <span className="user-profile__stat-label">{t("total_sales")}</span>
         </div>
-        
+
         <div className="user-profile__stat">
           <span className="user-profile__stat-value">
             {user.totalVolume} ICP
           </span>
-          <span className="user-profile__stat-label">
-            {t('total_volume')}
-          </span>
+          <span className="user-profile__stat-label">{t("total_volume")}</span>
         </div>
       </div>
 
       {/* Social Links */}
       {user.socialLinks && (
         <div className="user-profile__social">
-          <h3 className="user-profile__social-title">{t('social_links')}</h3>
+          <h3 className="user-profile__social-title">{t("social_links")}</h3>
           <div className="user-profile__social-links">
             {user.socialLinks.twitter && (
               <a
