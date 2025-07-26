@@ -14,6 +14,7 @@ import authEn from "../locales/en/auth.json";
 import navigationEn from "../locales/en/navigation.json";
 import howItWorksEn from "../locales/en/how-it-works.json";
 import settingsEn from "../locales/en/settings.json";
+import marketplaceEn from "../locales/en/marketplace.json";
 
 import commonId from "../locales/id/common.json";
 import dashboardId from "../locales/id/dashboard.json";
@@ -25,6 +26,7 @@ import authId from "../locales/id/auth.json";
 import navigationId from "../locales/id/navigation.json";
 import howItWorksId from "../locales/id/how-it-works.json";
 import settingsId from "../locales/id/settings.json";
+import marketplaceId from "../locales/id/marketplace.json";
 
 // Type untuk translation modules
 export type TranslationModule =
@@ -37,7 +39,8 @@ export type TranslationModule =
   | "auth"
   | "navigation"
   | "howitworks"
-  | "settings";
+  | "settings"
+  | "marketplace";
 
 // Translation resources
 const resources = {
@@ -52,6 +55,7 @@ const resources = {
     navigation: navigationEn,
     howitworks: howItWorksEn,
     settings: settingsEn,
+    marketplace: marketplaceEn,
   },
   id: {
     common: commonId,
@@ -64,6 +68,7 @@ const resources = {
     navigation: navigationId,
     howitworks: howItWorksId,
     settings: settingsId,
+    marketplace: marketplaceId,
   },
 };
 
@@ -89,7 +94,7 @@ export const loadAllTranslations = (language: string) => {
     (acc, module) => {
       return { ...acc, ...langResources[module as TranslationModule] };
     },
-    {} as Record<string, string>,
+    {} as Record<string, any>,
   );
 };
 
@@ -114,6 +119,8 @@ export const getAvailableModules = (): TranslationModule[] => {
     "auth",
     "navigation",
     "howitworks",
+    "settings",
+    "marketplace",
   ];
 };
 

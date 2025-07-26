@@ -1,0 +1,389 @@
+// Create NFT Page
+// ==========================================================================
+
+.create-nft-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+
+    .back-btn {
+      @extend .btn-wireframe !optional;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--color-primary-text);
+      margin: 0;
+    }
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  &__upload-section {
+    .upload-area {
+      border: 3px dashed var(--color-primary-text);
+      border-radius: 0;
+      padding: 3rem 2rem;
+      text-align: center;
+      background-color: transparent;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        background-color: var(--color-accent);
+        border-color: var(--color-accent);
+        color: var(--color-surface);
+      }
+
+      &.drag-over {
+        background-color: var(--color-accent);
+        border-color: var(--color-primary-text);
+        color: var(--color-surface);
+      }
+
+      .upload-icon {
+        font-size: 3rem;
+        color: var(--color-primary-text);
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .upload-text {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--color-primary-text);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .upload-subtext {
+        font-size: 0.875rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 1rem;
+      }
+
+      .upload-formats {
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+        font-family: var(--font-family-mono);
+      }
+
+      input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+    }
+
+    .file-preview {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border: 2px solid var(--color-primary-text);
+      background-color: var(--color-surface);
+      border-radius: 0;
+
+      &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+
+        h3 {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--color-primary-text);
+          margin: 0;
+        }
+
+        .remove-btn {
+          background: none;
+          border: none;
+          color: var(--color-error);
+          cursor: pointer;
+          padding: 0.25rem;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background-color: var(--color-error);
+            color: var(--color-surface);
+          }
+        }
+      }
+
+      &__image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+
+      &__info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+        color: var(--color-text-secondary);
+        font-family: var(--font-family-mono);
+      }
+    }
+  }
+
+  &__form-section {
+    .form-section {
+      margin-bottom: 2.5rem;
+
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--color-primary-text);
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-primary-text);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-family: var(--font-family-mono);
+      }
+
+      .required {
+        color: var(--color-error);
+      }
+
+      input,
+      textarea,
+      select {
+        @extend .wireframe-input !optional;
+        width: 100%;
+        font-family: var(--font-family-mono);
+        font-size: 0.875rem;
+
+        &:focus {
+          outline: none;
+          border-color: var(--color-accent);
+          box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb), 0.2);
+        }
+      }
+
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .error {
+        color: var(--color-error);
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        font-family: var(--font-family-mono);
+      }
+    }
+
+    .price-group {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .tags-group {
+      .tags-input {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        input {
+          flex: 1;
+        }
+
+        .add-tag-btn {
+          @extend .btn-wireframe !optional;
+          padding: 0.75rem 1rem;
+          font-size: 0.875rem;
+          min-width: auto;
+          white-space: nowrap;
+        }
+      }
+
+      .tags-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .tag {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 0.75rem;
+          background-color: var(--color-primary-bg);
+          border: 1px solid var(--color-primary-text);
+          color: var(--color-primary-text);
+          font-size: 0.75rem;
+          font-family: var(--font-family-mono);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+
+          .remove-tag {
+            background: none;
+            border: none;
+            color: var(--color-error);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 2px;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background-color: var(--color-error);
+              color: var(--color-surface);
+            }
+          }
+        }
+      }
+    }
+
+    .originstamp-section {
+      padding: 1.5rem;
+      border: 2px solid var(--color-primary-text);
+      background-color: var(--color-surface);
+      border-radius: 0;
+
+      &__header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+
+        .icon {
+          color: var(--color-success);
+          font-size: 1.25rem;
+        }
+
+        h3 {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--color-primary-text);
+          margin: 0;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+      }
+
+      &__description {
+        font-size: 0.875rem;
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      &__benefits {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        .benefit {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.875rem;
+          color: var(--color-primary-text);
+
+          .icon {
+            color: var(--color-success);
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    .create-btn {
+      @extend .btn-wireframe !optional;
+      @extend .btn-wireframe--primary !optional;
+      width: 100%;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 2rem;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .create-nft-page {
+    padding: 1rem;
+
+    &__header {
+      margin-bottom: 2rem;
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    &__content {
+      gap: 1.5rem;
+    }
+
+    &__upload-section {
+      .upload-area {
+        padding: 2rem 1rem;
+
+        .upload-icon {
+          font-size: 2rem;
+        }
+
+        .upload-text {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+} 
