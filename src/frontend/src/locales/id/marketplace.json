@@ -29,12 +29,6 @@
     "grid": "Grid"
   },
   "by": "Oleh",
-  "floorPrice": "Floor Price",
-  "items": "Item",
-  "totalVolume": "Total Volume",
-  "listed": "Listed",
-  "collection": "KOLEKSI",
-  "floor": "FLOOR",
   "featuredCollections": {
     "title": "Koleksi Unggulan",
     "subtitle": "Koleksi kurasi minggu ini."
@@ -43,12 +37,6 @@
     "title": "Drops Unggulan",
     "subtitle": "Live dan upcoming drops minggu ini."
   },
-  "floorPrice": "Floor Price",
-  "items": "Item",
-  "totalVolume": "Total Volume",
-  "listed": "Listed",
-  "collection": "KOLEKSI",
-  "floor": "FLOOR",
   "topCollections": "KOLEKSI TERATAS",
   "sidebar": {
     "explore": "Jelajahi",

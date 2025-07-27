@@ -19,8 +19,10 @@ export const CollectionDetailPage: React.FC = () => {
     creator: "Gunz",
     description:
       "A collection of futuristic digital art pieces exploring themes of technology and human connection.",
-    image: "/api/placeholder/800/400",
-    bannerImage: "/api/placeholder/1200/300",
+    image:
+      "https://via.placeholder.com/800x400/1f2937/ffffff?text=Collection+Image",
+    bannerImage:
+      "https://via.placeholder.com/1200x300/1f2937/ffffff?text=Banner+Image",
     floorPrice: "11.00",
     currency: "GUN",
     items: 6821231,

@@ -5,8 +5,10 @@ import { loadAllTranslations } from "./utils/translationLoader";
 // Import translation files
 import commonEn from "./locales/en/common.json";
 import settingsEn from "./locales/en/settings.json";
+import marketplaceEn from "./locales/en/marketplace.json";
 import commonId from "./locales/id/common.json";
 import settingsId from "./locales/id/settings.json";
+import marketplaceId from "./locales/id/marketplace.json";
 
 // Initialize i18n dengan sistem modular
 i18n
@@ -17,11 +19,13 @@ i18n
         translation: loadAllTranslations("en"),
         common: commonEn,
         settings: settingsEn,
+        marketplace: marketplaceEn,
       },
       id: {
         translation: loadAllTranslations("id"),
         common: commonId,
         settings: settingsId,
+        marketplace: marketplaceId,
       },
     },
     lng: "en", // default language
