@@ -34,10 +34,7 @@ import CertificateDetailPage from "./pages/dashboard/CertificateDetailPage";
 import KaryaDetailPage from "./pages/dashboard/KaryaDetailPage";
 import SettingsPage from "./pages/SettingsPage";
 // Import marketplace pages
-import MarketplaceHomePage from "./pages/marketplace/MarketplaceHomePage";
-import NFTDetailPage from "./pages/marketplace/NFTDetailPage";
-import SearchResultsPage from "./pages/marketplace/SearchResultsPage";
-import CreateNFTPage from "./pages/marketplace/CreateNFTPage";
+import { MarketplaceHomePage, CollectionDetailPage } from "./pages/marketplace";
 
 // Component untuk menentukan apakah navbar harus ditampilkan
 function NavigationWrapper() {
@@ -154,9 +151,7 @@ function MainContentWrapper() {
         />
         {/* Marketplace Routes */}
         <Route path="/marketplace" element={<MarketplaceHomePage />} />
-        <Route path="/marketplace/nft/:id" element={<NFTDetailPage />} />
-        <Route path="/marketplace/search" element={<SearchResultsPage />} />
-        <Route path="/marketplace/create" element={<CreateNFTPage />} />
+        <Route path="/marketplace/collection/:collectionId" element={<CollectionDetailPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </main>

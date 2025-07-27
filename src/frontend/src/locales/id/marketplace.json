@@ -1,4 +1,60 @@
 {
+  "search": {
+    "placeholder": "Cari OriginStamp"
+  },
+  "connectWallet": "Hubungkan Wallet",
+  "nav": {
+    "explore": "Jelajahi",
+    "create": "Buat",
+    "collections": "Koleksi"
+  },
+  "categories": {
+    "all": "Semua",
+    "art": "Seni",
+    "gaming": "Gaming",
+    "pfps": "PFPs",
+    "memberships": "Membership",
+    "music": "Musik",
+    "photography": "Fotografi"
+  },
+  "timeframes": {
+    "all": "Semua"
+  },
+  "sort": {
+    "top": "Teratas",
+    "trending": "Trending"
+  },
+  "view": {
+    "list": "Daftar",
+    "grid": "Grid"
+  },
+  "by": "Oleh",
+  "floorPrice": "Floor Price",
+  "items": "Item",
+  "totalVolume": "Total Volume",
+  "listed": "Listed",
+  "collection": "KOLEKSI",
+  "floor": "FLOOR",
+  "featuredCollections": {
+    "title": "Koleksi Unggulan",
+    "subtitle": "Koleksi kurasi minggu ini."
+  },
+  "featuredDrops": {
+    "title": "Drops Unggulan",
+    "subtitle": "Live dan upcoming drops minggu ini."
+  },
+  "topCollections": "KOLEKSI TERATAS",
+  "sidebar": {
+    "explore": "Jelajahi",
+    "collections": "Koleksi",
+    "items": "Item",
+    "activity": "Aktivitas",
+    "create": "Buat",
+    "profile": "Profil",
+    "portfolio": "Portfolio",
+    "settings": "Pengaturan",
+    "help": "Bantuan"
+  },
   "hero": {
     "title": "Temukan Seni Digital Unik",
     "subtitle": "Jelajahi karya seni digital terverifikasi dengan sertifikasi OriginStamp. Setiap karya menceritakan kisah penciptaan yang unik.",
