@@ -1,16 +1,16 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { 
-  Compass, 
-  Grid, 
-  List, 
-  Anchor, 
-  Scissors, 
-  User, 
-  Folder, 
-  Settings, 
-  HelpCircle 
-} from 'lucide-react';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import {
+  Compass,
+  Grid,
+  List,
+  Anchor,
+  Scissors,
+  User,
+  Folder,
+  Settings,
+  HelpCircle,
+} from "lucide-react";
 
 interface SidebarProps {
   activeSection: string;
@@ -19,20 +19,20 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeSection,
-  onSectionChange
+  onSectionChange,
 }) => {
-  const { t } = useTranslation('marketplace');
+  const { t } = useTranslation("marketplace");
 
   const menuItems = [
-    { id: 'explore', icon: Compass, label: t('sidebar.explore') },
-    { id: 'collections', icon: Grid, label: t('sidebar.collections') },
-    { id: 'items', icon: List, label: t('sidebar.items') },
-    { id: 'activity', icon: Anchor, label: t('sidebar.activity') },
-    { id: 'create', icon: Scissors, label: t('sidebar.create') },
-    { id: 'profile', icon: User, label: t('sidebar.profile') },
-    { id: 'portfolio', icon: Folder, label: t('sidebar.portfolio') },
-    { id: 'settings', icon: Settings, label: t('sidebar.settings') },
-    { id: 'help', icon: HelpCircle, label: t('sidebar.help') }
+    { id: "explore", icon: Compass, label: t("sidebar.explore") },
+    { id: "collections", icon: Grid, label: t("sidebar.collections") },
+    { id: "items", icon: List, label: t("sidebar.items") },
+    { id: "activity", icon: Anchor, label: t("sidebar.activity") },
+    { id: "create", icon: Scissors, label: t("sidebar.create") },
+    { id: "profile", icon: User, label: t("sidebar.profile") },
+    { id: "portfolio", icon: Folder, label: t("sidebar.portfolio") },
+    { id: "settings", icon: Settings, label: t("sidebar.settings") },
+    { id: "help", icon: HelpCircle, label: t("sidebar.help") },
   ];
 
   return (
@@ -42,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="sidebar-logo">
           <div className="logo-icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <path d="M16 2L30 16L16 30L2 16L16 2Z" fill="currentColor"/>
+              <path d="M16 2L30 16L16 30L2 16L16 2Z" fill="currentColor" />
             </svg>
           </div>
         </div>
@@ -54,7 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             return (
               <li key={item.id}>
                 <button
-                  className={`menu-item ${activeSection === item.id ? 'active' : ''}`}
+                  className={`menu-item ${activeSection === item.id ? "active" : ""}`}
                   onClick={() => onSectionChange(item.id)}
                   title={item.label}
                 >
@@ -68,4 +68,4 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
     </nav>
   );
-}; 
+};
