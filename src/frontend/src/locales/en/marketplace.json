@@ -1,8 +1,64 @@
 {
+  "search": {
+    "placeholder": "Search OriginStamp"
+  },
+  "connectWallet": "Connect Wallet",
+  "nav": {
+    "explore": "Explore",
+    "create": "Create",
+    "collections": "Collections"
+  },
+  "categories": {
+    "all": "All",
+    "art": "Art",
+    "gaming": "Gaming",
+    "pfps": "PFPs",
+    "memberships": "Memberships",
+    "music": "Music",
+    "photography": "Photography"
+  },
+  "timeframes": {
+    "all": "All"
+  },
+  "sort": {
+    "top": "Top",
+    "trending": "Trending"
+  },
+  "view": {
+    "list": "List",
+    "grid": "Grid"
+  },
+  "by": "By",
+  "floorPrice": "Floor Price",
+  "items": "Items",
+  "totalVolume": "Total Volume",
+  "listed": "Listed",
+  "collection": "COLLECTION",
+  "floor": "FLOOR",
+  "featuredCollections": {
+    "title": "Featured Collections",
+    "subtitle": "This week's curated collections."
+  },
+  "featuredDrops": {
+    "title": "Featured Drops",
+    "subtitle": "This week's curated live and upcoming drops."
+  },
+  "topCollections": "TOP COLLECTIONS",
+  "sidebar": {
+    "explore": "Explore",
+    "collections": "Collections",
+    "items": "Items",
+    "activity": "Activity",
+    "create": "Create",
+    "profile": "Profile",
+    "portfolio": "Portfolio",
+    "settings": "Settings",
+    "help": "Help"
+  },
   "hero": {
     "title": "Discover Unique Digital Art",
-    "subtitle": "Explore verified digital artworks with OriginStamp certification. Each piece tells a unique story of creation.",
-    "searchPlaceholder": "Search for NFTs, collections, or creators...",
+    "subtitle": "Explore verified digital artworks with OriginStamp certification. Each piece tells a unique creation story.",
+    "searchPlaceholder": "Search NFTs, collections, or creators...",
     "createNFT": "Create & Sell",
     "featured": "Featured NFTs"
   },
@@ -38,7 +94,7 @@
     "priceHigh": "Price: High to Low",
     "popular": "Most Popular",
     "originStampVerified": "OriginStamp Verified",
-    "creatorVerified": "Verified Creators",
+    "creatorVerified": "Creator Verified",
     "cancel": "Cancel",
     "apply": "Apply Filters",
     "searching": "Searching...",
@@ -49,7 +105,7 @@
     "collections": "Collections",
     "users": "Users",
     "noResults": "No results found",
-    "noResultsDescription": "Try adjusting your search terms or browse our marketplace.",
+    "noResultsDescription": "Try adjusting your search terms or explore our marketplace.",
     "browseMarketplace": "Browse Marketplace",
     "followers": "Followers",
     "sales": "Sales",
@@ -69,7 +125,7 @@
     "placeBid": "Place Bid",
     "sold": "Sold",
     "originStampCertificate": "OriginStamp Certificate",
-    "certificateDescription": "This artwork has been verified with OriginStamp, providing proof of the creation process and authenticity.",
+    "certificateDescription": "This artwork has been verified with OriginStamp, providing proof of creation process and authenticity.",
     "certificateId": "Certificate ID",
     "creationProcess": "Creation Process",
     "verified": "Verified",
@@ -77,7 +133,7 @@
     "viewCertificate": "View Certificate",
     "moreFromCreator": "More from this creator",
     "notFound": "NFT Not Found",
-    "notFoundDescription": "The NFT you are looking for does not exist or has been removed.",
+    "notFoundDescription": "The NFT you're looking for doesn't exist or has been removed.",
     "backToMarketplace": "Back to Marketplace"
   },
   "create": {
@@ -101,7 +157,7 @@
     "originStampDescription": "Your NFT will be automatically verified with OriginStamp, providing proof of creation process and authenticity.",
     "benefit1": "Immutable creation history",
     "benefit2": "Proof of authenticity",
-    "benefit3": "Enhanced value and trust",
+    "benefit3": "Increased value and trust",
     "createNFT": "Create NFT",
     "creating": "Creating...",
     "titleRequired": "Title is required",

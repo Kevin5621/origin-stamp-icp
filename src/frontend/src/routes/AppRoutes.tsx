@@ -10,6 +10,7 @@ import VerificationPage from "../pages/dashboard/VerificationPage";
 import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
 import AdminPage from "../pages/admin/AdminPage";
 import SettingsPage from "../pages/SettingsPage";
+import { MarketplaceHomePage, CollectionDetailPage } from "../pages/marketplace";
 
 /**
  * App Routes - Route manager utama
@@ -79,6 +80,10 @@ export const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+
+      {/* Marketplace Routes */}
+      <Route path="/marketplace" element={<MarketplaceHomePage />} />
+      <Route path="/marketplace/collection/:collectionId" element={<CollectionDetailPage />} />
 
       {/* Fallback - Redirect ke landing page */}
       <Route path="*" element={<Navigate to="/" replace />} />
