@@ -1,6 +1,6 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Check } from 'lucide-react';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Check } from "lucide-react";
 
 interface HeroBannerProps {
   featuredCollection: {
@@ -17,8 +17,10 @@ interface HeroBannerProps {
   };
 }
 
-export const HeroBanner: React.FC<HeroBannerProps> = ({ featuredCollection }) => {
-  const { t } = useTranslation('marketplace');
+export const HeroBanner: React.FC<HeroBannerProps> = ({
+  featuredCollection,
+}) => {
+  const { t } = useTranslation("marketplace");
 
   return (
     <section className="hero-banner">
@@ -27,7 +29,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ featuredCollection }) =>
         <div className="hero-banner__main">
           <div className="hero-banner__image">
             <img src={featuredCollection.image} alt={featuredCollection.name} />
-            
+
             {/* Collection Info Overlay */}
             <div className="hero-banner__info">
               <div className="collection-header">
@@ -36,32 +38,34 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ featuredCollection }) =>
                   <Check className="verified-icon" size={16} />
                 </h2>
                 <p className="collection-creator">
-                  {t('by')} {featuredCollection.creator}
+                  {t("by")} {featuredCollection.creator}
                 </p>
               </div>
 
               {/* Collection Stats */}
               <div className="collection-stats">
                 <div className="stat-item">
-                  <span className="stat-label">{t('floorPrice')}</span>
+                  <span className="stat-label">{t("floorPrice")}</span>
                   <span className="stat-value">
-                    {featuredCollection.floorPrice} {featuredCollection.currency}
+                    {featuredCollection.floorPrice}{" "}
+                    {featuredCollection.currency}
                   </span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-label">{t('items')}</span>
+                  <span className="stat-label">{t("items")}</span>
                   <span className="stat-value">
                     {featuredCollection.items.toLocaleString()}
                   </span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-label">{t('totalVolume')}</span>
+                  <span className="stat-label">{t("totalVolume")}</span>
                   <span className="stat-value">
-                    {featuredCollection.totalVolume} {featuredCollection.currency}
+                    {featuredCollection.totalVolume}{" "}
+                    {featuredCollection.currency}
                   </span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-label">{t('listed')}</span>
+                  <span className="stat-label">{t("listed")}</span>
                   <span className="stat-value">
                     {featuredCollection.listedPercentage}
                   </span>
@@ -93,4 +97,4 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ featuredCollection }) =>
       </div>
     </section>
   );
-}; 
+};

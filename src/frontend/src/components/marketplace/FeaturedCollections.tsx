@@ -1,6 +1,6 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Check, TrendingUp, TrendingDown } from 'lucide-react';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Check, TrendingUp, TrendingDown } from "lucide-react";
 
 interface Collection {
   id: string;
@@ -21,15 +21,19 @@ interface FeaturedCollectionsProps {
 export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
   collections,
   title,
-  subtitle
+  subtitle,
 }) => {
-  const { t } = useTranslation('marketplace');
+  const { t } = useTranslation("marketplace");
 
   const formatChange = (change: number) => {
     const isPositive = change >= 0;
-    const icon = isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />;
-    const color = isPositive ? 'positive' : 'negative';
-    
+    const icon = isPositive ? (
+      <TrendingUp size={12} />
+    ) : (
+      <TrendingDown size={12} />
+    );
+    const color = isPositive ? "positive" : "negative";
+
     return (
       <span className={`change-indicator ${color}`}>
         {icon}
@@ -51,15 +55,17 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
             <div className="collection-card__image">
               <img src={collection.image} alt={collection.name} />
             </div>
-            
+
             <div className="collection-card__info">
               <h3 className="collection-name">
                 {collection.name}
-                {collection.verified && <Check className="verified-icon" size={14} />}
+                {collection.verified && (
+                  <Check className="verified-icon" size={14} />
+                )}
               </h3>
-              
+
               <div className="collection-price">
-                <span className="price-label">{t('floorPrice')}:</span>
+                <span className="price-label">{t("floorPrice")}:</span>
                 <span className="price-value">
                   {collection.floorPrice} {collection.currency}
                 </span>
@@ -71,4 +77,4 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
       </div>
     </section>
   );
-}; 
+};

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Search, Wallet, Menu, X } from 'lucide-react';
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Search, Wallet, Menu, X } from "lucide-react";
 
 interface MarketplaceHeaderProps {
   onSearch: (query: string) => void;
@@ -9,10 +9,10 @@ interface MarketplaceHeaderProps {
 
 export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
   onSearch,
-  onConnectWallet
+  onConnectWallet,
 }) => {
-  const { t } = useTranslation('marketplace');
-  const [searchQuery, setSearchQuery] = useState('');
+  const { t } = useTranslation("marketplace");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -34,7 +34,7 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
             <Search className="search-icon" size={20} />
             <input
               type="text"
-              placeholder={t('search.placeholder')}
+              placeholder={t("search.placeholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -46,23 +46,26 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
         {/* Navigation */}
         <nav className="marketplace-header__nav">
           <ul className="nav-list">
-            <li><a href="#explore">{t('nav.explore')}</a></li>
-            <li><a href="#create">{t('nav.create')}</a></li>
-            <li><a href="#collections">{t('nav.collections')}</a></li>
+            <li>
+              <a href="#explore">{t("nav.explore")}</a>
+            </li>
+            <li>
+              <a href="#create">{t("nav.create")}</a>
+            </li>
+            <li>
+              <a href="#collections">{t("nav.collections")}</a>
+            </li>
           </ul>
         </nav>
 
         {/* Actions */}
         <div className="marketplace-header__actions">
-          <button 
-            className="connect-wallet-btn"
-            onClick={onConnectWallet}
-          >
+          <button className="connect-wallet-btn" onClick={onConnectWallet}>
             <Wallet size={16} />
-            {t('connectWallet')}
+            {t("connectWallet")}
           </button>
-          
-          <button 
+
+          <button
             className="mobile-menu-btn"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
@@ -76,13 +79,19 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
         <div className="mobile-menu">
           <nav className="mobile-nav">
             <ul>
-              <li><a href="#explore">{t('nav.explore')}</a></li>
-              <li><a href="#create">{t('nav.create')}</a></li>
-              <li><a href="#collections">{t('nav.collections')}</a></li>
+              <li>
+                <a href="#explore">{t("nav.explore")}</a>
+              </li>
+              <li>
+                <a href="#create">{t("nav.create")}</a>
+              </li>
+              <li>
+                <a href="#collections">{t("nav.collections")}</a>
+              </li>
             </ul>
           </nav>
         </div>
       )}
     </header>
   );
-}; 
+};

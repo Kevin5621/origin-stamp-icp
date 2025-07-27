@@ -1,6 +1,6 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Check } from 'lucide-react';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Check } from "lucide-react";
 
 interface Collection {
   id: string;
@@ -19,17 +19,18 @@ interface CollectionListProps {
 
 export const CollectionList: React.FC<CollectionListProps> = ({
   collections,
-  title
+  title,
 }) => {
-  const { t } = useTranslation('marketplace');
+  const { t } = useTranslation("marketplace");
 
   const formatChange = (change: number) => {
     const isPositive = change >= 0;
-    const color = isPositive ? 'positive' : 'negative';
-    
+    const color = isPositive ? "positive" : "negative";
+
     return (
       <span className={`change-percentage ${color}`}>
-        {isPositive ? '+' : ''}{change}%
+        {isPositive ? "+" : ""}
+        {change}%
       </span>
     );
   };
@@ -42,8 +43,8 @@ export const CollectionList: React.FC<CollectionListProps> = ({
 
       <div className="collection-list__content">
         <div className="list-header">
-          <span className="header-collection">{t('collection')}</span>
-          <span className="header-floor">{t('floor')}</span>
+          <span className="header-collection">{t("collection")}</span>
+          <span className="header-floor">{t("floor")}</span>
         </div>
 
         <div className="list-items">
@@ -56,11 +57,13 @@ export const CollectionList: React.FC<CollectionListProps> = ({
                 <div className="collection-info">
                   <span className="collection-name">
                     {collection.name}
-                    {collection.verified && <Check className="verified-icon" size={12} />}
+                    {collection.verified && (
+                      <Check className="verified-icon" size={12} />
+                    )}
                   </span>
                 </div>
               </div>
-              
+
               <div className="item-floor">
                 <span className="floor-price">
                   {collection.floorPrice} {collection.currency}
@@ -73,4 +76,4 @@ export const CollectionList: React.FC<CollectionListProps> = ({
       </div>
     </aside>
   );
-}; 
+};

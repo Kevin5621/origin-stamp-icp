@@ -151,7 +151,10 @@ function MainContentWrapper() {
         />
         {/* Marketplace Routes */}
         <Route path="/marketplace" element={<MarketplaceHomePage />} />
-        <Route path="/marketplace/collection/:collectionId" element={<CollectionDetailPage />} />
+        <Route
+          path="/marketplace/collection/:collectionId"
+          element={<CollectionDetailPage />}
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </main>
