@@ -78,5 +78,13 @@
   "error_server": "Server error occurred. Please try again later.",
   "error_timeout": "Request took too long. Please try again.",
   "error_unknown": "An unknown error occurred. Please try again.",
-  "error_critical": "Critical Error"
+  "error_critical": "Critical Error",
+  "sidebar": {
+    "explore": "Explore",
+    "collections": "Collections",
+    "create": "Create",
+    "activity": "Activity",
+    "rankings": "Rankings",
+    "stats": "Stats"
+  }
 }

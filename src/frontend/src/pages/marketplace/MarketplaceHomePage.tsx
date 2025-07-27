@@ -4,15 +4,15 @@ import { MarketplaceHeader } from "../../components/marketplace/MarketplaceHeade
 import { CategoryFilter } from "../../components/marketplace/CategoryFilter";
 import { HeroBanner } from "../../components/marketplace/HeroBanner";
 import { FeaturedCollections } from "../../components/marketplace/FeaturedCollections";
-import { CollectionList } from "../../components/marketplace/CollectionList";
-import { Sidebar } from "../../components/marketplace/Sidebar";
+import { MarketplaceSidebar } from "../../components/marketplace/MarketplaceSidebar";
+import { MarketplaceMainContent } from "../../components/marketplace/MarketplaceMainContent";
+import { MarketplacePriceList } from "../../components/marketplace/MarketplacePriceList";
 
 export const MarketplaceHomePage: React.FC = () => {
   const { t } = useTranslation("marketplace");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1d");
   const [selectedView, setSelectedView] = useState<"grid" | "list">("grid");
-  const [activeSection, setActiveSection] = useState("explore");
 
   // Mock data untuk featured collection
   const featuredCollection = {
@@ -202,49 +202,44 @@ export const MarketplaceHomePage: React.FC = () => {
         onConnectWallet={handleConnectWallet}
       />
 
-      <div className="marketplace-layout">
-        {/* Sidebar */}
-        <Sidebar
-          activeSection={activeSection}
-          onSectionChange={setActiveSection}
+      {/* Left Sidebar */}
+      <MarketplaceSidebar onSectionChange={() => {}} />
+
+      {/* Main Content */}
+      <MarketplaceMainContent>
+        {/* Category Filter */}
+        <CategoryFilter
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          selectedTimeframe={selectedTimeframe}
+          onTimeframeChange={setSelectedTimeframe}
+          selectedView={selectedView}
+          onViewChange={setSelectedView}
         />
 
-        {/* Main Content */}
-        <main className="marketplace-main">
-          {/* Category Filter */}
-          <CategoryFilter
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            selectedTimeframe={selectedTimeframe}
-            onTimeframeChange={setSelectedTimeframe}
-            selectedView={selectedView}
-            onViewChange={setSelectedView}
-          />
+        {/* Hero Banner */}
+        <HeroBanner featuredCollection={featuredCollection} />
 
-          {/* Hero Banner */}
-          <HeroBanner featuredCollection={featuredCollection} />
-
-          {/* Featured Collections */}
-          <FeaturedCollections
-            collections={featuredCollections}
-            title={t("featuredCollections.title")}
-            subtitle={t("featuredCollections.subtitle")}
-          />
-
-          {/* Featured Drops */}
-          <FeaturedCollections
-            collections={[]}
-            title={t("featuredDrops.title")}
-            subtitle={t("featuredDrops.subtitle")}
-          />
-        </main>
-
-        {/* Collection List Sidebar */}
-        <CollectionList
-          collections={topCollections}
-          title={t("topCollections")}
+        {/* Featured Collections */}
+        <FeaturedCollections
+          collections={featuredCollections}
+          title={t("featuredCollections.title")}
+          subtitle={t("featuredCollections.subtitle")}
         />
-      </div>
+
+        {/* Featured Drops */}
+        <FeaturedCollections
+          collections={[]}
+          title={t("featuredDrops.title")}
+          subtitle={t("featuredDrops.subtitle")}
+        />
+      </MarketplaceMainContent>
+
+      {/* Right Price List Sidebar */}
+      <MarketplacePriceList
+        collections={topCollections}
+        title="TOP COLLECTIONS"
+      />
     </div>
   );
 };

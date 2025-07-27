@@ -78,5 +78,13 @@
   "error_server": "Terjadi kesalahan pada server. Silakan coba lagi nanti.",
   "error_timeout": "Permintaan memakan waktu terlalu lama. Silakan coba lagi.",
   "error_unknown": "Terjadi kesalahan yang tidak diketahui. Silakan coba lagi.",
-  "error_critical": "Kesalahan Kritis"
+  "error_critical": "Kesalahan Kritis",
+  "sidebar": {
+    "explore": "Jelajahi",
+    "collections": "Koleksi",
+    "create": "Buat",
+    "activity": "Aktivitas",
+    "rankings": "Peringkat",
+    "stats": "Statistik"
+  }
 }

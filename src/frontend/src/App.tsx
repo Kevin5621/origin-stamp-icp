@@ -12,6 +12,7 @@ import {
   ThemeToggle,
   Login,
   FloatingHeader,
+  AppLayout,
 } from "./components";
 import LanguageToggle from "./components/ui/LanguageToggle";
 import { NotificationButton } from "./components/common/NotificationButton";
@@ -51,24 +52,31 @@ function NavigationWrapper() {
   return <AppNavigation />;
 }
 
-// Component untuk menentukan class pada main content
+// Component untuk menentukan layout berdasarkan halaman
 function MainContentWrapper() {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
   const isLoginPage = location.pathname === "/login";
   const isHowItWorksPage = location.pathname === "/how-it-works";
+  const isMarketplacePage = location.pathname.startsWith("/marketplace");
 
-  const mainClass =
-    isLandingPage || isLoginPage || isHowItWorksPage
-      ? "main-content main-content--overlay"
-      : "main-content";
+  // Halaman yang tidak memerlukan sidebar
+  if (isLandingPage || isLoginPage || isHowItWorksPage) {
+    return (
+      <main className="main-content main-content--overlay">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/how-it-works" element={<HowItWorksPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </main>
+    );
+  }
 
+  // Halaman dengan sidebar
   return (
-    <main className={mainClass}>
+    <AppLayout variant={isMarketplacePage ? "marketplace" : "dashboard"}>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/how-it-works" element={<HowItWorksPage />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route
           path="/dashboard"
           element={
@@ -157,7 +165,7 @@ function MainContentWrapper() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </main>
+    </AppLayout>
   );
 }
 
