@@ -47,13 +47,10 @@
   "sidebar": {
     "explore": "Explore",
     "collections": "Collections",
-    "items": "Items",
-    "activity": "Activity",
     "create": "Create",
-    "profile": "Profile",
-    "portfolio": "Portfolio",
-    "settings": "Settings",
-    "help": "Help"
+    "activity": "Activity",
+    "rankings": "Rankings",
+    "stats": "Stats"
   },
   "hero": {
     "title": "Discover Unique Digital Art",

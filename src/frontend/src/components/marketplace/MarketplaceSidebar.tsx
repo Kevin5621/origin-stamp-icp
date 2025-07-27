@@ -15,11 +15,13 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
-interface SidebarProps {
+interface MarketplaceSidebarProps {
   onSectionChange: (section: string) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ onSectionChange }) => {
+export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
+  onSectionChange,
+}) => {
   const { t } = useTranslation("marketplace");
   const location = useLocation();
 
@@ -92,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSectionChange }) => {
         <div className="sidebar-logo">
           <Link to="/marketplace" className="logo-link">
             <div className="logo-icon">🎨</div>
-            <span className="logo-text">IC Vibe</span>
+            <span className="logo-text">OriginStamp</span>
           </Link>
         </div>
 
@@ -103,7 +105,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSectionChange }) => {
           </div>
           <div className="user-info">
             <div className="user-name">User Name</div>
-            <div className="user-balance">0.00 ETH</div>
+            <div className="user-balance">0.00 ICP</div>
           </div>
           <div className="user-actions">
             <button className="action-btn" title="Wallet">
