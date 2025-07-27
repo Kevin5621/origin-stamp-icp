@@ -33,7 +33,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: "1",
-      title: "Welcome to IC Vibe!",
+      title: "Welcome to OriginStamp!",
       message:
         "Thank you for joining our platform. Start exploring your dashboard.",
       type: "info",

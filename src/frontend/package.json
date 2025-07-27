@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Frontend for IC Vibe application",
+  "description": "OriginStamp",
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
