@@ -21,7 +21,7 @@ ENV PATH $NVM_DIR/versions/node/v22/bin:$PATH
 # Install Node.js and npm
 RUN . "$NVM_DIR/nvm.sh" && \
     nvm install 22 && \
-    npm install -g npm@11.4.2
+    npm install -g npm@11.5.2
 
 # Install DFINITY SDK
 RUN wget https://github.com/dfinity/sdk/releases/download/0.28.0/dfx-0.28.0-x86_64-linux.tar.gz && \

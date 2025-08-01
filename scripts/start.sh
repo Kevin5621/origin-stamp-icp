@@ -76,6 +76,6 @@ while true; do
     bash scripts/setup-s3.sh || true
     echo "🌐 Starting frontend..."
     pushd src/frontend/ > /dev/null
-    timeout 2700 npm start
+    timeout 2700 npm start || true
     popd > /dev/null
 done
