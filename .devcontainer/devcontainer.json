@@ -1,65 +1,74 @@
 {
-  "name": "ICP Vibe Coding Dev",
+  "name": "OriginStamp ICP Dev Container",
   "image": "ghcr.io/dfinity/icp-dev-env:latest",
-  "forwardPorts": [4943, 5173, 11434],
+  "forwardPorts": [4943, 5173],
   "portsAttributes": {
     "4943": {
-      "label": "dfx",
+      "label": "dfx replica",
       "onAutoForward": "ignore"
     },
     "5173": {
-      "label": "vite",
+      "label": "vite dev server",
       "onAutoForward": "openBrowser"
-    },
-    "11434": {
-      "label": "ollama",
-      "onAutoForward": "notify"
     }
   },
   "onCreateCommand": "chmod +x scripts/dev-container-setup.sh",
   "postCreateCommand": "./scripts/dev-container-setup.sh",
+  "updateContentCommand": "npm install",
   "customizations": {
     "vscode": {
       "extensions": [
         "GitHub.copilot",
+        "GitHub.copilot-chat",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "tamasfe.even-better-toml",
         "rust-lang.rust-analyzer",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "formulahendry.auto-rename-tag",
+        "ms-vscode.vscode-json",
+        "ms-vscode.vscode-typescript-next"
       ],
       "settings": {
-        "chat.promptFiles": true,
         "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit",
+          "source.organizeImports": "explicit"
+        },
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "[rust]": {
-          "editor.defaultFormatter": "rust-lang.rust-analyzer"
+          "editor.defaultFormatter": "rust-lang.rust-analyzer",
+          "editor.formatOnSave": true
+        },
+        "[toml]": {
+          "editor.defaultFormatter": "tamasfe.even-better-toml"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[jsonc]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "files.associations": {
-          "*.css": "tailwindcss"
+          "*.css": "tailwindcss",
+          "*.did": "plaintext"
         },
         "editor.quickSuggestions": {
           "strings": "on"
         },
-        "github.copilot.chat.codeGeneration.instructions": [
-          {
-            "file": "general.instructions.md"
-          },
-          {
-            "file": "rust.instructions.md"
-          },
-          {
-            "file": "typescript.instructions.md"
-          }
-        ],
-        "github.copilot.chat.testGeneration.instructions": [
-          {
-            "file": "backend-test.instructions.md"
-          },
-          {
-            "file": "frontend-test.instructions.md"
-          }
-        ],
+        "rust-analyzer.check.command": "clippy",
+        "rust-analyzer.cargo.features": "all",
+        "rust-analyzer.procMacro.enable": true,
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "typescript.suggest.autoImports": true,
+        "eslint.workingDirectories": ["src/frontend"],
+        "tailwindCSS.experimental.configFile": "src/frontend/vite.config.ts",
+        "tailwindCSS.includeLanguages": {
+          "typescript": "javascript",
+          "typescriptreact": "javascript"
+        },
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "git.autofetch": true,
         "settingsSync.ignoredExtensions": ["*"],
         "settingsSync.ignoredSettings": [
           "github.copilot.chat.codeGeneration.instructions",
@@ -75,7 +84,31 @@
       }
     }
   },
-
-  "features": {},
-  "mounts": []
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": false,
+      "installOhMyZsh": false,
+      "upgradePackages": true,
+      "username": "automatic",
+      "uid": "automatic",
+      "gid": "automatic"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "lts",
+      "nvmVersion": "latest"
+    }
+  },
+  "mounts": [],
+  "remoteUser": "vscode",
+  "containerEnv": {
+    "DFX_VERSION": "0.25.0"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
 }
