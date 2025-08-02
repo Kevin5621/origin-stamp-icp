@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { NotificationButton } from "./NotificationButton";
+import { LanguageToggle } from "../ui/LanguageToggle";
+import { ThemeToggle } from "../ui/ThemeToggle";
+import { Login } from "../login/Login";
+import { SignInButton } from "../login/SignInButton";
 
 interface FloatingHeaderProps {
-  children: React.ReactNode;
   className?: string;
   threshold?: number;
   showOnTop?: boolean;
 }
 
 export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
-  children,
   className = "",
   threshold = 100,
   showOnTop = true,
 }) => {
+  const { isAuthenticated } = useAuth();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -58,7 +63,33 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
         bottom: showOnTop ? "auto" : "0",
       }}
     >
-      <div className="floating-header-content">{children}</div>
+      <div className="floating-header-content">
+        {isAuthenticated ? (
+          // Header untuk user yang sudah login
+          <div className="floating-header__authenticated">
+            <div className="floating-header__left">
+              <NotificationButton />
+            </div>
+            <div className="floating-header__right">
+              <LanguageToggle />
+              <ThemeToggle />
+              <Login />
+            </div>
+          </div>
+        ) : (
+          // Header untuk user yang belum login
+          <div className="floating-header__unauthenticated">
+            <div className="floating-header__left">
+              {/* Logo atau brand bisa ditambahkan di sini */}
+            </div>
+            <div className="floating-header__right">
+              <LanguageToggle />
+              <ThemeToggle />
+              <SignInButton variant="primary" size="medium" />
+            </div>
+          </div>
+        )}
+      </div>
     </header>
   );
 };

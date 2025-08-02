@@ -177,12 +177,7 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <BrowserRouter>
-          <FloatingHeader className="app-floating-header">
-            <NotificationButton />
-            <LanguageToggle />
-            <ThemeToggle />
-            <Login />
-          </FloatingHeader>
+          <FloatingHeader className="app-floating-header" />
 
           <MainContentWrapper />
 

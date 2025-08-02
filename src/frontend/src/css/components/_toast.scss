@@ -8,7 +8,7 @@
 
 .toast-container {
   position: fixed;
-  top: 20px;
+  top: 120px;
   right: 20px;
   z-index: 9999;
   display: flex;
@@ -16,12 +16,18 @@
   gap: 12px;
   max-width: 400px;
   pointer-events: none;
+  padding: 0 20px;
 
   @media (max-width: 768px) {
-    top: 10px;
+    top: 80px;
     right: 10px;
     left: 10px;
     max-width: none;
+    padding: 0 10px;
+  }
+
+  @media (max-width: 480px) {
+    top: 70px;
   }
 }
 
@@ -46,7 +52,11 @@
   }
 
   &.animate-slide-in {
-    animation: slideInRight 0.3s ease-out;
+    animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &.animate-slide-out {
+    animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 }
 
@@ -364,5 +374,53 @@
     font-size: 1rem;
     min-width: 1.25rem;
     height: 1.25rem;
+  }
+}
+
+/* =============================================================================
+   ANIMATIONS
+   ============================================================================= */
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInTop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutTop {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
   }
 }

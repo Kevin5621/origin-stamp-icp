@@ -79,6 +79,8 @@
   "error_timeout": "Permintaan memakan waktu terlalu lama. Silakan coba lagi.",
   "error_unknown": "Terjadi kesalahan yang tidak diketahui. Silakan coba lagi.",
   "error_critical": "Kesalahan Kritis",
+  "sign_in": "Masuk",
+  "redirecting_to_login": "Mengarahkan ke halaman masuk...",
   "sidebar": {
     "explore": "Jelajahi",
     "collections": "Koleksi",

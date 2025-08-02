@@ -111,6 +111,53 @@
 }
 
 /* =============================================================================
+   CONDITIONAL HEADER LAYOUTS
+   ============================================================================= */
+
+.floating-header__authenticated,
+.floating-header__unauthenticated {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--spacing-md);
+}
+
+.floating-header__left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.floating-header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.floating-header__authenticated {
+  .floating-header__left {
+    min-width: 0;
+  }
+
+  .floating-header__right {
+    min-width: 0;
+  }
+}
+
+.floating-header__unauthenticated {
+  .floating-header__left {
+    min-width: 0;
+  }
+
+  .floating-header__right {
+    min-width: 0;
+  }
+}
+
+/* =============================================================================
    APP-SPECIFIC FLOATING HEADER
    ============================================================================= */
 
@@ -191,6 +238,47 @@
 
   .brand-subtitle {
     font-size: clamp(1.125rem, 3vw, 1.5rem);
+  }
+}
+
+/* =============================================================================
+   RESPONSIVE HEADER DESIGN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .floating-header {
+    padding: var(--spacing-md);
+  }
+
+  .floating-header-content {
+    padding: var(--spacing-sm);
+    min-height: 3rem;
+  }
+
+  .floating-header__authenticated,
+  .floating-header__unauthenticated {
+    gap: var(--spacing-sm);
+  }
+
+  .floating-header__left,
+  .floating-header__right {
+    gap: var(--spacing-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-header {
+    padding: var(--spacing-sm);
+  }
+
+  .floating-header-content {
+    padding: var(--spacing-xs);
+    min-height: 2.5rem;
+  }
+
+  .floating-header__authenticated,
+  .floating-header__unauthenticated {
+    gap: var(--spacing-xs);
   }
 }
 
