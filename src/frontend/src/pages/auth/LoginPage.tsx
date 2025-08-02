@@ -13,7 +13,7 @@ import { googleAuthService } from "../../services/googleAuth";
  */
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("auth");
   const { success, error } = useToastContext();
   const { isAuthenticated, loginWithInternetIdentity, loginWithGoogle } =
     useAuth();
@@ -41,10 +41,8 @@ const LoginPage: React.FC = () => {
   // Implement login with ICP (Internet Computer Protocol)
   const handleInternetIdentityLogin = async () => {
     try {
-      // Create AuthClient instance
       const authClient = await AuthClient.create();
 
-      // Check if already authenticated
       const isAuthenticated = await authClient.isAuthenticated();
       if (isAuthenticated) {
         const identity = authClient.getIdentity();
@@ -54,7 +52,6 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      // Start login process
       await authClient.login({
         identityProvider: "https://identity.ic0.app",
         windowOpenerFeatures:
@@ -76,13 +73,11 @@ const LoginPage: React.FC = () => {
           error(
             t("login_failed", { message: "Internet Identity login failed" }),
           );
-          // Keep page open on error so user can try again
         },
       });
     } catch (err) {
       console.error("Error during Internet Identity login:", err);
       error(t("login_failed", { message: "Internet Identity login failed" }));
-      // Keep page open on error so user can try again
     }
   };
 
@@ -96,7 +91,6 @@ const LoginPage: React.FC = () => {
     } catch (err) {
       console.error("Google login failed:", err);
       error(t("login_failed", { message: "Google login failed" }));
-      // Keep page open on error so user can try again
     }
   };
 
@@ -110,62 +104,64 @@ const LoginPage: React.FC = () => {
     } catch (err) {
       console.error("Google signup failed:", err);
       error(t("register_failed", { message: "Google signup failed" }));
-      // Keep page open on error so user can try again
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-page-container">
-        <div className="login-page-content">
-          <header className="login-page-header">
-            <h1 className="login-page-title">{t("login_signup")}</h1>
+    <div className="auth-page">
+      <div className="auth-page-container">
+        <div className="auth-page-content">
+          <header className="auth-page-header">
+            <h1 className="auth-page-title">{t("welcome_back")}</h1>
+            <p className="auth-page-subtitle">{t("choose_auth_method")}</p>
           </header>
 
-          <main className="login-page-body">
+          <main className="auth-page-body">
             {!showCustomLogin ? (
-              <>
-                <p className="login-page-desc">{t("choose_login_method")}</p>
-                <div className="login-page-options">
-                  <button
-                    onClick={handleInternetIdentityLogin}
-                    className="login-btn login-btn--icp"
-                  >
-                    <img
-                      src="/assets/ii-logo.svg"
-                      alt="ICP"
-                      className="login-btn-icon"
-                    />
-                    <span>{t("login_with_internet_identity")}</span>
-                  </button>
-                  <button
-                    onClick={handleGoogleLogin}
-                    className="login-btn login-btn--google"
-                  >
-                    <img
-                      src="/assets/google-logo.svg"
-                      alt="Google"
-                      className="login-btn-icon"
-                    />
-                    <span>{t("login_with_google")}</span>
-                  </button>
-                  <div className="login-page-or">{t("or")}</div>
-                  <button
-                    onClick={handleGoogleSignup}
-                    className="login-btn login-btn--signup"
-                  >
-                    <img
-                      src="/assets/google-logo.svg"
-                      alt="Google"
-                      className="login-btn-icon"
-                    />
-                    <span>{t("signup_with_google")}</span>
-                  </button>
-                  <button onClick={handleShowCustomLogin} className="login-btn">
-                    <span>{t("login_with_username_password")}</span>
-                  </button>
+              <div className="auth-page-options">
+                <button
+                  onClick={handleInternetIdentityLogin}
+                  className="auth-page-btn auth-page-btn--icp"
+                >
+                  <img
+                    src="/assets/ii-logo.svg"
+                    alt="ICP"
+                    className="auth-page-btn-icon"
+                  />
+                  <span>{t("login_with_internet_identity")}</span>
+                </button>
+                <button
+                  onClick={handleGoogleLogin}
+                  className="auth-page-btn auth-page-btn--google"
+                >
+                  <img
+                    src="/assets/google-logo.svg"
+                    alt="Google"
+                    className="auth-page-btn-icon"
+                  />
+                  <span>{t("login_with_google")}</span>
+                </button>
+                <div className="auth-page-divider">
+                  <span>{t("or")}</span>
                 </div>
-              </>
+                <button
+                  onClick={handleGoogleSignup}
+                  className="auth-page-btn auth-page-btn--signup"
+                >
+                  <img
+                    src="/assets/google-logo.svg"
+                    alt="Google"
+                    className="auth-page-btn-icon"
+                  />
+                  <span>{t("signup_with_google")}</span>
+                </button>
+                <button
+                  onClick={handleShowCustomLogin}
+                  className="auth-page-btn auth-page-btn--custom"
+                >
+                  <span>{t("login_with_username_password")}</span>
+                </button>
+              </div>
             ) : (
               <LoginForm
                 onBack={handleBackToLoginOptions}

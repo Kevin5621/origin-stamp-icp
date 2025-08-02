@@ -4,6 +4,7 @@ import { backendService } from "../../services/backendService";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToastContext } from "../../contexts/ToastContext";
+import { ChevronLeft } from "lucide-react";
 
 interface LoginFormProps {
   onBack: () => void;
@@ -14,7 +15,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onBack,
   onLoginSuccess,
 }) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("auth");
   const { login } = useAuth();
   const { success, error } = useToastContext();
   const [username, setUsername] = useState("");
@@ -34,11 +35,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   const handleBack = (e?: React.MouseEvent) => {
-    // Mencegah event bubbling
     if (e) {
       e.stopPropagation();
     }
-    // Kembali ke component Login
     onBack();
   };
 
@@ -54,7 +53,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       setResult(loginResult);
 
       if (loginResult.success) {
-        // Set user ke context autentikasi
         if (loginResult.username?.[0]) {
           login(loginResult.username[0]);
         }
@@ -64,7 +62,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           t("login_success", { username: loginResult.username[0] }),
         );
 
-        // Panggil callback untuk menutup modal
         if (onLoginSuccess) {
           onLoginSuccess();
         }
@@ -110,30 +107,19 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <div className="login-form-container">
-      {/* Tombol kembali di pojok kanan atas */}
+    <div className="auth-form-container">
       <button
         onClick={handleBack}
-        className="login-form-back-button"
-        aria-label="Kembali"
-        title="Kembali"
+        className="auth-form-back-btn"
+        aria-label={t("back_to_options")}
+        title={t("back_to_options")}
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
+        <ChevronLeft size={24} />
       </button>
 
-      <div className="login-form-header">
-        <h2 className="login-form-title">{t("login_register_title")}</h2>
+      <div className="auth-form-header">
+        <h2 className="auth-form-title">{t("login_register_title")}</h2>
+        <p className="auth-form-subtitle">{t("enter_credentials")}</p>
       </div>
 
       <form
@@ -141,10 +127,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           e.preventDefault();
           handleLogin();
         }}
-        className="login-form-content"
+        className="auth-form-content"
       >
-        <div className="login-form-group">
-          <label htmlFor="username" className="login-form-label">
+        <div className="auth-form-group">
+          <label htmlFor="username" className="auth-form-label">
             {t("login_username_label")}
           </label>
           <input
@@ -152,14 +138,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="login-form-input"
+            className="auth-form-input"
             placeholder={t("login_username_placeholder")}
             disabled={loading}
+            autoComplete="username"
           />
         </div>
 
-        <div className="login-form-group">
-          <label htmlFor="password" className="login-form-label">
+        <div className="auth-form-group">
+          <label htmlFor="password" className="auth-form-label">
             {t("login_password_label")}
           </label>
           <input
@@ -167,43 +154,118 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="login-form-input"
+            className="auth-form-input"
             placeholder={t("login_password_placeholder")}
             disabled={loading}
+            autoComplete="current-password"
           />
         </div>
 
-        <div className="login-form-actions">
+        <div className="auth-form-actions">
           <button
             type="button"
             onClick={handleLogin}
             disabled={loading}
-            className="login-form-button login-form-button--secondary"
+            className="auth-form-btn auth-form-btn--login"
           >
-            {loading ? t("loading") : t("login_button")}
+            {loading ? (
+              <span className="auth-form-btn-loading">
+                <svg className="auth-form-btn-spinner" viewBox="0 0 24 24">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                    strokeDasharray="31.416"
+                    strokeDashoffset="31.416"
+                  >
+                    <animate
+                      attributeName="stroke-dasharray"
+                      dur="2s"
+                      values="0 31.416;15.708 15.708;0 31.416"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="stroke-dashoffset"
+                      dur="2s"
+                      values="0;-15.708;-31.416"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </svg>
+                {t("loading")}
+              </span>
+            ) : (
+              t("login_button")
+            )}
           </button>
 
           <button
             type="button"
             onClick={handleRegister}
             disabled={loading}
-            className="login-form-button login-form-button--secondary"
+            className="auth-form-btn auth-form-btn--register"
           >
-            {loading ? t("loading") : t("register_button")}
+            {loading ? (
+              <span className="auth-form-btn-loading">
+                <svg className="auth-form-btn-spinner" viewBox="0 0 24 24">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                    strokeDasharray="31.416"
+                    strokeDashoffset="31.416"
+                  >
+                    <animate
+                      attributeName="stroke-dasharray"
+                      dur="2s"
+                      values="0 31.416;15.708 15.708;0 31.416"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="stroke-dashoffset"
+                      dur="2s"
+                      values="0;-15.708;-31.416"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </svg>
+                {t("loading")}
+              </span>
+            ) : (
+              t("register_button")
+            )}
           </button>
         </div>
       </form>
 
       {result && (
-        <div className="login-form-result">
-          <p>
-            <strong>{t("login_message_label")}:</strong> {result.message}
-          </p>
-          {result.username?.[0] && (
-            <p>
-              <strong>{t("login_username_label")}:</strong> {result.username[0]}
+        <div className="auth-form-result">
+          <div className="auth-form-result-header">
+            <span
+              className={`auth-form-result-status auth-form-result-status--${result.success ? "success" : "error"}`}
+            >
+              {result.success
+                ? t("login_status_success")
+                : t("login_status_failed")}
+            </span>
+          </div>
+          <div className="auth-form-result-content">
+            <p className="auth-form-result-message">
+              <strong>{t("login_message_label")}:</strong> {result.message}
             </p>
-          )}
+            {result.username?.[0] && (
+              <p className="auth-form-result-username">
+                <strong>{t("login_username_label")}:</strong>{" "}
+                {result.username[0]}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>
