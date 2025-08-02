@@ -93,7 +93,7 @@
 
   &:hover {
     background: var(--color-surface-hover);
-    color: var(--color-text);
+    /* Keep original text color, don't change on hover */
   }
 
   svg {

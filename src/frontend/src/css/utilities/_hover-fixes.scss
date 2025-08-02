@@ -2,15 +2,10 @@
    UTILITIES: HOVER TEXT FIXES
    ============================================================================= */
 
-/* Global hover text visibility fixes */
-* {
-  &:hover {
-    /* Ensure text remains visible on hover for all elements */
-    color: inherit;
-  }
-}
+/* Global hover text visibility fixes - removed to prevent unwanted color changes */
+/* Individual components should handle their own hover states */
 
-/* Button hover fixes */
+/* Button hover fixes - removed forced color changes */
 .btn-wireframe,
 .surface-wireframe,
 .form-input-wireframe,
@@ -23,37 +18,12 @@
 .how-it-works-result-card,
 .stat-cell {
   &:hover {
-    /* Force text color to be visible on hover */
-    color: var(--color-surface) !important;
-
-    /* Ensure child text elements are also visible */
-    * {
-      color: var(--color-surface) !important;
-    }
-
-    /* Specific text elements that should remain visible */
-    .stat-number,
-    .stat-label,
-    .art-type-title,
-    .art-type-description,
-    .feature-tag,
-    .landing-step-title,
-    .landing-step-description,
-    .how-it-works-result-title,
-    .how-it-works-result-description,
-    .empty-title,
-    .empty-description {
-      color: var(--color-surface) !important;
-    }
-
-    /* Keep success colors visible */
-    .stat-change.positive {
-      color: var(--color-success) !important;
-    }
+    /* Keep original text colors, don't force changes */
+    /* Only change background/border, not text color */
   }
 }
 
-/* Dark theme specific hover fixes */
+/* Dark theme specific hover fixes - removed forced color changes */
 [data-theme="dark"] {
   .btn-wireframe,
   .surface-wireframe,
@@ -67,40 +37,18 @@
   .how-it-works-result-card,
   .stat-cell {
     &:hover {
-      color: #000 !important;
-
-      * {
-        color: #000 !important;
-      }
-
-      .stat-number,
-      .stat-label,
-      .art-type-title,
-      .art-type-description,
-      .feature-tag,
-      .landing-step-title,
-      .landing-step-description,
-      .how-it-works-result-title,
-      .how-it-works-result-description,
-      .empty-title,
-      .empty-description {
-        color: #000 !important;
-      }
-
-      .stat-change.positive {
-        color: var(--color-success) !important;
-      }
+      /* Keep original text colors, don't force changes */
+      /* Only change background/border, not text color */
     }
   }
 }
 
 /* Form input specific hover fixes */
 .form-input-wireframe:hover {
-  color: var(--color-primary-text) !important;
-
+  /* Keep original text color, don't change on hover */
+  
   &::placeholder {
-    color: var(--color-primary-text) !important;
-    opacity: 0.6;
+    /* Keep original placeholder color */
   }
 }
 
@@ -108,7 +56,7 @@
 .toggle-btn {
   &:hover {
     background: var(--color-hover-overlay) !important;
-    color: var(--color-primary-text) !important;
+    /* Keep original text color */
   }
 
   &.active {
@@ -122,7 +70,7 @@
   &:hover {
     .featured-details h4,
     .featured-price {
-      color: var(--color-primary-text) !important;
+      /* Keep original text color */
     }
   }
 }
@@ -131,13 +79,13 @@
 .btn-hero-primary,
 .btn-hero-secondary {
   &:hover {
-    color: var(--color-surface) !important;
+    /* Keep original text color */
   }
 }
 
 .btn-hero-primary:hover {
   background: var(--color-accent) !important;
-  color: var(--color-surface) !important;
+  /* Keep original text color */
 }
 
 /* Notification hover fixes */
@@ -145,23 +93,16 @@
   &:hover {
     .notification-panel__item-title,
     .notification-panel__item-message {
-      color: var(--color-text-primary) !important;
+      /* Keep original text color */
     }
   }
 }
 
-/* Modal and overlay hover fixes */
-.modal-overlay,
-.toast {
-  &:hover {
-    color: inherit !important;
-  }
-}
+/* Modal and overlay hover fixes - removed forced color changes */
+/* Individual components should handle their own hover states */
 
-/* Ensure focus states maintain text visibility */
-*:focus-visible {
-  color: inherit !important;
-}
+/* Focus states - removed forced color changes */
+/* Individual components should handle their own focus states */
 
 /* Animation for smooth color transitions */
 .btn-wireframe,
@@ -177,8 +118,20 @@
 .stat-cell {
   transition:
     background-color 0.3s ease,
-    color 0.3s ease,
     border-color 0.3s ease,
     transform 0.3s ease,
     box-shadow 0.3s ease;
+}
+
+/* Badge hover fixes - prevent text color changes */
+.transformable-notification__badge,
+.project-type-badge,
+.how-it-works-hero-badge,
+.completion-badge,
+.status-badge,
+.verified-badge {
+  &:hover {
+    /* Keep original text color, don't change on hover */
+    color: inherit !important;
+  }
 }
