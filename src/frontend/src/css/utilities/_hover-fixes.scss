@@ -46,7 +46,7 @@
 /* Form input specific hover fixes */
 .form-input-wireframe:hover {
   /* Keep original text color, don't change on hover */
-  
+
   &::placeholder {
     /* Keep original placeholder color */
   }
