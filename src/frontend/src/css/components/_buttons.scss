@@ -88,7 +88,7 @@
 /* Dark theme hover state */
 [data-theme="dark"] .btn-wireframe:hover {
   background-color: #fff;
-  color: #000;
+  color: var(--color-surface);
   border-color: #fff;
 }
 
