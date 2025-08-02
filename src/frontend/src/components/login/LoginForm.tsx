@@ -4,7 +4,7 @@ import { backendService } from "../../services/backendService";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToastContext } from "../../contexts/ToastContext";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 
 interface LoginFormProps {
   onBack: () => void;
@@ -20,6 +20,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const { success, error } = useToastContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<LoginResult | null>(null);
 
@@ -39,6 +40,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       e.stopPropagation();
     }
     onBack();
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleLogin = async () => {
@@ -149,16 +154,29 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <label htmlFor="password" className="auth-form-label">
             {t("login_password_label")}
           </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="auth-form-input"
-            placeholder={t("login_password_placeholder")}
-            disabled={loading}
-            autoComplete="current-password"
-          />
+          <div className="auth-form-input-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="auth-form-input"
+              placeholder={t("login_password_placeholder")}
+              disabled={loading}
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="auth-form-password-toggle"
+              aria-label={
+                showPassword ? t("hide_password") : t("show_password")
+              }
+              title={showPassword ? t("hide_password") : t("show_password")}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
         </div>
 
         <div className="auth-form-actions">
