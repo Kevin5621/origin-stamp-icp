@@ -283,6 +283,10 @@
     var(--color-surface) 0%,
     rgba(var(--color-primary-rgb), 0.02) 100%
   );
+
+  &.auth-modal-header--hidden {
+    display: none !important;
+  }
 }
 
 .auth-modal-title {
