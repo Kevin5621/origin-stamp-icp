@@ -30,10 +30,6 @@ alwaysApply: true
 - Use index.ts files for clean exports
 - Maintain consistent naming conventions
 - Separate business logic in `services/` and `hooks/`
-
-- Maintain consistent naming conventions
-- Separate business logic in `services/` and `hooks/`
-
 # Frontend Architecture Rules
 
 ## Internationalization (i18n)
@@ -59,8 +55,5 @@ alwaysApply: true
 ## File Organization
 - Keep related files together (component + styles + tests)
 - Use index.ts files for clean exports
-- Maintain consistent naming conventions
-- Separate business logic in `services/` and `hooks/`
-
 - Maintain consistent naming conventions
 - Separate business logic in `services/` and `hooks/`
