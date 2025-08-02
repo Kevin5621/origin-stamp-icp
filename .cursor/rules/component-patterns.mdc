@@ -58,10 +58,6 @@ export const Component: React.FC<ComponentProps> = ({
 - Test user interactions and state changes
 - Mock external dependencies
 - Test accessibility features
-
-- Mock external dependencies
-- Test accessibility features
-
 # Component Patterns & Best Practices
 
 ## Component Structure

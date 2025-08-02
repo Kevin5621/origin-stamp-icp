@@ -63,10 +63,6 @@ export default ComponentName;
 - Include default export for convenience
 - Export types and interfaces when needed
 - Use index.ts for clean imports
-
-- Export types and interfaces when needed
-- Use index.ts for clean imports
-
 # Component Structure Rules
 
 ## Directory Organization
@@ -125,8 +121,5 @@ export default ComponentName;
 ## Export Pattern
 - Use named exports for components
 - Include default export for convenience
-- Export types and interfaces when needed
-- Use index.ts for clean imports
-
 - Export types and interfaces when needed
 - Use index.ts for clean imports
