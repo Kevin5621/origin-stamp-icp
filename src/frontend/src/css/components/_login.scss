@@ -1,132 +1,182 @@
 /* ==========================================================================
-   Login Dialog Styles - Enhanced Wireframe Minimalist
+   Authentication Modal Styles - Modern Clean Design
    ========================================================================== */
 
 /* =============================================================================
-   SIGN IN BUTTON COMPONENT
+   LOGIN TRIGGER BUTTON
    ============================================================================= */
 
-.sign-in-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-semibold);
-  font-size: 0.875rem;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap;
-  user-select: none;
+.login-trigger-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  border: 2px solid var(--color-primary-text) !important;
+  background: var(--color-primary-text) !important;
+  color: var(--color-surface) !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  text-decoration: none !important;
+  outline: none !important;
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+  &:hover {
+    background: var(--color-primary-text) !important;
+    color: var(--color-surface) !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3) !important;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary-text);
-    outline-offset: 2px;
+    outline: 2px solid var(--color-focus) !important;
+    outline-offset: 2px !important;
+  }
+
+  &--active {
+    background: var(--color-primary-text) !important;
+    color: var(--color-surface) !important;
+  }
+
+  svg {
+    width: 20px !important;
+    height: 20px !important;
+    transition: transform 0.3s ease !important;
+  }
+
+  &:hover svg {
+    transform: scale(1.1) !important;
+  }
+}
+
+/* =============================================================================
+   SIGN IN BUTTON
+   ============================================================================= */
+
+.sign-in-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--spacing-xs) !important;
+  padding: var(--spacing-sm) var(--spacing-lg) !important;
+  border: none !important;
+  border-radius: var(--border-radius-md) !important;
+  font-family: var(--font-family-primary) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  font-size: 0.875rem !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  user-select: none !important;
+
+  &:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text) !important;
+    outline-offset: 2px !important;
   }
 
   &__text {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+    display: flex !important;
+    align-items: center !important;
+    gap: var(--spacing-xs) !important;
   }
 
   &__loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   &__spinner {
-    width: 1rem;
-    height: 1rem;
-    animation: spin 1s linear infinite;
+    width: 1rem !important;
+    height: 1rem !important;
+    animation: spin 1s linear infinite !important;
   }
 }
 
 .sign-in-btn--primary {
-  background: var(--color-primary-text);
-  color: var(--color-surface);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--color-primary-text) !important;
+  color: var(--color-surface) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 
   &:hover:not(:disabled) {
-    background: var(--color-primary-text);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background: var(--color-primary-text) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   }
 }
 
 .sign-in-btn--secondary {
-  background: var(--color-surface);
-  color: var(--color-primary-text);
-  border: 2px solid var(--color-primary-text);
+  background: var(--color-surface) !important;
+  color: var(--color-primary-text) !important;
+  border: 2px solid var(--color-primary-text) !important;
 
   &:hover:not(:disabled) {
-    background: var(--color-primary-text);
-    color: var(--color-surface);
-    transform: translateY(-1px);
+    background: var(--color-primary-text) !important;
+    color: var(--color-surface) !important;
+    transform: translateY(-1px) !important;
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) !important;
   }
 }
 
 .sign-in-btn--outline {
-  background: transparent;
-  color: var(--color-primary-text);
-  border: 2px solid var(--color-primary-text);
+  background: transparent !important;
+  color: var(--color-primary-text) !important;
+  border: 2px solid var(--color-primary-text) !important;
 
   &:hover:not(:disabled) {
-    background: var(--color-primary-text);
-    color: var(--color-surface);
-    transform: translateY(-1px);
+    background: var(--color-primary-text) !important;
+    color: var(--color-surface) !important;
+    transform: translateY(-1px) !important;
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) !important;
   }
 }
 
 .sign-in-btn--small {
-  padding: var(--spacing-xs) var(--spacing-md);
-  font-size: 0.75rem;
-  min-height: 2rem;
+  padding: var(--spacing-xs) var(--spacing-md) !important;
+  font-size: 0.75rem !important;
+  min-height: 2rem !important;
 }
 
 .sign-in-btn--medium {
-  padding: var(--spacing-sm) var(--spacing-lg);
-  font-size: 0.875rem;
-  min-height: 2.5rem;
+  padding: var(--spacing-sm) var(--spacing-lg) !important;
+  font-size: 0.875rem !important;
+  min-height: 2.5rem !important;
 }
 
 .sign-in-btn--large {
-  padding: var(--spacing-md) var(--spacing-xl);
-  font-size: 1rem;
-  min-height: 3rem;
+  padding: var(--spacing-md) var(--spacing-xl) !important;
+  font-size: 1rem !important;
+  min-height: 3rem !important;
 }
 
 [data-theme="dark"] .sign-in-btn--primary {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
 
   &:hover:not(:disabled) {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
   }
 }
 
@@ -140,301 +190,294 @@
   }
 }
 
-/* Dialog Backdrop - Transparent with subtle blur */
-.login-dialog-backdrop {
-  background: transparent;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+/* =============================================================================
+   AUTH MODAL OVERLAY
+   ============================================================================= */
+
+.auth-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: var(--z-index-modal-backdrop) !important;
+  padding: var(--spacing-md) !important;
+  animation: authModalFadeIn 0.3s ease-out !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  will-change: opacity, backdrop-filter !important;
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
+  /* Pastikan modal berada di atas semua elemen */
+  isolation: isolate !important;
 }
 
-/* Login Dialog Header - Enhanced typography */
-.login-title {
-  margin: 0 0 0.5rem 0;
+@keyframes authModalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* =============================================================================
+   AUTH MODAL CONTENT
+   ============================================================================= */
+
+.auth-modal-content {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 16px !important;
+  padding: 0 !important;
+  position: relative !important;
+  z-index: var(--z-index-modal) !important;
+  max-width: 90% !important;
+  width: 420px !important;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  animation: authModalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  will-change: transform, opacity !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
+  contain: layout style paint !important;
+}
+
+@keyframes authModalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* =============================================================================
+   AUTH MODAL HEADER
+   ============================================================================= */
+
+.auth-modal-header {
+  padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
   text-align: center;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-primary-rgb), 0.02) 100%
+  );
+}
+
+.auth-modal-title {
+  margin: 0 0 var(--spacing-sm);
   font-size: 1.5rem;
-  font-weight: 600;
-  font-family: "Raleway", sans-serif;
+  font-weight: 700;
   color: var(--color-primary-text);
-  line-height: 1.2;
   letter-spacing: -0.025em;
 }
 
-.login-desc {
-  margin: 0 0 1.5rem 0;
-  text-align: center;
+.auth-modal-subtitle {
+  margin: 0;
   font-size: 0.95rem;
-  font-family: "Raleway", sans-serif;
   color: var(--color-text-secondary);
   line-height: 1.5;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-/* Login Dialog Layout - Improved spacing */
-.login-options {
+/* =============================================================================
+   AUTH MODAL BODY
+   ============================================================================= */
+
+.auth-modal-body {
+  padding: var(--spacing-xl);
+}
+
+/* =============================================================================
+   AUTH OPTIONS
+   ============================================================================= */
+
+.auth-options {
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
-  align-items: stretch;
+  gap: var(--spacing-md);
+}
+
+/* =============================================================================
+   AUTH BUTTONS
+   ============================================================================= */
+
+.auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
   width: 100%;
-}
-
-.login-or {
-  text-align: center;
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin: 0.75rem 0;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.login-or::before,
-.login-or::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background-color: var(--color-border);
-  margin: 0 0.75rem;
-}
-
-/* Login Button Base Styles - Enhanced wireframe */
-.login-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  justify-content: center;
-  font-size: 0.95rem;
-  font-weight: 500;
-  font-family: "Raleway", sans-serif;
-  padding: 0.875rem 1.25rem;
-  min-height: 48px;
-  background: transparent;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
   color: var(--color-primary-text);
-  border: 2px solid var(--color-primary-text);
-  border-radius: 0;
-  box-shadow: none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  text-decoration: none;
-  width: 100%;
 
   &:hover {
-    background: var(--color-primary-text);
-    color: var(--color-surface);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary-text);
+    background: rgba(var(--color-primary-rgb), 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   }
 
   &:active {
     transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   &:focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
-    border-color: var(--color-focus);
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
-    box-shadow: none;
-  }
-}
-
-/* Login Button Variants - Enhanced color system */
-.login-btn--google {
-  border-color: var(--color-info);
-  color: var(--color-info);
-
-  &:hover {
-    background: var(--color-info);
-    color: var(--color-surface);
-    border-color: var(--color-info);
   }
 
-  &:focus-visible {
-    border-color: var(--color-info);
-  }
-}
-
-.login-btn--icp {
-  border-color: var(--color-primary-text);
-  color: var(--color-primary-text);
-
-  &:hover {
-    background: var(--color-primary-text);
-    color: var(--color-surface);
+  &--icp {
     border-color: var(--color-primary-text);
+    color: var(--color-primary-text);
+
+    &:hover {
+      background: var(--color-primary-text);
+      color: var(--color-surface);
+    }
   }
 
-  &:focus-visible {
-    border-color: var(--color-primary-text);
+  &--google {
+    border-color: #4285f4;
+    color: #4285f4;
+
+    &:hover {
+      background: #4285f4;
+      color: white;
+    }
+  }
+
+  &--signup {
+    border-color: var(--color-success);
+    color: var(--color-success);
+
+    &:hover {
+      background: var(--color-success);
+      color: white;
+    }
+  }
+
+  &--custom {
+    border-color: var(--color-text-secondary);
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background: var(--color-text-secondary);
+      color: var(--color-surface);
+    }
   }
 }
 
-.login-btn--signup {
-  border-color: var(--color-success);
-  color: var(--color-success);
-
-  &:hover {
-    background: var(--color-success);
-    color: var(--color-surface);
-    border-color: var(--color-success);
-  }
-
-  &:focus-visible {
-    border-color: var(--color-success);
-  }
-}
-
-/* Login Button Elements - Improved icons */
-.login-btn-icon {
+.auth-btn-icon {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
   filter: var(--icon-filter, none);
-  transition: filter 0.2s ease;
+  transition: filter 0.3s ease;
 }
 
-.login-btn:hover .login-btn-icon {
+.auth-btn:hover .auth-btn-icon {
   filter: var(--icon-filter-hover, none);
 }
 
-.login-btn span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 500;
+.auth-btn span {
+  font-weight: 600;
   letter-spacing: 0.025em;
 }
 
-/* Login Form Container - Enhanced structure */
-.login-form-container {
-  width: 100%;
+/* =============================================================================
+   AUTH DIVIDER
+   ============================================================================= */
+
+.auth-divider {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  align-items: center;
+  margin: var(--spacing-lg) 0;
   position: relative;
+
+  &::before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  span {
+    padding: 0 var(--spacing-md);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    background: var(--color-surface);
+  }
 }
 
-.login-form-back-button {
+/* =============================================================================
+   AUTH MODAL CLOSE
+   ============================================================================= */
+
+.auth-modal-close {
   position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
-  width: 32px;
-  height: 32px;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 44px;
+  height: 44px;
+  border: none;
   background: transparent;
-  border: 1px solid var(--color-primary-text);
-  color: var(--color-primary-text);
+  color: var(--color-text-secondary);
+  border-radius: var(--border-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
   z-index: 10;
+  padding: var(--spacing-xs);
 
   &:hover {
-    background: var(--color-primary-text);
-    color: var(--color-surface);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
-  }
-}
-
-.login-form-header {
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.login-form-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  font-family: "Raleway", sans-serif;
-  color: var(--color-primary-text);
-}
-
-.login-form-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.login-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.login-form-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  font-family: "Raleway", sans-serif;
-  color: var(--color-primary-text);
-  margin: 0;
-}
-
-.login-form-input {
-  padding: 0.75rem;
-  border: 2px solid var(--color-primary-text);
-  border-radius: 0;
-  background: transparent;
-  color: var(--color-primary-text);
-  font-family: "Raleway", sans-serif;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-focus);
-    box-shadow: 0 0 0 2px rgba(var(--color-focus-rgb), 0.2);
-  }
-
-  &::placeholder {
     color: var(--color-primary-text);
-    opacity: 0.6;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
-
-.login-form-actions {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-}
-
-.login-form-button {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--color-primary-text);
-  background: transparent;
-  color: var(--color-primary-text);
-  font-family: "Raleway", sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: 0;
-
-  &:hover:not(:disabled) {
-    background: var(--color-primary-text);
-    color: var(--color-surface);
+    background: var(--color-hover-overlay);
   }
 
   &:focus-visible {
@@ -442,86 +485,111 @@
     outline-offset: 2px;
   }
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  svg {
+    width: 20px;
+    height: 20px;
   }
-}
 
-.login-form-button--secondary {
-  border-color: var(--color-text-secondary);
-  color: var(--color-text-secondary);
+  /* Responsive untuk mobile */
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
 
-  &:hover:not(:disabled) {
-    background: var(--color-text-secondary);
-    color: var(--color-surface);
-  }
-}
-
-.login-form-result {
-  padding: 1rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  font-size: 0.875rem;
-  line-height: 1.5;
-
-  p {
-    margin: 0 0 0.5rem 0;
-
-    &:last-child {
-      margin-bottom: 0;
+    svg {
+      width: 18px;
+      height: 18px;
     }
   }
-
-  strong {
-    color: var(--color-primary-text);
-    font-weight: 600;
-  }
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-  .login-title {
+/* =============================================================================
+   BODY SCROLL LOCK
+   ============================================================================= */
+
+/* Prevent body scroll saat modal terbuka */
+body.auth-modal-open {
+  overflow: hidden !important;
+  padding-right: 0 !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  /* Pastikan tidak ada scroll */
+  touch-action: none !important;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .auth-modal-overlay {
+    padding: var(--spacing-sm);
+  }
+
+  .auth-modal-content {
+    width: 100%;
+    max-width: none;
+  }
+
+  .auth-modal-header {
+    padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+  }
+
+  .auth-modal-body {
+    padding: var(--spacing-lg);
+  }
+
+  .auth-modal-title {
     font-size: 1.25rem;
   }
 
-  .login-desc {
-    font-size: 0.875rem;
-  }
-
-  .login-btn {
-    padding: 0.75rem 1rem;
+  .auth-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
     font-size: 0.9rem;
   }
+}
 
-  .login-form-actions {
-    flex-direction: column;
+@media (max-width: 480px) {
+  .auth-modal-overlay {
+    padding: var(--spacing-xs);
+  }
+
+  .auth-modal-header {
+    padding: var(--spacing-md);
+  }
+
+  .auth-modal-body {
+    padding: var(--spacing-md);
+  }
+
+  .auth-modal-title {
+    font-size: 1.125rem;
+  }
+
+  .auth-btn {
+    padding: var(--spacing-sm);
+    font-size: 0.875rem;
   }
 }
 
-/* Loading state */
-.login-btn:disabled,
-.login-form-button:disabled {
-  position: relative;
-  color: transparent;
+/* =============================================================================
+   DARK THEME ADJUSTMENTS
+   ============================================================================= */
 
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 16px;
-    height: 16px;
-    margin: -8px 0 0 -8px;
-    border: 2px solid currentColor;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+[data-theme="dark"] {
+  .login-trigger-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
   }
-}
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  .auth-modal-content {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  .auth-btn {
+    &:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
   }
 }

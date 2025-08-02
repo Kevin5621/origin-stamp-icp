@@ -8,13 +8,14 @@ import { useToastContext } from "../../contexts/ToastContext";
 import { TransformableAvatar } from "../profile/TransformableAvatar";
 import { AuthClient } from "@dfinity/auth-client";
 import { googleAuthService } from "../../services/googleAuth";
+import { X } from "lucide-react";
 
 interface LoginProps {
   readonly className?: string;
 }
 
 export function Login({ className = "" }: LoginProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("auth");
   const navigate = useNavigate();
   const { success, error } = useToastContext();
   const {
@@ -81,7 +82,6 @@ export function Login({ className = "" }: LoginProps) {
       );
       const firstElement = focusableElements[0] as HTMLElement;
       if (firstElement) {
-        // Delay focus untuk memastikan modal sudah ter-render
         setTimeout(() => {
           firstElement.focus();
         }, 100);
@@ -89,7 +89,7 @@ export function Login({ className = "" }: LoginProps) {
     }
   }, [isModalOpen, showCustomLogin]);
 
-  // Prevent body scroll saat modal terbuka - dengan optimasi
+  // Prevent body scroll saat modal terbuka
   useEffect(() => {
     if (isModalOpen && !bodyScrollLockRef.current) {
       const scrollBarWidth =
@@ -128,7 +128,6 @@ export function Login({ className = "" }: LoginProps) {
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setShowCustomLogin(false);
-    // Return focus ke tombol login dengan delay
     setTimeout(() => {
       if (loginButtonRef.current) {
         loginButtonRef.current.focus();
@@ -162,10 +161,8 @@ export function Login({ className = "" }: LoginProps) {
   // Implement login with ICP (Internet Computer Protocol)
   const handleInternetIdentityLogin = useCallback(async () => {
     try {
-      // Create AuthClient instance
       const authClient = await AuthClient.create();
 
-      // Check if already authenticated
       const isAuthenticated = await authClient.isAuthenticated();
       if (isAuthenticated) {
         const identity = authClient.getIdentity();
@@ -176,7 +173,6 @@ export function Login({ className = "" }: LoginProps) {
         return;
       }
 
-      // Start login process
       await authClient.login({
         identityProvider: "https://identity.ic0.app",
         windowOpenerFeatures:
@@ -199,12 +195,10 @@ export function Login({ className = "" }: LoginProps) {
           error(
             t("login_failed", { message: "Internet Identity login failed" }),
           );
-          // Keep modal open on error so user can try again
         },
       });
     } catch (error) {
       console.error("Error during Internet Identity login:", error);
-      // Keep modal open on error so user can try again
     }
   }, [handleCloseModal, navigate, loginWithInternetIdentity]);
 
@@ -219,7 +213,6 @@ export function Login({ className = "" }: LoginProps) {
     } catch (err) {
       console.error("Google login failed:", err);
       error(t("login_failed", { message: "Google login failed" }));
-      // Keep modal open on error so user can try again
     }
   }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
 
@@ -234,7 +227,6 @@ export function Login({ className = "" }: LoginProps) {
     } catch (err) {
       console.error("Google signup failed:", err);
       error(t("register_failed", { message: "Google signup failed" }));
-      // Keep modal open on error so user can try again
     }
   }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
 
@@ -259,13 +251,13 @@ export function Login({ className = "" }: LoginProps) {
 
   return (
     <>
-      {/* Circular login button using semantic class and translation */}
+      {/* Login button */}
       <button
         ref={loginButtonRef}
         onClick={handleOpenModal}
-        className={`btn-login-circular ${isModalOpen ? "btn-login-circular--expanded" : ""} ${className}`.trim()}
-        aria-label={t("login_signup")}
-        title={t("login_signup")}
+        className={`login-trigger-btn ${isModalOpen ? "login-trigger-btn--active" : ""} ${className}`.trim()}
+        aria-label={t("access_account")}
+        title={t("access_account")}
         aria-expanded={isModalOpen}
         aria-haspopup="dialog"
       >
@@ -289,10 +281,10 @@ export function Login({ className = "" }: LoginProps) {
         createPortal(
           <div
             ref={modalRef}
-            className="modal-overlay"
+            className="auth-modal-overlay"
             role="dialog"
             aria-modal="true"
-            aria-labelledby="login-modal-title"
+            aria-labelledby="auth-modal-title"
             tabIndex={-1}
             onClick={handleCloseModal}
             onKeyDown={(e) => {
@@ -300,104 +292,91 @@ export function Login({ className = "" }: LoginProps) {
             }}
           >
             <div
-              className="modal-content"
+              className="auth-modal-content"
               role="document"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === "Escape") handleCloseModal();
               }}
             >
-              {/* Close button untuk wireframe style */}
+              {/* Close button */}
               <button
                 onClick={handleCloseModal}
-                className="modal-close"
+                className="auth-modal-close"
                 aria-label={t("close_modal")}
                 title={t("close_modal")}
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
+                <X size={18} />
               </button>
 
               {!showCustomLogin && (
-                <header className="modal-header">
-                  <h1 id="login-modal-title" className="login-title">
-                    {t("login_signup")}
+                <header className="auth-modal-header">
+                  <h1 id="auth-modal-title" className="auth-modal-title">
+                    {t("welcome_back")}
                   </h1>
+                  <p className="auth-modal-subtitle">
+                    {t("choose_auth_method")}
+                  </p>
                 </header>
               )}
 
-              <main className="modal-body">
+              <main className="auth-modal-body">
                 {!showCustomLogin ? (
-                  <>
-                    <p className="login-desc">{t("choose_login_method")}</p>
+                  <div className="auth-options">
+                    <button
+                      onClick={handleInternetIdentityLogin}
+                      className="auth-btn auth-btn--icp"
+                      aria-label={t("login_with_internet_identity")}
+                    >
+                      <img
+                        src="/assets/ii-logo.svg"
+                        alt=""
+                        className="auth-btn-icon"
+                        aria-hidden="true"
+                      />
+                      <span>{t("login_with_internet_identity")}</span>
+                    </button>
 
-                    <div className="login-options">
-                      <button
-                        onClick={handleInternetIdentityLogin}
-                        className="login-btn login-btn--icp"
-                        aria-label={t("login_with_internet_identity")}
-                      >
-                        <img
-                          src="/assets/ii-logo.svg"
-                          alt=""
-                          className="login-btn-icon"
-                          aria-hidden="true"
-                        />
-                        <span>{t("login_with_internet_identity")}</span>
-                      </button>
+                    <button
+                      onClick={handleGoogleLogin}
+                      className="auth-btn auth-btn--google"
+                      aria-label={t("login_with_google")}
+                    >
+                      <img
+                        src="/assets/google-logo.svg"
+                        alt=""
+                        className="auth-btn-icon"
+                        aria-hidden="true"
+                      />
+                      <span>{t("login_with_google")}</span>
+                    </button>
 
-                      <button
-                        onClick={handleGoogleLogin}
-                        className="login-btn login-btn--google"
-                        aria-label={t("login_with_google")}
-                      >
-                        <img
-                          src="/assets/google-logo.svg"
-                          alt=""
-                          className="login-btn-icon"
-                          aria-hidden="true"
-                        />
-                        <span>{t("login_with_google")}</span>
-                      </button>
-
-                      <div className="login-or" role="separator">
-                        {t("or")}
-                      </div>
-
-                      <button
-                        onClick={handleGoogleSignup}
-                        className="login-btn login-btn--signup"
-                        aria-label={t("signup_with_google")}
-                      >
-                        <img
-                          src="/assets/google-logo.svg"
-                          alt=""
-                          className="login-btn-icon"
-                          aria-hidden="true"
-                        />
-                        <span>{t("signup_with_google")}</span>
-                      </button>
-
-                      <button
-                        onClick={handleShowCustomLogin}
-                        className="login-btn"
-                        aria-label={t("login_with_username_password")}
-                      >
-                        <span>{t("login_with_username_password")}</span>
-                      </button>
+                    <div className="auth-divider" role="separator">
+                      <span>{t("or")}</span>
                     </div>
-                  </>
+
+                    <button
+                      onClick={handleGoogleSignup}
+                      className="auth-btn auth-btn--signup"
+                      aria-label={t("signup_with_google")}
+                    >
+                      <img
+                        src="/assets/google-logo.svg"
+                        alt=""
+                        className="auth-btn-icon"
+                        aria-hidden="true"
+                      />
+                      <span>{t("signup_with_google")}</span>
+                    </button>
+
+                    <button
+                      onClick={handleShowCustomLogin}
+                      className="auth-btn auth-btn--custom"
+                      aria-label={t("login_with_username_password")}
+                    >
+                      <span>{t("login_with_username_password")}</span>
+                    </button>
+                  </div>
                 ) : (
                   <LoginForm
                     onBack={handleBackToLoginOptions}
