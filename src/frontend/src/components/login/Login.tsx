@@ -309,6 +309,7 @@ export function Login({ className = "" }: LoginProps) {
                 <X size={18} />
               </button>
 
+              {/* Header hanya ditampilkan di halaman pilihan metode autentikasi, tidak di halaman login/register */}
               {!showCustomLogin && (
                 <header className="auth-modal-header">
                   <h1 id="auth-modal-title" className="auth-modal-title">

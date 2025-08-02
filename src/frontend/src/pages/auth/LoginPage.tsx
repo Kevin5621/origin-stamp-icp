@@ -111,10 +111,13 @@ const LoginPage: React.FC = () => {
     <div className="auth-page">
       <div className="auth-page-container">
         <div className="auth-page-content">
-          <header className="auth-page-header">
-            <h1 className="auth-page-title">{t("welcome_back")}</h1>
-            <p className="auth-page-subtitle">{t("choose_auth_method")}</p>
-          </header>
+          {/* Header hanya ditampilkan di halaman pilihan metode autentikasi, tidak di halaman login/register */}
+          {!showCustomLogin && (
+            <header className="auth-page-header">
+              <h1 className="auth-page-title">{t("welcome_back")}</h1>
+              <p className="auth-page-subtitle">{t("choose_auth_method")}</p>
+            </header>
+          )}
 
           <main className="auth-page-body">
             {!showCustomLogin ? (
