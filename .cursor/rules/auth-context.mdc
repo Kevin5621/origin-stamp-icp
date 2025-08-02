@@ -1,0 +1,111 @@
+---
+alwaysApply: true
+---
+# Authentication Context Rules
+
+## AuthContext Structure
+Reference [AuthContext.tsx](mdc:src/frontend/src/contexts/AuthContext.tsx) for authentication patterns
+
+### User Interface
+```typescript
+interface User {
+  username: string;
+  loginTime: string;
+  principal?: string;
+  email?: string;
+  picture?: string;
+  loginMethod?: "username" | "icp" | "google";
+}
+```
+
+### Authentication Methods
+- **Username/Password**: Basic authentication
+- **Internet Identity (ICP)**: Blockchain-based authentication
+- **Google OAuth**: Social authentication
+
+### Context Usage
+```typescript
+const { user, isAuthenticated, login, logout, authClient } = useAuth();
+
+// Check authentication status
+if (isAuthenticated) {
+  // User is logged in
+}
+
+// Access user data
+const username = user?.username;
+const loginMethod = user?.loginMethod;
+```
+
+### Protected Routes
+- Use `ProtectedRoute` component for authenticated pages
+- Redirect unauthenticated users to login
+- Handle authentication state changes
+
+### Login Flow
+1. User clicks Sign In button
+2. Navigate to `/login` page
+3. Choose authentication method
+4. Handle authentication success/failure
+5. Update AuthContext state
+6. Redirect to dashboard
+
+### Logout Flow
+1. Clear user data from context
+2. Clear localStorage
+3. Logout from ICP if applicable
+4. Redirect to home page
+# Authentication Context Rules
+
+## AuthContext Structure
+Reference [AuthContext.tsx](mdc:src/frontend/src/contexts/AuthContext.tsx) for authentication patterns
+
+### User Interface
+```typescript
+interface User {
+  username: string;
+  loginTime: string;
+  principal?: string;
+  email?: string;
+  picture?: string;
+  loginMethod?: "username" | "icp" | "google";
+}
+```
+
+### Authentication Methods
+- **Username/Password**: Basic authentication
+- **Internet Identity (ICP)**: Blockchain-based authentication
+- **Google OAuth**: Social authentication
+
+### Context Usage
+```typescript
+const { user, isAuthenticated, login, logout, authClient } = useAuth();
+
+// Check authentication status
+if (isAuthenticated) {
+  // User is logged in
+}
+
+// Access user data
+const username = user?.username;
+const loginMethod = user?.loginMethod;
+```
+
+### Protected Routes
+- Use `ProtectedRoute` component for authenticated pages
+- Redirect unauthenticated users to login
+- Handle authentication state changes
+
+### Login Flow
+1. User clicks Sign In button
+2. Navigate to `/login` page
+3. Choose authentication method
+4. Handle authentication success/failure
+5. Update AuthContext state
+6. Redirect to dashboard
+
+### Logout Flow
+1. Clear user data from context
+2. Clear localStorage
+3. Logout from ICP if applicable
+4. Redirect to home page

@@ -1,0 +1,66 @@
+---
+alwaysApply: true
+---
+
+
+# Frontend Architecture Rules
+
+## Internationalization (i18n)
+- Always use `useTranslation("namespace")` hook for text content
+- Follow namespace structure: `common`, `auth`, `dashboard`, `marketplace`, `settings`
+- Add new translations to both `en/` and `id/` locale files
+- Use semantic keys like `sign_in`, `redirecting_to_login`, not generic ones
+- Reference [i18n.ts](mdc:src/frontend/src/i18n.ts) for namespace configuration
+
+## Styling & CSS Architecture
+- Use ITCSS methodology with [main.scss](mdc:src/frontend/src/css/main.scss) as entry point
+- Follow semantic color system from [_settings.scss](mdc:src/frontend/src/css/settings/_settings.scss)
+- Use CSS custom properties for theming: `var(--color-primary-text)`, `var(--color-surface)`
+- Implement responsive design with breakpoints: 480px, 768px, 900px, 1200px
+- Use spacing system: `var(--spacing-xs)` to `var(--spacing-3xl)`
+
+## Component Structure
+- Place components in appropriate directories: `common/`, `ui/`, `layout/`, `pages/`
+- Use TypeScript interfaces for props
+- Implement proper error boundaries and loading states
+- Follow React best practices with hooks and functional components
+
+## File Organization
+- Keep related files together (component + styles + tests)
+- Use index.ts files for clean exports
+- Maintain consistent naming conventions
+- Separate business logic in `services/` and `hooks/`
+
+- Maintain consistent naming conventions
+- Separate business logic in `services/` and `hooks/`
+
+# Frontend Architecture Rules
+
+## Internationalization (i18n)
+- Always use `useTranslation("namespace")` hook for text content
+- Follow namespace structure: `common`, `auth`, `dashboard`, `marketplace`, `settings`
+- Add new translations to both `en/` and `id/` locale files
+- Use semantic keys like `sign_in`, `redirecting_to_login`, not generic ones
+- Reference [i18n.ts](mdc:src/frontend/src/i18n.ts) for namespace configuration
+
+## Styling & CSS Architecture
+- Use ITCSS methodology with [main.scss](mdc:src/frontend/src/css/main.scss) as entry point
+- Follow semantic color system from [_settings.scss](mdc:src/frontend/src/css/settings/_settings.scss)
+- Use CSS custom properties for theming: `var(--color-primary-text)`, `var(--color-surface)`
+- Implement responsive design with breakpoints: 480px, 768px, 900px, 1200px
+- Use spacing system: `var(--spacing-xs)` to `var(--spacing-3xl)`
+
+## Component Structure
+- Place components in appropriate directories: `common/`, `ui/`, `layout/`, `pages/`
+- Use TypeScript interfaces for props
+- Implement proper error boundaries and loading states
+- Follow React best practices with hooks and functional components
+
+## File Organization
+- Keep related files together (component + styles + tests)
+- Use index.ts files for clean exports
+- Maintain consistent naming conventions
+- Separate business logic in `services/` and `hooks/`
+
+- Maintain consistent naming conventions
+- Separate business logic in `services/` and `hooks/`

@@ -1,0 +1,132 @@
+---
+alwaysApply: true
+---
+
+
+# Component Structure Rules
+
+## Directory Organization
+```
+src/frontend/src/components/
+├── common/          # Shared components (Button, Card, Modal)
+├── ui/              # UI elements (ThemeToggle, LanguageToggle)
+├── layout/          # Layout components (Sidebar, Header)
+├── auth/            # Authentication components
+├── dashboard/       # Dashboard specific components
+├── marketplace/     # Marketplace components
+└── index.ts         # Export all components
+```
+
+## Component File Structure
+```typescript
+// ComponentName.tsx
+import React from "react";
+import { useTranslation } from "react-i18next";
+
+interface ComponentNameProps {
+  className?: string;
+  variant?: "primary" | "secondary";
+  size?: "small" | "medium" | "large";
+}
+
+export const ComponentName: React.FC<ComponentNameProps> = ({
+  className = "",
+  variant = "primary",
+  size = "medium",
+}) => {
+  const { t } = useTranslation("common");
+  
+  return (
+    <div className={`component-name component-name--${variant} component-name--${size} ${className}`}>
+      {/* Component content */}
+    </div>
+  );
+};
+
+export default ComponentName;
+```
+
+## Styling Integration
+- Use BEM methodology for CSS classes
+- Implement conditional styling based on props
+- Use semantic color variables from settings
+- Follow responsive design patterns
+
+## Props Interface
+- Always define TypeScript interfaces
+- Use descriptive prop names
+- Provide default values where appropriate
+- Use union types for variants and sizes
+
+## Export Pattern
+- Use named exports for components
+- Include default export for convenience
+- Export types and interfaces when needed
+- Use index.ts for clean imports
+
+- Export types and interfaces when needed
+- Use index.ts for clean imports
+
+# Component Structure Rules
+
+## Directory Organization
+```
+src/frontend/src/components/
+├── common/          # Shared components (Button, Card, Modal)
+├── ui/              # UI elements (ThemeToggle, LanguageToggle)
+├── layout/          # Layout components (Sidebar, Header)
+├── auth/            # Authentication components
+├── dashboard/       # Dashboard specific components
+├── marketplace/     # Marketplace components
+└── index.ts         # Export all components
+```
+
+## Component File Structure
+```typescript
+// ComponentName.tsx
+import React from "react";
+import { useTranslation } from "react-i18next";
+
+interface ComponentNameProps {
+  className?: string;
+  variant?: "primary" | "secondary";
+  size?: "small" | "medium" | "large";
+}
+
+export const ComponentName: React.FC<ComponentNameProps> = ({
+  className = "",
+  variant = "primary",
+  size = "medium",
+}) => {
+  const { t } = useTranslation("common");
+  
+  return (
+    <div className={`component-name component-name--${variant} component-name--${size} ${className}`}>
+      {/* Component content */}
+    </div>
+  );
+};
+
+export default ComponentName;
+```
+
+## Styling Integration
+- Use BEM methodology for CSS classes
+- Implement conditional styling based on props
+- Use semantic color variables from settings
+- Follow responsive design patterns
+
+## Props Interface
+- Always define TypeScript interfaces
+- Use descriptive prop names
+- Provide default values where appropriate
+- Use union types for variants and sizes
+
+## Export Pattern
+- Use named exports for components
+- Include default export for convenience
+- Export types and interfaces when needed
+- Use index.ts for clean imports
+
+- Export types and interfaces when needed
+- Use index.ts for clean imports

@@ -1,0 +1,140 @@
+---
+alwaysApply: true
+---
+
+
+# CSS Architecture Rules
+
+## ITCSS Layer Structure
+Reference [main.scss](mdc:src/frontend/src/css/main.scss) for import order
+
+### Layer 1: Settings
+- Global variables and configuration
+- Color system, typography, spacing
+- No actual CSS output
+
+### Layer 2: Tools
+- Mixins, functions, and utilities
+- No actual CSS output
+
+### Layer 3: Generic
+- Reset and base styles
+- Normalize.css, box-sizing
+
+### Layer 4: Elements
+- HTML element styles
+- Typography, forms, buttons
+
+### Layer 5: Objects
+- Layout and structural styles
+- Grid systems, containers
+
+### Layer 6: Components
+- UI component styles
+- Buttons, cards, modals
+
+### Layer 7: Utilities
+- Helper classes
+- Spacing, visibility, alignment
+
+## File Naming Convention
+- Use underscore prefix: `_settings.scss`, `_buttons.scss`
+- Group related styles: `_header.scss`, `_navigation.scss`
+- Use semantic names: `_toast.scss`, `_modal.scss`
+
+## Semantic Color Usage
+Reference [_settings.scss](mdc:src/frontend/src/css/settings/_settings.scss)
+
+### Primary Colors
+```scss
+color: var(--color-primary-text);
+background: var(--color-surface);
+border: 1px solid var(--color-border);
+```
+
+### Status Colors
+```scss
+&.success { color: var(--color-success); }
+&.error { color: var(--color-error); }
+&.warning { color: var(--color-warning); }
+&.info { color: var(--color-info); }
+```
+
+### Dark Theme
+```scss
+[data-theme="dark"] {
+  --color-surface: #1a1a1a;
+  --color-primary-text: #e2e8f0;
+}
+```
+
+}
+```
+
+# CSS Architecture Rules
+
+## ITCSS Layer Structure
+Reference [main.scss](mdc:src/frontend/src/css/main.scss) for import order
+
+### Layer 1: Settings
+- Global variables and configuration
+- Color system, typography, spacing
+- No actual CSS output
+
+### Layer 2: Tools
+- Mixins, functions, and utilities
+- No actual CSS output
+
+### Layer 3: Generic
+- Reset and base styles
+- Normalize.css, box-sizing
+
+### Layer 4: Elements
+- HTML element styles
+- Typography, forms, buttons
+
+### Layer 5: Objects
+- Layout and structural styles
+- Grid systems, containers
+
+### Layer 6: Components
+- UI component styles
+- Buttons, cards, modals
+
+### Layer 7: Utilities
+- Helper classes
+- Spacing, visibility, alignment
+
+## File Naming Convention
+- Use underscore prefix: `_settings.scss`, `_buttons.scss`
+- Group related styles: `_header.scss`, `_navigation.scss`
+- Use semantic names: `_toast.scss`, `_modal.scss`
+
+## Semantic Color Usage
+Reference [_settings.scss](mdc:src/frontend/src/css/settings/_settings.scss)
+
+### Primary Colors
+```scss
+color: var(--color-primary-text);
+background: var(--color-surface);
+border: 1px solid var(--color-border);
+```
+
+### Status Colors
+```scss
+&.success { color: var(--color-success); }
+&.error { color: var(--color-error); }
+&.warning { color: var(--color-warning); }
+&.info { color: var(--color-info); }
+```
+
+### Dark Theme
+```scss
+[data-theme="dark"] {
+  --color-surface: #1a1a1a;
+  --color-primary-text: #e2e8f0;
+}
+```
+
+}
+```

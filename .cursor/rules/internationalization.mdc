@@ -1,0 +1,92 @@
+---
+alwaysApply: true
+---
+
+
+# Internationalization Rules
+
+## Translation Structure
+Reference [i18n.ts](mdc:src/frontend/src/i18n.ts) for namespace configuration
+
+### Namespace Organization
+- `common`: Shared UI elements and general text
+- `auth`: Authentication related text
+- `dashboard`: Dashboard specific content
+- `marketplace`: Marketplace features
+- `settings`: User settings and preferences
+
+### Translation Keys
+- Use semantic, descriptive keys: `sign_in`, `redirecting_to_login`
+- Avoid generic keys: `button_text`, `message`
+- Group related keys: `sidebar.explore`, `sidebar.collections`
+- Use consistent naming: camelCase for keys
+
+### Implementation
+```typescript
+// Correct usage
+const { t } = useTranslation("common");
+t("sign_in") // "Masuk" / "Sign In"
+
+// Add to both locale files
+// src/frontend/src/locales/id/common.json
+// src/frontend/src/locales/en/common.json
+```
+
+### Locale Files Structure
+- Maintain identical key structure across languages
+- Use interpolation for dynamic content: `{{username}}`
+- Keep translations concise and natural
+- Test both languages for consistency
+
+### Component Integration
+- Always use `useTranslation` hook
+- Provide fallback for missing translations
+- Use proper namespace for component context
+- Implement language switching functionality
+
+- Use proper namespace for component context
+- Implement language switching functionality
+
+# Internationalization Rules
+
+## Translation Structure
+Reference [i18n.ts](mdc:src/frontend/src/i18n.ts) for namespace configuration
+
+### Namespace Organization
+- `common`: Shared UI elements and general text
+- `auth`: Authentication related text
+- `dashboard`: Dashboard specific content
+- `marketplace`: Marketplace features
+- `settings`: User settings and preferences
+
+### Translation Keys
+- Use semantic, descriptive keys: `sign_in`, `redirecting_to_login`
+- Avoid generic keys: `button_text`, `message`
+- Group related keys: `sidebar.explore`, `sidebar.collections`
+- Use consistent naming: camelCase for keys
+
+### Implementation
+```typescript
+// Correct usage
+const { t } = useTranslation("common");
+t("sign_in") // "Masuk" / "Sign In"
+
+// Add to both locale files
+// src/frontend/src/locales/id/common.json
+// src/frontend/src/locales/en/common.json
+```
+
+### Locale Files Structure
+- Maintain identical key structure across languages
+- Use interpolation for dynamic content: `{{username}}`
+- Keep translations concise and natural
+- Test both languages for consistency
+
+### Component Integration
+- Always use `useTranslation` hook
+- Provide fallback for missing translations
+- Use proper namespace for component context
+- Implement language switching functionality
+
+- Use proper namespace for component context
+- Implement language switching functionality

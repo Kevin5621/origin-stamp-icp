@@ -1,0 +1,107 @@
+---
+alwaysApply: true
+---
+# Comment Guidelines
+
+## Avoid Generic AI-like Comments
+❌ **Don't use these:**
+- `/* Padding untuk konsistensi dengan header */`
+- `/* Lebih kecil lagi untuk small mobile */`
+- `/* Memberikan space untuk header */`
+- `/* Space untuk notification button */`
+- `/* Dark theme adjustments */`
+- `/* Mobile devices */`
+- `/* Sign In Button Variants */`
+- `/* Animation for smooth transitions */`
+- `/* Ensure proper spacing */`
+- `/* Handle responsive design */`
+
+## Use Natural Professional Comments
+✅ **Use these instead:**
+
+### Complex Function Explanations
+```scss
+/* Conditional header layout based on authentication status */
+/* Toast container with slide-in animation from right */
+/* Button with loading state and spinner animation */
+```
+
+### Business Logic Explanations
+```scss
+/* Authenticated users: notification + profile */
+/* Unauthenticated users: language + theme + sign in */
+/* Responsive breakpoints for mobile optimization */
+```
+
+### Technical Implementation
+```scss
+/* Z-index stacking for modal overlay */
+/* CSS Grid layout for dashboard cards */
+/* Flexbox centering for button alignment */
+```
+
+### Component Architecture
+```scss
+/* Main navigation wrapper */
+/* Form validation error states */
+/* Loading skeleton animation */
+```
+
+## Guidelines
+- Only comment when explaining complex logic or important architectural decisions
+- Use natural, developer-like language
+- Avoid obvious or redundant comments
+- Focus on "why" not "what" when commenting
+- Keep comments concise and meaningful
+# Comment Guidelines
+
+## Avoid Generic AI-like Comments
+❌ **Don't use these:**
+- `/* Padding untuk konsistensi dengan header */`
+- `/* Lebih kecil lagi untuk small mobile */`
+- `/* Memberikan space untuk header */`
+- `/* Space untuk notification button */`
+- `/* Dark theme adjustments */`
+- `/* Mobile devices */`
+- `/* Sign In Button Variants */`
+- `/* Animation for smooth transitions */`
+- `/* Ensure proper spacing */`
+- `/* Handle responsive design */`
+
+## Use Natural Professional Comments
+✅ **Use these instead:**
+
+### Complex Function Explanations
+```scss
+/* Conditional header layout based on authentication status */
+/* Toast container with slide-in animation from right */
+/* Button with loading state and spinner animation */
+```
+
+### Business Logic Explanations
+```scss
+/* Authenticated users: notification + profile */
+/* Unauthenticated users: language + theme + sign in */
+/* Responsive breakpoints for mobile optimization */
+```
+
+### Technical Implementation
+```scss
+/* Z-index stacking for modal overlay */
+/* CSS Grid layout for dashboard cards */
+/* Flexbox centering for button alignment */
+```
+
+### Component Architecture
+```scss
+/* Main navigation wrapper */
+/* Form validation error states */
+/* Loading skeleton animation */
+```
+
+## Guidelines
+- Only comment when explaining complex logic or important architectural decisions
+- Use natural, developer-like language
+- Avoid obvious or redundant comments
+- Focus on "why" not "what" when commenting
+- Keep comments concise and meaningful

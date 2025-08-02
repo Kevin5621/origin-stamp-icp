@@ -1,0 +1,108 @@
+---
+alwaysApply: true
+---
+
+
+# Semantic Colors & Styling Rules
+
+## Color System
+Reference [_settings.scss](mdc:src/frontend/src/css/settings/_settings.scss) for all color variables
+
+### Primary Colors
+- `--color-primary-text`: Main text color
+- `--color-primary-bg`: Main background color
+- `--color-surface`: Component surface color
+- `--color-on-surface`: Text on surface color
+
+### Status Colors
+- `--color-success`: Success states and confirmations
+- `--color-error`: Error states and warnings
+- `--color-warning`: Warning states
+- `--color-info`: Information states
+
+### Interactive Colors
+- `--color-accent`: Primary action color
+- `--color-hover-overlay`: Hover state overlay
+- `--color-border`: Border and divider colors
+
+## CSS Architecture
+Reference [main.scss](mdc:src/frontend/src/css/main.scss) for import structure
+
+### ITCSS Layers
+1. Settings: Variables and configuration
+2. Tools: Mixins and functions
+3. Generic: Reset and base styles
+4. Elements: HTML element styles
+5. Objects: Layout and structural styles
+6. Components: UI component styles
+7. Utilities: Helper classes
+
+### Responsive Design
+- Mobile: `@media (max-width: 480px)`
+- Tablet: `@media (max-width: 768px)`
+- Desktop: `@media (max-width: 1200px)`
+
+### Spacing System
+- Use spacing variables: `var(--spacing-xs)` to `var(--spacing-3xl)`
+- Viewport-based spacing: `var(--spacing-vw-md)`, `var(--spacing-vh-lg)`
+
+## Component Styling
+- Use semantic class names: `.btn-primary`, `.card-surface`
+- Implement dark theme with `[data-theme="dark"]` selector
+- Use CSS custom properties for dynamic theming
+- Follow BEM methodology for complex components
+
+- Use CSS custom properties for dynamic theming
+- Follow BEM methodology for complex components
+
+# Semantic Colors & Styling Rules
+
+## Color System
+Reference [_settings.scss](mdc:src/frontend/src/css/settings/_settings.scss) for all color variables
+
+### Primary Colors
+- `--color-primary-text`: Main text color
+- `--color-primary-bg`: Main background color
+- `--color-surface`: Component surface color
+- `--color-on-surface`: Text on surface color
+
+### Status Colors
+- `--color-success`: Success states and confirmations
+- `--color-error`: Error states and warnings
+- `--color-warning`: Warning states
+- `--color-info`: Information states
+
+### Interactive Colors
+- `--color-accent`: Primary action color
+- `--color-hover-overlay`: Hover state overlay
+- `--color-border`: Border and divider colors
+
+## CSS Architecture
+Reference [main.scss](mdc:src/frontend/src/css/main.scss) for import structure
+
+### ITCSS Layers
+1. Settings: Variables and configuration
+2. Tools: Mixins and functions
+3. Generic: Reset and base styles
+4. Elements: HTML element styles
+5. Objects: Layout and structural styles
+6. Components: UI component styles
+7. Utilities: Helper classes
+
+### Responsive Design
+- Mobile: `@media (max-width: 480px)`
+- Tablet: `@media (max-width: 768px)`
+- Desktop: `@media (max-width: 1200px)`
+
+### Spacing System
+- Use spacing variables: `var(--spacing-xs)` to `var(--spacing-3xl)`
+- Viewport-based spacing: `var(--spacing-vw-md)`, `var(--spacing-vh-lg)`
+
+## Component Styling
+- Use semantic class names: `.btn-primary`, `.card-surface`
+- Implement dark theme with `[data-theme="dark"]` selector
+- Use CSS custom properties for dynamic theming
+- Follow BEM methodology for complex components
+
+- Use CSS custom properties for dynamic theming
+- Follow BEM methodology for complex components

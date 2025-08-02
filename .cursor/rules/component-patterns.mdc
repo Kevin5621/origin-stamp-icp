@@ -1,0 +1,122 @@
+---
+alwaysApply: true
+---
+
+
+# Component Patterns & Best Practices
+
+## Component Structure
+```typescript
+// Standard component structure
+interface ComponentProps {
+  className?: string;
+  variant?: "primary" | "secondary";
+  size?: "small" | "medium" | "large";
+}
+
+export const Component: React.FC<ComponentProps> = ({
+  className = "",
+  variant = "primary",
+  size = "medium",
+}) => {
+  const { t } = useTranslation("common");
+  
+  return (
+    <div className={`component component--${variant} component--${size} ${className}`}>
+      {/* Component content */}
+    </div>
+  );
+};
+```
+
+## Styling Integration
+- Use semantic CSS classes with BEM methodology
+- Implement conditional styling based on props
+- Use CSS custom properties for theming
+- Follow responsive design patterns
+
+## State Management
+- Use React hooks for local state
+- Implement proper loading and error states
+- Use context for global state (AuthContext, ToastContext)
+- Handle async operations with proper error boundaries
+
+## Accessibility
+- Include proper ARIA labels and roles
+- Implement keyboard navigation
+- Use semantic HTML elements
+- Provide focus management for modals and dropdowns
+
+## Performance
+- Use React.memo for expensive components
+- Implement proper dependency arrays in useEffect
+- Use lazy loading for route-based code splitting
+- Optimize re-renders with useCallback and useMemo
+
+## Testing
+- Write unit tests for component logic
+- Test user interactions and state changes
+- Mock external dependencies
+- Test accessibility features
+
+- Mock external dependencies
+- Test accessibility features
+
+# Component Patterns & Best Practices
+
+## Component Structure
+```typescript
+// Standard component structure
+interface ComponentProps {
+  className?: string;
+  variant?: "primary" | "secondary";
+  size?: "small" | "medium" | "large";
+}
+
+export const Component: React.FC<ComponentProps> = ({
+  className = "",
+  variant = "primary",
+  size = "medium",
+}) => {
+  const { t } = useTranslation("common");
+  
+  return (
+    <div className={`component component--${variant} component--${size} ${className}`}>
+      {/* Component content */}
+    </div>
+  );
+};
+```
+
+## Styling Integration
+- Use semantic CSS classes with BEM methodology
+- Implement conditional styling based on props
+- Use CSS custom properties for theming
+- Follow responsive design patterns
+
+## State Management
+- Use React hooks for local state
+- Implement proper loading and error states
+- Use context for global state (AuthContext, ToastContext)
+- Handle async operations with proper error boundaries
+
+## Accessibility
+- Include proper ARIA labels and roles
+- Implement keyboard navigation
+- Use semantic HTML elements
+- Provide focus management for modals and dropdowns
+
+## Performance
+- Use React.memo for expensive components
+- Implement proper dependency arrays in useEffect
+- Use lazy loading for route-based code splitting
+- Optimize re-renders with useCallback and useMemo
+
+## Testing
+- Write unit tests for component logic
+- Test user interactions and state changes
+- Mock external dependencies
+- Test accessibility features
+
+- Mock external dependencies
+- Test accessibility features

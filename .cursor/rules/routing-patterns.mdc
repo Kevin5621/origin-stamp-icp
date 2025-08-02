@@ -1,0 +1,53 @@
+---
+alwaysApply: true
+---
+
+# Routing Patterns & Navigation
+
+## Route Structure
+Reference [App.tsx](mdc:src/frontend/src/App.tsx) for main routing configuration
+
+### Public Routes
+- `/` - Landing page
+- `/login` - Authentication page
+- `/marketplace` - Public marketplace
+- `/how-it-works` - Information page
+
+### Protected Routes
+- `/dashboard` - Main dashboard
+- `/session` - Art session management
+- `/certificates` - Certificate management
+- `/analytics` - Analytics and insights
+- `/settings` - User settings
+
+### Route Organization
+```typescript
+// Public routes - accessible to everyone
+<Route path="/" element={<LandingPage />} />
+<Route path="/login" element={<LoginPage />} />
+
+// Protected routes - require authentication
+<Route path="/dashboard" element={
+  <ProtectedRoute>
+    <DashboardPage />
+  </ProtectedRoute>
+} />
+```
+
+### Navigation Patterns
+- Use `useNavigate` hook for programmatic navigation
+- Implement proper loading states during navigation
+- Handle authentication redirects
+- Use breadcrumbs for complex navigation
+
+### Route Guards
+- `ProtectedRoute` component for authentication
+- Role-based access control when needed
+- Redirect unauthorized users
+- Preserve intended destination after login
+
+### URL Structure
+- Use semantic URLs: `/dashboard/analytics`
+- Implement nested routes for complex features
+- Use query parameters for filtering and sorting
+- Maintain clean URL structure
