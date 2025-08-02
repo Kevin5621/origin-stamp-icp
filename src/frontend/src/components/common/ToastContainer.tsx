@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Toast } from "../../hooks/useToast";
 
@@ -11,6 +11,14 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: string) => void }> = ({
   toast,
   onRemove,
 }) => {
+  const [isExiting, setIsExiting] = useState(false);
+
+  const handleRemove = () => {
+    setIsExiting(true);
+    setTimeout(() => {
+      onRemove(toast.id);
+    }, 300); // Match animation duration
+  };
   const { t } = useTranslation("common");
 
   const getToastIcon = (type: string) => {
@@ -68,7 +76,7 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: string) => void }> = ({
 
   return (
     <div
-      className="toast-item animate-slide-in"
+      className={`toast-item ${isExiting ? "animate-slide-out" : "animate-slide-in"}`}
       style={{ borderLeftColor: getToastColor(toast.type) }}
     >
       <div className="toast-icon" style={{ color: getToastColor(toast.type) }}>
@@ -79,7 +87,7 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: string) => void }> = ({
       </div>
       <button
         className="toast-close"
-        onClick={() => onRemove(toast.id)}
+        onClick={handleRemove}
         aria-label={t("close_toast")}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">

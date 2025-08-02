@@ -79,6 +79,8 @@
   "error_timeout": "Request took too long. Please try again.",
   "error_unknown": "An unknown error occurred. Please try again.",
   "error_critical": "Critical Error",
+  "sign_in": "Sign In",
+  "redirecting_to_login": "Redirecting to login page...",
   "sidebar": {
     "explore": "Explore",
     "collections": "Collections",

@@ -10,6 +10,7 @@ export * from "./common/FloatingHeader";
 export * from "./ui/ThemeToggle";
 export * from "./login/Login";
 export * from "./login/LoginForm";
+export * from "./login/SignInButton";
 export * from "./profile";
 export * from "./layout/Sidebar";
 export * from "./layout/AppLayout";
