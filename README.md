@@ -125,9 +125,6 @@ npm run deploy:backend
 
 # Deploy frontend
 npm run deploy:frontend
-
-# Deploy dependencies (if any)
-npm run deploy:deps
 ```
 
 ### 4. Development Workflow
