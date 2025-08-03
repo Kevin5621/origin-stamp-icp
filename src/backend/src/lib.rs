@@ -385,7 +385,7 @@ pub struct CollectionMetadata {
 // NFT storage
 thread_local! {
     static TOKENS: RefCell<HashMap<u64, Token>> = RefCell::new(HashMap::new());
-    static TOKEN_COUNTER: RefCell<u64> = RefCell::new(1);
+    static TOKEN_COUNTER: RefCell<u64> = const { RefCell::new(1) };
     static COLLECTION_METADATA: RefCell<CollectionMetadata> = RefCell::new(CollectionMetadata {
         name: "Origin Stamp Art NFTs".to_string(),
         description: Some("NFTs representing physical art pieces authenticated through Origin Stamp".to_string()),

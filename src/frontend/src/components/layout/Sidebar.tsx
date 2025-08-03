@@ -130,8 +130,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const getUserAvatar = () => {
-    if (!isAuthenticated) return "/api/placeholder/40/40";
-    return user?.picture || "/api/placeholder/40/40";
+    if (!isAuthenticated)
+      return "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png";
+    return (
+      user?.picture ||
+      "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png"
+    );
   };
 
   return (

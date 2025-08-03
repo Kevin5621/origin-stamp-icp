@@ -77,7 +77,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "pudgy-penguins",
       name: "Pudgy Penguins",
-      image: "https://placehold.co/40x40",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "15.96",
       currency: "ICP",
       change: 1.3,
@@ -86,7 +86,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "cryptopunks",
       name: "CryptoPunks",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=CP",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "50.99",
       currency: "ICP",
       change: 0,
@@ -95,7 +95,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "bored-ape-yacht-club",
       name: "Bored Ape Yacht Club",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=BAYC",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "12.67",
       currency: "ICP",
       change: 4.6,
@@ -104,7 +104,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "milady-maker",
       name: "Milady Maker",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=MM",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "3.20",
       currency: "ICP",
       change: 5.8,
@@ -113,7 +113,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "moonbirds",
       name: "Moonbirds",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=MB",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.92",
       currency: "ICP",
       change: 17.1,
@@ -122,7 +122,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "rektguy",
       name: "rektguy",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=RK",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.35",
       currency: "ICP",
       change: 18.5,
@@ -131,7 +131,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "lil-pudgys",
       name: "Lil Pudgys",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=LP",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.73",
       currency: "ICP",
       change: 4.3,
@@ -140,7 +140,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "dx-terminal",
       name: "DX Terminal",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=DX",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "< 0.01",
       currency: "ICP",
       change: 0.9,
@@ -149,7 +149,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "mutant-ape-yacht-club",
       name: "Mutant Ape Yacht Club",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=MAYC",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.89",
       currency: "ICP",
       change: 4.6,
@@ -158,7 +158,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "azuki",
       name: "Azuki",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=AZ",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "2.08",
       currency: "ICP",
       change: 6.2,
@@ -167,7 +167,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "fidenza",
       name: "Fidenza by Tyler Hobbs",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=FD",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "34.89",
       currency: "ICP",
       change: 2.6,
@@ -176,7 +176,7 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "doodles",
       name: "Doodles",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=DD",
+      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.04",
       currency: "ICP",
       change: 6.3,
