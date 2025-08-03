@@ -52,6 +52,7 @@ const SessionRecordPage: React.FC = () => {
   const [stepDescription, setStepDescription] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isGeneratingNFT, setIsGeneratingNFT] = useState(false);
+  const [uploadInProgress, setUploadInProgress] = useState(false);
 
   // Load session data (dummy data)
   useEffect(() => {
@@ -93,6 +94,22 @@ const SessionRecordPage: React.FC = () => {
   }, [sessionId]);
 
   const handleFileSelect = (files: FileList) => {
+    // Check for duplicates with existing photos
+    if (session) {
+      const existingFilenames = session.photos.map((photo) => photo.filename);
+      const newFiles = Array.from(files);
+      const duplicates = newFiles.filter((file) =>
+        existingFilenames.includes(file.name),
+      );
+
+      if (duplicates.length > 0) {
+        alert(
+          `File berikut sudah ada: ${duplicates.map((f) => f.name).join(", ")}`,
+        );
+        return;
+      }
+    }
+
     setSelectedFiles(files);
   };
 
@@ -112,13 +129,30 @@ const SessionRecordPage: React.FC = () => {
     setDragActive(false);
 
     if (e.dataTransfer.files?.[0]) {
+      // Check for duplicates with existing photos
+      if (session) {
+        const existingFilenames = session.photos.map((photo) => photo.filename);
+        const newFiles = Array.from(e.dataTransfer.files);
+        const duplicates = newFiles.filter((file) =>
+          existingFilenames.includes(file.name),
+        );
+
+        if (duplicates.length > 0) {
+          alert(
+            `File berikut sudah ada: ${duplicates.map((f) => f.name).join(", ")}`,
+          );
+          return;
+        }
+      }
+
       handleFileSelect(e.dataTransfer.files);
     }
   };
 
   const handleUploadToS3 = async () => {
-    if (!selectedFiles || !session) return;
+    if (!selectedFiles || !session || uploadInProgress) return;
 
+    setUploadInProgress(true);
     setIsUploading(true);
     setUploadProgress(0);
 
@@ -128,34 +162,47 @@ const SessionRecordPage: React.FC = () => {
         if (prev >= 100) {
           clearInterval(interval);
 
-          // Add photos to session with S3 keys
+          // Add photos to session with S3 keys - menggunakan timestamp yang unique
           const newPhotos: PhotoLog[] = Array.from(selectedFiles).map(
             (file, index) => ({
-              id: Date.now().toString() + index,
+              id: `photo-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
               filename: file.name,
               timestamp: new Date(),
               description:
-                stepDescription || `Step ${session.currentStep + index}`,
+                stepDescription || `Step ${session.currentStep + index + 1}`,
               fileSize: file.size,
               url: URL.createObjectURL(file),
-              step: session.currentStep + index,
-              s3Key: `sessions/${session.id}/photos/${Date.now()}-${file.name}`,
+              step: session.currentStep + index + 1,
+              s3Key: `sessions/${session.id}/photos/${Date.now()}-${index}-${file.name}`,
             }),
           );
 
-          setSession((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  photos: [...prev.photos, ...newPhotos],
-                  currentStep: prev.currentStep + selectedFiles.length,
-                }
-              : null,
-          );
+          // Pastikan tidak ada duplicate dengan mengecek filename dan timestamp
+          setSession((prev) => {
+            if (!prev) return null;
+
+            // Filter out any potential duplicates based on filename and recent timestamp
+            const existingPhotos = prev.photos.filter((photo) => {
+              const isRecent = Date.now() - photo.timestamp.getTime() < 5000; // 5 seconds
+              return (
+                !isRecent ||
+                !newPhotos.some(
+                  (newPhoto) => newPhoto.filename === photo.filename,
+                )
+              );
+            });
+
+            return {
+              ...prev,
+              photos: [...existingPhotos, ...newPhotos],
+              currentStep: prev.currentStep + selectedFiles.length,
+            };
+          });
 
           setSelectedFiles(null);
           setStepDescription("");
           setIsUploading(false);
+          setUploadInProgress(false);
           return 0;
         }
         return prev + 10;
@@ -349,14 +396,14 @@ const SessionRecordPage: React.FC = () => {
                     <button
                       className="btn btn--secondary"
                       onClick={() => setSelectedFiles(null)}
-                      disabled={isUploading}
+                      disabled={isUploading || uploadInProgress}
                     >
                       Cancel
                     </button>
                     <button
                       className="btn btn--primary"
                       onClick={handleUploadToS3}
-                      disabled={isUploading}
+                      disabled={isUploading || uploadInProgress}
                     >
                       <Plus size={16} />
                       {isUploading ? "Uploading to S3..." : "Upload to S3"}
@@ -370,7 +417,7 @@ const SessionRecordPage: React.FC = () => {
           {/* Photo Log */}
           <div className="session-record__log">
             <div className="log-header">
-              <h2>S3 Photo Log</h2>
+              <h2>Photo Log</h2>
               <div className="log-stats">
                 <span>{session.photos.length} photos</span>
                 <span>•</span>
