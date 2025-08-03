@@ -85,67 +85,31 @@
     }
   }
 
-  // Recording Status
+  // Recording Status - Compact and Clean
   &__status {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-md) var(--spacing-lg);
-    background: linear-gradient(135deg, var(--color-success) 0%, #10b981 100%);
-    color: white;
-    border-radius: var(--border-radius-xl);
-    margin-bottom: var(--spacing-lg);
-    box-shadow: var(--shadow-lg);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 100%
-      );
-      animation: shimmer 3s infinite;
-    }
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-xl);
-      transition: all 0.3s ease;
-    }
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: var(--spacing-sm);
-      text-align: center;
-      padding: var(--spacing-sm) var(--spacing-md);
-    }
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--spacing-xl);
 
     .recording-indicator {
       display: flex;
       align-items: center;
       gap: var(--spacing-sm);
-      font-weight: 600;
       font-size: var(--font-size-sm);
-      position: relative;
-      z-index: 1;
+      font-weight: 500;
+      color: var(--color-success);
 
       .recording-dot {
         width: 8px;
         height: 8px;
-        background: white;
+        background: var(--color-success);
         border-radius: 50%;
         animation: pulse 2s infinite;
-        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
       }
     }
 
@@ -153,53 +117,11 @@
       display: flex;
       align-items: center;
       gap: var(--spacing-sm);
-      font-size: var(--font-size-sm);
-      opacity: 0.95;
-      font-weight: 500;
-      position: relative;
-      z-index: 1;
 
-      .step-progress {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-xs);
-        background: rgba(255, 255, 255, 0.2);
-        padding: var(--spacing-xs) var(--spacing-sm);
-        border-radius: var(--border-radius-md);
-        backdrop-filter: blur(10px);
-      }
-
-      .progress-bar {
-        width: 60px;
-        height: 3px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: var(--border-radius-sm);
-        overflow: hidden;
-        position: relative;
-
-        .progress-fill {
-          height: 100%;
-          background: white;
-          border-radius: var(--border-radius-sm);
-          transition: width 0.3s ease;
-          position: relative;
-
-          &::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-              90deg,
-              transparent 0%,
-              rgba(255, 255, 255, 0.5) 50%,
-              transparent 100%
-            );
-            animation: shimmer 2s infinite;
-          }
-        }
+      .photo-count {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        font-weight: 500;
       }
     }
   }
@@ -298,7 +220,6 @@
     .selected-files {
       margin-top: var(--spacing-lg);
       padding-top: var(--spacing-lg);
-      border-top: 2px solid var(--color-border);
 
       h3 {
         font-size: var(--font-size-md);
@@ -733,7 +654,6 @@
     justify-content: flex-end;
     gap: var(--spacing-md);
     padding-top: var(--spacing-lg);
-    border-top: 2px solid var(--color-border);
 
     @media (max-width: 768px) {
       flex-direction: column;
@@ -763,15 +683,6 @@
   }
   50% {
     opacity: 0.5;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
   }
 }
 
@@ -845,11 +756,5 @@
       background: var(--color-accent);
       color: white;
     }
-  }
-}
-
-// Light theme adjustments
-[data-theme="light"] {
-  .session-record {
   }
 }
