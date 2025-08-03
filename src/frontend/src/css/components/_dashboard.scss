@@ -269,6 +269,12 @@
     font-size: var(--font-size-xs);
     color: var(--color-success);
     font-weight: 700;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
   }
 
   // Main Content - New Layout
@@ -487,6 +493,13 @@
     min-width: 240px;
     box-shadow: var(--shadow-sm);
 
+    svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--color-text-secondary);
+    }
+
     @media (max-width: 768px) {
       min-width: auto;
       flex: 1;
@@ -526,6 +539,12 @@
     transition: all 0.3s ease;
     color: var(--color-text-secondary);
     box-shadow: var(--shadow-sm);
+
+    svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
 
     &:hover {
       border-color: var(--color-accent);
@@ -660,6 +679,12 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
+
+    svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
   }
 
   &__project-format {
@@ -673,6 +698,12 @@
     font-size: var(--font-size-xs);
     color: var(--color-accent);
     font-weight: 600;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
   }
 
   &__empty-state {
