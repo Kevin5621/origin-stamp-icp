@@ -1,125 +1,99 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Camera,
   Palette,
-  Edit3,
-  Trash2,
-  Clock,
-  CheckCircle,
-  Save,
   Play,
   FileText,
+  Clock,
+  CheckCircle,
+  Plus,
+  FolderOpen,
 } from "lucide-react";
 
 // Types for session management
-interface SessionDraft {
+interface SessionData {
   id: string;
   title: string;
   description: string;
   artType: "physical" | "digital";
   createdAt: Date;
   updatedAt: Date;
-  status: "draft" | "active" | "completed";
+  status: "active" | "completed";
   progress: number;
-  photoCount?: number;
+  photoCount: number;
 }
 
 /**
- * Session Page - Redesigned with draft management
+ * Session Page - Simplified untuk menampilkan session yang bisa dilanjutkan
  */
 const SessionPage: React.FC = () => {
   const navigate = useNavigate();
-  const [drafts, setDrafts] = useState<SessionDraft[]>([]);
-  const [selectedArtType, setSelectedArtType] = useState<
-    "physical" | "digital" | null
-  >(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-  });
+  const location = useLocation();
+  const [sessions, setSessions] = useState<SessionData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load draft sessions (dummy data)
+  // Load active sessions (dummy data)
   useEffect(() => {
-    const mockDrafts: SessionDraft[] = [
-      {
-        id: "1",
-        title: "Landscape Painting Study",
-        description:
-          "Watercolor painting of mountain landscape with step-by-step documentation",
-        artType: "physical",
-        createdAt: new Date(2024, 7, 1),
-        updatedAt: new Date(2024, 7, 2),
-        status: "draft",
-        progress: 0,
-        photoCount: 0,
-      },
-      {
-        id: "2",
-        title: "Digital Portrait Series",
-        description:
-          "Character design exploration using Photoshop with automated logging",
-        artType: "digital",
-        createdAt: new Date(2024, 7, 3),
-        updatedAt: new Date(2024, 7, 3),
-        status: "draft",
-        progress: 0,
-      },
-      {
-        id: "3",
-        title: "Sculpture Progress",
-        description:
-          "Clay sculpture documentation from initial sketches to final form",
-        artType: "physical",
-        createdAt: new Date(2024, 6, 28),
-        updatedAt: new Date(2024, 7, 1),
-        status: "active",
-        progress: 35,
-        photoCount: 12,
-      },
-    ];
-    setDrafts(mockDrafts);
+    // Simulate API call delay
+    setTimeout(() => {
+      // Mock data - bisa diubah untuk testing empty state
+      // Set ke [] untuk testing empty state
+      const mockSessions: SessionData[] = [
+        {
+          id: "1",
+          title: "Landscape Painting Study",
+          description:
+            "Watercolor painting of mountain landscape with step-by-step documentation",
+          artType: "physical",
+          createdAt: new Date(2024, 7, 1),
+          updatedAt: new Date(2024, 7, 2),
+          status: "active",
+          progress: 35,
+          photoCount: 12,
+        },
+        {
+          id: "2",
+          title: "Digital Portrait Series",
+          description:
+            "Character design exploration using Photoshop with automated logging",
+          artType: "digital",
+          createdAt: new Date(2024, 7, 3),
+          updatedAt: new Date(2024, 7, 3),
+          status: "active",
+          progress: 15,
+          photoCount: 8,
+        },
+        {
+          id: "3",
+          title: "Sculpture Progress",
+          description:
+            "Clay sculpture documentation from initial sketches to final form",
+          artType: "physical",
+          createdAt: new Date(2024, 6, 28),
+          updatedAt: new Date(2024, 7, 1),
+          status: "completed",
+          progress: 100,
+          photoCount: 25,
+        },
+      ];
+
+      // Untuk testing empty state, ganti dengan: setSessions([]);
+      setSessions(mockSessions);
+      setIsLoading(false);
+    }, 800);
   }, []);
 
-  const handleArtTypeSelect = (type: "physical" | "digital") => {
-    setSelectedArtType(type);
+  const handleContinueSession = (sessionId: string) => {
+    navigate(`/sessions/${sessionId}`);
   };
 
-  const handleSaveDraft = () => {
-    if (!formData.title.trim() || !selectedArtType) return;
-
-    const newDraft: SessionDraft = {
-      id: Date.now().toString(),
-      title: formData.title,
-      description: formData.description,
-      artType: selectedArtType,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      status: "draft",
-      progress: 0,
-      photoCount: selectedArtType === "physical" ? 0 : undefined,
-    };
-
-    setDrafts([newDraft, ...drafts]);
-    setFormData({ title: "", description: "" });
-    setSelectedArtType(null);
+  const handleViewCertificate = (sessionId: string) => {
+    navigate(`/certificates/${sessionId}`);
   };
 
-  const handleStartSession = (draft: SessionDraft) => {
-    // Update draft status to active
-    setDrafts(
-      drafts.map((d) =>
-        d.id === draft.id
-          ? { ...d, status: "active" as const, updatedAt: new Date() }
-          : d,
-      ),
-    );
-    // Navigate to session recording interface
-    navigate(`/sessions/${draft.id}/record`);
-  };
-
-  const handleDeleteDraft = (id: string) => {
-    setDrafts(drafts.filter((d) => d.id !== id));
+  const handleCreateNewSession = () => {
+    navigate("/dashboard");
   };
 
   const formatDate = (date: Date) => {
@@ -130,9 +104,8 @@ const SessionPage: React.FC = () => {
     });
   };
 
-  const getStatusBadge = (status: SessionDraft["status"]) => {
+  const getStatusBadge = (status: SessionData["status"]) => {
     const statusClasses = {
-      draft: "session__status--draft",
       active: "session__status--active",
       completed: "session__status--completed",
     };
@@ -144,6 +117,17 @@ const SessionPage: React.FC = () => {
     );
   };
 
+  if (isLoading) {
+    return (
+      <div className="session">
+        <div className="session__loading">
+          <div className="loading-spinner" />
+          <p>Loading sessions...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="session">
       {/* Welcome Section */}
@@ -153,243 +137,122 @@ const SessionPage: React.FC = () => {
             <Camera size={32} />
           </div>
           <div className="session__welcome-text">
-            <h1>Session Management</h1>
-            <p>Create, manage, and track your verification sessions</p>
+            <h1>Active Sessions</h1>
+            <p>Continue your ongoing creative sessions and track progress</p>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="session__main-content">
-        {/* Create New Session */}
-        <div className="session__create-form">
-          <div className="session__form-header">
-            <h2>Create New Session</h2>
+        {/* Sessions Grid */}
+        <div className="session__sessions">
+          <div className="session__sessions-header">
+            <h2>Your Sessions</h2>
+            <button
+              className="btn btn--primary"
+              onClick={handleCreateNewSession}
+            >
+              <Plus size={16} />
+              New Session
+            </button>
           </div>
 
-          {/* Art Type Selection */}
-          {!selectedArtType ? (
-            <div className="session__art-type-selection">
-              <h3>Select Art Type</h3>
-              <div className="session__art-type-grid">
-                <button
-                  className="session__art-type-card"
-                  onClick={() => handleArtTypeSelect("physical")}
-                >
-                  <div className="session__art-type-icon">
-                    <Camera size={32} />
-                  </div>
-                  <h4>Physical Art</h4>
-                  <p>Upload photos of your physical artwork creation process</p>
-                  <div className="session__art-type-features">
-                    <span className="session__feature-tag">
-                      Step-by-step Photos
-                    </span>
-                    <span className="session__feature-tag">Manual Process</span>
-                  </div>
-                </button>
-
-                <button
-                  className="session__art-type-card"
-                  onClick={() => handleArtTypeSelect("digital")}
-                >
-                  <div className="session__art-type-icon">
-                    <Palette size={32} />
-                  </div>
-                  <h4>Digital Art</h4>
-                  <p>
-                    Use plugins to automatically record your digital creation
-                    process
-                  </p>
-                  <div className="session__art-type-features">
-                    <span className="session__feature-tag">
-                      Automatic Plugin
-                    </span>
-                    <span className="session__feature-tag">Real-time Log</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-          ) : (
-            /* Session Details Form */
-            <div className="session__session-form">
-              <div className="session__selected-type">
-                <div className="session__type-badge">
-                  {selectedArtType === "physical" ? (
-                    <Camera size={20} />
-                  ) : (
-                    <Palette size={20} />
-                  )}
-                  <span>
-                    {selectedArtType === "physical"
-                      ? "Physical Art"
-                      : "Digital Art"}
-                  </span>
-                </div>
-                <button
-                  className="btn btn--outline"
-                  onClick={() => setSelectedArtType(null)}
-                >
-                  Change Type
-                </button>
-              </div>
-
-              <div className="session__form-fields">
-                <div className="session__form-group">
-                  <label htmlFor="session-title">Session Title</label>
-                  <input
-                    id="session-title"
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
-                    placeholder="Enter session title..."
-                    className="session__form-input"
-                  />
-                </div>
-
-                <div className="session__form-group">
-                  <label htmlFor="session-description">Description</label>
-                  <textarea
-                    id="session-description"
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        description: e.target.value,
-                      })
-                    }
-                    placeholder="Describe your project..."
-                    className="session__form-textarea"
-                    rows={3}
-                  />
-                </div>
-              </div>
-
-              <div className="session__form-actions">
-                <button
-                  className="btn btn--secondary"
-                  onClick={() => setSelectedArtType(null)}
-                >
-                  Back
-                </button>
-                <button
-                  className="btn btn--primary"
-                  onClick={handleSaveDraft}
-                  disabled={!formData.title.trim()}
-                >
-                  <Save size={16} />
-                  Save as Draft
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Sessions Grid */}
-        <div className="session__drafts">
-          <h2>Your Sessions</h2>
-
-          {drafts.length === 0 ? (
+          {sessions.length === 0 ? (
             <div className="session__empty-state">
               <div className="session__empty-icon">
-                <FileText size={48} />
+                <FolderOpen size={64} />
               </div>
-              <h3>No Sessions Yet</h3>
+              <h3>No Active Sessions</h3>
               <p>
-                Create your first session above to start documenting your
-                creative process
+                You don't have any active sessions yet. Start documenting your
+                creative process by creating a new session.
               </p>
+              <div className="session__empty-actions">
+                <button
+                  className="btn btn--primary"
+                  onClick={handleCreateNewSession}
+                >
+                  <Plus size={16} />
+                  Create Your First Session
+                </button>
+                <button
+                  className="btn btn--secondary"
+                  onClick={() => navigate("/dashboard")}
+                >
+                  <FileText size={16} />
+                  Go to Dashboard
+                </button>
+              </div>
             </div>
           ) : (
-            <div className="session__drafts-grid">
-              {drafts.map((draft) => (
-                <div key={draft.id} className="session__draft-card">
-                  <div className="session__draft-header">
-                    <div className="session__draft-type">
-                      {draft.artType === "physical" ? (
+            <div className="session__sessions-grid">
+              {sessions.map((session) => (
+                <div key={session.id} className="session__session-card">
+                  <div className="session__session-header">
+                    <div className="session__session-type">
+                      {session.artType === "physical" ? (
                         <Camera size={20} />
                       ) : (
                         <Palette size={20} />
                       )}
                       <span>
-                        {draft.artType === "physical" ? "Physical" : "Digital"}
+                        {session.artType === "physical"
+                          ? "Physical"
+                          : "Digital"}
                       </span>
                     </div>
-                    {getStatusBadge(draft.status)}
+                    {getStatusBadge(session.status)}
                   </div>
 
-                  <div className="session__draft-content">
-                    <h3 className="session__draft-title">{draft.title}</h3>
-                    <p className="session__draft-description">
-                      {draft.description}
+                  <div className="session__session-content">
+                    <h3 className="session__session-title">{session.title}</h3>
+                    <p className="session__session-description">
+                      {session.description}
                     </p>
 
-                    <div className="session__draft-meta">
+                    <div className="session__session-meta">
                       <div className="session__meta-item">
                         <Clock size={14} />
-                        <span>Updated {formatDate(draft.updatedAt)}</span>
+                        <span>Updated {formatDate(session.updatedAt)}</span>
+                      </div>
+                      <div className="session__meta-item">
+                        <Camera size={14} />
+                        <span>{session.photoCount} photos</span>
                       </div>
                     </div>
 
-                    {draft.progress > 0 && (
-                      <div className="session__draft-progress">
+                    {session.progress > 0 && (
+                      <div className="session__session-progress">
                         <div className="session__progress-info">
                           <span>Progress</span>
-                          <span>{draft.progress}%</span>
+                          <span>{session.progress}%</span>
                         </div>
                         <div className="session__progress-bar">
                           <div
                             className="session__progress-fill"
-                            style={{ width: `${draft.progress}%` }}
+                            style={{ width: `${session.progress}%` }}
                           />
                         </div>
                       </div>
                     )}
                   </div>
 
-                  <div className="session__draft-actions">
-                    {draft.status === "draft" && (
-                      <>
-                        <button
-                          className="btn btn--primary"
-                          onClick={() => handleStartSession(draft)}
-                        >
-                          <Play size={16} />
-                          Start Session
-                        </button>
-                        <button
-                          className="session__action-btn session__action-btn--edit"
-                          onClick={() => {
-                            /* Edit draft */
-                          }}
-                        >
-                          <Edit3 size={16} />
-                        </button>
-                        <button
-                          className="session__action-btn session__action-btn--delete"
-                          onClick={() => handleDeleteDraft(draft.id)}
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </>
-                    )}
-
-                    {draft.status === "active" && (
+                  <div className="session__session-actions">
+                    {session.status === "active" && (
                       <button
                         className="btn btn--primary"
-                        onClick={() => navigate(`/sessions/${draft.id}/record`)}
+                        onClick={() => handleContinueSession(session.id)}
                       >
                         <Play size={16} />
                         Continue Session
                       </button>
                     )}
 
-                    {draft.status === "completed" && (
+                    {session.status === "completed" && (
                       <button
                         className="btn btn--secondary"
-                        onClick={() => navigate(`/certificates/${draft.id}`)}
+                        onClick={() => handleViewCertificate(session.id)}
                       >
                         <CheckCircle size={16} />
                         View Certificate

@@ -18,6 +18,7 @@ import HowItWorksPage from "./pages/how-it-works/HowItWorksPage";
 import LoginPage from "./pages/auth/LoginPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import SessionPage from "./pages/dashboard/SessionPage";
+import SessionRecordPage from "./pages/dashboard/SessionRecordPage";
 import FinalizationPage from "./pages/dashboard/FinalizationPage";
 import VerificationPage from "./pages/dashboard/VerificationPage";
 import CertificatesPage from "./pages/dashboard/CertificatesPage";
@@ -82,6 +83,14 @@ function MainContentWrapper() {
           element={
             <ProtectedRoute>
               <SessionPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sessions/:sessionId"
+          element={
+            <ProtectedRoute>
+              <SessionRecordPage />
             </ProtectedRoute>
           }
         />
@@ -155,6 +164,7 @@ function MainContentWrapper() {
           path="/marketplace/collection/:collectionId"
           element={<CollectionDetailPage />}
         />
+        {/* Fallback route - harus di akhir */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AppLayout>

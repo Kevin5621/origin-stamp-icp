@@ -30,7 +30,7 @@ export const protectedRoutes: RouteConfig[] = [
     },
   },
   {
-    path: "/sessions/:sessionId/record",
+    path: "/sessions/:sessionId",
     element: SessionRecordPage,
     title: "Session Recording",
     isProtected: true,
