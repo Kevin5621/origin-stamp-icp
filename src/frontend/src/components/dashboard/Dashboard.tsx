@@ -109,34 +109,30 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   if (isLoading) {
     return (
-      <div className="bg-surface mx-auto min-h-screen max-w-7xl p-6 pt-24">
-        <div className="flex min-h-96 flex-col items-center justify-center gap-4">
-          <div className="border-border border-t-accent h-10 w-10 animate-spin rounded-full border-3"></div>
-          <p className="text-text-secondary">{t("loading")}</p>
+      <div className="dashboard">
+        <div className="dashboard__loading">
+          <div className="loading-spinner"></div>
+          <p>{t("loading")}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-surface mx-auto min-h-screen max-w-7xl p-6 pt-24">
+    <div className="dashboard">
       {/* Welcome Section */}
-      <div className="from-accent to-accent-hover relative mb-12 flex flex-col items-center justify-between gap-6 overflow-hidden rounded-3xl bg-gradient-to-br p-8 text-white md:flex-row">
-        <div className="relative z-10 flex flex-col items-center gap-6 text-center md:flex-row md:text-left">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+      <div className="dashboard__welcome">
+        <div className="dashboard__welcome-content">
+          <div className="dashboard__welcome-icon">
             <Sparkles size={32} />
           </div>
-          <div>
-            <h1 className="mb-1 text-2xl leading-tight font-bold md:text-3xl">
-              {t("creator_dashboard")}
-            </h1>
-            <p className="text-base leading-normal opacity-90 md:text-lg">
-              {t("manage_monitor_projects")}
-            </p>
+          <div className="dashboard__welcome-text">
+            <h1>{t("creator_dashboard")}</h1>
+            <p>{t("manage_monitor_projects")}</p>
           </div>
         </div>
         <button
-          className="relative z-10 flex items-center gap-2 rounded-xl border border-white/30 bg-white/20 px-6 py-3 font-semibold backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/30 hover:shadow-2xl active:translate-y-0 md:px-8 md:py-4"
+          className="dashboard__welcome-action"
           onClick={handleNewProject}
         >
           <Plus size={20} />
@@ -145,77 +141,67 @@ const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Stats Overview */}
-      <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <div className="from-accent to-accent-hover border-accent hover:border-accent group relative flex items-center gap-6 overflow-hidden rounded-2xl border bg-gradient-to-br p-8 text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-          <div className="absolute top-0 right-0 left-0 h-0.5 bg-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 text-white">
+      <div className="dashboard__stats-overview">
+        <div className="dashboard__stat-item dashboard__stat-item--primary">
+          <div className="dashboard__stat-icon">
             <Target size={24} />
           </div>
-          <div className="flex-1">
-            <h3 className="mb-1 text-2xl leading-tight font-bold">
+          <div className="dashboard__stat-content">
+            <div className="dashboard__stat-value">
               {stats.completedProjects}
-            </h3>
-            <p className="mb-1 text-sm font-medium text-white/80">
+            </div>
+            <div className="dashboard__stat-label">
               {t("completed_projects")}
-            </p>
-            <div className="flex items-center gap-1 text-xs font-semibold text-white/90">
+            </div>
+            <div className="dashboard__stat-trend">
               <TrendingUp size={14} />
               <span>+12%</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-surface border-border hover:border-accent group relative flex items-center gap-6 overflow-hidden rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-          <div className="bg-accent absolute top-0 right-0 left-0 h-0.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-          <div className="bg-accent flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl text-white">
+        <div className="dashboard__stat-item">
+          <div className="dashboard__stat-icon">
             <FileText size={24} />
           </div>
-          <div className="flex-1">
-            <h3 className="text-text-primary mb-1 text-2xl leading-tight font-bold">
+          <div className="dashboard__stat-content">
+            <div className="dashboard__stat-value">
               {stats.certificatesIssued}
-            </h3>
-            <p className="text-text-secondary mb-1 text-sm font-medium">
+            </div>
+            <div className="dashboard__stat-label">
               {t("certificates_issued")}
-            </p>
-            <div className="text-success flex items-center gap-1 text-xs font-semibold">
+            </div>
+            <div className="dashboard__stat-trend">
               <TrendingUp size={14} />
               <span>+8%</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-surface border-border hover:border-accent group relative flex items-center gap-6 overflow-hidden rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-          <div className="bg-accent absolute top-0 right-0 left-0 h-0.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-          <div className="bg-accent flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl text-white">
+        <div className="dashboard__stat-item">
+          <div className="dashboard__stat-icon">
             <Clock size={24} />
           </div>
-          <div className="flex-1">
-            <h3 className="text-text-primary mb-1 text-2xl leading-tight font-bold">
-              {stats.activeSessions}
-            </h3>
-            <p className="text-text-secondary mb-1 text-sm font-medium">
-              {t("active_sessions")}
-            </p>
-            <div className="text-success flex items-center gap-1 text-xs font-semibold">
+          <div className="dashboard__stat-content">
+            <div className="dashboard__stat-value">{stats.activeSessions}</div>
+            <div className="dashboard__stat-label">{t("active_sessions")}</div>
+            <div className="dashboard__stat-trend">
               <Activity size={14} />
               <span>Active</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-surface border-border hover:border-accent group relative flex items-center gap-6 overflow-hidden rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-          <div className="bg-accent absolute top-0 right-0 left-0 h-0.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-          <div className="bg-accent flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl text-white">
+        <div className="dashboard__stat-item">
+          <div className="dashboard__stat-icon">
             <DollarSign size={24} />
           </div>
-          <div className="flex-1">
-            <h3 className="text-text-primary mb-1 text-2xl leading-tight font-bold">
+          <div className="dashboard__stat-content">
+            <div className="dashboard__stat-value">
               {formatCurrency(stats.totalValue)}
-            </h3>
-            <p className="text-text-secondary mb-1 text-sm font-medium">
-              {t("total_value")}
-            </p>
-            <div className="text-success flex items-center gap-1 text-xs font-semibold">
+            </div>
+            <div className="dashboard__stat-label">{t("total_value")}</div>
+            <div className="dashboard__stat-trend">
               <TrendingUp size={14} />
               <span>+15%</span>
             </div>
@@ -224,125 +210,91 @@ const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 items-start gap-12 xl:grid-cols-3">
+      <div className="dashboard__main-grid">
         {/* Quick Actions Panel */}
-        <div className="bg-surface border-border order-2 h-fit rounded-3xl border p-8 xl:order-1">
-          <div className="mb-8">
-            <h2 className="text-text-primary mb-1 text-xl font-semibold">
-              {t("quick_actions")}
-            </h2>
-            <div className="text-text-secondary text-sm">
+        <div className="dashboard__quick-panel">
+          <div className="dashboard__panel-header">
+            <h2 className="dashboard__panel-title">{t("quick_actions")}</h2>
+            <p className="dashboard__panel-subtitle">
               Akses cepat ke fitur utama
-            </div>
+            </p>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="dashboard__quick-grid">
             <button
-              className="from-accent to-accent-hover border-accent group relative flex w-full cursor-pointer items-center gap-4 overflow-hidden rounded-xl border bg-gradient-to-br p-6 text-left text-white transition-all duration-300 hover:translate-x-2"
+              className="dashboard__quick-card dashboard__quick-card--primary"
               onClick={handleNewProject}
             >
-              <div className="from-accent to-accent-hover absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-5"></div>
-              <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-white/20 text-white">
+              <div className="dashboard__quick-icon">
                 <Plus size={24} />
               </div>
-              <div className="relative z-10 flex-1">
-                <h3 className="mb-1 font-semibold">{t("new_project")}</h3>
-                <p className="text-sm opacity-80">
-                  {t("create_verification_project")}
-                </p>
+              <div className="dashboard__quick-content">
+                <h3>{t("new_project")}</h3>
+                <p>{t("create_verification_project")}</p>
               </div>
-              <ArrowRight
-                size={20}
-                className="relative z-10 text-white transition-transform duration-300 group-hover:translate-x-1"
-              />
+              <ArrowRight size={20} className="dashboard__quick-arrow" />
             </button>
 
             <button
-              className="bg-surface border-border group hover:border-accent relative flex w-full cursor-pointer items-center gap-4 overflow-hidden rounded-xl border p-6 text-left transition-all duration-300 hover:translate-x-2"
+              className="dashboard__quick-card"
               onClick={handleViewCertificates}
             >
-              <div className="from-accent to-accent-hover absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-5"></div>
-              <div className="bg-accent relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg text-white">
+              <div className="dashboard__quick-icon">
                 <FileText size={24} />
               </div>
-              <div className="relative z-10 flex-1">
-                <h3 className="text-text-primary mb-1 font-semibold">
-                  {t("view_certificates")}
-                </h3>
-                <p className="text-text-secondary text-sm">
-                  {t("manage_issued_certificates")}
-                </p>
+              <div className="dashboard__quick-content">
+                <h3>{t("view_certificates")}</h3>
+                <p>{t("manage_issued_certificates")}</p>
               </div>
-              <ArrowRight
-                size={20}
-                className="text-text-secondary relative z-10 transition-transform duration-300 group-hover:translate-x-1"
-              />
+              <ArrowRight size={20} className="dashboard__quick-arrow" />
             </button>
 
             <button
-              className="bg-surface border-border group hover:border-accent relative flex w-full cursor-pointer items-center gap-4 overflow-hidden rounded-xl border p-6 text-left transition-all duration-300 hover:translate-x-2"
+              className="dashboard__quick-card"
               onClick={handleViewAnalytics}
             >
-              <div className="from-accent to-accent-hover absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-5"></div>
-              <div className="bg-accent relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg text-white">
+              <div className="dashboard__quick-icon">
                 <BarChart3 size={24} />
               </div>
-              <div className="relative z-10 flex-1">
-                <h3 className="text-text-primary mb-1 font-semibold">
-                  {t("analytics")}
-                </h3>
-                <p className="text-text-secondary text-sm">
-                  {t("view_statistics_reports")}
-                </p>
+              <div className="dashboard__quick-content">
+                <h3>{t("analytics")}</h3>
+                <p>{t("view_statistics_reports")}</p>
               </div>
-              <ArrowRight
-                size={20}
-                className="text-text-secondary relative z-10 transition-transform duration-300 group-hover:translate-x-1"
-              />
+              <ArrowRight size={20} className="dashboard__quick-arrow" />
             </button>
           </div>
         </div>
 
         {/* Projects Panel */}
-        <div className="bg-surface border-border order-1 rounded-3xl border p-8 xl:order-2 xl:col-span-2">
-          <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-            <div className="flex items-center gap-4">
-              <h2 className="text-text-primary text-xl font-semibold">
-                {t("recent_projects")}
-              </h2>
-              <span className="text-text-secondary bg-surface border-border rounded-lg border px-3 py-1 text-sm">
+        <div className="dashboard__projects-panel">
+          <div className="dashboard__panel-header">
+            <div className="dashboard__panel-title-group">
+              <h2 className="dashboard__panel-title">{t("recent_projects")}</h2>
+              <span className="dashboard__panel-count">
                 {filteredProjects.length} projects
               </span>
             </div>
 
-            <div className="flex w-full flex-col items-stretch gap-4 sm:flex-row sm:items-center md:w-auto">
-              <div className="bg-surface border-border flex flex-1 items-center gap-2 rounded-lg border px-4 py-2 sm:min-w-60 sm:flex-none">
-                <Search size={16} className="text-text-secondary" />
+            <div className="dashboard__panel-controls">
+              <div className="dashboard__search-wrapper">
+                <Search size={16} />
                 <input
                   type="text"
                   placeholder={t("search_projects")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="text-text-primary placeholder:text-text-secondary w-full border-0 bg-transparent text-sm outline-none"
+                  className="dashboard__search-input"
                 />
               </div>
-              <div className="flex gap-1 self-end sm:self-auto">
+              <div className="dashboard__view-toggle">
                 <button
-                  className={`border-border flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border transition-all duration-300 ${
-                    viewMode === "grid"
-                      ? "bg-accent border-accent text-white"
-                      : "bg-surface text-text-secondary hover:border-accent hover:text-accent"
-                  }`}
+                  className={`dashboard__view-btn ${viewMode === "grid" ? "active" : ""}`}
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid size={16} />
                 </button>
                 <button
-                  className={`border-border flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border transition-all duration-300 ${
-                    viewMode === "list"
-                      ? "bg-accent border-accent text-white"
-                      : "bg-surface text-text-secondary hover:border-accent hover:text-accent"
-                  }`}
+                  className={`dashboard__view-btn ${viewMode === "list" ? "active" : ""}`}
                   onClick={() => setViewMode("list")}
                 >
                   <List size={16} />
@@ -352,24 +304,22 @@ const Dashboard: React.FC<DashboardProps> = ({
           </div>
 
           <div
-            className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}
+            className={`dashboard__projects-grid dashboard__projects-grid--${viewMode}`}
           >
             {filteredProjects.length > 0 ? (
               filteredProjects.slice(0, 6).map((project) => (
                 <button
                   key={project.karya_id}
-                  className="bg-surface border-border group hover:border-accent relative w-full cursor-pointer overflow-hidden rounded-xl border p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+                  className="dashboard__project-card"
                   onClick={() => handleProjectClick(project.karya_id)}
                   type="button"
                 >
-                  <div className="bg-accent absolute top-0 right-0 left-0 h-0.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-
-                  <div className="mb-4 flex items-center justify-between">
-                    <div className="bg-surface border-border text-text-secondary flex h-8 w-8 items-center justify-center rounded-lg border">
+                  <div className="dashboard__project-header">
+                    <div className="dashboard__project-type">
                       {getProjectTypeIcon(project.tipe_karya)}
                     </div>
                     <div
-                      className="rounded px-2 py-1 text-xs font-semibold tracking-wide text-white uppercase"
+                      className="dashboard__project-status"
                       style={{
                         backgroundColor: getStatusColor(project.status_karya),
                       }}
@@ -378,46 +328,40 @@ const Dashboard: React.FC<DashboardProps> = ({
                     </div>
                   </div>
 
-                  <div>
-                    <h3 className="text-text-primary mb-2 text-base leading-tight font-semibold">
-                      {project.nama_karya}
-                    </h3>
-                    <p className="text-text-secondary mb-4 line-clamp-2 text-sm leading-normal">
-                      {project.deskripsi}
-                    </p>
-
-                    <div className="text-text-secondary mb-2 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        <span>{formatDate(project.waktu_mulai)}</span>
-                      </div>
-                      <div>{project.format_file}</div>
-                    </div>
-
-                    {project.log_count && (
-                      <div className="text-accent flex items-center gap-1 text-xs font-medium">
-                        <Activity size={14} />
-                        <span>
-                          {project.log_count} {t("process_logs")}
-                        </span>
-                      </div>
-                    )}
+                  <div className="dashboard__project-content">
+                    <h3>{project.nama_karya}</h3>
+                    <p>{project.deskripsi}</p>
                   </div>
+
+                  <div className="dashboard__project-meta">
+                    <div className="dashboard__project-date">
+                      <Calendar size={14} />
+                      <span>{formatDate(project.waktu_mulai)}</span>
+                    </div>
+                    <div className="dashboard__project-format">
+                      {project.format_file}
+                    </div>
+                  </div>
+
+                  {project.log_count && (
+                    <div className="dashboard__project-logs">
+                      <Activity size={14} />
+                      <span>
+                        {project.log_count} {t("process_logs")}
+                      </span>
+                    </div>
+                  )}
                 </button>
               ))
             ) : (
-              <div className="col-span-full flex flex-col items-center justify-center p-12 text-center">
-                <div className="text-text-secondary mb-6">
+              <div className="dashboard__empty-state">
+                <div className="dashboard__empty-icon">
                   <Target size={48} />
                 </div>
-                <h3 className="text-text-primary mb-2 text-lg font-semibold">
-                  {t("no_projects_yet")}
-                </h3>
-                <p className="text-text-secondary mb-6 text-base leading-normal">
-                  {t("start_creating_projects")}
-                </p>
+                <h3>{t("no_projects_yet")}</h3>
+                <p>{t("start_creating_projects")}</p>
                 <button
-                  className="bg-accent hover:bg-accent-hover cursor-pointer rounded-xl border-0 px-6 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-0.5"
+                  className="dashboard__empty-action"
                   onClick={handleNewProject}
                   type="button"
                 >
