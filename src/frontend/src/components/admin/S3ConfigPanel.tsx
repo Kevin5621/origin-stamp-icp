@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Settings, Save, AlertCircle, CheckCircle } from "lucide-react";
 import PhysicalArtService from "../../services/physicalArtService";
 
@@ -11,6 +12,7 @@ interface S3ConfigFormData {
 }
 
 const S3ConfigPanel: React.FC = () => {
+  const { t } = useTranslation("settings");
   const [config, setConfig] = useState<S3ConfigFormData>({
     bucket_name: "",
     region: "",
@@ -56,11 +58,11 @@ const S3ConfigPanel: React.FC = () => {
       if (success) {
         setMessage({
           type: "success",
-          text: "S3 configuration saved successfully!",
+          text: t("s3_config.saved_success"),
         });
         setIsConfigured(true);
       } else {
-        setMessage({ type: "error", text: "Failed to save S3 configuration." });
+        setMessage({ type: "error", text: t("s3_config.save_failed") });
       }
     } catch (error) {
       setMessage({
@@ -68,7 +70,7 @@ const S3ConfigPanel: React.FC = () => {
         text:
           error instanceof Error
             ? error.message
-            : "Failed to save configuration.",
+            : t("s3_config.save_failed_generic"),
       });
     } finally {
       setIsLoading(false);
@@ -86,8 +88,8 @@ const S3ConfigPanel: React.FC = () => {
         <div className="header-content">
           <Settings size={24} />
           <div>
-            <h2>S3 Storage Configuration</h2>
-            <p>Configure S3 storage for physical art photo uploads</p>
+            <h2>{t("s3_config.title")}</h2>
+            <p>{t("s3_config.subtitle")}</p>
           </div>
         </div>
 
@@ -98,12 +100,12 @@ const S3ConfigPanel: React.FC = () => {
             {isConfigured ? (
               <>
                 <CheckCircle size={16} />
-                <span>Configured</span>
+                <span>{t("s3_config.configured")}</span>
               </>
             ) : (
               <>
                 <AlertCircle size={16} />
-                <span>Not Configured</span>
+                <span>{t("s3_config.not_configured")}</span>
               </>
             )}
           </div>
@@ -114,7 +116,7 @@ const S3ConfigPanel: React.FC = () => {
         <div className="form-grid">
           <div className="form-group">
             <label htmlFor="bucket_name" className="form-label">
-              Bucket Name *
+              {t("s3_config.bucket_name")}
             </label>
             <input
               id="bucket_name"
@@ -131,7 +133,7 @@ const S3ConfigPanel: React.FC = () => {
 
           <div className="form-group">
             <label htmlFor="region" className="form-label">
-              Region *
+              {t("s3_config.region")}
             </label>
             <input
               id="region"
@@ -148,7 +150,7 @@ const S3ConfigPanel: React.FC = () => {
 
           <div className="form-group">
             <label htmlFor="access_key_id" className="form-label">
-              Access Key ID *
+              {t("s3_config.access_key_id")}
             </label>
             <input
               id="access_key_id"
@@ -165,7 +167,7 @@ const S3ConfigPanel: React.FC = () => {
 
           <div className="form-group">
             <label htmlFor="secret_access_key" className="form-label">
-              Secret Access Key *
+              {t("s3_config.secret_access_key")}
             </label>
             <input
               id="secret_access_key"
@@ -182,7 +184,7 @@ const S3ConfigPanel: React.FC = () => {
 
           <div className="form-group full-width">
             <label htmlFor="endpoint" className="form-label">
-              Custom Endpoint (Optional)
+              {t("s3_config.custom_endpoint")}
             </label>
             <input
               id="endpoint"
@@ -194,9 +196,7 @@ const S3ConfigPanel: React.FC = () => {
               className="form-input"
               disabled={isLoading}
             />
-            <p className="form-help">
-              Leave empty for AWS S3. Use for S3-compatible services.
-            </p>
+            <p className="form-help">{t("s3_config.endpoint_help")}</p>
           </div>
         </div>
 
@@ -216,12 +216,12 @@ const S3ConfigPanel: React.FC = () => {
             {isLoading ? (
               <>
                 <div className="loading-spinner small"></div>
-                Saving...
+                {t("s3_config.saving")}
               </>
             ) : (
               <>
                 <Save size={16} />
-                Save Configuration
+                {t("s3_config.save_button")}
               </>
             )}
           </button>

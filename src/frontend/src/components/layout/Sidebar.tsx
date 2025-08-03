@@ -73,30 +73,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ];
     } else {
       return [
-        { id: "dashboard", icon: Home, label: "Dashboard", path: "/dashboard" },
-        { id: "session", icon: User, label: "Session", path: "/session" },
+        {
+          id: "dashboard",
+          icon: Home,
+          label: t("sidebar.dashboard"),
+          path: "/dashboard",
+        },
+        {
+          id: "session",
+          icon: User,
+          label: t("sidebar.session"),
+          path: "/session",
+        },
         {
           id: "certificates",
           icon: Award,
-          label: "Certificates",
+          label: t("sidebar.certificates"),
           path: "/certificates",
         },
         {
           id: "analytics",
           icon: BarChart3,
-          label: "Analytics",
+          label: t("sidebar.analytics"),
           path: "/analytics",
         },
         {
           id: "portfolio",
           icon: Folder,
-          label: "Portfolio",
+          label: t("sidebar.portfolio"),
           path: "/portfolio",
         },
         {
           id: "settings",
           icon: Settings,
-          label: "Settings",
+          label: t("sidebar.settings"),
           path: "/settings",
         },
       ];
@@ -107,10 +117,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: "marketplace",
       icon: Compass,
-      label: "Marketplace",
+      label: t("sidebar.marketplace"),
       path: "/marketplace",
     },
-    { id: "home", icon: Home, label: "Home", path: "/" },
+    { id: "home", icon: Home, label: t("sidebar.home"), path: "/" },
   ];
 
   const isActive = (path: string) => {
@@ -125,8 +135,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const getUserName = () => {
-    if (!isAuthenticated) return "Guest User";
-    return user?.username || "User";
+    if (!isAuthenticated) return t("sidebar.guest_user");
+    return user?.username || t("sidebar.user");
   };
 
   const getUserAvatar = () => {
@@ -183,15 +193,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Quick Actions */}
         <div className="sidebar-quick-actions">
-          <h3 className="section-title">Quick Actions</h3>
+          <h3 className="section-title">{t("quick_actions")}</h3>
           <div className="quick-actions-grid">
             <button className="quick-action-btn">
               <Plus size={16} />
-              <span>Create NFT</span>
+              <span>{t("create_nft")}</span>
             </button>
             <button className="quick-action-btn">
               <Wallet size={16} />
-              <span>Connect Wallet</span>
+              <span>{t("connect_wallet")}</span>
             </button>
           </div>
         </div>

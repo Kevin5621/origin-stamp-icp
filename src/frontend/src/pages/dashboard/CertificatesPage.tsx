@@ -95,7 +95,7 @@ const CertificatesPage: React.FC = () => {
   const handleShareCertificate = (certUrl: string) => {
     if (navigator.share) {
       navigator.share({
-        title: "Certificate of Authenticity",
+        title: t("certificate_of_authenticity"),
         text: "Check out this verified artwork certificate",
         url: certUrl,
       });
@@ -175,19 +175,19 @@ const CertificatesPage: React.FC = () => {
                 className={`filter-tab wireframe-tab ${filterStatus === "all" ? "active" : ""}`}
                 onClick={() => handleFilterChange("all")}
               >
-                All
+                {t("all")}
               </button>
               <button
                 className={`filter-tab wireframe-tab ${filterStatus === "verified" ? "active" : ""}`}
                 onClick={() => handleFilterChange("verified")}
               >
-                Verified
+                {t("verified")}
               </button>
               <button
                 className={`filter-tab wireframe-tab ${filterStatus === "pending" ? "active" : ""}`}
                 onClick={() => handleFilterChange("pending")}
               >
-                Pending
+                {t("pending")}
               </button>
             </div>
           </div>

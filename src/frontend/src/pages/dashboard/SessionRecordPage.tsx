@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Camera,
@@ -46,6 +47,7 @@ const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
   const { addToast } = useToastContext();
+  const { t } = useTranslation("session");
 
   const [session, setSession] = useState<SessionData | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -263,7 +265,7 @@ const SessionRecordPage: React.FC = () => {
     // Prevent multiple uploads
     if (isUploading || uploadInProgress) {
       console.log("Upload already in progress, ignoring new request");
-      addToast("warning", "Upload sudah berjalan, tunggu hingga selesai");
+      addToast("warning", t("upload_already_in_progress"));
       return;
     }
 
@@ -282,7 +284,10 @@ const SessionRecordPage: React.FC = () => {
     console.log("Starting upload process...");
     console.log("Files to upload:", filesArray.length);
 
-    addToast("info", `Memulai upload ${filesArray.length} file...`);
+    addToast(
+      "info",
+      `${t("starting_upload")} ${filesArray.length} ${t("files")}...`,
+    );
 
     const newPhotos: PhotoLog[] = [];
 
@@ -292,7 +297,7 @@ const SessionRecordPage: React.FC = () => {
         // Check for cancellation before processing file
         if (cancelRef.current) {
           console.log("Upload cancelled at file", i);
-          addToast("warning", "Upload dibatalkan oleh user");
+          addToast("warning", t("upload_cancelled_by_user"));
           return; // Exit immediately and discard all files
         }
 
@@ -303,7 +308,7 @@ const SessionRecordPage: React.FC = () => {
           // Check for cancellation at each progress step
           if (cancelRef.current) {
             console.log("Upload cancelled during progress at", progress, "%");
-            addToast("warning", "Upload dibatalkan oleh user");
+            addToast("warning", t("upload_cancelled_by_user"));
             return; // Exit immediately and discard all files
           }
 
@@ -314,7 +319,7 @@ const SessionRecordPage: React.FC = () => {
         // Final check before adding file to array
         if (cancelRef.current) {
           console.log("Upload cancelled before adding file to array");
-          addToast("warning", "Upload dibatalkan oleh user");
+          addToast("warning", t("upload_cancelled_by_user"));
           return; // Exit immediately and discard all files
         }
 
@@ -324,7 +329,8 @@ const SessionRecordPage: React.FC = () => {
           id: `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
           filename: file.name,
           timestamp: new Date(),
-          description: stepDescription || `Step ${session.currentStep + i + 1}`,
+          description:
+            stepDescription || `${t("step")} ${session.currentStep + i + 1}`,
           fileSize: file.size,
           url: URL.createObjectURL(file),
           step: session.currentStep + i + 1,
@@ -345,13 +351,13 @@ const SessionRecordPage: React.FC = () => {
             currentStep: prev.currentStep + newPhotos.length,
           };
         });
-        addToast("success", `${newPhotos.length} file berhasil diupload!`);
+        addToast("success", `${newPhotos.length} ${t("files_uploaded")}`);
       } else {
         console.log("Session not updated - cancelled or no photos");
       }
     } catch (error) {
       console.log("Upload error:", error);
-      addToast("error", "Terjadi kesalahan saat upload file");
+      addToast("error", t("error_uploading_file"));
     } finally {
       // Reset all states
       setSelectedFiles(null);
@@ -378,7 +384,7 @@ const SessionRecordPage: React.FC = () => {
       if (photoToDelete) {
         addToast(
           "success",
-          `Foto "${photoToDelete.filename}" berhasil dihapus`,
+          `${t("photo")} "${photoToDelete.filename}" ${t("deleted_successfully")}`,
         );
       }
     }
@@ -388,7 +394,7 @@ const SessionRecordPage: React.FC = () => {
     if (!session) return;
 
     setIsGeneratingNFT(true);
-    addToast("info", "Memulai proses generate NFT...");
+    addToast("info", t("starting_nft_generation"));
 
     // Simulate NFT generation process
     setTimeout(() => {
@@ -404,7 +410,7 @@ const SessionRecordPage: React.FC = () => {
       setIsGeneratingNFT(false);
       addToast(
         "success",
-        "NFT berhasil di-generate! Redirecting ke certificate...",
+        `${t("nft_generated")}! ${t("redirecting_to_certificate")}`,
       );
 
       // Navigate to certificate page
@@ -448,7 +454,7 @@ const SessionRecordPage: React.FC = () => {
             onClick={() => navigate("/session")}
           >
             <ArrowLeft size={20} />
-            Back to Sessions
+            {t("back_to_sessions")}
           </button>
           <div className="session-record__title">
             <h1>{session.title}</h1>
@@ -462,8 +468,8 @@ const SessionRecordPage: React.FC = () => {
             >
               <Sparkles size={20} />
               {isGeneratingNFT
-                ? "Generating NFT..."
-                : "Complete & Generate NFT"}
+                ? t("generating_nft")
+                : t("complete_and_generate_nft")}
             </button>
           </div>
         </div>
@@ -472,10 +478,12 @@ const SessionRecordPage: React.FC = () => {
         <div className="session-record__status">
           <div className="recording-indicator">
             <div className="recording-dot" />
-            <span>Recording</span>
+            <span>{t("recording")}</span>
           </div>
           <div className="session-info">
-            <div className="photo-count">{session.photos.length} photos</div>
+            <div className="photo-count">
+              {session.photos.length} {t("photos")}
+            </div>
           </div>
         </div>
 
@@ -483,7 +491,7 @@ const SessionRecordPage: React.FC = () => {
           {/* Upload Section */}
           <div className="session-record__upload">
             <div className="upload-card">
-              <h2>Upload Progress Photos to S3</h2>
+              <h2>{t("upload_progress_photos_to_s3")}</h2>
 
               {/* File Drop Zone */}
               <div
@@ -506,14 +514,12 @@ const SessionRecordPage: React.FC = () => {
 
                 <div className="upload-content">
                   <Camera size={32} />
-                  <h3>Drop photos here or click to browse</h3>
-                  <p>
-                    Support multiple photos (JPG, PNG, WebP) up to 10MB each
-                  </p>
+                  <h3>{t("drop_photos_here_or_click_to_browse")}</h3>
+                  <p>{t("support_multiple_photos_up_to_10mb_each")}</p>
 
                   <label htmlFor="photo-upload" className="btn btn--primary">
                     <Upload size={16} />
-                    Choose Photos
+                    {t("choose_photos")}
                   </label>
                 </div>
               </div>
@@ -521,16 +527,18 @@ const SessionRecordPage: React.FC = () => {
               {/* Selected Files */}
               {selectedFiles && (
                 <div className="selected-files">
-                  <h3>Selected Files ({selectedFiles.length})</h3>
+                  <h3>
+                    {t("selected_files")} ({selectedFiles.length})
+                  </h3>
 
                   <div className="step-description">
-                    <label htmlFor="step-desc">Step Description</label>
+                    <label htmlFor="step-desc">{t("step_description")}</label>
                     <input
                       id="step-desc"
                       type="text"
                       value={stepDescription}
                       onChange={(e) => setStepDescription(e.target.value)}
-                      placeholder="Describe this step..."
+                      placeholder={t("describe_this_step")}
                       className="form-input"
                     />
                   </div>
@@ -558,8 +566,8 @@ const SessionRecordPage: React.FC = () => {
                       <div className="progress-info">
                         <span>
                           {shouldCancelUpload
-                            ? "Upload cancelled"
-                            : `Uploading ${uploadedFiles} of ${totalFiles} files`}
+                            ? t("upload_cancelled")
+                            : `${t("uploading")} ${uploadedFiles} ${t("of")} ${totalFiles} ${t("files")}`}
                         </span>
                         <span>
                           {shouldCancelUpload
@@ -602,7 +610,7 @@ const SessionRecordPage: React.FC = () => {
                           // Reset progress immediately for visual feedback
                           setUploadProgress(0);
                           setUploadedFiles(0);
-                          addToast("warning", "Upload dibatalkan");
+                          addToast("warning", t("upload_cancelled"));
                         } else {
                           // Clear selection
                           setSelectedFiles(null);
@@ -619,10 +627,10 @@ const SessionRecordPage: React.FC = () => {
                       disabled={isCancelling}
                     >
                       {isCancelling
-                        ? "Cancelling..."
+                        ? t("cancelling")
                         : isUploading || uploadInProgress
-                          ? "Cancel Upload"
-                          : "Cancel"}
+                          ? t("cancel_upload")
+                          : t("cancel")}
                     </button>
                     <button
                       className="btn btn--primary"
@@ -630,7 +638,7 @@ const SessionRecordPage: React.FC = () => {
                       disabled={false}
                     >
                       <Plus size={16} />
-                      {isUploading ? "Uploading to S3..." : "Upload to S3"}
+                      {isUploading ? t("uploading_to_s3") : t("upload_to_s3")}
                     </button>
                   </div>
                 </div>
@@ -641,19 +649,23 @@ const SessionRecordPage: React.FC = () => {
           {/* Photo Log */}
           <div className="session-record__log">
             <div className="log-header">
-              <h2>Photo Log</h2>
+              <h2>{t("photo_log")}</h2>
               <div className="log-stats">
-                <span>{session.photos.length} photos</span>
+                <span>
+                  {session.photos.length} {t("photos")}
+                </span>
                 <span>•</span>
-                <span>Step {session.currentStep}</span>t
+                <span>
+                  {t("step")} {session.currentStep}
+                </span>
               </div>
             </div>
 
             {session.photos.length === 0 ? (
               <div className="log-empty">
                 <FileText size={48} />
-                <h3>No photos uploaded yet</h3>
-                <p>Upload your first progress photo to start the S3 log</p>
+                <h3>{t("no_photos_uploaded_yet")}</h3>
+                <p>{t("upload_your_first_progress_photo_to_start_s3_log")}</p>
               </div>
             ) : (
               <div className="log-timeline">
@@ -699,7 +711,9 @@ const SessionRecordPage: React.FC = () => {
                           {photo.s3Key && (
                             <>
                               <span>•</span>
-                              <span className="s3-key">S3: {photo.s3Key}</span>
+                              <span className="s3-key">
+                                {t("s3_key")}: {photo.s3Key}
+                              </span>
                             </>
                           )}
                         </div>
@@ -719,7 +733,7 @@ const SessionRecordPage: React.FC = () => {
             onClick={() => navigate("/session")}
           >
             <Save size={16} />
-            Save Progress
+            {t("save_progress")}
           </button>
 
           <button
@@ -728,7 +742,9 @@ const SessionRecordPage: React.FC = () => {
             disabled={isGeneratingNFT || session.photos.length === 0}
           >
             <Sparkles size={16} />
-            {isGeneratingNFT ? "Generating NFT..." : "Complete & Generate NFT"}
+            {isGeneratingNFT
+              ? t("generating_nft")
+              : t("complete_and_generate_nft")}
           </button>
         </div>
       </div>

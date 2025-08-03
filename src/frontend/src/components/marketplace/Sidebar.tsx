@@ -63,20 +63,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSectionChange }) => {
   ];
 
   const bottomMenuItems = [
-    { id: "dashboard", icon: Home, label: "Dashboard", path: "/dashboard" },
+    {
+      id: "dashboard",
+      icon: Home,
+      label: t("sidebar.dashboard"),
+      path: "/dashboard",
+    },
     {
       id: "certificates",
       icon: Award,
-      label: "Certificates",
+      label: t("sidebar.certificates"),
       path: "/certificates",
     },
     {
       id: "analytics",
       icon: BarChart3,
-      label: "Analytics",
+      label: t("sidebar.analytics"),
       path: "/analytics",
     },
-    { id: "settings", icon: Settings, label: "Settings", path: "/settings" },
+    {
+      id: "settings",
+      icon: Settings,
+      label: t("sidebar.settings"),
+      path: "/settings",
+    },
   ];
 
   const isActive = (path: string) => {
@@ -105,14 +115,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSectionChange }) => {
             />
           </div>
           <div className="user-info">
-            <div className="user-name">User Name</div>
+            <div className="user-name">{t("user_name")}</div>
             <div className="user-balance">0.00 ETH</div>
           </div>
           <div className="user-actions">
-            <button className="action-btn" title="Wallet">
+            <button className="action-btn" title={t("wallet")}>
               <Wallet size={16} />
             </button>
-            <button className="action-btn" title="Notifications">
+            <button className="action-btn" title={t("notifications")}>
               <Bell size={16} />
             </button>
           </div>
@@ -141,15 +151,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSectionChange }) => {
 
         {/* Quick Actions */}
         <div className="sidebar-quick-actions">
-          <h3 className="section-title">Quick Actions</h3>
+          <h3 className="section-title">{t("quick_actions")}</h3>
           <div className="quick-actions-grid">
             <button className="quick-action-btn">
               <Plus size={16} />
-              <span>Create NFT</span>
+              <span>{t("create_nft")}</span>
             </button>
             <button className="quick-action-btn">
               <Wallet size={16} />
-              <span>Connect Wallet</span>
+              <span>{t("connect_wallet")}</span>
             </button>
           </div>
         </div>

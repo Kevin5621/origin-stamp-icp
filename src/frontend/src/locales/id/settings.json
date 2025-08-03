@@ -37,5 +37,42 @@
   "danger_zone": "Zona Berbahaya",
   "delete_account": "Hapus Akun",
   "delete_account_description": "Hapus akun Anda secara permanen. Tindakan ini tidak dapat dibatalkan.",
-  "confirm_delete_account": "Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan."
+  "confirm_delete_account": "Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan.",
+  "s3_config": {
+    "saved_success": "Konfigurasi S3 berhasil disimpan!",
+    "save_failed": "Gagal menyimpan konfigurasi S3.",
+    "save_failed_generic": "Gagal menyimpan konfigurasi.",
+    "title": "Konfigurasi Penyimpanan S3",
+    "subtitle": "Konfigurasikan penyimpanan S3 untuk upload foto karya fisik",
+    "configured": "Dikonfigurasi",
+    "not_configured": "Belum Dikonfigurasi",
+    "bucket_name": "Nama Bucket *",
+    "region": "Region *",
+    "access_key_id": "Access Key ID *",
+    "secret_access_key": "Secret Access Key *",
+    "custom_endpoint": "Endpoint Kustom (Opsional)",
+    "endpoint_help": "Biarkan kosong untuk AWS S3. Gunakan untuk layanan S3-kompatibel.",
+    "saving": "Menyimpan...",
+    "save_button": "Simpan Konfigurasi"
+  },
+  "s3_test": {
+    "user_ready": "Pengguna uji siap",
+    "upload_confirmed": "Upload dikonfirmasi di backend",
+    "backend_config": "Konfigurasi Backend",
+    "setting_config": "Mengatur konfigurasi S3 ke backend...",
+    "config_verified": "Konfigurasi S3 terverifikasi",
+    "config_not_found": "Konfigurasi S3 tidak ditemukan",
+    "config_verify": "Verifikasi Konfigurasi",
+    "user_setup": "Setup Pengguna",
+    "test_artwork": "Karya Uji",
+    "file_upload": "Upload File",
+    "test_error": "Error Tes",
+    "presigned_url": "URL Presigned",
+    "upload_confirm": "Konfirmasi Upload",
+    "upload_process": "Proses Upload",
+    "session": "Sesi",
+    "session_created": "Sesi dibuat",
+    "failed_to_create_session": "Gagal membuat sesi",
+    "error_creating_session": "Error membuat sesi"
+  }
 }

@@ -156,5 +156,7 @@
     "priceRequired": "Harga yang valid diperlukan",
     "fileRequired": "Silakan pilih file",
     "createFailed": "Gagal membuat NFT"
-  }
+  },
+  "wallet": "Dompet",
+  "notifications": "Notifikasi"
 }

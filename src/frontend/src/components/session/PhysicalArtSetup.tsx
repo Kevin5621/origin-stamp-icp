@@ -21,7 +21,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
   onSessionCreated,
   onPhotosUploaded,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("session");
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -54,7 +54,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
       const sessionId = await PhysicalArtService.createSession(
         user.username,
         artTitle.trim(),
-        description.trim() || "Physical artwork creation process",
+        description.trim() || t("physical_art_setup.description_default"),
       );
 
       setSessionId(sessionId);
@@ -141,7 +141,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
           ...newProgress.get(file.name)!,
           status: "failed",
           progress: 0,
-          error: error instanceof Error ? error.message : "Upload failed",
+          error: error instanceof Error ? error.message : t("upload_failed"),
         });
       }
 
@@ -258,7 +258,9 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
         <div className="upload-section">
           <div className="session-info">
             <h3 className="session-title">{artTitle}</h3>
-            <p className="session-id">Session ID: {sessionId}</p>
+            <p className="session-id">
+              {t("session_id")}: {sessionId}
+            </p>
             {description && (
               <p className="session-description">{description}</p>
             )}

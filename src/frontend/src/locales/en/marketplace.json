@@ -162,5 +162,7 @@
     "priceRequired": "Valid price is required",
     "fileRequired": "Please select a file",
     "createFailed": "Failed to create NFT"
-  }
+  },
+  "wallet": "Wallet",
+  "notifications": "Notifications"
 }
