@@ -7,7 +7,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Loader, ErrorDisplay, FloatingHeader, AppLayout } from "./components";
-import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -34,17 +33,8 @@ import { MarketplaceHomePage, CollectionDetailPage } from "./pages/marketplace";
 
 // Component untuk menentukan apakah navbar harus ditampilkan
 function NavigationWrapper() {
-  const location = useLocation();
-  const isLandingPage = location.pathname === "/";
-  const isLoginPage = location.pathname === "/login";
-  const isHowItWorksPage = location.pathname === "/how-it-works";
-
-  // Hanya tampilkan navbar jika bukan landing page, login page, atau how it works page
-  if (isLandingPage || isLoginPage || isHowItWorksPage) {
-    return null;
-  }
-
-  return <AppNavigation />;
+  // Navigation sudah dihapus - tidak ditampilkan lagi
+  return null;
 }
 
 // Component untuk menentukan layout berdasarkan halaman
