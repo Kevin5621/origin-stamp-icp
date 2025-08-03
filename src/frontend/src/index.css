@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+/* Component Styles */
+@import "./css/components/_dashboard.scss";
+@import "./css/components/_session.scss";
+@import "./css/components/_session-record.scss";
