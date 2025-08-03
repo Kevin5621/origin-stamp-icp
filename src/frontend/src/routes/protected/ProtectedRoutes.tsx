@@ -23,7 +23,7 @@ export const protectedRoutes: RouteConfig[] = [
   {
     path: "/session",
     element: SessionPage,
-    title: "Session",
+    title: "Session Management",
     isProtected: true,
     meta: {
       requiresAuth: true,
