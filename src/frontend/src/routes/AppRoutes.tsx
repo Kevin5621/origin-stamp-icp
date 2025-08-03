@@ -5,6 +5,7 @@ import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/auth/LoginPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import SessionPage from "../pages/dashboard/SessionPage";
+import SessionRecordPage from "../pages/dashboard/SessionRecordPage";
 import FinalizationPage from "../pages/dashboard/FinalizationPage";
 import VerificationPage from "../pages/dashboard/VerificationPage";
 import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
@@ -40,6 +41,14 @@ export const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <SessionPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/sessions/:sessionId"
+        element={
+          <ProtectedRoute>
+            <SessionRecordPage />
           </ProtectedRoute>
         }
       />
