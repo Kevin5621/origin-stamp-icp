@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add ICRC-7 NFT standard implementation with full compliance to Internet Computer NFT specification
+- Add NFT minting from physical art sessions with rich metadata including artist info and photo URLs
 - Add automated S3 configuration setup during deployment
 - Add Physical Art Session management for photo uploads
 - Add S3 presigned URL generation with AWS Signature V4

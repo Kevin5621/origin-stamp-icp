@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -6,20 +6,12 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import {
-  Loader,
-  ErrorDisplay,
-  ThemeToggle,
-  Login,
-  FloatingHeader,
-  AppLayout,
-} from "./components";
-import LanguageToggle from "./components/ui/LanguageToggle";
-import { NotificationButton } from "./components/common/NotificationButton";
+import { Loader, ErrorDisplay, FloatingHeader, AppLayout } from "./components";
 import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { PhysicalArtService } from "./services/physicalArtService";
 // Import pages dari sistem modular baru
 import LandingPage from "./pages/landing/LandingPage";
 import HowItWorksPage from "./pages/how-it-works/HowItWorksPage";
@@ -172,6 +164,19 @@ function MainContentWrapper() {
 function App() {
   const [loading] = useState(false);
   const [error] = useState<string | undefined>();
+
+  // Initialize S3 configuration from environment variables
+  useEffect(() => {
+    const initializeS3 = async () => {
+      try {
+        await PhysicalArtService.initializeS3FromEnv();
+      } catch (error) {
+        console.error("Failed to initialize S3:", error);
+      }
+    };
+
+    initializeS3();
+  }, []);
 
   return (
     <AuthProvider>
