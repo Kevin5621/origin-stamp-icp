@@ -207,17 +207,17 @@ const SessionRecordPage: React.FC = () => {
       <div className="session-record__container">
         {/* Header */}
         <div className="session-record__header">
-          <button 
+          <button
             className="btn btn--secondary"
             onClick={() => navigate("/session")}
           >
             <ArrowLeft size={20} />
             Back to Sessions
-          </button>          <div className="session-record__title">
+          </button>
+          <div className="session-record__title">
             <h1>{session.title}</h1>
             <p>{session.description}</p>
           </div>
-
           <div className="session-record__controls">
             {!isRecording ? (
               <button
@@ -310,7 +310,10 @@ const SessionRecordPage: React.FC = () => {
 
                   <div className="files-list">
                     {Array.from(selectedFiles).map((file) => (
-                      <div key={file.name + file.lastModified} className="file-item">
+                      <div
+                        key={file.name + file.lastModified}
+                        className="file-item"
+                      >
                         <Image size={20} />
                         <span className="file-name">{file.name}</span>
                         <span className="file-size">
