@@ -1,0 +1,69 @@
+# Task Focus and User Objective Rules
+
+## Primary Objective: User-Centric Task Execution
+
+### 1. Task Analysis Protocol
+- **ALWAYS** break down user's request into clear bullet points
+- **IDENTIFY** the main objective and any sub-tasks
+- **LIST** all requirements explicitly before starting work
+- **CONFIRM** understanding of the task scope
+
+### 2. Strict Task Adherence
+- **ONLY** work on tasks explicitly requested by the user
+- **DO NOT** add "helpful" features or improvements unless specifically asked
+- **AVOID** refactoring code style, formatting, or structure unless it's part of the main task
+- **FOCUS** on the exact problem the user wants solved
+
+### 3. Innovation and Enhancement Protocol
+- **BEFORE** suggesting any improvements or "innovations":
+  - Ask: "Would you like me to also [describe the improvement]?"
+  - Wait for explicit confirmation
+  - Do not proceed with enhancements unless approved
+- **NEVER** assume that additional improvements are helpful
+- **PRIORITIZE** user's stated needs over perceived improvements
+
+### 4. Code Modification Rules
+- **ONLY** modify code that directly relates to the user's request
+- **PRESERVE** existing code style and formatting unless specifically asked to change it
+- **MAINTAIN** existing import order and structure
+- **AVOID** unnecessary refactoring or restructuring
+
+### 5. Communication Protocol
+- **ALWAYS** confirm before making changes that go beyond the stated objective
+- **ASK** for clarification if the task scope is unclear
+- **REPORT** progress on the main objective, not side improvements
+- **FOCUS** on solving the user's problem, not creating additional work
+
+### 6. Error Prevention
+- **DO NOT** make assumptions about what the user "might want"
+- **DO NOT** add features that weren't requested
+- **DO NOT** change code style or formatting unless explicitly requested
+- **DO NOT** restructure code unless it's necessary for the main task
+
+### 7. Quality Assurance
+- **VERIFY** that changes directly address the user's stated problem
+- **ENSURE** no unintended side effects or style changes
+- **CONFIRM** that the solution meets the user's exact requirements
+- **TEST** that the main objective is achieved before considering enhancements
+
+## Example Task Breakdown:
+When user says: "Replace hardcoded text with translation system"
+
+**Breakdown:**
+- [ ] Find all hardcoded text in specified files
+- [ ] Add translation keys to locale files
+- [ ] Replace hardcoded text with t("key") calls
+- [ ] Add useTranslation hooks where needed
+
+**NOT to do:**
+- [ ] Refactor component structure
+- [ ] Change import formatting
+- [ ] Add new features
+- [ ] Modify styling or layout
+- [ ] Restructure code organization
+
+## Remember: User's Problem = Your Only Objective
+description:
+globs:
+alwaysApply: true
+---
