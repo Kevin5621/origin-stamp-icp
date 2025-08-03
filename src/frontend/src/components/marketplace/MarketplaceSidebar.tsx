@@ -101,7 +101,10 @@ export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
         {/* User Profile Section */}
         <div className="sidebar-user">
           <div className="user-avatar">
-            <img src="https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png" alt="User" />
+            <img
+              src="https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png"
+              alt="User"
+            />
           </div>
           <div className="user-info">
             <div className="user-name">User Name</div>
