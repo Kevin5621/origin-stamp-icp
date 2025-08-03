@@ -77,7 +77,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "pudgy-penguins",
       name: "Pudgy Penguins",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "15.96",
       currency: "ICP",
       change: 1.3,
@@ -86,7 +87,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "cryptopunks",
       name: "CryptoPunks",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "50.99",
       currency: "ICP",
       change: 0,
@@ -95,7 +97,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "bored-ape-yacht-club",
       name: "Bored Ape Yacht Club",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "12.67",
       currency: "ICP",
       change: 4.6,
@@ -104,7 +107,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "milady-maker",
       name: "Milady Maker",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "3.20",
       currency: "ICP",
       change: 5.8,
@@ -113,7 +117,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "moonbirds",
       name: "Moonbirds",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.92",
       currency: "ICP",
       change: 17.1,
@@ -122,7 +127,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "rektguy",
       name: "rektguy",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.35",
       currency: "ICP",
       change: 18.5,
@@ -131,7 +137,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "lil-pudgys",
       name: "Lil Pudgys",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.73",
       currency: "ICP",
       change: 4.3,
@@ -140,7 +147,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "dx-terminal",
       name: "DX Terminal",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "< 0.01",
       currency: "ICP",
       change: 0.9,
@@ -149,7 +157,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "mutant-ape-yacht-club",
       name: "Mutant Ape Yacht Club",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.89",
       currency: "ICP",
       change: 4.6,
@@ -158,7 +167,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "azuki",
       name: "Azuki",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "2.08",
       currency: "ICP",
       change: 6.2,
@@ -167,7 +177,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "fidenza",
       name: "Fidenza by Tyler Hobbs",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "34.89",
       currency: "ICP",
       change: 2.6,
@@ -176,7 +187,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "doodles",
       name: "Doodles",
-      image: "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.04",
       currency: "ICP",
       change: 6.3,

@@ -209,63 +209,54 @@ const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="dashboard__main-grid">
-        {/* Quick Actions Panel */}
-        <div className="dashboard__quick-panel">
-          <div className="dashboard__panel-header">
-            <h2 className="dashboard__panel-title">{t("quick_actions")}</h2>
-            <p className="dashboard__panel-subtitle">
-              Akses cepat ke fitur utama
-            </p>
-          </div>
+      {/* Main Content */}
+      <div className="dashboard__main-content">
+        {/* Quick Actions - Now as horizontal cards */}
+        <div className="dashboard__quick-actions">
+          <button
+            className="dashboard__quick-card dashboard__quick-card--primary"
+            onClick={handleNewProject}
+          >
+            <div className="dashboard__quick-icon">
+              <Plus size={24} />
+            </div>
+            <div className="dashboard__quick-content">
+              <h3>{t("new_project")}</h3>
+              <p>{t("create_verification_project")}</p>
+            </div>
+            <ArrowRight size={20} className="dashboard__quick-arrow" />
+          </button>
 
-          <div className="dashboard__quick-grid">
-            <button
-              className="dashboard__quick-card dashboard__quick-card--primary"
-              onClick={handleNewProject}
-            >
-              <div className="dashboard__quick-icon">
-                <Plus size={24} />
-              </div>
-              <div className="dashboard__quick-content">
-                <h3>{t("new_project")}</h3>
-                <p>{t("create_verification_project")}</p>
-              </div>
-              <ArrowRight size={20} className="dashboard__quick-arrow" />
-            </button>
+          <button
+            className="dashboard__quick-card"
+            onClick={handleViewCertificates}
+          >
+            <div className="dashboard__quick-icon">
+              <FileText size={24} />
+            </div>
+            <div className="dashboard__quick-content">
+              <h3>{t("view_certificates")}</h3>
+              <p>{t("manage_issued_certificates")}</p>
+            </div>
+            <ArrowRight size={20} className="dashboard__quick-arrow" />
+          </button>
 
-            <button
-              className="dashboard__quick-card"
-              onClick={handleViewCertificates}
-            >
-              <div className="dashboard__quick-icon">
-                <FileText size={24} />
-              </div>
-              <div className="dashboard__quick-content">
-                <h3>{t("view_certificates")}</h3>
-                <p>{t("manage_issued_certificates")}</p>
-              </div>
-              <ArrowRight size={20} className="dashboard__quick-arrow" />
-            </button>
-
-            <button
-              className="dashboard__quick-card"
-              onClick={handleViewAnalytics}
-            >
-              <div className="dashboard__quick-icon">
-                <BarChart3 size={24} />
-              </div>
-              <div className="dashboard__quick-content">
-                <h3>{t("analytics")}</h3>
-                <p>{t("view_statistics_reports")}</p>
-              </div>
-              <ArrowRight size={20} className="dashboard__quick-arrow" />
-            </button>
-          </div>
+          <button
+            className="dashboard__quick-card"
+            onClick={handleViewAnalytics}
+          >
+            <div className="dashboard__quick-icon">
+              <BarChart3 size={24} />
+            </div>
+            <div className="dashboard__quick-content">
+              <h3>{t("analytics")}</h3>
+              <p>{t("view_statistics_reports")}</p>
+            </div>
+            <ArrowRight size={20} className="dashboard__quick-arrow" />
+          </button>
         </div>
 
-        {/* Projects Panel */}
+        {/* Projects Panel - Now full width */}
         <div className="dashboard__projects-panel">
           <div className="dashboard__panel-header">
             <div className="dashboard__panel-title-group">
