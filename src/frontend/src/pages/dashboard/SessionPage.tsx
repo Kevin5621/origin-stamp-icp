@@ -20,7 +20,6 @@ interface SessionData {
   createdAt: Date;
   updatedAt: Date;
   status: "active" | "completed";
-  progress: number;
   photoCount: number;
 }
 
@@ -48,7 +47,6 @@ const SessionPage: React.FC = () => {
           createdAt: new Date(2024, 7, 1),
           updatedAt: new Date(2024, 7, 2),
           status: "active",
-          progress: 35,
           photoCount: 12,
         },
         {
@@ -60,7 +58,6 @@ const SessionPage: React.FC = () => {
           createdAt: new Date(2024, 7, 3),
           updatedAt: new Date(2024, 7, 3),
           status: "active",
-          progress: 15,
           photoCount: 8,
         },
         {
@@ -72,7 +69,6 @@ const SessionPage: React.FC = () => {
           createdAt: new Date(2024, 6, 28),
           updatedAt: new Date(2024, 7, 1),
           status: "completed",
-          progress: 100,
           photoCount: 25,
         },
       ];
@@ -219,21 +215,6 @@ const SessionPage: React.FC = () => {
                         <span>{session.photoCount} photos</span>
                       </div>
                     </div>
-
-                    {session.progress > 0 && (
-                      <div className="session__session-progress">
-                        <div className="session__progress-info">
-                          <span>Progress</span>
-                          <span>{session.progress}%</span>
-                        </div>
-                        <div className="session__progress-bar">
-                          <div
-                            className="session__progress-fill"
-                            style={{ width: `${session.progress}%` }}
-                          />
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   <div className="session__session-actions">

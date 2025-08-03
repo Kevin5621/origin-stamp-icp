@@ -408,7 +408,7 @@ const SessionRecordPage: React.FC = () => {
       );
 
       // Navigate to certificate page
-      navigate(`/certificates/${session.id}`);
+      navigate(`/certificate/${session.id}`);
     }, 3000);
   };
 
@@ -472,22 +472,10 @@ const SessionRecordPage: React.FC = () => {
         <div className="session-record__status">
           <div className="recording-indicator">
             <div className="recording-dot" />
-            <span>Session in progress</span>
+            <span>Recording</span>
           </div>
           <div className="session-info">
-            <div className="step-progress">
-              <span>Step {session.currentStep + 1}</span>
-              <span>•</span>
-              <span>{session.photos.length} photos</span>
-            </div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{
-                  width: `${Math.min((session.photos.length / 10) * 100, 100)}%`,
-                }}
-              />
-            </div>
+            <div className="photo-count">{session.photos.length} photos</div>
           </div>
         </div>
 
