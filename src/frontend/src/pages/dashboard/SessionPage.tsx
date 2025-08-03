@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Camera,
   Palette,
@@ -29,7 +29,6 @@ interface SessionData {
  */
 const SessionPage: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [sessions, setSessions] = useState<SessionData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -93,7 +92,7 @@ const SessionPage: React.FC = () => {
   };
 
   const handleCreateNewSession = () => {
-    navigate("/dashboard");
+    navigate("/create-session");
   };
 
   const formatDate = (date: Date) => {
@@ -141,6 +140,12 @@ const SessionPage: React.FC = () => {
             <p>Continue your ongoing creative sessions and track progress</p>
           </div>
         </div>
+        <div className="session__welcome-actions">
+          <button className="btn btn--primary" onClick={handleCreateNewSession}>
+            <Plus size={16} />
+            New Session
+          </button>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -149,13 +154,6 @@ const SessionPage: React.FC = () => {
         <div className="session__sessions">
           <div className="session__sessions-header">
             <h2>Your Sessions</h2>
-            <button
-              className="btn btn--primary"
-              onClick={handleCreateNewSession}
-            >
-              <Plus size={16} />
-              New Session
-            </button>
           </div>
 
           {sessions.length === 0 ? (

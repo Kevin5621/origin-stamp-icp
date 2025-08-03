@@ -19,6 +19,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import SessionPage from "./pages/dashboard/SessionPage";
 import SessionRecordPage from "./pages/dashboard/SessionRecordPage";
+import CreateSessionPage from "./pages/dashboard/CreateSessionPage";
 import FinalizationPage from "./pages/dashboard/FinalizationPage";
 import VerificationPage from "./pages/dashboard/VerificationPage";
 import CertificatesPage from "./pages/dashboard/CertificatesPage";
@@ -75,6 +76,14 @@ function MainContentWrapper() {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-session"
+          element={
+            <ProtectedRoute>
+              <CreateSessionPage />
             </ProtectedRoute>
           }
         />
