@@ -20,6 +20,7 @@ import DashboardPage from "./pages/dashboard/DashboardPage";
 import SessionPage from "./pages/dashboard/SessionPage";
 import SessionRecordPage from "./pages/dashboard/SessionRecordPage";
 import CreateSessionPage from "./pages/dashboard/CreateSessionPage";
+import ViewCertificatePage from "./pages/dashboard/ViewCertificatePage";
 import FinalizationPage from "./pages/dashboard/FinalizationPage";
 import VerificationPage from "./pages/dashboard/VerificationPage";
 import CertificatesPage from "./pages/dashboard/CertificatesPage";
@@ -100,6 +101,14 @@ function MainContentWrapper() {
           element={
             <ProtectedRoute>
               <SessionRecordPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/certificate/:certificateId"
+          element={
+            <ProtectedRoute>
+              <ViewCertificatePage />
             </ProtectedRoute>
           }
         />

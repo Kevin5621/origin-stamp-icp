@@ -1,0 +1,387 @@
+// src/frontend/src/css/components/_view-certificate.scss
+.view-certificate {
+  padding: var(--spacing-md);
+  padding-top: calc(var(--spacing-xl) + 80px);
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--color-surface);
+  color: var(--color-primary-text);
+
+  &__loading,
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: var(--spacing-md);
+    text-align: center;
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--color-border);
+      border-top: 3px solid var(--color-accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    p {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-md);
+      font-weight: 500;
+    }
+
+    h2 {
+      color: var(--color-primary-text);
+      margin-bottom: var(--spacing-sm);
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: var(--spacing-md);
+      align-items: flex-start;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--spacing-md);
+
+    @media (max-width: 768px) {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--spacing-lg);
+    grid-template-areas:
+      "info info"
+      "badge details";
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "info"
+        "badge"
+        "details";
+    }
+  }
+
+  &__info {
+    grid-area: info;
+    text-align: center;
+    padding: var(--spacing-lg);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+
+    .certificate-issued-to {
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary-text);
+
+      strong {
+        color: var(--color-accent);
+      }
+    }
+
+    .certificate-dates {
+      font-size: var(--font-size-md);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  &__main {
+    grid-area: badge;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    height: 100%;
+  }
+
+  .certificate-badge {
+    flex-shrink: 0;
+
+    .badge-hexagon {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+        background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+        clip-path: polygon(
+          50% 0%,
+          100% 25%,
+          100% 75%,
+          50% 100%,
+          0% 75%,
+          0% 25%
+        );
+      }
+    }
+
+    .badge-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: white;
+      padding: var(--spacing-md);
+
+      .badge-title {
+        font-size: var(--font-size-sm);
+        font-weight: 700;
+        margin-bottom: var(--spacing-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .badge-subtitle {
+        font-size: var(--font-size-lg);
+        font-weight: 800;
+        margin-bottom: var(--spacing-sm);
+        line-height: 1.2;
+      }
+
+      .badge-level {
+        font-size: var(--font-size-xs);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .certificate-actions {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__details {
+    grid-area: details;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+
+    .certificate-description {
+      h3 {
+        font-size: var(--font-size-lg);
+        font-weight: 700;
+        margin-bottom: var(--spacing-sm);
+        color: var(--color-primary-text);
+      }
+
+      p {
+        line-height: 1.6;
+        color: var(--color-text-secondary);
+      }
+    }
+
+    .certificate-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+
+      .certificate-tag {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        background: var(--color-accent);
+        color: white;
+        border-radius: var(--border-radius-md);
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+      }
+    }
+
+    .certificate-criteria {
+      h3 {
+        font-size: var(--font-size-lg);
+        font-weight: 700;
+        margin-bottom: var(--spacing-sm);
+        color: var(--color-primary-text);
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          padding: var(--spacing-sm) 0;
+          padding-left: var(--spacing-lg);
+          position: relative;
+          color: var(--color-text-secondary);
+          line-height: 1.5;
+
+          &::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Verification Modal
+.verification-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  &__content {
+    position: relative;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    max-width: 500px;
+    width: 100%;
+    box-shadow: var(--shadow-xl);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-border);
+
+    h2 {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      margin: 0;
+      color: var(--color-primary-text);
+    }
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-md);
+    color: var(--color-text-secondary);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: var(--color-border);
+      color: var(--color-primary-text);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+
+    .verification-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--color-primary-text);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+
+      svg {
+        color: #22c55e;
+        flex-shrink: 0;
+      }
+
+      span {
+        font-size: var(--font-size-md);
+        line-height: 1.4;
+        color: var(--color-primary-text);
+      }
+
+      &--verified {
+        background: rgba(34, 197, 94, 0.15);
+        border: 2px solid #22c55e;
+
+        span {
+          font-weight: 700;
+          color: #22c55e;
+        }
+
+        svg {
+          color: #22c55e;
+        }
+      }
+    }
+  }
+}
+
+// Animation
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

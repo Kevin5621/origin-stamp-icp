@@ -88,7 +88,7 @@ const SessionPage: React.FC = () => {
   };
 
   const handleViewCertificate = (sessionId: string) => {
-    navigate(`/certificates/${sessionId}`);
+    navigate(`/certificate/${sessionId}`);
   };
 
   const handleCreateNewSession = () => {
