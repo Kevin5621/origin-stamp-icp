@@ -6,12 +6,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import {
-  Loader,
-  ErrorDisplay,
-  FloatingHeader,
-  AppLayout,
-} from "./components";
+import { Loader, ErrorDisplay, FloatingHeader, AppLayout } from "./components";
 import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
