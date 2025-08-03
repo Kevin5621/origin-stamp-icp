@@ -43,13 +43,7 @@ const DashboardPage: React.FC = () => {
     loadData();
   }, []);
 
-  return (
-    <Dashboard
-      isLoading={isLoading}
-      stats={stats}
-      projects={projects}
-    />
-  );
+  return <Dashboard isLoading={isLoading} stats={stats} projects={projects} />;
 };
 
 export default DashboardPage;

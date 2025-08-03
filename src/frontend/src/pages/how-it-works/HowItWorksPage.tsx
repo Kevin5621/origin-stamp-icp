@@ -5,7 +5,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import ThreeModelViewer from "../../components/ThreeModelViewer";
 import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
-import { useLandingLenis } from "../../hooks/useLenis";
 import { useCursorSpotlight } from "../../hooks/useCursorSpotlight";
 
 /**
@@ -19,7 +18,6 @@ const HowItWorksPage: React.FC = () => {
   const [show3DModel, setShow3DModel] = useState(false);
 
   const currentTheme = useTheme();
-  const lenis = useLandingLenis();
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
   // Initialize cursor spotlight effect
@@ -42,25 +40,22 @@ const HowItWorksPage: React.FC = () => {
     }, 500);
   }, []);
 
-  // Listen to Lenis scroll events for 3D model animation
+  // Handle scroll events for 3D model animation
   useEffect(() => {
-    if (!lenis) return;
-
-    const handleScroll = (e: any) => {
+    const handleScroll = () => {
       // Update data-scroll attribute for CSS animations
       const layout = document.querySelector(".how-it-works-layout");
       if (layout) {
-        const scrollProgress = Math.min(Math.floor(e.scroll / 500), 4);
+        const scrollProgress = Math.min(Math.floor(window.scrollY / 500), 4);
         layout.setAttribute("data-scroll", scrollProgress.toString());
       }
     };
 
-    lenis.on("scroll", handleScroll);
-
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      lenis.off("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [lenis]);
+  }, []);
 
   const handleGetStarted = () => {
     if (isAuthenticated) {
