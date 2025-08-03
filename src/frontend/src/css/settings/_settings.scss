@@ -8,47 +8,51 @@
      ============================================================================= */
 
   /* Light Theme Colors */
-  --color-primary-bg: #f8fafc;
-  --color-primary-text: #1e293b;
+  --color-primary-bg: #ffffff;
+  --color-primary-text: #0f172a;
   --color-surface: var(--color-primary-bg);
   --color-on-surface: var(--color-primary-text);
   --color-text-primary: var(--color-primary-text);
-  --color-text-secondary: #475569;
+  --color-text-secondary: #334155;
+  --color-text-tertiary: #64748b;
+  --color-surface-hover: #f8fafc;
 
   /* RGB Values for Surface Colors */
-  --color-surface-rgb: 248, 250, 252;
+  --color-surface-rgb: 255, 255, 255;
 
   /* Shadow Colors for Neumorphic Design */
-  --color-shadow-dark: #cbd5e1;
+  --color-shadow-dark: #d1d5db;
   --color-shadow-light: #ffffff;
 
   /* Interactive States */
-  --color-hover-overlay: rgba(148, 163, 184, 0.1);
-  --color-accent: #3b82f6;
-  --color-accent-rgb: 59, 130, 246;
+  --color-hover-overlay: rgba(37, 99, 235, 0.15);
+  --color-accent: #1e40af;
+  --color-accent-rgb: 30, 64, 175;
+  --color-accent-hover: #1e3a8a;
 
   /* Status Colors */
   --color-error: #dc2626;
   --color-error-bg: #fef2f2;
-  --color-success: #16a34a;
-  --color-warning: #ca8a04;
-  --color-info: #2563eb;
+  --color-success: #047857;
+  --color-warning: #b45309;
+  --color-info: #1e40af;
 
   /* RGB Values for Status Colors */
   --color-error-rgb: 220, 38, 38;
-  --color-success-rgb: 22, 163, 74;
-  --color-warning-rgb: 202, 138, 4;
-  --color-info-rgb: 37, 99, 235;
+  --color-success-rgb: 4, 120, 87;
+  --color-warning-rgb: 180, 83, 9;
+  --color-info-rgb: 30, 64, 175;
 
   /* Additional Colors */
   --color-secondary: #64748b;
-  --color-border: #e2e8f0;
+  --color-border: #cbd5e1;
+  --color-border-hover: #94a3b8;
   --color-text-tertiary: #64748b;
   --color-surface-disabled: #f1f5f9;
-  --color-primary-rgb: 30, 41, 59;
+  --color-primary-rgb: 15, 23, 42;
 
   /* RGB Values for Additional Colors */
-  --color-border-rgb: 226, 232, 240;
+  --color-border-rgb: 203, 213, 225;
 
   /* Animation States */
   --color-recording: #e53e3e;
@@ -60,7 +64,7 @@
 
   /* Overlay Colors for Neumorphic Effects */
   --color-white-overlay: rgba(255, 255, 255, 0.1);
-  --color-shadow-overlay: rgba(0, 0, 0, 0.1);
+  --color-shadow-overlay: rgba(0, 0, 0, 0.15);
   --color-white-overlay-light: rgba(255, 255, 255, 0.05);
 
   /* =============================================================================
@@ -75,6 +79,7 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
 
   --line-height-tight: 1.2;
   --line-height-normal: 1.5;
@@ -83,6 +88,16 @@
   --letter-spacing-tight: -0.02em;
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.05em;
+
+  /* Font Sizes */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-md: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
 
   /* =============================================================================
      SPACING SYSTEM
@@ -95,6 +110,7 @@
   --spacing-xl: 2rem; /* 32px */
   --spacing-2xl: 3rem; /* 48px */
   --spacing-3xl: 4rem; /* 64px */
+  --spacing-4xl: 6rem; /* 96px */
 
   /* Viewport-based spacing */
   --spacing-vw-sm: 2vw;
@@ -113,6 +129,7 @@
   --breakpoint-tablet: 900px;
   --breakpoint-desktop: 1200px;
   --breakpoint-wide: 1440px;
+  --breakpoint-ultra-wide: 1920px;
 
   /* =============================================================================
      BORDER RADIUS
@@ -123,19 +140,21 @@
   --border-radius-lg: 1rem; /* 16px */
   --border-radius-xl: 1.5rem; /* 24px */
   --border-radius-2xl: 2rem; /* 32px */
+  --border-radius-3xl: 3rem; /* 48px */
   --border-radius-full: 9999px;
 
   /* =============================================================================
      SHADOWS
      ============================================================================= */
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --shadow-md:
     0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg:
     0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl:
     0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
 
   /* Neumorphic shadows */
   --shadow-neumorphic-sm:
