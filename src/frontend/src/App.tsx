@@ -9,13 +9,9 @@ import {
 import {
   Loader,
   ErrorDisplay,
-  ThemeToggle,
-  Login,
   FloatingHeader,
   AppLayout,
 } from "./components";
-import LanguageToggle from "./components/ui/LanguageToggle";
-import { NotificationButton } from "./components/common/NotificationButton";
 import { AppNavigation } from "./components/navigation/AppNavigation";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
