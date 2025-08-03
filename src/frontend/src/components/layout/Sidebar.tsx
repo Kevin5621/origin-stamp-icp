@@ -158,14 +158,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="user-name">{getUserName()}</div>
             <div className="user-balance">{getUserBalance()}</div>
           </div>
-          <div className="user-actions">
-            <button className="action-btn" title="Wallet">
-              <Wallet size={16} />
-            </button>
-            <button className="action-btn" title="Notifications">
-              <Bell size={16} />
-            </button>
-          </div>
         </div>
 
         {/* Main Menu Items */}
