@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Camera,
@@ -13,6 +13,7 @@ import {
   Plus,
   Sparkles,
 } from "lucide-react";
+import { useToastContext } from "../../contexts/ToastContext";
 
 // Types for photo logs
 interface PhotoLog {
@@ -44,6 +45,7 @@ interface SessionData {
 const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
+  const { addToast } = useToastContext();
 
   const [session, setSession] = useState<SessionData | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -56,6 +58,8 @@ const SessionRecordPage: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<number>(0);
   const [totalFiles, setTotalFiles] = useState<number>(0);
   const [shouldCancelUpload, setShouldCancelUpload] = useState<boolean>(false);
+  const [isCancelling, setIsCancelling] = useState<boolean>(false);
+  const cancelRef = useRef<boolean>(false);
 
   // Debug effect untuk melihat perubahan location
   useEffect(() => {
@@ -71,12 +75,20 @@ const SessionRecordPage: React.FC = () => {
       setIsUploading(false);
       setUploadInProgress(false);
       setShouldCancelUpload(false);
+      setIsCancelling(false);
     }
   }, [selectedFiles]);
 
   // Debug shouldCancelUpload changes
   useEffect(() => {
     console.log("shouldCancelUpload changed to:", shouldCancelUpload);
+
+    // If cancelled, reset progress immediately for visual feedback
+    if (shouldCancelUpload) {
+      console.log("Resetting progress due to cancellation");
+      setUploadProgress(0);
+      setUploadedFiles(0);
+    }
   }, [shouldCancelUpload]);
 
   // Load session data (dummy data)
@@ -126,6 +138,7 @@ const SessionRecordPage: React.FC = () => {
     setIsUploading(false);
     setUploadInProgress(false);
     setShouldCancelUpload(false);
+    setIsCancelling(false);
 
     // Check for duplicates with existing photos
     if (session) {
@@ -136,7 +149,8 @@ const SessionRecordPage: React.FC = () => {
       );
 
       if (duplicates.length > 0) {
-        alert(
+        addToast(
+          "error",
           `File berikut sudah ada: ${duplicates.map((f) => f.name).join(", ")}`,
         );
         return;
@@ -149,12 +163,12 @@ const SessionRecordPage: React.FC = () => {
       const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
 
       if (!isValidType) {
-        alert(`File ${file.name} bukan file gambar yang valid`);
+        addToast("error", `File ${file.name} bukan file gambar yang valid`);
         return false;
       }
 
       if (!isValidSize) {
-        alert(`File ${file.name} terlalu besar (maksimal 10MB)`);
+        addToast("error", `File ${file.name} terlalu besar (maksimal 10MB)`);
         return false;
       }
 
@@ -205,7 +219,8 @@ const SessionRecordPage: React.FC = () => {
         );
 
         if (duplicates.length > 0) {
-          alert(
+          addToast(
+            "error",
             `File berikut sudah ada: ${duplicates.map((f) => f.name).join(", ")}`,
           );
           return;
@@ -218,12 +233,12 @@ const SessionRecordPage: React.FC = () => {
         const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
 
         if (!isValidType) {
-          alert(`File ${file.name} bukan file gambar yang valid`);
+          addToast("error", `File ${file.name} bukan file gambar yang valid`);
           return false;
         }
 
         if (!isValidSize) {
-          alert(`File ${file.name} terlalu besar (maksimal 10MB)`);
+          addToast("error", `File ${file.name} terlalu besar (maksimal 10MB)`);
           return false;
         }
 
@@ -248,6 +263,7 @@ const SessionRecordPage: React.FC = () => {
     // Prevent multiple uploads
     if (isUploading || uploadInProgress) {
       console.log("Upload already in progress, ignoring new request");
+      addToast("warning", "Upload sudah berjalan, tunggu hingga selesai");
       return;
     }
 
@@ -256,79 +272,115 @@ const SessionRecordPage: React.FC = () => {
     setUploadedFiles(0);
     setTotalFiles(selectedFiles.length);
     setShouldCancelUpload(false);
+    setIsCancelling(false);
+    cancelRef.current = false;
     setIsUploading(true);
     setUploadInProgress(true);
 
     const filesArray = Array.from(selectedFiles);
+
+    console.log("Starting upload process...");
+    console.log("Files to upload:", filesArray.length);
+
+    addToast("info", `Memulai upload ${filesArray.length} file...`);
+
     const newPhotos: PhotoLog[] = [];
 
-    // Simple upload simulation
-    for (let i = 0; i < filesArray.length; i++) {
-      // Check for cancellation
-      if (shouldCancelUpload) {
-        console.log("Upload cancelled at file", i);
-        break;
-      }
-
-      const file = filesArray[i];
-
-      // Simulate file upload with progress
-      for (let progress = 0; progress <= 100; progress += 10) {
-        if (shouldCancelUpload) {
-          console.log("Upload cancelled during progress");
-          break;
+    try {
+      // Simple upload simulation
+      for (let i = 0; i < filesArray.length; i++) {
+        // Check for cancellation before processing file
+        if (cancelRef.current) {
+          console.log("Upload cancelled at file", i);
+          addToast("warning", "Upload dibatalkan oleh user");
+          return; // Exit immediately and discard all files
         }
 
-        setUploadProgress((i * 100 + progress) / filesArray.length);
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        const file = filesArray[i];
+
+        // Simulate file upload with progress
+        for (let progress = 0; progress <= 100; progress += 10) {
+          // Check for cancellation at each progress step
+          if (cancelRef.current) {
+            console.log("Upload cancelled during progress at", progress, "%");
+            addToast("warning", "Upload dibatalkan oleh user");
+            return; // Exit immediately and discard all files
+          }
+
+          setUploadProgress((i * 100 + progress) / filesArray.length);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+
+        // Final check before adding file to array
+        if (cancelRef.current) {
+          console.log("Upload cancelled before adding file to array");
+          addToast("warning", "Upload dibatalkan oleh user");
+          return; // Exit immediately and discard all files
+        }
+
+        // Add file to photos array only if not cancelled
+        console.log("Adding file:", file.name);
+        newPhotos.push({
+          id: `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
+          filename: file.name,
+          timestamp: new Date(),
+          description: stepDescription || `Step ${session.currentStep + i + 1}`,
+          fileSize: file.size,
+          url: URL.createObjectURL(file),
+          step: session.currentStep + i + 1,
+          s3Key: `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
+        });
+
+        setUploadedFiles(i + 1);
       }
 
-      if (shouldCancelUpload) break;
-
-      // Add file to photos array
-      newPhotos.push({
-        id: `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
-        filename: file.name,
-        timestamp: new Date(),
-        description: stepDescription || `Step ${session.currentStep + i + 1}`,
-        fileSize: file.size,
-        url: URL.createObjectURL(file),
-        step: session.currentStep + i + 1,
-        s3Key: `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
-      });
-
-      setUploadedFiles(i + 1);
+      // Update session with new photos only if not cancelled
+      if (!cancelRef.current && newPhotos.length > 0) {
+        console.log("Updating session with", newPhotos.length, "new photos");
+        setSession((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            photos: [...prev.photos, ...newPhotos],
+            currentStep: prev.currentStep + newPhotos.length,
+          };
+        });
+        addToast("success", `${newPhotos.length} file berhasil diupload!`);
+      } else {
+        console.log("Session not updated - cancelled or no photos");
+      }
+    } catch (error) {
+      console.log("Upload error:", error);
+      addToast("error", "Terjadi kesalahan saat upload file");
+    } finally {
+      // Reset all states
+      setSelectedFiles(null);
+      setStepDescription("");
+      setIsUploading(false);
+      setUploadInProgress(false);
+      setUploadedFiles(0);
+      setTotalFiles(0);
+      setShouldCancelUpload(false);
+      setIsCancelling(false);
+      cancelRef.current = false;
+      setUploadProgress(0);
     }
-
-    // Update session if not cancelled
-    if (!shouldCancelUpload && newPhotos.length > 0) {
-      setSession((prev) => {
-        if (!prev) return null;
-        return {
-          ...prev,
-          photos: [...prev.photos, ...newPhotos],
-          currentStep: prev.currentStep + newPhotos.length,
-        };
-      });
-    }
-
-    // Reset all states
-    setSelectedFiles(null);
-    setStepDescription("");
-    setIsUploading(false);
-    setUploadInProgress(false);
-    setUploadProgress(0);
-    setUploadedFiles(0);
-    setTotalFiles(0);
-    setShouldCancelUpload(false);
   };
 
   const handleDeletePhoto = (photoId: string) => {
     if (session) {
+      const photoToDelete = session.photos.find((p) => p.id === photoId);
       setSession({
         ...session,
         photos: session.photos.filter((p) => p.id !== photoId),
       });
+
+      if (photoToDelete) {
+        addToast(
+          "success",
+          `Foto "${photoToDelete.filename}" berhasil dihapus`,
+        );
+      }
     }
   };
 
@@ -336,6 +388,7 @@ const SessionRecordPage: React.FC = () => {
     if (!session) return;
 
     setIsGeneratingNFT(true);
+    addToast("info", "Memulai proses generate NFT...");
 
     // Simulate NFT generation process
     setTimeout(() => {
@@ -349,6 +402,10 @@ const SessionRecordPage: React.FC = () => {
           : null,
       );
       setIsGeneratingNFT(false);
+      addToast(
+        "success",
+        "NFT berhasil di-generate! Redirecting ke certificate...",
+      );
 
       // Navigate to certificate page
       navigate(`/certificates/${session.id}`);
@@ -513,16 +570,20 @@ const SessionRecordPage: React.FC = () => {
                       <div className="progress-info">
                         <span>
                           {shouldCancelUpload
-                            ? "Cancelling upload..."
+                            ? "Upload cancelled"
                             : `Uploading ${uploadedFiles} of ${totalFiles} files`}
                         </span>
-                        <span>{Math.min(uploadProgress, 100).toFixed(0)}%</span>
+                        <span>
+                          {shouldCancelUpload
+                            ? "0%"
+                            : `${Math.min(uploadProgress, 100).toFixed(0)}%`}
+                        </span>
                       </div>
                       <div className="progress-bar">
                         <div
                           className="progress-fill"
                           style={{
-                            width: `${Math.min(uploadProgress, 100)}%`,
+                            width: `${shouldCancelUpload ? 0 : Math.min(uploadProgress, 100)}%`,
                             background: shouldCancelUpload
                               ? "var(--color-error)"
                               : "var(--color-accent)",
@@ -539,9 +600,21 @@ const SessionRecordPage: React.FC = () => {
                         console.log("Cancel button clicked");
 
                         if (isUploading || uploadInProgress) {
-                          // Cancel ongoing upload
+                          // Cancel ongoing upload immediately
                           console.log("Cancelling upload...");
+                          console.log(
+                            "Current state - isUploading:",
+                            isUploading,
+                            "uploadInProgress:",
+                            uploadInProgress,
+                          );
                           setShouldCancelUpload(true);
+                          setIsCancelling(true);
+                          cancelRef.current = true;
+                          // Reset progress immediately for visual feedback
+                          setUploadProgress(0);
+                          setUploadedFiles(0);
+                          addToast("warning", "Upload dibatalkan");
                         } else {
                           // Clear selection
                           setSelectedFiles(null);
@@ -552,13 +625,16 @@ const SessionRecordPage: React.FC = () => {
                           setIsUploading(false);
                           setUploadInProgress(false);
                           setShouldCancelUpload(false);
+                          setIsCancelling(false);
                         }
                       }}
-                      disabled={false}
+                      disabled={isCancelling}
                     >
-                      {isUploading || uploadInProgress
-                        ? "Cancel Upload"
-                        : "Cancel"}
+                      {isCancelling
+                        ? "Cancelling..."
+                        : isUploading || uploadInProgress
+                          ? "Cancel Upload"
+                          : "Cancel"}
                     </button>
                     <button
                       className="btn btn--primary"
