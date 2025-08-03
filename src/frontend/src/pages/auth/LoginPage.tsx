@@ -90,7 +90,7 @@ const LoginPage: React.FC = () => {
       success(t("login_success", { username: userInfo.name }));
     } catch (err) {
       console.error("Google login failed:", err);
-      error(t("login_failed", { message: "Google login failed" }));
+      error(t("login_failed", { message: t("google_login_failed") }));
     }
   };
 
@@ -103,7 +103,7 @@ const LoginPage: React.FC = () => {
       success(t("register_success"));
     } catch (err) {
       console.error("Google signup failed:", err);
-      error(t("register_failed", { message: "Google signup failed" }));
+      error(t("register_failed", { message: t("google_signup_failed") }));
     }
   };
 

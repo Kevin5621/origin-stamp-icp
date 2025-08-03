@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   Camera,
@@ -27,6 +28,7 @@ interface SessionData {
  * Session Page - Simplified untuk menampilkan session yang bisa dilanjutkan
  */
 const SessionPage: React.FC = () => {
+  const { t } = useTranslation("session");
   const navigate = useNavigate();
   const [sessions, setSessions] = useState<SessionData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -117,7 +119,7 @@ const SessionPage: React.FC = () => {
       <div className="session">
         <div className="session__loading">
           <div className="loading-spinner" />
-          <p>Loading sessions...</p>
+          <p>{t("session.loading_sessions")}</p>
         </div>
       </div>
     );
@@ -132,14 +134,14 @@ const SessionPage: React.FC = () => {
             <Camera size={32} />
           </div>
           <div className="session__welcome-text">
-            <h1>Active Sessions</h1>
-            <p>Continue your ongoing creative sessions and track progress</p>
+            <h1>{t("session.active_sessions")}</h1>
+            <p>{t("session.continue_sessions_description")}</p>
           </div>
         </div>
         <div className="session__welcome-actions">
           <button className="btn btn--primary" onClick={handleCreateNewSession}>
             <Plus size={16} />
-            New Session
+            {t("session.new_session")}
           </button>
         </div>
       </div>
@@ -149,7 +151,7 @@ const SessionPage: React.FC = () => {
         {/* Sessions Grid */}
         <div className="session__sessions">
           <div className="session__sessions-header">
-            <h2>Your Sessions</h2>
+            <h2>{t("session.your_sessions")}</h2>
           </div>
 
           {sessions.length === 0 ? (
@@ -157,25 +159,22 @@ const SessionPage: React.FC = () => {
               <div className="session__empty-icon">
                 <FolderOpen size={64} />
               </div>
-              <h3>No Active Sessions</h3>
-              <p>
-                You don't have any active sessions yet. Start documenting your
-                creative process by creating a new session.
-              </p>
+              <h3>{t("session.no_active_sessions")}</h3>
+              <p>{t("session.no_sessions_description")}</p>
               <div className="session__empty-actions">
                 <button
                   className="btn btn--primary"
                   onClick={handleCreateNewSession}
                 >
                   <Plus size={16} />
-                  Create Your First Session
+                  {t("session.create_first_session")}
                 </button>
                 <button
                   className="btn btn--secondary"
                   onClick={() => navigate("/dashboard")}
                 >
                   <FileText size={16} />
-                  Go to Dashboard
+                  {t("session.go_to_dashboard")}
                 </button>
               </div>
             </div>
@@ -192,8 +191,8 @@ const SessionPage: React.FC = () => {
                       )}
                       <span>
                         {session.artType === "physical"
-                          ? "Physical"
-                          : "Digital"}
+                          ? t("session.physical")
+                          : t("session.digital")}
                       </span>
                     </div>
                     {getStatusBadge(session.status)}
@@ -208,11 +207,15 @@ const SessionPage: React.FC = () => {
                     <div className="session__session-meta">
                       <div className="session__meta-item">
                         <Clock size={14} />
-                        <span>Updated {formatDate(session.updatedAt)}</span>
+                        <span>
+                          {t("session.updated")} {formatDate(session.updatedAt)}
+                        </span>
                       </div>
                       <div className="session__meta-item">
                         <Camera size={14} />
-                        <span>{session.photoCount} photos</span>
+                        <span>
+                          {session.photoCount} {t("session.photos")}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -224,7 +227,7 @@ const SessionPage: React.FC = () => {
                         onClick={() => handleContinueSession(session.id)}
                       >
                         <Play size={16} />
-                        Continue Session
+                        {t("session.continue_session")}
                       </button>
                     )}
 
@@ -234,7 +237,7 @@ const SessionPage: React.FC = () => {
                         onClick={() => handleViewCertificate(session.id)}
                       >
                         <CheckCircle size={16} />
-                        View Certificate
+                        {t("session.view_certificate")}
                       </button>
                     )}
                   </div>

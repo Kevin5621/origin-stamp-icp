@@ -193,7 +193,7 @@ export function Login({ className = "" }: LoginProps) {
         onError: (err) => {
           console.error("Internet Identity login failed:", err);
           error(
-            t("login_failed", { message: "Internet Identity login failed" }),
+            t("login_failed", { message: t("internet_identity_login_failed") }),
           );
         },
       });
@@ -212,7 +212,7 @@ export function Login({ className = "" }: LoginProps) {
       success(t("login_success", { username: userInfo.name }));
     } catch (err) {
       console.error("Google login failed:", err);
-      error(t("login_failed", { message: "Google login failed" }));
+      error(t("login_failed", { message: t("google_login_failed") }));
     }
   }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
 
@@ -226,7 +226,7 @@ export function Login({ className = "" }: LoginProps) {
       success(t("register_success"));
     } catch (err) {
       console.error("Google signup failed:", err);
-      error(t("register_failed", { message: "Google signup failed" }));
+      error(t("register_failed", { message: t("google_signup_failed") }));
     }
   }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
 

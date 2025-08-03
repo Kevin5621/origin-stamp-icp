@@ -42,7 +42,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "2",
-      title: "Profile Updated",
+      title: t("notification.profile_updated"),
       message: "Your profile information has been successfully updated.",
       type: "success",
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
@@ -50,7 +50,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "3",
-      title: "New Feature Available",
+      title: t("notification.new_feature"),
       message: "Check out our new 3D model viewer feature in the dashboard.",
       type: "info",
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
@@ -58,7 +58,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "4",
-      title: "System Maintenance",
+      title: t("notification.system_maintenance"),
       message: "Scheduled maintenance will occur tonight at 2 AM UTC.",
       type: "warning",
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6), // 6 hours ago
@@ -66,7 +66,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "5",
-      title: "Security Alert",
+      title: t("notification.security_alert"),
       message: "New login detected from unknown device.",
       type: "error",
       timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
@@ -74,7 +74,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "6",
-      title: "Backup Completed",
+      title: t("notification.backup_completed"),
       message: "Your data has been successfully backed up.",
       type: "success",
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12), // 12 hours ago
@@ -82,7 +82,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "7",
-      title: "New Project Created",
+      title: t("notification.new_project"),
       message:
         "Your new project 'Digital Art Collection' has been created successfully.",
       type: "success",
@@ -91,7 +91,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "8",
-      title: "Certificate Generated",
+      title: t("notification.certificate_generated"),
       message:
         "Your certificate for 'Abstract Painting #3' is ready for download.",
       type: "info",
@@ -100,7 +100,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "9",
-      title: "Storage Warning",
+      title: t("notification.storage_warning"),
       message:
         "You're using 85% of your storage space. Consider upgrading your plan.",
       type: "warning",
@@ -109,7 +109,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "10",
-      title: "Collaboration Invite",
+      title: t("notification.collaboration_invite"),
       message: "You've been invited to collaborate on 'Community Art Project'.",
       type: "info",
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 36), // 36 hours ago
@@ -117,7 +117,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "11",
-      title: "Export Completed",
+      title: t("notification.export_completed"),
       message:
         "Your artwork has been successfully exported to high-resolution format.",
       type: "success",
@@ -126,7 +126,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     },
     {
       id: "12",
-      title: "API Update",
+      title: t("notification.api_update"),
       message:
         "Our API has been updated to version 2.1. Check the documentation for new features.",
       type: "info",
@@ -194,7 +194,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    if (minutes < 1) return "Just now";
+    if (minutes < 1) return t("notification.just_now");
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     return `${days}d ago`;

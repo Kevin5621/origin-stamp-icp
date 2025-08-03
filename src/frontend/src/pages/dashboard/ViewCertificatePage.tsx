@@ -1,5 +1,6 @@
 // src/frontend/src/pages/dashboard/ViewCertificatePage.tsx
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, CheckCircle, Share2, Download, Eye, X } from "lucide-react";
 
@@ -27,6 +28,7 @@ interface CertificateData {
  * View Certificate Page - Halaman untuk melihat detail sertifikat
  */
 const ViewCertificatePage: React.FC = () => {
+  const { t } = useTranslation("certificates");
   const navigate = useNavigate();
   const { certificateId } = useParams<{ certificateId: string }>();
   const [certificate, setCertificate] = useState<CertificateData | null>(null);
@@ -40,8 +42,8 @@ const ViewCertificatePage: React.FC = () => {
       setTimeout(() => {
         const mockCertificate: CertificateData = {
           id: certificateId,
-          title: "Creative Process Mastery",
-          subtitle: "Digital Art Documentation",
+          title: t("certificate_title"),
+          subtitle: t("certificate_preview_description"),
           level: "ADVANCED",
           issuedTo: "Ananda Kevin Refaldo Sariputra",
           issuedDate: new Date(2024, 7, 12),
@@ -112,7 +114,7 @@ const ViewCertificatePage: React.FC = () => {
       <div className="view-certificate">
         <div className="view-certificate__loading">
           <div className="loading-spinner" />
-          <p>Loading certificate...</p>
+          <p>{t("loading_certificate")}</p>
         </div>
       </div>
     );
@@ -122,13 +124,13 @@ const ViewCertificatePage: React.FC = () => {
     return (
       <div className="view-certificate">
         <div className="view-certificate__error">
-          <h2>Certificate Not Found</h2>
-          <p>The certificate you're looking for doesn't exist.</p>
+          <h2>{t("certificate_not_found")}</h2>
+          <p>{t("certificate_not_found_description")}</p>
           <button
             className="btn btn--primary"
             onClick={() => navigate("/certificates")}
           >
-            Back to Certificates
+            {t("back_to_certificates")}
           </button>
         </div>
       </div>
@@ -145,16 +147,16 @@ const ViewCertificatePage: React.FC = () => {
             onClick={() => navigate("/certificates")}
           >
             <ArrowLeft size={20} />
-            Back to Certificates
+            {t("back_to_certificates")}
           </button>
           <div className="view-certificate__actions">
             <button className="btn btn--secondary" onClick={handleShare}>
               <Share2 size={16} />
-              Share
+              {t("share")}
             </button>
             <button className="btn btn--secondary" onClick={handleDownload}>
               <Download size={16} />
-              Download
+              {t("download")}
             </button>
           </div>
         </div>
@@ -164,12 +166,12 @@ const ViewCertificatePage: React.FC = () => {
           {/* Certificate Info */}
           <div className="view-certificate__info">
             <div className="certificate-issued-to">
-              This certificate was issued to{" "}
+              {t("certificate_issued_to")}{" "}
               <strong>{certificate.issuedTo}</strong>
             </div>
             <div className="certificate-dates">
-              Date issued: {formatDate(certificate.issuedDate)} | Expires:{" "}
-              {formatDate(certificate.expiresDate)}
+              {t("date_issued")}: {formatDate(certificate.issuedDate)} |{" "}
+              {t("expires")}: {formatDate(certificate.expiresDate)}
             </div>
           </div>
 
@@ -178,9 +180,11 @@ const ViewCertificatePage: React.FC = () => {
             <div className="certificate-badge">
               <div className="badge-hexagon">
                 <div className="badge-content">
-                  <div className="badge-title">{certificate.title}</div>
-                  <div className="badge-subtitle">{certificate.subtitle}</div>
-                  <div className="badge-level">{certificate.level}</div>
+                  <div className="badge-title">{t("certificate_title")}</div>
+                  <div className="badge-subtitle">
+                    {t("certificate_preview_description")}
+                  </div>
+                  <div className="badge-level">{t("advanced")}</div>
                 </div>
               </div>
             </div>
@@ -188,7 +192,7 @@ const ViewCertificatePage: React.FC = () => {
             <div className="certificate-actions">
               <button className="btn btn--primary" onClick={handleVerify}>
                 <Eye size={16} />
-                Verify
+                {t("verify")}
               </button>
             </div>
           </div>
@@ -196,23 +200,23 @@ const ViewCertificatePage: React.FC = () => {
           {/* Certificate Details */}
           <div className="view-certificate__details">
             <div className="certificate-description">
-              <h3>Description</h3>
-              <p>{certificate.description}</p>
+              <h3>{t("description")}</h3>
+              <p>{t("certificate_description")}</p>
             </div>
 
             <div className="certificate-tags">
               {certificate.tags.map((tag, index) => (
                 <span key={index} className="certificate-tag">
-                  {tag}
+                  {t(`tag_${tag.toLowerCase().replace(/\s+/g, "_")}`)}
                 </span>
               ))}
             </div>
 
             <div className="certificate-criteria">
-              <h3>Earning Criteria</h3>
+              <h3>{t("earning_criteria")}</h3>
               <ul>
                 {certificate.earningCriteria.map((criteria, index) => (
-                  <li key={index}>{criteria}</li>
+                  <li key={index}>{t(`criteria_${index + 1}`)}</li>
                 ))}
               </ul>
             </div>
@@ -228,7 +232,7 @@ const ViewCertificatePage: React.FC = () => {
             />
             <div className="verification-modal__content">
               <div className="verification-modal__header">
-                <h2>Verification</h2>
+                <h2>{t("verification")}</h2>
                 <button
                   className="verification-modal__close"
                   onClick={() => setShowVerificationModal(false)}
@@ -240,36 +244,44 @@ const ViewCertificatePage: React.FC = () => {
               <div className="verification-modal__list">
                 <div className="verification-item">
                   <CheckCircle size={20} />
-                  <span>Issued on {formatDate(certificate.issuedDate)}</span>
-                </div>
-                <div className="verification-item">
-                  <CheckCircle size={20} />
-                  <span>Issued by {certificate.issuedBy}</span>
-                </div>
-                <div className="verification-item">
-                  <CheckCircle size={20} />
-                  <span>Issued using {certificate.platform}</span>
-                </div>
-                <div className="verification-item">
-                  <CheckCircle size={20} />
-                  <span>Issued to {certificate.issuedTo}</span>
-                </div>
-                <div className="verification-item">
-                  <CheckCircle size={20} />
                   <span>
-                    Accepted on {formatDate(certificate.acceptedDate)}
+                    {t("issued_on")} {formatDate(certificate.issuedDate)}
                   </span>
                 </div>
                 <div className="verification-item">
                   <CheckCircle size={20} />
                   <span>
-                    Last Updated {formatDate(certificate.lastUpdated)}
+                    {t("issued_by")} {certificate.issuedBy}
+                  </span>
+                </div>
+                <div className="verification-item">
+                  <CheckCircle size={20} />
+                  <span>
+                    {t("issued_using")} {certificate.platform}
+                  </span>
+                </div>
+                <div className="verification-item">
+                  <CheckCircle size={20} />
+                  <span>
+                    {t("issued_to")} {certificate.issuedTo}
+                  </span>
+                </div>
+                <div className="verification-item">
+                  <CheckCircle size={20} />
+                  <span>
+                    {t("accepted_on")} {formatDate(certificate.acceptedDate)}
+                  </span>
+                </div>
+                <div className="verification-item">
+                  <CheckCircle size={20} />
+                  <span>
+                    {t("last_updated")} {formatDate(certificate.lastUpdated)}
                   </span>
                 </div>
                 <div className="verification-item verification-item--verified">
                   <CheckCircle size={20} />
                   <span>
-                    <strong>VERIFIED</strong>
+                    <strong>{t("verified_status")}</strong>
                   </span>
                 </div>
               </div>
