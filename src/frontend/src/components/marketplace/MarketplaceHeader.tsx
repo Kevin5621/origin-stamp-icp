@@ -60,11 +60,6 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
 
         {/* Actions */}
         <div className="marketplace-header__actions">
-          <button className="connect-wallet-btn" onClick={onConnectWallet}>
-            <Wallet size={16} />
-            {t("connectWallet")}
-          </button>
-
           <button
             className="mobile-menu-btn"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
