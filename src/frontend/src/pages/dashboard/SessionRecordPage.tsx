@@ -53,6 +53,31 @@ const SessionRecordPage: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [isGeneratingNFT, setIsGeneratingNFT] = useState(false);
   const [uploadInProgress, setUploadInProgress] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<number>(0);
+  const [totalFiles, setTotalFiles] = useState<number>(0);
+  const [shouldCancelUpload, setShouldCancelUpload] = useState<boolean>(false);
+
+  // Debug effect untuk melihat perubahan location
+  useEffect(() => {
+    console.log("SessionPage location changed to:", location.pathname);
+  }, [location.pathname]);
+
+  // Reset progress states when selectedFiles changes
+  useEffect(() => {
+    if (!selectedFiles) {
+      setUploadProgress(0);
+      setUploadedFiles(0);
+      setTotalFiles(0);
+      setIsUploading(false);
+      setUploadInProgress(false);
+      setShouldCancelUpload(false);
+    }
+  }, [selectedFiles]);
+
+  // Debug shouldCancelUpload changes
+  useEffect(() => {
+    console.log("shouldCancelUpload changed to:", shouldCancelUpload);
+  }, [shouldCancelUpload]);
 
   // Load session data (dummy data)
   useEffect(() => {
@@ -94,6 +119,14 @@ const SessionRecordPage: React.FC = () => {
   }, [sessionId]);
 
   const handleFileSelect = (files: FileList) => {
+    // Reset progress states when new files are selected
+    setUploadProgress(0);
+    setUploadedFiles(0);
+    setTotalFiles(0);
+    setIsUploading(false);
+    setUploadInProgress(false);
+    setShouldCancelUpload(false);
+
     // Check for duplicates with existing photos
     if (session) {
       const existingFilenames = session.photos.map((photo) => photo.filename);
@@ -110,7 +143,33 @@ const SessionRecordPage: React.FC = () => {
       }
     }
 
-    setSelectedFiles(files);
+    // Validate file types and sizes
+    const validFiles = Array.from(files).filter((file) => {
+      const isValidType = file.type.startsWith("image/");
+      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
+
+      if (!isValidType) {
+        alert(`File ${file.name} bukan file gambar yang valid`);
+        return false;
+      }
+
+      if (!isValidSize) {
+        alert(`File ${file.name} terlalu besar (maksimal 10MB)`);
+        return false;
+      }
+
+      return true;
+    });
+
+    if (validFiles.length === 0) {
+      return;
+    }
+
+    // Create a new FileList-like object with valid files
+    const dataTransfer = new DataTransfer();
+    validFiles.forEach((file) => dataTransfer.items.add(file));
+
+    setSelectedFiles(dataTransfer.files);
   };
 
   const handleDrag = (e: React.DragEvent) => {
@@ -127,6 +186,14 @@ const SessionRecordPage: React.FC = () => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
+
+    // Reset progress states when new files are dropped
+    setUploadProgress(0);
+    setUploadedFiles(0);
+    setTotalFiles(0);
+    setIsUploading(false);
+    setUploadInProgress(false);
+    setShouldCancelUpload(false);
 
     if (e.dataTransfer.files?.[0]) {
       // Check for duplicates with existing photos
@@ -145,69 +212,115 @@ const SessionRecordPage: React.FC = () => {
         }
       }
 
-      handleFileSelect(e.dataTransfer.files);
+      // Validate file types and sizes
+      const validFiles = Array.from(e.dataTransfer.files).filter((file) => {
+        const isValidType = file.type.startsWith("image/");
+        const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
+
+        if (!isValidType) {
+          alert(`File ${file.name} bukan file gambar yang valid`);
+          return false;
+        }
+
+        if (!isValidSize) {
+          alert(`File ${file.name} terlalu besar (maksimal 10MB)`);
+          return false;
+        }
+
+        return true;
+      });
+
+      if (validFiles.length === 0) {
+        return;
+      }
+
+      // Create a new FileList-like object with valid files
+      const dataTransfer = new DataTransfer();
+      validFiles.forEach((file) => dataTransfer.items.add(file));
+
+      handleFileSelect(dataTransfer.files);
     }
   };
 
   const handleUploadToS3 = async () => {
-    if (!selectedFiles || !session || uploadInProgress) return;
+    if (!selectedFiles || !session) return;
 
-    setUploadInProgress(true);
-    setIsUploading(true);
+    // Prevent multiple uploads
+    if (isUploading || uploadInProgress) {
+      console.log("Upload already in progress, ignoring new request");
+      return;
+    }
+
+    // Reset states and start upload
     setUploadProgress(0);
+    setUploadedFiles(0);
+    setTotalFiles(selectedFiles.length);
+    setShouldCancelUpload(false);
+    setIsUploading(true);
+    setUploadInProgress(true);
 
-    // Simulate S3 upload process
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
+    const filesArray = Array.from(selectedFiles);
+    const newPhotos: PhotoLog[] = [];
 
-          // Add photos to session with S3 keys - menggunakan timestamp yang unique
-          const newPhotos: PhotoLog[] = Array.from(selectedFiles).map(
-            (file, index) => ({
-              id: `photo-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
-              filename: file.name,
-              timestamp: new Date(),
-              description:
-                stepDescription || `Step ${session.currentStep + index + 1}`,
-              fileSize: file.size,
-              url: URL.createObjectURL(file),
-              step: session.currentStep + index + 1,
-              s3Key: `sessions/${session.id}/photos/${Date.now()}-${index}-${file.name}`,
-            }),
-          );
+    // Simple upload simulation
+    for (let i = 0; i < filesArray.length; i++) {
+      // Check for cancellation
+      if (shouldCancelUpload) {
+        console.log("Upload cancelled at file", i);
+        break;
+      }
 
-          // Pastikan tidak ada duplicate dengan mengecek filename dan timestamp
-          setSession((prev) => {
-            if (!prev) return null;
+      const file = filesArray[i];
 
-            // Filter out any potential duplicates based on filename and recent timestamp
-            const existingPhotos = prev.photos.filter((photo) => {
-              const isRecent = Date.now() - photo.timestamp.getTime() < 5000; // 5 seconds
-              return (
-                !isRecent ||
-                !newPhotos.some(
-                  (newPhoto) => newPhoto.filename === photo.filename,
-                )
-              );
-            });
-
-            return {
-              ...prev,
-              photos: [...existingPhotos, ...newPhotos],
-              currentStep: prev.currentStep + selectedFiles.length,
-            };
-          });
-
-          setSelectedFiles(null);
-          setStepDescription("");
-          setIsUploading(false);
-          setUploadInProgress(false);
-          return 0;
+      // Simulate file upload with progress
+      for (let progress = 0; progress <= 100; progress += 10) {
+        if (shouldCancelUpload) {
+          console.log("Upload cancelled during progress");
+          break;
         }
-        return prev + 10;
+
+        setUploadProgress((i * 100 + progress) / filesArray.length);
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+
+      if (shouldCancelUpload) break;
+
+      // Add file to photos array
+      newPhotos.push({
+        id: `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
+        filename: file.name,
+        timestamp: new Date(),
+        description: stepDescription || `Step ${session.currentStep + i + 1}`,
+        fileSize: file.size,
+        url: URL.createObjectURL(file),
+        step: session.currentStep + i + 1,
+        s3Key: `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
       });
-    }, 100);
+
+      setUploadedFiles(i + 1);
+    }
+
+    // Update session if not cancelled
+    if (!shouldCancelUpload && newPhotos.length > 0) {
+      setSession((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          photos: [...prev.photos, ...newPhotos],
+          currentStep: prev.currentStep + newPhotos.length,
+        };
+      });
+    }
+
+    // Reset all states
+    setSelectedFiles(null);
+    setStepDescription("");
+    setIsUploading(false);
+    setUploadInProgress(false);
+    setUploadProgress(0);
+    setUploadedFiles(0);
+    setTotalFiles(0);
+    setShouldCancelUpload(false);
   };
 
   const handleDeletePhoto = (photoId: string) => {
@@ -305,9 +418,19 @@ const SessionRecordPage: React.FC = () => {
             <span>Session in progress</span>
           </div>
           <div className="session-info">
-            <span>Step {session.currentStep + 1}</span>
-            <span>•</span>
-            <span>{session.photos.length} photos uploaded to S3</span>
+            <div className="step-progress">
+              <span>Step {session.currentStep + 1}</span>
+              <span>•</span>
+              <span>{session.photos.length} photos</span>
+            </div>
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{
+                  width: `${Math.min((session.photos.length / 10) * 100, 100)}%`,
+                }}
+              />
+            </div>
           </div>
         </div>
 
@@ -328,7 +451,7 @@ const SessionRecordPage: React.FC = () => {
                 <input
                   type="file"
                   multiple
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/jpg"
                   onChange={(e) =>
                     e.target.files && handleFileSelect(e.target.files)
                   }
@@ -337,12 +460,14 @@ const SessionRecordPage: React.FC = () => {
                 />
 
                 <div className="upload-content">
-                  <Camera size={48} />
+                  <Camera size={32} />
                   <h3>Drop photos here or click to browse</h3>
-                  <p>Photos will be automatically uploaded to S3 storage</p>
+                  <p>
+                    Support multiple photos (JPG, PNG, WebP) up to 10MB each
+                  </p>
 
                   <label htmlFor="photo-upload" className="btn btn--primary">
-                    <Upload size={20} />
+                    <Upload size={16} />
                     Choose Photos
                   </label>
                 </div>
@@ -381,29 +506,64 @@ const SessionRecordPage: React.FC = () => {
                   </div>
 
                   {uploadProgress > 0 && (
-                    <div className="upload-progress">
+                    <div
+                      className="upload-progress"
+                      key={`progress-${selectedFiles?.length || 0}-${uploadProgress}`}
+                    >
+                      <div className="progress-info">
+                        <span>
+                          {shouldCancelUpload
+                            ? "Cancelling upload..."
+                            : `Uploading ${uploadedFiles} of ${totalFiles} files`}
+                        </span>
+                        <span>{Math.min(uploadProgress, 100).toFixed(0)}%</span>
+                      </div>
                       <div className="progress-bar">
                         <div
                           className="progress-fill"
-                          style={{ width: `${uploadProgress}%` }}
+                          style={{
+                            width: `${Math.min(uploadProgress, 100)}%`,
+                            background: shouldCancelUpload
+                              ? "var(--color-error)"
+                              : "var(--color-accent)",
+                          }}
                         />
                       </div>
-                      <span>{uploadProgress}%</span>
                     </div>
                   )}
 
                   <div className="upload-actions">
                     <button
                       className="btn btn--secondary"
-                      onClick={() => setSelectedFiles(null)}
-                      disabled={isUploading || uploadInProgress}
+                      onClick={() => {
+                        console.log("Cancel button clicked");
+
+                        if (isUploading || uploadInProgress) {
+                          // Cancel ongoing upload
+                          console.log("Cancelling upload...");
+                          setShouldCancelUpload(true);
+                        } else {
+                          // Clear selection
+                          setSelectedFiles(null);
+                          setStepDescription("");
+                          setUploadProgress(0);
+                          setUploadedFiles(0);
+                          setTotalFiles(0);
+                          setIsUploading(false);
+                          setUploadInProgress(false);
+                          setShouldCancelUpload(false);
+                        }
+                      }}
+                      disabled={false}
                     >
-                      Cancel
+                      {isUploading || uploadInProgress
+                        ? "Cancel Upload"
+                        : "Cancel"}
                     </button>
                     <button
                       className="btn btn--primary"
                       onClick={handleUploadToS3}
-                      disabled={isUploading || uploadInProgress}
+                      disabled={false}
                     >
                       <Plus size={16} />
                       {isUploading ? "Uploading to S3..." : "Upload to S3"}
@@ -421,7 +581,7 @@ const SessionRecordPage: React.FC = () => {
               <div className="log-stats">
                 <span>{session.photos.length} photos</span>
                 <span>•</span>
-                <span>Step {session.currentStep}</span>
+                <span>Step {session.currentStep}</span>t
               </div>
             </div>
 
