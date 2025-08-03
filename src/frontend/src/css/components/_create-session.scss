@@ -1,0 +1,186 @@
+// src/frontend/src/css/components/_create-session.scss
+.create-session {
+  padding: var(--spacing-md);
+  padding-top: calc(var(--spacing-xl) + 80px);
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--color-surface);
+  color: var(--color-primary-text);
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-md);
+    }
+  }
+
+  &__title {
+    flex: 1;
+
+    h1 {
+      font-size: var(--font-size-2xl);
+      font-weight: 800;
+      margin: 0 0 var(--spacing-xs) 0;
+      color: var(--color-primary-text);
+      line-height: 1.2;
+
+      @media (max-width: 768px) {
+        font-size: var(--font-size-xl);
+      }
+    }
+
+    p {
+      font-size: var(--font-size-md);
+      margin: 0;
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+  }
+
+  &__content {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &__form {
+    max-width: 600px;
+    margin: 0 auto;
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+
+      label {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+        font-weight: 600;
+        color: var(--color-primary-text);
+
+        .required {
+          color: var(--color-error);
+          margin-left: var(--spacing-xs);
+        }
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: var(--spacing-sm);
+        border: 2px solid var(--color-border);
+        border-radius: var(--border-radius-md);
+        background: var(--color-surface);
+        color: var(--color-primary-text);
+        font-size: var(--font-size-md);
+        transition: all 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: var(--color-accent);
+          box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.1);
+        }
+
+        &::placeholder {
+          color: var(--color-text-secondary);
+        }
+
+        &.form-input--error {
+          border-color: var(--color-error);
+          box-shadow: 0 0 0 3px rgba(var(--color-error-rgb), 0.1);
+        }
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .error-message {
+        color: var(--color-error);
+        font-size: var(--font-size-sm);
+        margin-top: var(--spacing-xs);
+        font-weight: 500;
+      }
+    }
+
+    .art-type-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-sm);
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .art-type-option {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-md);
+      padding: var(--spacing-lg);
+      border: 2px solid var(--color-border);
+      border-radius: var(--border-radius-lg);
+      background: var(--color-surface);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      width: 100%;
+
+      &:hover {
+        border-color: var(--color-accent);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      &.art-type-option--active {
+        border-color: var(--color-accent);
+        background: rgba(var(--color-accent-rgb), 0.05);
+        box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.1);
+      }
+
+      .art-type-content {
+        flex: 1;
+
+        h4 {
+          margin: 0 0 var(--spacing-xs) 0;
+          font-size: var(--font-size-lg);
+          font-weight: 700;
+          color: var(--color-primary-text);
+        }
+
+        p {
+          margin: 0;
+          font-size: var(--font-size-sm);
+          color: var(--color-text-secondary);
+          line-height: 1.4;
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: flex-end;
+      margin-top: var(--spacing-xl);
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+  }
+}

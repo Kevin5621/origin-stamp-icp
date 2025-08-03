@@ -6,6 +6,7 @@ import LoginPage from "../pages/auth/LoginPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import SessionPage from "../pages/dashboard/SessionPage";
 import SessionRecordPage from "../pages/dashboard/SessionRecordPage";
+import CreateSessionPage from "../pages/dashboard/CreateSessionPage";
 import FinalizationPage from "../pages/dashboard/FinalizationPage";
 import VerificationPage from "../pages/dashboard/VerificationPage";
 import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
@@ -36,6 +37,7 @@ export const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+      <Route path="/create-session" element={<CreateSessionPage />} />
       <Route
         path="/session"
         element={
