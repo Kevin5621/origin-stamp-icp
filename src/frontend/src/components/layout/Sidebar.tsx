@@ -10,7 +10,6 @@ import {
   BarChart3,
   Award,
   Wallet,
-  Bell,
   Plus,
   User,
   Folder,
