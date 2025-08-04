@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Search, Wallet, Menu, X } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
 
 interface MarketplaceHeaderProps {
   onSearch: (query: string) => void;
@@ -9,7 +9,6 @@ interface MarketplaceHeaderProps {
 
 export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
   onSearch,
-  onConnectWallet,
 }) => {
   const { t } = useTranslation("marketplace");
   const [searchQuery, setSearchQuery] = useState("");

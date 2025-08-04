@@ -215,7 +215,7 @@ const ViewCertificatePage: React.FC = () => {
             <div className="certificate-criteria">
               <h3>{t("earning_criteria")}</h3>
               <ul>
-                {certificate.earningCriteria.map((criteria, index) => (
+                {certificate.earningCriteria.map((index) => (
                   <li key={index}>{t(`criteria_${index + 1}`)}</li>
                 ))}
               </ul>

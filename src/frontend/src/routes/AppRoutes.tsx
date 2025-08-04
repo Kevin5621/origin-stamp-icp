@@ -10,7 +10,6 @@ import CreateSessionPage from "../pages/dashboard/CreateSessionPage";
 import FinalizationPage from "../pages/dashboard/FinalizationPage";
 import VerificationPage from "../pages/dashboard/VerificationPage";
 import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
-import AdminPage from "../pages/admin/AdminPage";
 import SettingsPage from "../pages/SettingsPage";
 import {
   MarketplaceHomePage,
@@ -75,14 +74,6 @@ export const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <AnalyticsDetailPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminPage />
           </ProtectedRoute>
         }
       />
