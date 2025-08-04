@@ -45,8 +45,9 @@ export default defineConfig({
       },
     },
     allowedHosts: [
+      "originstamp.csalab.id",
       "originstamp.csalab.app",
-      "originstamp.csalab.dev",
+      "originstamp-dev.csalab.app",
       "localhost",
     ],
   },
