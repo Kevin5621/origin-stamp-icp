@@ -25,13 +25,21 @@
     /* Adjust toggle button position when collapsed */
     .sidebar-collapse-toggle {
       right: -14px;
-      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--color-primary) 0%,
+        var(--color-accent) 100%
+      );
       color: var(--color-surface);
       border-color: var(--color-primary);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 
       &:hover {
-        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--color-accent) 0%,
+          var(--color-primary) 100%
+        );
         color: var(--color-surface);
         transform: scale(1.15) rotate(5deg);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
@@ -659,13 +667,18 @@
     position: relative;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent 0%, var(--color-border) 50%, transparent 100%);
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--color-border) 50%,
+        transparent 100%
+      );
     }
 
     .menu-item {
@@ -677,13 +690,17 @@
       overflow: hidden;
 
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, transparent 0%, rgba(var(--color-primary-rgb), 0.02) 100%);
+        background: linear-gradient(
+          135deg,
+          transparent 0%,
+          rgba(var(--color-primary-rgb), 0.02) 100%
+        );
         opacity: 0;
         transition: opacity 0.3s ease;
       }
@@ -705,7 +722,11 @@
       }
 
       &.active {
-        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--color-primary) 0%,
+          var(--color-accent) 100%
+        );
         color: var(--color-surface);
         border-color: var(--color-primary);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -728,17 +749,19 @@
 
   /* Enhanced visual effects */
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(180deg, 
-      rgba(var(--color-primary-rgb), 0.02) 0%, 
-      transparent 20%, 
-      transparent 80%, 
-      rgba(var(--color-primary-rgb), 0.02) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(var(--color-primary-rgb), 0.02) 0%,
+      transparent 20%,
+      transparent 80%,
+      rgba(var(--color-primary-rgb), 0.02) 100%
+    );
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -784,16 +807,18 @@
       overflow: hidden;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, 
-          transparent 0%, 
-          rgba(255, 255, 255, 0.1) 50%, 
-          transparent 100%);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.1) 50%,
+          transparent 100%
+        );
         animation: shimmer 1.5s infinite;
       }
     }
