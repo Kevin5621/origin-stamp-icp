@@ -429,6 +429,451 @@ Mengecek apakah S3 sudah dikonfigurasi.
 dfx canister call backend get_s3_config_status
 ```
 
+## ICRC-7 NFT Functions
+
+### Data Structures for NFT
+
+#### Account
+
+```rust
+pub struct Account {
+    pub owner: candid::Principal,
+    pub subaccount: Option<Vec<u8>>,
+}
+```
+
+#### TokenMetadata
+
+```rust
+pub struct TokenMetadata {
+    pub name: String,
+    pub description: Option<String>,
+    pub image: Option<String>,
+    pub attributes: Vec<(String, String)>,
+}
+```
+
+#### Token
+
+```rust
+pub struct Token {
+    pub id: u64,
+    pub owner: Account,
+    pub metadata: TokenMetadata,
+    pub created_at: u64,
+    pub session_id: Option<String>,
+}
+```
+
+#### TransferRequest
+
+```rust
+pub struct TransferRequest {
+    pub from: Account,
+    pub to: Account,
+    pub token_id: u64,
+    pub memo: Option<Vec<u8>>,
+    pub created_at_time: Option<u64>,
+}
+```
+
+#### TransferResponse
+
+```rust
+pub struct TransferResponse {
+    pub token_id: u64,
+    pub result: Result<(), String>,
+}
+```
+
+#### CollectionMetadata
+
+```rust
+pub struct CollectionMetadata {
+    pub name: String,
+    pub description: Option<String>,
+    pub image: Option<String>,
+    pub total_supply: u64,
+    pub max_supply: Option<u64>,
+}
+```
+
+### icrc7_collection_metadata
+
+**Type**: Query function  
+**Signature**: `icrc7_collection_metadata() -> CollectionMetadata`
+
+Mengambil metadata collection NFT.
+
+**Returns:**
+
+- `CollectionMetadata` - Metadata lengkap collection
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_collection_metadata
+```
+
+---
+
+### icrc7_name
+
+**Type**: Query function  
+**Signature**: `icrc7_name() -> String`
+
+Mengambil nama collection NFT.
+
+**Returns:**
+
+- `String` - Nama collection
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_name
+```
+
+---
+
+### icrc7_description
+
+**Type**: Query function  
+**Signature**: `icrc7_description() -> Option<String>`
+
+Mengambil deskripsi collection NFT.
+
+**Returns:**
+
+- `Some(description)` - Deskripsi collection jika ada
+- `None` - Jika tidak ada deskripsi
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_description
+```
+
+---
+
+### icrc7_total_supply
+
+**Type**: Query function  
+**Signature**: `icrc7_total_supply() -> u64`
+
+Mengambil total supply NFT yang sudah di-mint.
+
+**Returns:**
+
+- `u64` - Jumlah total NFT
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_total_supply
+```
+
+---
+
+### icrc7_supply_cap
+
+**Type**: Query function  
+**Signature**: `icrc7_supply_cap() -> Option<u64>`
+
+Mengambil batas maksimum supply NFT.
+
+**Returns:**
+
+- `Some(cap)` - Batas maksimum jika ada
+- `None` - Jika tidak ada batas
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_supply_cap
+```
+
+---
+
+### icrc7_tokens
+
+**Type**: Query function  
+**Signature**: `icrc7_tokens(prev: Option<u64>, take: Option<u64>) -> Vec<u64>`
+
+Mengambil daftar token ID dengan pagination.
+
+**Parameters:**
+
+- `prev` - Token ID sebelumnya untuk pagination (optional)
+- `take` - Jumlah token yang diambil (optional, max 1000)
+
+**Returns:**
+
+- `Vec<u64>` - Daftar token ID
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_tokens '(null, opt 10)'
+```
+
+---
+
+### icrc7_owner_of
+
+**Type**: Query function  
+**Signature**: `icrc7_owner_of(token_ids: Vec<u64>) -> Vec<Option<Account>>`
+
+Mengambil pemilik dari token-token tertentu.
+
+**Parameters:**
+
+- `token_ids` - Daftar token ID
+
+**Returns:**
+
+- `Vec<Option<Account>>` - Daftar pemilik untuk setiap token
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_owner_of '(vec { 1; 2; 3 })'
+```
+
+---
+
+### icrc7_balance_of
+
+**Type**: Query function  
+**Signature**: `icrc7_balance_of(accounts: Vec<Account>) -> Vec<u64>`
+
+Mengambil jumlah NFT yang dimiliki oleh akun-akun tertentu.
+
+**Parameters:**
+
+- `accounts` - Daftar akun
+
+**Returns:**
+
+- `Vec<u64>` - Jumlah NFT untuk setiap akun
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_balance_of '(vec { record { owner=principal "rrkah-fqaaa-aaaaa-aaaaq-cai"; subaccount=null } })'
+```
+
+---
+
+### icrc7_tokens_of
+
+**Type**: Query function  
+**Signature**: `icrc7_tokens_of(account: Account, prev: Option<u64>, take: Option<u64>) -> Vec<u64>`
+
+Mengambil daftar token ID yang dimiliki oleh akun tertentu dengan pagination.
+
+**Parameters:**
+
+- `account` - Akun pemilik
+- `prev` - Token ID sebelumnya untuk pagination (optional)
+- `take` - Jumlah token yang diambil (optional, max 1000)
+
+**Returns:**
+
+- `Vec<u64>` - Daftar token ID milik akun
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_tokens_of '(record { owner=principal "rrkah-fqaaa-aaaaa-aaaaq-cai"; subaccount=null }, null, opt 10)'
+```
+
+---
+
+### icrc7_token_metadata
+
+**Type**: Query function  
+**Signature**: `icrc7_token_metadata(token_ids: Vec<u64>) -> Vec<Option<TokenMetadata>>`
+
+Mengambil metadata dari token-token tertentu.
+
+**Parameters:**
+
+- `token_ids` - Daftar token ID
+
+**Returns:**
+
+- `Vec<Option<TokenMetadata>>` - Metadata untuk setiap token
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_token_metadata '(vec { 1; 2 })'
+```
+
+---
+
+### icrc7_transfer
+
+**Type**: Update function  
+**Signature**: `icrc7_transfer(requests: Vec<TransferRequest>) -> Vec<TransferResponse>`
+
+Transfer NFT antar akun.
+
+**Parameters:**
+
+- `requests` - Daftar request transfer
+
+**Returns:**
+
+- `Vec<TransferResponse>` - Hasil transfer untuk setiap request
+
+**Example:**
+
+```bash
+dfx canister call backend icrc7_transfer '(vec {
+    record {
+        from=record { owner=principal "rrkah-fqaaa-aaaaa-aaaaq-cai"; subaccount=null };
+        to=record { owner=principal "rdmx6-jaaaa-aaaah-qcaiq-cai"; subaccount=null };
+        token_id=1;
+        memo=null;
+        created_at_time=null
+    }
+})'
+```
+
+---
+
+### mint_nft_from_session
+
+**Type**: Update function  
+**Signature**: `mint_nft_from_session(session_id: String, recipient: Account, additional_attributes: Vec<(String, String)>) -> Result<u64, String>`
+
+Mint NFT baru dari physical art session.
+
+**Parameters:**
+
+- `session_id` - ID session physical art
+- `recipient` - Akun penerima NFT
+- `additional_attributes` - Atribut tambahan untuk NFT
+
+**Returns:**
+
+- `Ok(token_id)` - Token ID yang baru di-mint
+- `Err(message)` - Error message jika gagal
+
+**Example:**
+
+```bash
+dfx canister call backend mint_nft_from_session '(
+    "abc123",
+    record { owner=principal "rrkah-fqaaa-aaaaa-aaaaq-cai"; subaccount=null },
+    vec { record { "custom_attribute"; "custom_value" } }
+)'
+```
+
+---
+
+### get_session_nfts
+
+**Type**: Query function  
+**Signature**: `get_session_nfts(session_id: String) -> Vec<Token>`
+
+Mengambil semua NFT yang terkait dengan session tertentu.
+
+**Parameters:**
+
+- `session_id` - ID session
+
+**Returns:**
+
+- `Vec<Token>` - Daftar NFT dari session
+
+**Example:**
+
+```bash
+dfx canister call backend get_session_nfts '("abc123")'
+```
+
+---
+
+### get_user_nfts
+
+**Type**: Query function  
+**Signature**: `get_user_nfts(owner: candid::Principal) -> Vec<Token>`
+
+Mengambil semua NFT yang dimiliki oleh principal tertentu.
+
+**Parameters:**
+
+- `owner` - Principal pemilik
+
+**Returns:**
+
+- `Vec<Token>` - Daftar NFT milik user
+
+**Example:**
+
+```bash
+dfx canister call backend get_user_nfts '(principal "rrkah-fqaaa-aaaaa-aaaaq-cai")'
+```
+
+---
+
+### update_collection_metadata
+
+**Type**: Update function  
+**Signature**: `update_collection_metadata(name: String, description: Option<String>, image: Option<String>, max_supply: Option<u64>) -> Result<bool, String>`
+
+Update metadata collection NFT.
+
+**Parameters:**
+
+- `name` - Nama collection baru
+- `description` - Deskripsi collection (optional)
+- `image` - URL gambar collection (optional)
+- `max_supply` - Batas maksimum supply (optional)
+
+**Returns:**
+
+- `Ok(true)` - Berhasil update metadata
+- `Err(message)` - Error message jika gagal
+
+**Example:**
+
+```bash
+dfx canister call backend update_collection_metadata '(
+    "Origin Stamp Art NFTs",
+    opt "Updated description",
+    opt "https://example.com/collection.jpg",
+    opt 10000
+)'
+```
+
+---
+
+### get_token_details
+
+**Type**: Query function  
+**Signature**: `get_token_details(token_id: u64) -> Option<Token>`
+
+Mengambil detail lengkap token berdasarkan ID.
+
+**Parameters:**
+
+- `token_id` - ID token
+
+**Returns:**
+
+- `Some(token)` - Detail token jika ditemukan
+- `None` - Jika token tidak ditemukan
+
+**Example:**
+
+```bash
+dfx canister call backend get_token_details '(1)'
+```
+
 ## Helper Functions (Internal)
 
 ### simple_hash
@@ -462,24 +907,67 @@ Semua update functions menggunakan `Result<T, String>` untuk error handling:
 
 ## Usage Examples
 
-### Complete Flow Example
+### Complete Flow Example (Physical Art + NFT)
 
 ```bash
 # 1. Register user
 dfx canister call backend register_user '("artist1", "password123")'
 
 # 2. Create session
-dfx canister call backend create_physical_art_session '("artist1", "My Painting", "Oil on canvas")'
+SESSION_ID=$(dfx canister call backend create_physical_art_session '("artist1", "My Painting", "Oil on canvas")' | grep -o '"[^"]*"' | head -1 | tr -d '"')
 
 # 3. Generate upload URL
-dfx canister call backend generate_upload_url '("session_id_here", record { filename="painting.jpg"; content_type="image/jpeg"; file_size=2048000 })'
+dfx canister call backend generate_upload_url '("'$SESSION_ID'", record { filename="painting.jpg"; content_type="image/jpeg"; file_size=2048000 })'
 
 # 4. Upload photo to session (after S3 upload)
-dfx canister call backend upload_photo_to_session '("session_id_here", "https://s3.amazonaws.com/bucket/painting.jpg")'
+dfx canister call backend upload_photo_to_session '("'$SESSION_ID'", "https://s3.amazonaws.com/bucket/painting.jpg")'
 
 # 5. Update session status
-dfx canister call backend update_session_status '("session_id_here", "completed")'
+dfx canister call backend update_session_status '("'$SESSION_ID'", "completed")'
 
 # 6. Get session details
-dfx canister call backend get_session_details '("session_id_here")'
+dfx canister call backend get_session_details '("'$SESSION_ID'")'
+
+# 7. Mint NFT from session
+TOKEN_ID=$(dfx canister call backend mint_nft_from_session '(
+    "'$SESSION_ID'",
+    record { owner=principal "rrkah-fqaaa-aaaaa-aaaaq-cai"; subaccount=null },
+    vec { record { "edition"; "1/1" }; record { "medium"; "oil_on_canvas" } }
+)' | grep -o '[0-9]*')
+
+# 8. Get token details
+dfx canister call backend get_token_details '('$TOKEN_ID')'
+
+# 9. Check NFT balance
+dfx canister call backend icrc7_balance_of '(vec { record { owner=principal "rrkah-fqaaa-aaaaa-aaaaq-cai"; subaccount=null } })'
+```
+
+### NFT Operations Example
+
+```bash
+# Get collection info
+dfx canister call backend icrc7_collection_metadata
+
+# Get total supply
+dfx canister call backend icrc7_total_supply
+
+# List all tokens (first 10)
+dfx canister call backend icrc7_tokens '(null, opt 10)'
+
+# Get tokens owned by a user
+dfx canister call backend icrc7_tokens_of '(record { owner=principal "rrkah-fqaaa-aaaaa-aaaaq-cai"; subaccount=null }, null, opt 10)'
+
+# Transfer NFT
+dfx canister call backend icrc7_transfer '(vec {
+    record {
+        from=record { owner=principal "rrkah-fqaaa-aaaaa-aaaaq-cai"; subaccount=null };
+        to=record { owner=principal "rdmx6-jaaaa-aaaah-qcaiq-cai"; subaccount=null };
+        token_id=1;
+        memo=null;
+        created_at_time=null
+    }
+})'
+
+# Get metadata for specific tokens
+dfx canister call backend icrc7_token_metadata '(vec { 1; 2; 3 })'
 ```
