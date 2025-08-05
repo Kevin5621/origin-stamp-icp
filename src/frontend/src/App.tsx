@@ -42,9 +42,11 @@ function MainContentWrapper() {
   const isLoginPage = location.pathname === "/login";
   const isHowItWorksPage = location.pathname === "/how-it-works";
   const isMarketplacePage = location.pathname.startsWith("/marketplace");
+  const isErrorPage =
+    location.pathname === "/error" || location.pathname === "*";
 
-  // Halaman yang tidak memerlukan sidebar
-  if (isLandingPage || isLoginPage || isHowItWorksPage) {
+  // Halaman yang tidak memerlukan sidebar (termasuk error/404)
+  if (isLandingPage || isLoginPage || isHowItWorksPage || isErrorPage) {
     return (
       <main className="main-content main-content--overlay">
         <Routes>
@@ -61,7 +63,7 @@ function MainContentWrapper() {
   // Halaman marketplace tanpa AppLayout (sudah punya sidebar sendiri)
   if (isMarketplacePage) {
     return (
-      <main className="main-content">
+      <main className="main-content main-content--overlay">
         <Routes>
           <Route path="/marketplace" element={<MarketplaceHomePage />} />
           <Route
