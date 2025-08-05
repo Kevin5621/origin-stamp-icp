@@ -12,11 +12,14 @@ const AuthRedirect: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // If user is authenticated and on login page or landing page, redirect to dashboard
-    if (
-      isAuthenticated &&
-      (location.pathname === "/login" || location.pathname === "/")
-    ) {
+    // If user is authenticated and on public pages, redirect to dashboard
+    const publicPages = ["/", "/login", "/how-it-works"];
+
+    if (isAuthenticated && publicPages.includes(location.pathname)) {
+      console.log(
+        "User authenticated, redirecting to dashboard from:",
+        location.pathname,
+      );
       navigate("/dashboard", { replace: true });
     }
   }, [isAuthenticated, location.pathname, navigate]);

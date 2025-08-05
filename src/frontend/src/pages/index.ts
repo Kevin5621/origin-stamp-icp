@@ -8,3 +8,6 @@ export { default as VerificationPage } from "./dashboard/VerificationPage";
 export { default as AnalyticsDetailPage } from "./dashboard/AnalyticsDetailPage";
 export { default as CertificateDetailPage } from "./dashboard/CertificateDetailPage";
 export { default as KaryaDetailPage } from "./dashboard/KaryaDetailPage";
+
+// Error pages
+export { ErrorPage, NotFoundPage } from "./error";
