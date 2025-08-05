@@ -12,6 +12,10 @@ import {
   Folder,
   ChevronLeft,
   ChevronRight,
+  Grid,
+  List,
+  Anchor,
+  Bell,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -20,14 +24,17 @@ interface SidebarProps {
   onSectionChange?: (section: string) => void;
   isCollapsed?: boolean;
   onToggleCollapse?: (collapsed: boolean) => void;
+  variant?: "dashboard" | "marketplace";
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   onSectionChange = () => {},
   isCollapsed: externalIsCollapsed,
   onToggleCollapse,
+  variant = "dashboard",
 }) => {
   const { t } = useTranslation("common");
+  const { t: tMarketplace } = useTranslation("marketplace");
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
 
@@ -49,7 +56,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const getMenuItems = () => {
-    // Dashboard and general menu items
+    if (variant === "marketplace") {
+      return [
+        {
+          id: "explore",
+          icon: Compass,
+          label: tMarketplace("sidebar.explore"),
+          path: "/marketplace",
+        },
+        {
+          id: "collections",
+          icon: Grid,
+          label: tMarketplace("sidebar.collections"),
+          path: "/marketplace/collections",
+        },
+        {
+          id: "create",
+          icon: Plus,
+          label: tMarketplace("sidebar.create"),
+          path: "/marketplace/create",
+        },
+        {
+          id: "activity",
+          icon: List,
+          label: tMarketplace("sidebar.activity"),
+          path: "/marketplace/activity",
+        },
+        {
+          id: "rankings",
+          icon: Anchor,
+          label: tMarketplace("sidebar.rankings"),
+          path: "/marketplace/rankings",
+        },
+        {
+          id: "stats",
+          icon: BarChart3,
+          label: tMarketplace("sidebar.stats"),
+          path: "/marketplace/stats",
+        },
+      ];
+    }
+
+    // Dashboard menu items
     return [
       {
         id: "dashboard",
@@ -90,15 +138,46 @@ export const Sidebar: React.FC<SidebarProps> = ({
     ];
   };
 
-  const bottomMenuItems = [
-    {
-      id: "marketplace",
-      icon: Compass,
-      label: t("sidebar.marketplace"),
-      path: "/marketplace",
-    },
-    { id: "home", icon: Home, label: t("sidebar.home"), path: "/" },
-  ];
+  const getBottomMenuItems = () => {
+    if (variant === "marketplace") {
+      return [
+        {
+          id: "dashboard",
+          icon: Home,
+          label: t("sidebar.dashboard"),
+          path: "/dashboard",
+        },
+        {
+          id: "certificates",
+          icon: Award,
+          label: t("sidebar.certificates"),
+          path: "/certificates",
+        },
+        {
+          id: "analytics",
+          icon: BarChart3,
+          label: t("sidebar.analytics"),
+          path: "/analytics",
+        },
+        {
+          id: "settings",
+          icon: Settings,
+          label: t("sidebar.settings"),
+          path: "/settings",
+        },
+      ];
+    }
+
+    return [
+      {
+        id: "marketplace",
+        icon: Compass,
+        label: t("sidebar.marketplace"),
+        path: "/marketplace",
+      },
+      { id: "home", icon: Home, label: t("sidebar.home"), path: "/" },
+    ];
+  };
 
   const isActive = (path: string) => {
     return (
@@ -125,9 +204,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
     );
   };
 
+  const getLogoText = () => {
+    return variant === "marketplace" ? "IC Vibe" : "OriginStamp";
+  };
+
+  const getLogoIcon = () => {
+    return variant === "marketplace" ? "IC" : "OS";
+  };
+
+  const getLogoPath = () => {
+    return variant === "marketplace" ? "/marketplace" : "/";
+  };
+
   return (
     <nav
-      className={`app-sidebar ${isCollapsed ? "app-sidebar--collapsed" : ""}`}
+      className={`app-sidebar ${isCollapsed ? "app-sidebar--collapsed" : ""} app-sidebar--${variant}`}
     >
       <div className="sidebar-container">
         {/* Collapse Toggle Button */}
@@ -141,9 +232,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Logo */}
         <div className="sidebar-logo">
-          <Link to="/" className="logo-link">
-            <div className="logo-icon">🖼️</div>
-            {!isCollapsed && <span className="logo-text">OriginStamp</span>}
+          <Link to={getLogoPath()} className="logo-link">
+            <div className="logo-icon">{getLogoIcon()}</div>
+            {!isCollapsed && <span className="logo-text">{getLogoText()}</span>}
           </Link>
         </div>
 
@@ -212,7 +303,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Bottom Menu Items */}
         <div className="sidebar-bottom">
           <ul className="sidebar-menu">
-            {bottomMenuItems.map((item) => {
+            {getBottomMenuItems().map((item) => {
               const Icon = item.icon;
               const isItemActive = isActive(item.path);
               return (

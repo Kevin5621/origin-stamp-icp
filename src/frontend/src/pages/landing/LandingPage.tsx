@@ -126,7 +126,10 @@ const LandingPage: React.FC = () => {
             <button
               type="button"
               className="btn-wireframe btn-wireframe--secondary"
-              aria-label={t("explore_marketplace_button", "Explore Marketplace")}
+              aria-label={t(
+                "explore_marketplace_button",
+                "Explore Marketplace",
+              )}
               style={{
                 opacity: showButton ? 1 : 0,
                 transition: "opacity 0.5s ease-in-out",
@@ -139,7 +142,7 @@ const LandingPage: React.FC = () => {
           </div>
 
           {/* Secondary Action Link */}
-          <div 
+          <div
             className="landing-secondary-action"
             style={{
               opacity: showButton ? 1 : 0,
