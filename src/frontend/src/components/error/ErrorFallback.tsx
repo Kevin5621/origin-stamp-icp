@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
 import { Button } from "../common/Button";
-import { RefreshCw, ArrowLeft, Home, Search, Compass } from "lucide-react";
+import { RefreshCw, ArrowLeft, Home, Compass } from "lucide-react";
 
 interface ErrorFallbackProps {
   error: Error;
@@ -41,15 +41,6 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   const handleExploreMarketplace = () => {
     resetErrorBoundary();
     window.location.href = "/marketplace";
-  };
-
-  const handleSearch = () => {
-    resetErrorBoundary();
-    if (isAuthenticated) {
-      window.location.href = "/dashboard";
-    } else {
-      window.location.href = "/";
-    }
   };
 
   return (

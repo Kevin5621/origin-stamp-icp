@@ -6,7 +6,6 @@ import {
   Home,
   RefreshCw,
   ArrowLeft,
-  Search,
   Compass,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
@@ -48,14 +47,6 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, errorInfo, onRetry }) => {
 
   const handleExploreMarketplace = () => {
     navigate("/marketplace");
-  };
-
-  const handleSearch = () => {
-    if (isAuthenticated) {
-      navigate("/dashboard");
-    } else {
-      navigate("/");
-    }
   };
 
   return (
