@@ -87,10 +87,52 @@
 
 .landing-hero-buttons {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* =============================================================================
+   SECONDARY ACTION LINK
+   ============================================================================= */
+
+.landing-secondary-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.landing-secondary-link {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-family-primary);
+
+  &:hover {
+    color: var(--color-primary-text);
+    text-decoration-color: var(--color-primary-text);
+    background-color: rgba(var(--color-primary-rgb), 0.05);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
 /* =============================================================================
@@ -532,6 +574,47 @@
   .landing-step-description,
   .landing-feature-description {
     font-size: 1rem;
+  }
+}
+
+/* =============================================================================
+   RESPONSIVE HERO BUTTONS
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .landing-hero-buttons {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .landing-hero-buttons .btn-wireframe {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .landing-secondary-action {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-hero-buttons {
+    gap: 0.75rem;
+    max-width: 260px;
+  }
+
+  .landing-hero-buttons .btn-wireframe {
+    max-width: 240px;
+    font-size: 0.8125rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .landing-secondary-link {
+    font-size: 0.8125rem;
   }
 }
 

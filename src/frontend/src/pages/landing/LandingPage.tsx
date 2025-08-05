@@ -111,7 +111,7 @@ const LandingPage: React.FC = () => {
           <div className="landing-hero-buttons">
             <button
               type="button"
-              className="btn-wireframe"
+              className="btn-wireframe btn-wireframe--primary"
               aria-label={t("get_started_button")}
               style={{
                 opacity: showButton ? 1 : 0,
@@ -125,25 +125,8 @@ const LandingPage: React.FC = () => {
 
             <button
               type="button"
-              className="btn-wireframe"
-              aria-label={t("learn_how_button")}
-              style={{
-                opacity: showButton ? 1 : 0,
-                transition: "opacity 0.5s ease-in-out",
-                visibility: showButton ? "visible" : "hidden",
-              }}
-              onClick={handleLearnMore}
-            >
-              {t("learn_how_button")}
-            </button>
-
-            <button
-              type="button"
-              className="btn-wireframe btn-wireframe--accent"
-              aria-label={t(
-                "explore_marketplace_button",
-                "Explore Marketplace",
-              )}
+              className="btn-wireframe btn-wireframe--secondary"
+              aria-label={t("explore_marketplace_button", "Explore Marketplace")}
               style={{
                 opacity: showButton ? 1 : 0,
                 transition: "opacity 0.5s ease-in-out",
@@ -152,6 +135,25 @@ const LandingPage: React.FC = () => {
               onClick={() => navigate("/marketplace")}
             >
               {t("explore_marketplace_button", "Explore Marketplace")}
+            </button>
+          </div>
+
+          {/* Secondary Action Link */}
+          <div 
+            className="landing-secondary-action"
+            style={{
+              opacity: showButton ? 1 : 0,
+              transition: "opacity 0.5s ease-in-out",
+              visibility: showButton ? "visible" : "hidden",
+            }}
+          >
+            <button
+              type="button"
+              className="landing-secondary-link"
+              onClick={handleLearnMore}
+              aria-label={t("learn_how_button")}
+            >
+              {t("learn_how_button")}
             </button>
           </div>
         </div>
