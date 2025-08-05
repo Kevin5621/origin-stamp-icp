@@ -212,7 +212,7 @@ function App() {
         <BrowserRouter>
           {/* Global authentication redirect handler */}
           <AuthRedirect />
-          
+
           <FloatingHeader className="app-floating-header" />
 
           <MainContentWrapper />
