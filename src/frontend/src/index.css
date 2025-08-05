@@ -4,3 +4,6 @@
 @import "./css/components/_dashboard.scss";
 @import "./css/components/_session.scss";
 @import "./css/components/_session-record.scss";
+@import "./css/components/_error-page.scss";
+@import "./css/components/_not-found-page.scss";
+@import "./css/components/_error-fallback.scss";

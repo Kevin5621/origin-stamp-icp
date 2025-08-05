@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Loader, ErrorDisplay, FloatingHeader, AppLayout } from "./components";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AuthRedirect from "./components/auth/AuthRedirect";
+import { AppErrorBoundary } from "./components/error";
 import { PhysicalArtService } from "./services/physicalArtService";
 // Import pages dari sistem modular baru
 import LandingPage from "./pages/landing/LandingPage";
@@ -29,6 +24,8 @@ import AnalyticsDetailPage from "./pages/dashboard/AnalyticsDetailPage";
 import CertificateDetailPage from "./pages/dashboard/CertificateDetailPage";
 import KaryaDetailPage from "./pages/dashboard/KaryaDetailPage";
 import SettingsPage from "./pages/SettingsPage";
+// Import error pages
+import { ErrorPage, NotFoundPage } from "./pages/error";
 // Import marketplace pages
 import { MarketplaceHomePage, CollectionDetailPage } from "./pages/marketplace";
 
@@ -54,6 +51,8 @@ function MainContentWrapper() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/how-it-works" element={<HowItWorksPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
     );
@@ -69,6 +68,8 @@ function MainContentWrapper() {
             path="/marketplace/collection/:collectionId"
             element={<CollectionDetailPage />}
           />
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
     );
@@ -182,8 +183,12 @@ function MainContentWrapper() {
             </ProtectedRoute>
           }
         />
-        {/* Fallback route - harus di akhir */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        {/* Error Routes */}
+        <Route path="/error" element={<ErrorPage />} />
+
+        {/* Fallback route - 404 Page untuk rute yang tidak ditemukan */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AppLayout>
   );
@@ -210,21 +215,23 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <BrowserRouter>
-          {/* Global authentication redirect handler */}
-          <AuthRedirect />
+          <AppErrorBoundary>
+            {/* Global authentication redirect handler */}
+            <AuthRedirect />
 
-          <FloatingHeader className="app-floating-header" />
+            <FloatingHeader className="app-floating-header" />
 
-          <MainContentWrapper />
+            <MainContentWrapper />
 
-          {/* Navigation untuk halaman yang memerlukan autentikasi */}
-          <NavigationWrapper />
+            {/* Navigation untuk halaman yang memerlukan autentikasi */}
+            <NavigationWrapper />
 
-          {loading && !error && <Loader />}
-          {!!error && <ErrorDisplay message={error} />}
+            {loading && !error && <Loader />}
+            {!!error && <ErrorDisplay message={error} />}
 
-          {/* Portal target untuk modal */}
-          <div id="modal-root"></div>
+            {/* Portal target untuk modal */}
+            <div id="modal-root"></div>
+          </AppErrorBoundary>
         </BrowserRouter>
       </ToastProvider>
     </AuthProvider>
