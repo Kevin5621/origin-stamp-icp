@@ -142,7 +142,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Stats Overview */}
       <div className="dashboard__stats-overview">
-        <div className="dashboard__stat-item dashboard__stat-item--primary">
+        <div className="dashboard__stat-item">
           <div className="dashboard__stat-icon">
             <Target size={24} />
           </div>

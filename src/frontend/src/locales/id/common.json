@@ -114,7 +114,9 @@
     "marketplace": "Marketplace",
     "home": "Beranda",
     "guest_user": "Pengguna Tamu",
-    "user": "Pengguna"
+    "user": "Pengguna",
+    "collapse": "Tutup Sidebar",
+    "expand": "Buka Sidebar"
   },
   "quick_actions": "Aksi Cepat",
   "create_nft": "Buat NFT",

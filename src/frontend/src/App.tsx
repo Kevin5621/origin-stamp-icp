@@ -58,9 +58,24 @@ function MainContentWrapper() {
     );
   }
 
+  // Halaman marketplace tanpa AppLayout (sudah punya sidebar sendiri)
+  if (isMarketplacePage) {
+    return (
+      <main className="main-content">
+        <Routes>
+          <Route path="/marketplace" element={<MarketplaceHomePage />} />
+          <Route
+            path="/marketplace/collection/:collectionId"
+            element={<CollectionDetailPage />}
+          />
+        </Routes>
+      </main>
+    );
+  }
+
   // Halaman dengan sidebar
   return (
-    <AppLayout variant={isMarketplacePage ? "marketplace" : "dashboard"}>
+    <AppLayout variant="dashboard">
       <Routes>
         <Route
           path="/dashboard"
@@ -165,12 +180,6 @@ function MainContentWrapper() {
               <SettingsPage />
             </ProtectedRoute>
           }
-        />
-        {/* Marketplace Routes */}
-        <Route path="/marketplace" element={<MarketplaceHomePage />} />
-        <Route
-          path="/marketplace/collection/:collectionId"
-          element={<CollectionDetailPage />}
         />
         {/* Fallback route - harus di akhir */}
         <Route path="*" element={<Navigate to="/" replace />} />

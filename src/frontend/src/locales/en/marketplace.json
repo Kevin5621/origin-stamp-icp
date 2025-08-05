@@ -1,7 +1,4 @@
 {
-  "search": {
-    "placeholder": "Search OriginStamp"
-  },
   "connectWallet": "Connect Wallet",
   "nav": {
     "explore": "Explore",
@@ -50,7 +47,9 @@
     "create": "Create",
     "activity": "Activity",
     "rankings": "Rankings",
-    "stats": "Stats"
+    "stats": "Stats",
+    "collapse": "Collapse Sidebar",
+    "expand": "Expand Sidebar"
   },
   "hero": {
     "title": "Discover Unique Digital Art",

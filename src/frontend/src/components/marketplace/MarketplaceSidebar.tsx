@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Compass,
@@ -10,20 +10,42 @@ import {
   BarChart3,
   Award,
   Wallet,
-  Bell,
   Plus,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 interface MarketplaceSidebarProps {
   onSectionChange: (section: string) => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: (collapsed: boolean) => void;
 }
 
 export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
   onSectionChange,
+  isCollapsed: externalIsCollapsed,
+  onToggleCollapse,
 }) => {
   const { t } = useTranslation("marketplace");
   const location = useLocation();
+
+  // Internal state for collapse if not controlled externally
+  const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
+
+  const isCollapsed =
+    externalIsCollapsed !== undefined
+      ? externalIsCollapsed
+      : internalIsCollapsed;
+
+  const handleToggleCollapse = () => {
+    const newCollapsedState = !isCollapsed;
+    if (onToggleCollapse) {
+      onToggleCollapse(newCollapsedState);
+    } else {
+      setInternalIsCollapsed(newCollapsedState);
+    }
+  };
 
   const menuItems = [
     {
@@ -68,25 +90,25 @@ export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
     {
       id: "dashboard",
       icon: Home,
-      label: t("sidebar.dashboard"),
+      label: t("common:sidebar.dashboard"),
       path: "/dashboard",
     },
     {
       id: "certificates",
       icon: Award,
-      label: t("sidebar.certificates"),
+      label: t("common:sidebar.certificates"),
       path: "/certificates",
     },
     {
       id: "analytics",
       icon: BarChart3,
-      label: t("sidebar.analytics"),
+      label: t("common:sidebar.analytics"),
       path: "/analytics",
     },
     {
       id: "settings",
       icon: Settings,
-      label: t("sidebar.settings"),
+      label: t("common:sidebar.settings"),
       path: "/settings",
     },
   ];
@@ -98,37 +120,58 @@ export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
   };
 
   return (
-    <nav className="marketplace-sidebar">
+    <nav
+      className={`marketplace-sidebar ${isCollapsed ? "marketplace-sidebar--collapsed" : ""}`}
+    >
       <div className="sidebar-container">
+        {/* Collapse Toggle Button */}
+        <button
+          className="sidebar-collapse-toggle"
+          onClick={handleToggleCollapse}
+          title={isCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
+        >
+          {isCollapsed ? (
+            <ChevronsRight size={20} />
+          ) : (
+            <ChevronsLeft size={20} />
+          )}
+        </button>
+
         {/* Logo */}
         <div className="sidebar-logo">
           <Link to="/marketplace" className="logo-link">
             <div className="logo-icon">🎨</div>
-            <span className="logo-text">OriginStamp</span>
+            {!isCollapsed && <span className="logo-text">OriginStamp</span>}
           </Link>
         </div>
 
         {/* User Profile Section */}
-        <div className="sidebar-user">
-          <div className="user-avatar">
-            <img
-              src="https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png"
-              alt="User"
-            />
+        {!isCollapsed && (
+          <div className="sidebar-user">
+            <div className="user-avatar">
+              <img
+                src="https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png"
+                alt="User"
+              />
+            </div>
+            <div className="user-info">
+              <div className="user-name">{t("user_name")}</div>
+              <div className="user-balance">0.00 ICP</div>
+            </div>
           </div>
-          <div className="user-info">
-            <div className="user-name">{t("user_name")}</div>
-            <div className="user-balance">0.00 ICP</div>
+        )}
+
+        {/* Collapsed User Avatar */}
+        {isCollapsed && (
+          <div className="sidebar-user-collapsed">
+            <div className="user-avatar">
+              <img
+                src="https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png"
+                alt="User"
+              />
+            </div>
           </div>
-          <div className="user-actions">
-            <button className="action-btn" title={t("wallet")}>
-              <Wallet size={16} />
-            </button>
-            <button className="action-btn" title={t("notifications")}>
-              <Bell size={16} />
-            </button>
-          </div>
-        </div>
+        )}
 
         {/* Main Menu Items */}
         <ul className="sidebar-menu">
@@ -144,7 +187,9 @@ export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
                   title={item.label}
                 >
                   <Icon size={20} />
-                  <span className="menu-label">{item.label}</span>
+                  {!isCollapsed && (
+                    <span className="menu-label">{item.label}</span>
+                  )}
                 </Link>
               </li>
             );
@@ -152,19 +197,21 @@ export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
         </ul>
 
         {/* Quick Actions */}
-        <div className="sidebar-quick-actions">
-          <h3 className="section-title">{t("quick_actions")}</h3>
-          <div className="quick-actions-grid">
-            <button className="quick-action-btn">
-              <Plus size={16} />
-              <span>{t("create_nft")}</span>
-            </button>
-            <button className="quick-action-btn">
-              <Wallet size={16} />
-              <span>{t("connect_wallet")}</span>
-            </button>
+        {!isCollapsed && (
+          <div className="sidebar-quick-actions">
+            <h3 className="section-title">{t("common:quick_actions")}</h3>
+            <div className="quick-actions-grid">
+              <button className="quick-action-btn">
+                <Plus size={16} />
+                <span>{t("common:create_nft")}</span>
+              </button>
+              <button className="quick-action-btn">
+                <Wallet size={16} />
+                <span>{t("common:connect_wallet")}</span>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Bottom Menu Items */}
         <div className="sidebar-bottom">
@@ -180,7 +227,9 @@ export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
                     title={item.label}
                   >
                     <Icon size={20} />
-                    <span className="menu-label">{item.label}</span>
+                    {!isCollapsed && (
+                      <span className="menu-label">{item.label}</span>
+                    )}
                   </Link>
                 </li>
               );
