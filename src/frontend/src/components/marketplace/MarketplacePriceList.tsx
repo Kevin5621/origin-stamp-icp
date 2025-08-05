@@ -52,13 +52,14 @@ export const MarketplacePriceList: React.FC<MarketplacePriceListProps> = ({
   return (
     <aside className={`marketplace-price-list ${collapsed ? "collapsed" : ""}`}>
       <div className="marketplace-price-list__header">
-        <h3 className="list-title">{collapsed ? "" : title}</h3>
+        {!collapsed && <h3 className="list-title">{title}</h3>}
         <button
           className="price-list-collapse-toggle"
           onClick={toggleCollapse}
           aria-label={collapsed ? t("common:expand") : t("common:collapse")}
+          title={collapsed ? t("common:expand") : t("common:collapse")}
         >
-          {collapsed ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+          {collapsed ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
         </button>
       </div>
 

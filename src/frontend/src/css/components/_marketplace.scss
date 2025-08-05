@@ -8,18 +8,18 @@
   color: var(--color-text-primary);
   width: 100%;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: visible;
   transition: all 0.3s ease;
 
   /* Main content area adjustment when sidebar is collapsed */
   &.marketplace-layout--sidebar-collapsed {
     .marketplace-header {
-      left: 72px; /* Adjusted for collapsed sidebar */
+      left: 80px;
       transition: left 0.3s ease;
     }
 
     .marketplace-main-content {
-      margin-left: 72px; /* Adjusted for collapsed sidebar */
+      margin-left: 80px;
       transition: margin-left 0.3s ease;
     }
   }
@@ -40,7 +40,7 @@
   /* Both sidebars collapsed */
   &.marketplace-layout--sidebar-collapsed.marketplace-layout--pricelist-collapsed {
     .marketplace-header {
-      left: 72px;
+      left: 80px;
       right: 60px;
       transition:
         left 0.3s ease,
@@ -48,7 +48,7 @@
     }
 
     .marketplace-main-content {
-      margin-left: 72px;
+      margin-left: 80px;
       margin-right: 60px;
       transition:
         margin-left 0.3s ease,
@@ -64,7 +64,7 @@
 .marketplace-header {
   position: fixed;
   top: 0;
-  left: 280px; /* Offset for left sidebar */
+  left: 280px; /* Updated for new sidebar width */
   right: 300px; /* Offset for right sidebar */
   z-index: 1000;
   background: var(--color-surface);
@@ -252,7 +252,7 @@
   min-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden; /* Prevent horizontal scroll */
-  max-width: calc(100vw - 580px); /* 280px left + 300px right */
+  max-width: calc(100vw - 560px);
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -263,9 +263,9 @@
   background: var(--color-surface);
   min-height: 100vh;
   overflow-y: auto;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: visible;
   box-sizing: border-box;
-  margin-left: 280px; /* Default margin for left sidebar */
+  margin-left: 280px; /* Updated for new sidebar width */
   margin-right: 300px; /* Margin for right sidebar */
   transition:
     margin-left 0.3s ease,
@@ -285,7 +285,7 @@
    ============================================================================= */
 
 .marketplace-sidebar {
-  width: 280px;
+  width: 260px;
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
   position: fixed;
@@ -293,14 +293,14 @@
   left: 0;
   height: 100vh;
   overflow-y: auto;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: visible;
   z-index: 100;
   padding: 1rem;
   box-sizing: border-box;
   transition: width 0.3s ease;
 
   &.marketplace-sidebar--collapsed {
-    width: 72px;
+    width: 70px;
 
     .sidebar-container {
       align-items: center;
@@ -1057,48 +1057,111 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-primary-rgb), 0.05) 0%,
+      rgba(var(--color-accent-rgb), 0.03) 100%
+    );
+    border-radius: 12px;
+    border: 1px solid rgba(var(--color-border-rgb), 0.6);
+    position: relative;
+    overflow: visible;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+      );
+      border-radius: inherit;
+      pointer-events: none;
+    }
 
     .list-title {
-      font-size: 1rem;
+      font-size: 0.875rem;
       font-weight: 600;
       margin: 0;
       color: var(--color-text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      flex: 1;
+      position: relative;
+      z-index: 1;
     }
 
     .price-list-collapse-toggle {
-      background: none;
-      border: none;
+      background: rgba(var(--color-surface-rgb), 0.8);
+      border: 1px solid rgba(var(--color-border-rgb), 0.4);
       color: var(--color-text-secondary);
       cursor: pointer;
-      padding: 0.25rem;
-      border-radius: 0.25rem;
-      transition: all 0.2s ease;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 24px;
-      height: 24px;
+      min-width: 36px;
+      height: 36px;
+      position: relative;
+      z-index: 2;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
       &:hover {
-        background: var(--color-surface-secondary);
+        background: rgba(var(--color-primary-rgb), 0.1);
+        border-color: var(--color-primary);
         color: var(--color-text-primary);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       svg {
-        transition: transform 0.2s ease;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover svg {
+        transform: scale(1.1);
       }
     }
   }
 
   &.collapsed &__header {
     justify-content: center;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-primary-rgb), 0.08) 0%,
+      rgba(var(--color-accent-rgb), 0.05) 100%
+    );
+
+    .list-title {
+      display: none;
+    }
 
     .price-list-collapse-toggle {
       margin: 0;
+      background: rgba(var(--color-surface-rgb), 0.9);
+      border-color: rgba(var(--color-border-rgb), 0.6);
+
+      &:hover {
+        background: rgba(var(--color-primary-rgb), 0.15);
+      }
     }
   }
 
@@ -1551,11 +1614,11 @@
 
 /* Layout adjustments for marketplace with collapsible sidebar */
 .marketplace-layout {
-  padding-left: 280px;
+  padding-left: 260px; /* Updated for new sidebar width */
   transition: padding-left 0.3s ease;
 
   &.marketplace-layout--sidebar-collapsed {
-    padding-left: 72px;
+    padding-left: 70px; /* Updated for new collapsed width */
   }
 }
 
@@ -1565,7 +1628,7 @@
     padding-left: 240px;
 
     &.marketplace-layout--sidebar-collapsed {
-      padding-left: 64px;
+      padding-left: 65px;
     }
   }
 }

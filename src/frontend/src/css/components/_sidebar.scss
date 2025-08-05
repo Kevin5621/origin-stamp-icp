@@ -3,7 +3,7 @@
    ============================================================================= */
 
 .app-sidebar {
-  width: 280px;
+  width: 280px; /* Increased back to give more space for content */
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
   position: fixed;
@@ -11,28 +11,63 @@
   left: 0;
   height: 100vh;
   overflow-y: auto;
-  z-index: 100;
+  overflow-x: visible;
+  z-index: 1050; /* Increased z-index to ensure visibility above main content */
   padding: 1rem;
   transition: width 0.3s ease;
+  box-sizing: border-box;
+  min-width: 280px;
 
   &.app-sidebar--collapsed {
-    width: 72px;
+    width: 80px; /* Ensure minimum width */
+    min-width: 80px;
 
     .sidebar-container {
       align-items: center;
     }
 
-    /* Adjust toggle button position when collapsed */
+    /* Professional header styling for collapsed state */
+    .sidebar-header {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      justify-content: center;
+    }
+
+    .sidebar-logo {
+      margin: 0;
+      width: auto;
+
+      .logo-text {
+        display: none;
+      }
+
+      .logo-icon {
+        margin-right: 0;
+      }
+    }
+
+    /* Professional toggle button styling for collapsed state */
     .sidebar-collapse-toggle {
-      right: -14px;
+      width: 28px;
+      height: 28px;
       background: linear-gradient(
         135deg,
         var(--color-primary) 0%,
         var(--color-accent) 100%
       );
-      color: var(--color-surface);
       border-color: var(--color-primary);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      color: var(--color-surface);
+      box-shadow:
+        0 2px 8px rgba(var(--color-primary-rgb), 0.3),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-left: 0;
+
+      svg {
+        color: var(--color-surface);
+        width: 14px;
+        height: 14px;
+      }
 
       &:hover {
         background: linear-gradient(
@@ -40,14 +75,15 @@
           var(--color-accent) 0%,
           var(--color-primary) 100%
         );
-        color: var(--color-surface);
-        transform: scale(1.15) rotate(5deg);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      }
+        border-color: var(--color-accent);
+        transform: translateY(-1px) scale(1.05);
+        box-shadow:
+          0 3px 16px rgba(var(--color-primary-rgb), 0.4),
+          0 2px 6px rgba(0, 0, 0, 0.15);
 
-      svg {
-        transform: rotate(0deg);
-        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+        svg {
+          transform: scale(1.1);
+        }
       }
     }
 
@@ -168,70 +204,43 @@
     }
   }
 
-  .sidebar-collapse-toggle {
-    position: absolute;
-    top: 1rem;
-    right: -12px;
-    width: 28px;
-    height: 28px;
-    background: linear-gradient(
-      135deg,
-      var(--color-primary) 0%,
-      var(--color-accent) 100%
-    );
-    border: 2px solid var(--color-surface);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 101;
-    color: var(--color-surface);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-    &:hover {
-      background: linear-gradient(
-        135deg,
-        var(--color-accent) 0%,
-        var(--color-primary) 100%
-      );
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-
-    /* Icon styling */
-    svg {
-      width: 16px;
-      height: 16px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-    }
-
-    /* Animation for icon rotation */
-    &:hover svg {
-      transform: scale(1.2);
-    }
-
-    /* Enhanced shadow for better visibility */
-    &:hover {
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    }
-  }
-
   .sidebar-container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%; /* Ensure container takes full width */
+    box-sizing: border-box;
+  }
+
+  /* =============================================================================
+     PROFESSIONAL SIDEBAR HEADER
+     ============================================================================= */
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+    min-height: 60px;
+    background: linear-gradient(
+      135deg,
+      var(--color-surface) 0%,
+      var(--color-hover-overlay) 100%
+    );
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    z-index: 1002; /* Ensure header is above main content */
   }
 
   .sidebar-logo {
-    margin-bottom: 1.5rem;
-    padding: 0.5rem 0;
+    padding: 0;
+    margin: 0;
+    width: auto;
+    flex: 1;
+    min-width: 0; /* Allow logo to shrink if needed */
 
     .logo-link {
       display: flex;
@@ -243,6 +252,8 @@
       transition: all 0.3s ease;
       padding: 0.5rem;
       border-radius: 12px;
+      width: calc(100% - 0.5rem); /* Leave space for toggle button */
+      box-sizing: border-box;
 
       &:hover {
         background: var(--color-hover-overlay);
@@ -270,6 +281,7 @@
       letter-spacing: 0.5px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0; /* Prevent icon from shrinking */
 
       &:hover {
         transform: scale(1.05) rotate(2deg);
@@ -279,15 +291,11 @@
 
     .logo-text {
       font-weight: 700;
-      background: linear-gradient(
-        135deg,
-        var(--color-primary) 0%,
-        var(--color-accent) 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--color-text-primary);
       transition: all 0.3s ease;
+      white-space: nowrap; /* Prevent text wrapping */
+      overflow: hidden;
+      text-overflow: ellipsis; /* Show ellipsis if text is too long */
     }
   }
 
@@ -387,6 +395,7 @@
         font-size: 0.95rem;
         margin-bottom: 0.25rem;
         transition: color 0.3s ease;
+        display: block; /* Ensure text is visible */
       }
 
       .user-balance {
@@ -394,6 +403,7 @@
         color: var(--color-text-secondary);
         font-weight: 500;
         transition: color 0.3s ease;
+        display: block; /* Ensure text is visible */
       }
     }
 
@@ -467,6 +477,8 @@
       justify-content: flex-start;
       position: relative;
       overflow: hidden;
+      width: 100%; /* Ensure menu item takes full width */
+      box-sizing: border-box;
 
       &::before {
         content: "";
@@ -522,29 +534,19 @@
 
       svg {
         margin-right: 0.75rem;
-        flex-shrink: 0;
+        flex-shrink: 0; /* Prevent icon from shrinking */
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: currentColor;
       }
 
       .menu-label {
         font-weight: 500;
         transition: all 0.3s ease;
-      }
-    }
-  }
-
-  /* Collapsed state adjustments */
-  &.app-sidebar--collapsed {
-    .sidebar-menu .menu-item {
-      justify-content: center;
-      padding: 0.75rem;
-
-      .menu-label {
-        display: none;
-      }
-
-      svg {
-        margin-right: 0;
+        color: currentColor;
+        white-space: nowrap; /* Prevent text wrapping */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Show ellipsis if text is too long */
+        flex: 1; /* Take remaining space */
       }
     }
   }
@@ -656,6 +658,12 @@
         margin-right: 0.75rem;
         flex-shrink: 0;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: currentColor; /* Ensure icon color matches text */
+      }
+
+      span {
+        color: currentColor; /* Ensure text color is inherited */
+        font-weight: 500;
       }
     }
   }
@@ -688,6 +696,7 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
+      color: var(--color-text-secondary); /* Ensure base color is set */
 
       &::before {
         content: "";
@@ -743,6 +752,11 @@
 
       svg {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: currentColor; /* Ensure icon color matches text */
+      }
+
+      .menu-label {
+        color: currentColor; /* Ensure text color is inherited */
       }
     }
   }
@@ -769,6 +783,39 @@
 
   &:hover::before {
     opacity: 1;
+  }
+
+  /* Ensure all text elements are visible */
+  * {
+    color: inherit;
+  }
+
+  /* Force text visibility for specific elements */
+  .menu-label,
+  .user-name,
+  .user-balance,
+  .section-title,
+  span {
+    color: inherit !important;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: visible; /* Allow text to overflow */
+    text-overflow: clip; /* Don't show ellipsis */
+  }
+
+  /* Ensure icons have proper color */
+  svg {
+    color: currentColor;
+    overflow: visible; /* Allow icons to overflow */
+  }
+
+  /* Ensure all containers allow overflow */
+  .sidebar-container,
+  .sidebar-logo,
+  .sidebar-user,
+  .sidebar-menu,
+  .sidebar-quick-actions,
+  .sidebar-bottom {
+    overflow: visible;
   }
 
   /* Smooth scrollbar styling */
@@ -850,6 +897,75 @@
   .quick-action-btn:hover svg {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   }
+
+  /* =============================================================================
+     PROFESSIONAL COLLAPSE TOGGLE BUTTON
+     ============================================================================= */
+
+  .sidebar-collapse-toggle {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(
+      135deg,
+      var(--color-surface) 0%,
+      var(--color-hover-overlay) 100%
+    );
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1003; /* Ensure toggle is above everything */
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.1);
+    outline: none;
+    flex-shrink: 0;
+    margin-left: 0.5rem; /* Add margin to separate from logo */
+
+    &:hover {
+      background: linear-gradient(
+        135deg,
+        var(--color-primary) 0%,
+        var(--color-accent) 100%
+      );
+      border-color: var(--color-primary);
+      color: var(--color-surface);
+      transform: translateY(-1px);
+      box-shadow:
+        0 3px 12px rgba(var(--color-primary-rgb), 0.25),
+        0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow:
+        0 1px 4px rgba(var(--color-primary-rgb), 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-primary);
+      transition: all 0.3s ease;
+    }
+
+    &:hover svg {
+      color: var(--color-surface);
+      transform: scale(1.1);
+    }
+  }
 }
 
 /* =============================================================================
@@ -861,11 +977,17 @@
   width: 100%;
   min-height: 100vh;
   position: relative;
-  padding-left: 280px;
+  padding-left: 280px; /* Updated to match new sidebar width */
   transition: padding-left 0.3s ease;
+  box-sizing: border-box;
 
   &.layout-with-sidebar--collapsed {
-    padding-left: 72px;
+    padding-left: 80px; /* Updated to match new collapsed width */
+
+    .layout-main-content {
+      width: calc(100vw - 80px);
+      max-width: calc(100vw - 80px);
+    }
   }
 }
 
@@ -875,6 +997,21 @@
   background: var(--color-surface);
   min-height: 100vh;
   overflow-y: auto;
+  overflow-x: visible;
+  box-sizing: border-box;
+  width: calc(100vw - 260px); /* Ensure content takes remaining width */
+  max-width: calc(100vw - 260px); /* Prevent content from overflowing */
+
+  @media (max-width: 1024px) {
+    width: calc(100vw - 240px);
+    max-width: calc(100vw - 240px);
+  }
+
+  @media (max-width: 768px) {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 1rem;
+  }
 }
 
 /* =============================================================================
@@ -883,18 +1020,29 @@
 
 @media (max-width: 1024px) {
   .app-sidebar {
-    width: 240px;
+    width: 260px; /* Slightly smaller for tablets */
 
     &.app-sidebar--collapsed {
-      width: 64px;
+      width: 75px;
+    }
+
+    .sidebar-collapse-toggle {
+      width: 36px;
+      height: 36px;
+      right: -18px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
     }
   }
 
   .layout-with-sidebar {
-    padding-left: 240px;
+    padding-left: 260px;
 
     &.layout-with-sidebar--collapsed {
-      padding-left: 64px;
+      padding-left: 75px;
     }
   }
 }
@@ -902,7 +1050,7 @@
 @media (max-width: 768px) {
   .app-sidebar {
     position: fixed;
-    left: -280px;
+    left: -280px; /* Updated to match new width */
     top: 0;
     width: 280px;
     transition: left 0.3s ease;
@@ -913,27 +1061,22 @@
     }
 
     &.app-sidebar--collapsed {
-      width: 72px;
-      left: -72px;
+      width: 80px;
+      left: -80px; /* Updated to match new collapsed width */
 
       &.sidebar-open {
         left: 0;
       }
     }
 
-    /* Mobile-specific collapse toggle styling */
     .sidebar-collapse-toggle {
-      width: 28px;
-      height: 28px;
-      right: -14px;
+      width: 40px;
+      height: 40px;
+      right: -20px;
 
       svg {
         width: 18px;
         height: 18px;
-      }
-
-      &:hover {
-        transform: scale(1.1);
       }
     }
   }
@@ -973,19 +1116,14 @@
       left: -100%;
     }
 
-    /* Extra small screen collapse toggle */
     .sidebar-collapse-toggle {
-      width: 32px;
-      height: 32px;
-      right: -16px;
+      width: 44px;
+      height: 44px;
+      right: -22px;
 
       svg {
         width: 20px;
         height: 20px;
-      }
-
-      &:hover {
-        transform: scale(1.05);
       }
     }
   }

@@ -15,7 +15,6 @@ import {
   Grid,
   List,
   Anchor,
-  Bell,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -41,10 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   // Internal state for collapse if not controlled externally
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
 
-  const isCollapsed =
-    externalIsCollapsed !== undefined
-      ? externalIsCollapsed
-      : internalIsCollapsed;
+  const isCollapsed = externalIsCollapsed ?? internalIsCollapsed;
 
   const handleToggleCollapse = () => {
     const newCollapsedState = !isCollapsed;
@@ -187,7 +183,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const getUserBalance = () => {
     // Mock balance - in real app this would come from wallet
-    return isAuthenticated ? "0.00 ICP" : "0.00 ICP";
+    return "0.00 ICP";
   };
 
   const getUserName = () => {
@@ -221,21 +217,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
       className={`app-sidebar ${isCollapsed ? "app-sidebar--collapsed" : ""} app-sidebar--${variant}`}
     >
       <div className="sidebar-container">
-        {/* Collapse Toggle Button */}
-        <button
-          className="sidebar-collapse-toggle"
-          onClick={handleToggleCollapse}
-          title={isCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
-        >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
+        {/* Professional Header Section */}
+        <div className="sidebar-header">
+          {/* Logo */}
+          <div className="sidebar-logo">
+            <Link to={getLogoPath()} className="logo-link">
+              <div className="logo-icon">{getLogoIcon()}</div>
+              {!isCollapsed && (
+                <span className="logo-text">{getLogoText()}</span>
+              )}
+            </Link>
+          </div>
 
-        {/* Logo */}
-        <div className="sidebar-logo">
-          <Link to={getLogoPath()} className="logo-link">
-            <div className="logo-icon">{getLogoIcon()}</div>
-            {!isCollapsed && <span className="logo-text">{getLogoText()}</span>}
-          </Link>
+          {/* Collapse Toggle Button */}
+          <button
+            className="sidebar-collapse-toggle"
+            onClick={handleToggleCollapse}
+            title={isCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
+          >
+            {isCollapsed ? (
+              <ChevronRight size={16} />
+            ) : (
+              <ChevronLeft size={16} />
+            )}
+          </button>
         </div>
 
         {/* User Profile Section */}
