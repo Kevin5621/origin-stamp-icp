@@ -115,10 +115,12 @@
 .btn-wireframe--primary {
   border-color: var(--color-primary-text);
   color: var(--color-primary-text);
+  background-color: transparent;
 
   &:hover {
     background-color: var(--color-primary-text);
     color: var(--color-surface);
+    border-color: var(--color-primary-text);
   }
 
   &::before {
@@ -129,10 +131,12 @@
 .btn-wireframe--secondary {
   border-color: var(--color-text-secondary);
   color: var(--color-text-secondary);
+  background-color: transparent;
 
   &:hover {
     background-color: var(--color-text-secondary);
     color: var(--color-surface);
+    border-color: var(--color-text-secondary);
   }
 
   &::before {

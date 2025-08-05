@@ -130,11 +130,59 @@
   flex-shrink: 0;
 }
 
+.floating-header__unauthenticated {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+}
+
 .floating-header__right {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   flex-shrink: 0;
+}
+
+/* =============================================================================
+   HEADER BUTTON CONSISTENCY
+   ============================================================================= */
+
+.floating-header .sign-in-btn {
+  min-width: 80px;
+  height: 40px;
+  font-size: 0.875rem;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-weight: var(--font-weight-semibold);
+  transition: all 0.2s ease;
+}
+
+.floating-header .theme-toggle,
+.floating-header .language-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-on-surface);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: var(--color-hover-overlay);
+    transform: scale(1.05);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 2px;
+  }
 }
 
 .floating-header__authenticated {
