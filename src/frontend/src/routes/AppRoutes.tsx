@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/auth/LoginPage";
@@ -11,6 +11,7 @@ import FinalizationPage from "../pages/dashboard/FinalizationPage";
 import VerificationPage from "../pages/dashboard/VerificationPage";
 import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
 import SettingsPage from "../pages/SettingsPage";
+import { ErrorPage, NotFoundPage } from "../pages/error";
 import {
   MarketplaceHomePage,
   CollectionDetailPage,
@@ -93,8 +94,11 @@ export const AppRoutes: React.FC = () => {
         element={<CollectionDetailPage />}
       />
 
-      {/* Fallback - Redirect ke landing page */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Error Routes */}
+      <Route path="/error" element={<ErrorPage />} />
+
+      {/* Fallback - 404 Page untuk rute yang tidak ditemukan */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
