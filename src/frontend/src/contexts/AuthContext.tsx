@@ -41,6 +41,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authClient, setAuthClient] = useState<AuthClient | null>(null);
 
+  // Load user from localStorage first (immediate authentication check)
+  useEffect(() => {
+    const savedUser = localStorage.getItem("auth-user");
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error("Error parsing saved user:", error);
+        localStorage.removeItem("auth-user");
+      }
+    }
+  }, []);
+
   // Initialize AuthClient
   useEffect(() => {
     const initAuthClient = async () => {
@@ -69,19 +82,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     initAuthClient();
-  }, []);
-
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem("auth-user");
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error("Error parsing saved user:", error);
-        localStorage.removeItem("auth-user");
-      }
-    }
   }, []);
 
   const login = (username: string) => {
