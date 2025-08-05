@@ -10,6 +10,7 @@
   /* Light Theme Colors */
   --color-primary-bg: #ffffff;
   --color-primary-text: #0f172a;
+  --color-primary: #0f172a;
   --color-surface: var(--color-primary-bg);
   --color-on-surface: var(--color-primary-text);
   --color-text-primary: var(--color-primary-text);
@@ -213,6 +214,7 @@
 [data-theme="dark"] {
   --color-primary-bg: #1a1a1a;
   --color-primary-text: #e2e8f0;
+  --color-primary: #e2e8f0; /* Added missing primary color for dark theme */
   --color-surface: var(--color-primary-bg);
   --color-on-surface: var(--color-primary-text);
   --color-text-primary: var(--color-primary-text);
