@@ -10,6 +10,7 @@ import { Loader, ErrorDisplay, FloatingHeader, AppLayout } from "./components";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import AuthRedirect from "./components/auth/AuthRedirect";
 import { PhysicalArtService } from "./services/physicalArtService";
 // Import pages dari sistem modular baru
 import LandingPage from "./pages/landing/LandingPage";
@@ -209,6 +210,9 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <BrowserRouter>
+          {/* Global authentication redirect handler */}
+          <AuthRedirect />
+          
           <FloatingHeader className="app-floating-header" />
 
           <MainContentWrapper />

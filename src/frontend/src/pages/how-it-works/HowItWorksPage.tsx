@@ -23,6 +23,13 @@ const HowItWorksPage: React.FC = () => {
   // Initialize cursor spotlight effect
   useCursorSpotlight();
 
+  // Immediate redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   // Preload 3D model saat komponen mount
   useEffect(() => {
     const preloadModel = async () => {

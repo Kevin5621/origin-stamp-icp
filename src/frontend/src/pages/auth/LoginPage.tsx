@@ -19,12 +19,19 @@ const LoginPage: React.FC = () => {
     useAuth();
   const [showCustomLogin, setShowCustomLogin] = useState(false);
 
-  // Redirect jika sudah login
+  // Immediate redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     }
   }, [isAuthenticated, navigate]);
+
+  // Also check immediately on component mount
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, []);
 
   const handleLoginSuccess = () => {
     navigate("/dashboard");
