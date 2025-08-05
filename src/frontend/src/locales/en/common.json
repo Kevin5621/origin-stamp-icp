@@ -114,7 +114,9 @@
     "marketplace": "Marketplace",
     "home": "Home",
     "guest_user": "Guest User",
-    "user": "User"
+    "user": "User",
+    "collapse": "Collapse Sidebar",
+    "expand": "Expand Sidebar"
   },
   "quick_actions": "Quick Actions",
   "create_nft": "Create NFT",

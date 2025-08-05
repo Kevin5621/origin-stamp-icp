@@ -13,6 +13,8 @@ export const MarketplaceHomePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1d");
   const [selectedView, setSelectedView] = useState<"grid" | "list">("grid");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isPriceListCollapsed, setIsPriceListCollapsed] = useState(false);
 
   // Mock data untuk featured collection
   const featuredCollection = {
@@ -207,7 +209,9 @@ export const MarketplaceHomePage: React.FC = () => {
   };
 
   return (
-    <div className="marketplace-page">
+    <div
+      className={`marketplace-page ${isSidebarCollapsed ? "marketplace-layout--sidebar-collapsed" : ""} ${isPriceListCollapsed ? "marketplace-layout--pricelist-collapsed" : ""}`}
+    >
       {/* Header */}
       <MarketplaceHeader
         onSearch={handleSearch}
@@ -215,7 +219,11 @@ export const MarketplaceHomePage: React.FC = () => {
       />
 
       {/* Left Sidebar */}
-      <MarketplaceSidebar onSectionChange={() => {}} />
+      <MarketplaceSidebar
+        onSectionChange={() => {}}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={setIsSidebarCollapsed}
+      />
 
       {/* Main Content */}
       <MarketplaceMainContent>
@@ -251,6 +259,8 @@ export const MarketplaceHomePage: React.FC = () => {
       <MarketplacePriceList
         collections={topCollections}
         title="TOP COLLECTIONS"
+        isCollapsed={isPriceListCollapsed}
+        onToggleCollapse={setIsPriceListCollapsed}
       />
     </div>
   );
