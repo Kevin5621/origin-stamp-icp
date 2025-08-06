@@ -127,7 +127,7 @@ const ViewCertificatePage: React.FC = () => {
           <h2>{t("certificate_not_found")}</h2>
           <p>{t("certificate_not_found_description")}</p>
           <button
-            className="btn btn--primary"
+            className="btn-back"
             onClick={() => navigate("/certificates")}
           >
             {t("back_to_certificates")}
@@ -140,21 +140,21 @@ const ViewCertificatePage: React.FC = () => {
   return (
     <div className="view-certificate">
       <div className="view-certificate__container">
-        {/* Header */}
+        {/* Modern Header */}
         <div className="view-certificate__header">
           <button
-            className="btn btn--secondary"
+            className="btn-back"
             onClick={() => navigate("/certificates")}
           >
             <ArrowLeft size={20} />
             {t("back_to_certificates")}
           </button>
           <div className="view-certificate__actions">
-            <button className="btn btn--secondary" onClick={handleShare}>
+            <button className="btn-action" onClick={handleShare}>
               <Share2 size={16} />
               {t("share")}
             </button>
-            <button className="btn btn--secondary" onClick={handleDownload}>
+            <button className="btn-action" onClick={handleDownload}>
               <Download size={16} />
               {t("download")}
             </button>
@@ -190,7 +190,7 @@ const ViewCertificatePage: React.FC = () => {
             </div>
 
             <div className="certificate-actions">
-              <button className="btn btn--primary" onClick={handleVerify}>
+              <button className="btn-verify" onClick={handleVerify}>
                 <Eye size={16} />
                 {t("verify")}
               </button>
