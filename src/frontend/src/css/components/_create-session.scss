@@ -154,14 +154,14 @@
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-2xl);
     padding: var(--spacing-2xl);
-    box-shadow: 
+    box-shadow:
       0 10px 30px rgba(var(--color-secondary-rgb), 0.08),
       0 4px 15px rgba(0, 0, 0, 0.02);
     transition: all 0.3s ease;
 
     &:hover {
       border-color: rgba(var(--color-secondary-rgb), 0.1);
-      box-shadow: 
+      box-shadow:
         0 15px 40px rgba(var(--color-secondary-rgb), 0.12),
         0 6px 20px rgba(0, 0, 0, 0.03);
     }
@@ -202,7 +202,7 @@
         &:focus {
           outline: none;
           border-color: var(--color-secondary);
-          box-shadow: 
+          box-shadow:
             0 0 0 3px rgba(var(--color-secondary-rgb), 0.1),
             0 4px 12px rgba(var(--color-secondary-rgb), 0.08);
           transform: translateY(-1px);
@@ -218,7 +218,7 @@
 
         &.form-input--error {
           border-color: var(--color-error);
-          box-shadow: 
+          box-shadow:
             0 0 0 3px rgba(var(--color-error-rgb), 0.1),
             0 4px 12px rgba(var(--color-error-rgb), 0.08);
         }
@@ -289,7 +289,7 @@
       &:hover {
         border-color: var(--color-secondary);
         transform: translateY(-4px);
-        box-shadow: 
+        box-shadow:
           0 10px 40px rgba(var(--color-secondary-rgb), 0.15),
           0 4px 20px rgba(0, 0, 0, 0.05);
 
@@ -310,7 +310,7 @@
       &.art-type-option--active {
         border-color: var(--color-secondary);
         background: rgba(var(--color-secondary-rgb), 0.03);
-        box-shadow: 
+        box-shadow:
           0 8px 30px rgba(var(--color-secondary-rgb), 0.12),
           0 3px 15px rgba(0, 0, 0, 0.03);
 

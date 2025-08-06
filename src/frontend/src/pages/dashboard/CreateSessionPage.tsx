@@ -43,10 +43,7 @@ const CreateSessionPage: React.FC = () => {
       <div className="create-session__container">
         {/* Header */}
         <div className="create-session__header">
-          <button
-            className="btn-back"
-            onClick={() => navigate("/session")}
-          >
+          <button className="btn-back" onClick={() => navigate("/session")}>
             <ArrowLeft size={20} />
             {t("back_to_sessions")}
           </button>
@@ -139,10 +136,7 @@ const CreateSessionPage: React.FC = () => {
               >
                 Cancel
               </button>
-              <button
-                className="btn-create"
-                onClick={handleCreateSession}
-              >
+              <button className="btn-create" onClick={handleCreateSession}>
                 <Plus size={16} />
                 Create Session
               </button>
