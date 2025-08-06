@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
-/* Component Styles */
+/* Settings and base */
+@import "./css/settings/_settings.scss";
+
+/* Component styles */
 @import "./css/components/_dashboard.scss";
+@import "./css/components/_artwork-card.scss";
 @import "./css/components/_session.scss";
 @import "./css/components/_session-record.scss";
 @import "./css/components/_error-page.scss";

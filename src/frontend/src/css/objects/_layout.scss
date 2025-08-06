@@ -26,17 +26,26 @@
    MAIN CONTENT LAYOUT
    ============================================================================= */
 
-.main-content {
-  padding-top: 6rem; /* Space for floating header */
-  margin-bottom: 6rem; /* Space for navigation */
-  min-height: calc(100vh - 12rem);
-  transition: var(--theme-transition);
-  width: 100%;
+.layout-main-content {
+  flex: 1;
+  background: var(--color-surface);
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+  padding: var(--spacing-md) var(--spacing-sm); /* Reduced horizontal padding */
+  overflow-y: auto;
   position: relative;
 
+  /* Better container width for content */
+  max-width: 100%;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    padding: var(--spacing-md) var(--spacing-xs); /* Even smaller on tablets */
+  }
+
   @media (max-width: 768px) {
-    padding-top: 5rem;
-    margin-bottom: 5rem;
+    padding: var(--spacing-sm) var(--spacing-xs); /* Minimal padding on mobile */
+    margin-left: 0;
   }
 }
 

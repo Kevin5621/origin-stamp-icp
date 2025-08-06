@@ -1,118 +1,110 @@
 // src/frontend/src/components/dashboard/Dashboard.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import {
-  Sparkles,
   Plus,
-  Target,
-  FileText,
-  Clock,
-  DollarSign,
-  TrendingUp,
-  Activity,
-  ArrowRight,
   BarChart3,
-  Search,
-  Grid,
-  List,
-  Calendar,
-  FolderOpen,
+  Upload,
+  Eye,
+  TrendingUp,
+  CheckCircle,
+  Activity,
+  Shield,
+  Award,
+  Camera,
+  FileText,
 } from "lucide-react";
-import { KaryaWithLogs } from "../../types/karya";
+import {
+  type OriginStampStats,
+  type ArtworkOverview,
+  type RecentActivity,
+  OriginStampDashboardService,
+} from "../../services/dashboardService";
 
 interface DashboardProps {
-  stats: {
-    completedProjects: number;
-    certificatesIssued: number;
-    activeSessions: number;
-    totalValue: number;
-  };
-  projects: KaryaWithLogs[];
   isLoading?: boolean;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({
-  stats,
-  projects,
-  isLoading = false,
-}) => {
-  const { t } = useTranslation("dashboard");
+const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const handleNewProject = () => {
-    navigate("/session");
+  // State management
+  const [stats, setStats] = useState<OriginStampStats | null>(null);
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [artworks, setArtworks] = useState<ArtworkOverview[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load dashboard data
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        setLoading(true);
+        const [statsData, activityData, artworksData] = await Promise.all([
+          OriginStampDashboardService.getDashboardStats(),
+          OriginStampDashboardService.getRecentActivity(),
+          OriginStampDashboardService.getArtworkOverviews(),
+        ]);
+
+        setStats(statsData);
+        setRecentActivity(activityData);
+        setArtworks(artworksData);
+      } catch (error) {
+        console.error("Failed to load dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboardData();
+  }, []);
+
+  // Icon mapping for activity types
+  const iconMap = {
+    artwork_verified: CheckCircle,
+    certificate_issued: Award,
+    session_started: Camera,
+    process_logged: FileText,
+    nft_minted: Shield,
   };
 
-  const handleViewCertificates = () => {
-    navigate("/certificates");
-  };
+  // Quick actions for OriginStamp
+  const quickActions = [
+    {
+      id: "upload-artwork",
+      icon: Upload,
+      title: "Upload Artwork",
+      description: "Start artwork verification process",
+      onClick: () => navigate("/upload"),
+    },
+    {
+      id: "start-session",
+      icon: Camera,
+      title: "Start Session",
+      description: "Begin physical art session",
+      onClick: () => navigate("/sessions/new"),
+    },
+    {
+      id: "view-collection",
+      icon: Eye,
+      title: "View Collection",
+      description: "Browse verified artworks",
+      onClick: () => navigate("/collection"),
+    },
+    {
+      id: "analytics",
+      icon: BarChart3,
+      title: "Analytics",
+      description: "View verification metrics",
+      onClick: () => navigate("/analytics"),
+    },
+  ];
 
-  const handleViewAnalytics = () => {
-    navigate("/analytics");
-  };
-
-  const handleProjectClick = (karyaId: string) => {
-    navigate(`/karya/${karyaId}`);
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "var(--color-success)";
-      case "active":
-        return "var(--color-warning)";
-      default:
-        return "var(--color-text-secondary)";
-    }
-  };
-
-  const getProjectTypeIcon = (tipeKarya: string) => {
-    switch (tipeKarya) {
-      case "painting":
-        return <Target size={16} />;
-      case "sculpture":
-        return <FolderOpen size={16} />;
-      case "audio":
-        return <BarChart3 size={16} />;
-      case "digital":
-        return <FileText size={16} />;
-      default:
-        return <Target size={16} />;
-    }
-  };
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
-  const filteredProjects = projects.filter(
-    (project) =>
-      project.nama_karya.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.deskripsi.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  if (isLoading) {
+  if (loading || isLoading) {
     return (
       <div className="dashboard">
         <div className="dashboard__loading">
-          <div className="loading-spinner"></div>
-          <p>{t("loading")}</p>
+          <div className="loading-spinner" />
+          <p>Loading OriginStamp Dashboard...</p>
         </div>
       </div>
     );
@@ -120,247 +112,180 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="dashboard">
-      {/* Welcome Section */}
-      <div className="dashboard__welcome">
-        <div className="dashboard__welcome-content">
-          <div className="dashboard__welcome-icon">
-            <Sparkles size={32} />
+      {/* Enhanced Header */}
+      <div className="dashboard__header">
+        <div className="dashboard__header-main">
+          <div className="dashboard__header-content">
+            <h1 className="dashboard__header-title">OriginStamp Dashboard</h1>
+            <p className="dashboard__header-subtitle">
+              NFT RWA Art Verification Platform
+            </p>
           </div>
-          <div className="dashboard__welcome-text">
-            <h1>{t("creator_dashboard")}</h1>
-            <p>{t("manage_monitor_projects")}</p>
-          </div>
-        </div>
-        <button
-          className="dashboard__welcome-action"
-          onClick={handleNewProject}
-        >
-          <Plus size={20} />
-          <span>{t("new_project")}</span>
-        </button>
-      </div>
-
-      {/* Stats Overview */}
-      <div className="dashboard__stats-overview">
-        <div className="dashboard__stat-item">
-          <div className="dashboard__stat-icon">
-            <Target size={24} />
-          </div>
-          <div className="dashboard__stat-content">
-            <div className="dashboard__stat-value">
-              {stats.completedProjects}
-            </div>
-            <div className="dashboard__stat-label">
-              {t("completed_projects")}
-            </div>
-            <div className="dashboard__stat-trend">
-              <TrendingUp size={14} />
-              <span>+12%</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard__stat-item">
-          <div className="dashboard__stat-icon">
-            <FileText size={24} />
-          </div>
-          <div className="dashboard__stat-content">
-            <div className="dashboard__stat-value">
-              {stats.certificatesIssued}
-            </div>
-            <div className="dashboard__stat-label">
-              {t("certificates_issued")}
-            </div>
-            <div className="dashboard__stat-trend">
-              <TrendingUp size={14} />
-              <span>+8%</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard__stat-item">
-          <div className="dashboard__stat-icon">
-            <Clock size={24} />
-          </div>
-          <div className="dashboard__stat-content">
-            <div className="dashboard__stat-value">{stats.activeSessions}</div>
-            <div className="dashboard__stat-label">{t("active_sessions")}</div>
-            <div className="dashboard__stat-trend">
-              <Activity size={14} />
-              <span>Active</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard__stat-item">
-          <div className="dashboard__stat-icon">
-            <DollarSign size={24} />
-          </div>
-          <div className="dashboard__stat-content">
-            <div className="dashboard__stat-value">
-              {formatCurrency(stats.totalValue)}
-            </div>
-            <div className="dashboard__stat-label">{t("total_value")}</div>
-            <div className="dashboard__stat-trend">
-              <TrendingUp size={14} />
-              <span>+15%</span>
-            </div>
+          <div className="dashboard__header-actions">
+            <button
+              className="btn btn--primary"
+              onClick={() => navigate("/upload")}
+            >
+              <Plus size={16} />
+              Upload Artwork
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="dashboard__main-content">
-        {/* Quick Actions - Now as horizontal cards */}
-        <div className="dashboard__quick-actions">
-          <button
-            className="dashboard__quick-card dashboard__quick-card--primary"
-            onClick={handleNewProject}
-          >
-            <div className="dashboard__quick-icon">
-              <Plus size={24} />
-            </div>
-            <div className="dashboard__quick-content">
-              <h3>{t("new_project")}</h3>
-              <p>{t("create_verification_project")}</p>
-            </div>
-            <ArrowRight size={20} className="dashboard__quick-arrow" />
-          </button>
-
-          <button
-            className="dashboard__quick-card"
-            onClick={handleViewCertificates}
-          >
-            <div className="dashboard__quick-icon">
-              <FileText size={24} />
-            </div>
-            <div className="dashboard__quick-content">
-              <h3>{t("view_certificates")}</h3>
-              <p>{t("manage_issued_certificates")}</p>
-            </div>
-            <ArrowRight size={20} className="dashboard__quick-arrow" />
-          </button>
-
-          <button
-            className="dashboard__quick-card"
-            onClick={handleViewAnalytics}
-          >
-            <div className="dashboard__quick-icon">
-              <BarChart3 size={24} />
-            </div>
-            <div className="dashboard__quick-content">
-              <h3>{t("analytics")}</h3>
-              <p>{t("view_statistics_reports")}</p>
-            </div>
-            <ArrowRight size={20} className="dashboard__quick-arrow" />
-          </button>
-        </div>
-
-        {/* Projects Panel - Now full width */}
-        <div className="dashboard__projects-panel">
-          <div className="dashboard__panel-header">
-            <div className="dashboard__panel-title-group">
-              <h2 className="dashboard__panel-title">{t("recent_projects")}</h2>
-              <span className="dashboard__panel-count">
-                {filteredProjects.length} projects
-              </span>
-            </div>
-
-            <div className="dashboard__panel-controls">
-              <div className="dashboard__search-wrapper">
-                <Search size={16} />
-                <input
-                  type="text"
-                  placeholder={t("search_projects")}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="dashboard__search-input"
-                />
-              </div>
-              <div className="dashboard__view-toggle">
-                <button
-                  className={`dashboard__view-btn ${viewMode === "grid" ? "active" : ""}`}
-                  onClick={() => setViewMode("grid")}
-                >
-                  <Grid size={16} />
-                </button>
-                <button
-                  className={`dashboard__view-btn ${viewMode === "list" ? "active" : ""}`}
-                  onClick={() => setViewMode("list")}
-                >
-                  <List size={16} />
-                </button>
-              </div>
+      {/* Stats Grid with Gradients */}
+      <div className="dashboard__stats-grid">
+        <div className="dashboard__stat-card dashboard__stat-card--featured">
+          <div className="dashboard__stat-header">
+            <div className="dashboard__stat-icon">
+              <CheckCircle size={20} />
             </div>
           </div>
+          <div className="dashboard__stat-value">
+            {stats?.totalArtworks || 0}
+          </div>
+          <div className="dashboard__stat-label">Total Artworks</div>
+          <div className="dashboard__stat-trend">
+            <TrendingUp size={12} />+{stats?.monthlyGrowth || 0}% this month
+          </div>
+        </div>
 
-          <div
-            className={`dashboard__projects-grid dashboard__projects-grid--${viewMode}`}
+        <div className="dashboard__stat-card">
+          <div className="dashboard__stat-header">
+            <div className="dashboard__stat-icon">
+              <Shield size={20} />
+            </div>
+          </div>
+          <div className="dashboard__stat-value">
+            {stats?.verifiedArtworks || 0}
+          </div>
+          <div className="dashboard__stat-label">Verified Artworks</div>
+          <div className="dashboard__stat-trend">
+            <TrendingUp size={12} />+
+            {Math.round((stats?.verificationScore || 0) / 10)}% score
+          </div>
+        </div>
+
+        <div className="dashboard__stat-card">
+          <div className="dashboard__stat-header">
+            <div className="dashboard__stat-icon">
+              <Award size={20} />
+            </div>
+          </div>
+          <div className="dashboard__stat-value">
+            {stats?.certificatesIssued || 0}
+          </div>
+          <div className="dashboard__stat-label">NFTs Minted</div>
+          <div className="dashboard__stat-trend">
+            <TrendingUp size={12} />+
+            {Math.round((stats?.monthlyGrowth || 0) / 2)}% this month
+          </div>
+        </div>
+
+        <div className="dashboard__stat-card">
+          <div className="dashboard__stat-header">
+            <div className="dashboard__stat-icon">
+              <Camera size={20} />
+            </div>
+          </div>
+          <div className="dashboard__stat-value">
+            {stats?.activeSessions || 0}
+          </div>
+          <div className="dashboard__stat-label">Active Sessions</div>
+          <div className="dashboard__stat-trend">
+            <Activity size={12} />
+            Live tracking
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions Grid */}
+      <div className="dashboard__quick-actions">
+        {quickActions.map((action) => (
+          <button
+            key={action.id}
+            className="dashboard__action-card"
+            onClick={action.onClick}
           >
-            {filteredProjects.length > 0 ? (
-              filteredProjects.slice(0, 6).map((project) => (
-                <button
-                  key={project.karya_id}
-                  className="dashboard__project-card"
-                  onClick={() => handleProjectClick(project.karya_id)}
-                  type="button"
-                >
-                  <div className="dashboard__project-header">
-                    <div className="dashboard__project-type">
-                      {getProjectTypeIcon(project.tipe_karya)}
-                    </div>
-                    <div
-                      className="dashboard__project-status"
-                      style={{
-                        backgroundColor: getStatusColor(project.status_karya),
-                      }}
+            <action.icon className="action-icon" size={24} />
+            <div className="action-title">{action.title}</div>
+            <div className="action-description">{action.description}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Artwork Overview Grid */}
+      <div className="dashboard__overview">
+        <h3>Recent Artworks</h3>
+        <div className="dashboard__overview-grid">
+          {artworks.slice(0, 6).map((artwork) => (
+            <button
+              key={artwork.id}
+              className="dashboard__overview-card"
+              onClick={() => navigate(`/artwork/${artwork.id}`)}
+            >
+              <div className="artwork-card">
+                <div className="artwork-card__header">
+                  <div className="artwork-card__status">
+                    <span
+                      className={`status-badge status-badge--${artwork.status}`}
                     >
-                      {project.status_karya.toUpperCase()}
-                    </div>
+                      {artwork.status.replace("_", " ")}
+                    </span>
+                    <span className="artwork-card__type">{artwork.type}</span>
                   </div>
-
-                  <div className="dashboard__project-content">
-                    <h3>{project.nama_karya}</h3>
-                    <p>{project.deskripsi}</p>
-                  </div>
-
-                  <div className="dashboard__project-meta">
-                    <div className="dashboard__project-date">
-                      <Calendar size={14} />
-                      <span>{formatDate(project.waktu_mulai)}</span>
-                    </div>
-                    <div className="dashboard__project-format">
-                      {project.format_file}
-                    </div>
-                  </div>
-
-                  {project.log_count && (
-                    <div className="dashboard__project-logs">
-                      <Activity size={14} />
-                      <span>
-                        {project.log_count} {t("process_logs")}
-                      </span>
-                    </div>
-                  )}
-                </button>
-              ))
-            ) : (
-              <div className="dashboard__empty-state">
-                <div className="dashboard__empty-icon">
-                  <Target size={48} />
                 </div>
-                <h3>{t("no_projects_yet")}</h3>
-                <p>{t("start_creating_projects")}</p>
-                <button
-                  className="dashboard__empty-action"
-                  onClick={handleNewProject}
-                  type="button"
-                >
-                  {t("create_first_project")}
-                </button>
+                <div className="artwork-card__content">
+                  <div className="artwork-card__title">{artwork.name}</div>
+                  <div className="artwork-card__metadata">
+                    <div className="artwork-card__info">
+                      <div>Type: {artwork.type}</div>
+                      <div>
+                        Last Activity:{" "}
+                        {new Date(artwork.lastActivity).toLocaleDateString()}
+                      </div>
+                      <div>Progress: {artwork.progress}%</div>
+                    </div>
+                    <div className="artwork-card__stats">
+                      {artwork.verificationEntries > 0 && (
+                        <div className="stat-item">
+                          <FileText size={14} />
+                          <span>{artwork.verificationEntries} entries</span>
+                        </div>
+                      )}
+                      {artwork.progress > 0 && (
+                        <div className="stat-item">
+                          <Shield size={14} />
+                          <span>{artwork.progress}% complete</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="dashboard__activity">
+        <h3>Recent Activity</h3>
+        <div className="dashboard__activity-list">
+          {recentActivity.slice(0, 8).map((activity) => {
+            const Icon = iconMap[activity.type] || Activity;
+            return (
+              <div key={activity.id} className="dashboard__activity-item">
+                <Icon className="activity-icon" size={16} />
+                <div className="activity-content">
+                  <div className="activity-text">{activity.description}</div>
+                  <div className="activity-time">
+                    {new Date(activity.timestamp).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

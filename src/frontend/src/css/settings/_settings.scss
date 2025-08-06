@@ -79,10 +79,19 @@
   --color-creative-overlay: rgba(237, 137, 54, 0.05);
 
   /* Creative Gradient Combinations */
-  --gradient-primary-secondary: linear-gradient(135deg, #2d3748 0%, #4a90a4 100%);
+  --gradient-primary-secondary: linear-gradient(
+    135deg,
+    #2d3748 0%,
+    #4a90a4 100%
+  );
   --gradient-warm-cool: linear-gradient(135deg, #ed8936 0%, #4a90a4 100%);
   --gradient-subtle-primary: linear-gradient(135deg, #fdfcf7 0%, #f0f4f8 100%);
-  --gradient-creative-accent: linear-gradient(135deg, #4a90a4 0%, #ed8936 50%, #38a169 100%);
+  --gradient-creative-accent: linear-gradient(
+    135deg,
+    #4a90a4 0%,
+    #ed8936 50%,
+    #38a169 100%
+  );
 
   /* =============================================================================
      TYPOGRAPHY
@@ -164,15 +173,19 @@
      SHADOWS - DUAL-TONE ARTISTIC
      ============================================================================= */
 
-  --shadow-sm: 0 1px 3px 0 rgba(45, 55, 72, 0.1), 0 1px 2px 0 rgba(45, 55, 72, 0.06);
+  --shadow-sm:
+    0 1px 3px 0 rgba(45, 55, 72, 0.1), 0 1px 2px 0 rgba(45, 55, 72, 0.06);
   --shadow-md:
     0 4px 6px -1px rgba(45, 55, 72, 0.1), 0 2px 4px -1px rgba(45, 55, 72, 0.06);
   --shadow-lg:
-    0 10px 15px -3px rgba(45, 55, 72, 0.1), 0 4px 6px -2px rgba(45, 55, 72, 0.05);
+    0 10px 15px -3px rgba(45, 55, 72, 0.1),
+    0 4px 6px -2px rgba(45, 55, 72, 0.05);
   --shadow-xl:
-    0 20px 25px -5px rgba(45, 55, 72, 0.1), 0 10px 10px -5px rgba(45, 55, 72, 0.04);
+    0 20px 25px -5px rgba(45, 55, 72, 0.1),
+    0 10px 10px -5px rgba(45, 55, 72, 0.04);
   --shadow-hover:
-    0 10px 15px -3px rgba(45, 55, 72, 0.12), 0 4px 6px -2px rgba(74, 144, 164, 0.08);
+    0 10px 15px -3px rgba(45, 55, 72, 0.12),
+    0 4px 6px -2px rgba(74, 144, 164, 0.08);
 
   /* Dual-tone Neumorphic shadows */
   --shadow-neumorphic-sm:
@@ -188,9 +201,8 @@
   /* Creative Shadow Effects */
   --shadow-creative-primary: 0 4px 20px rgba(45, 55, 72, 0.15);
   --shadow-creative-secondary: 0 4px 20px rgba(74, 144, 164, 0.15);
-  --shadow-creative-dual: 
-    0 4px 20px rgba(45, 55, 72, 0.1),
-    0 8px 40px rgba(74, 144, 164, 0.1);
+  --shadow-creative-dual:
+    0 4px 20px rgba(45, 55, 72, 0.1), 0 8px 40px rgba(74, 144, 164, 0.1);
 
   /* =============================================================================
      TRANSITIONS & ANIMATIONS
@@ -301,15 +313,23 @@
   --color-creative-overlay: rgba(246, 173, 85, 0.05);
 
   /* Dark Creative Gradient Combinations */
-  --gradient-primary-secondary: linear-gradient(135deg, #1a202c 0%, #63b3ed 100%);
+  --gradient-primary-secondary: linear-gradient(
+    135deg,
+    #1a202c 0%,
+    #63b3ed 100%
+  );
   --gradient-warm-cool: linear-gradient(135deg, #f6ad55 0%, #63b3ed 100%);
   --gradient-subtle-primary: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-  --gradient-creative-accent: linear-gradient(135deg, #63b3ed 0%, #f6ad55 50%, #68d391 100%);
+  --gradient-creative-accent: linear-gradient(
+    135deg,
+    #63b3ed 0%,
+    #f6ad55 50%,
+    #68d391 100%
+  );
 
   /* Dark Creative Shadow Effects */
   --shadow-creative-primary: 0 4px 20px rgba(23, 25, 35, 0.3);
   --shadow-creative-secondary: 0 4px 20px rgba(99, 179, 237, 0.2);
-  --shadow-creative-dual: 
-    0 4px 20px rgba(23, 25, 35, 0.2),
-    0 8px 40px rgba(99, 179, 237, 0.15);
+  --shadow-creative-dual:
+    0 4px 20px rgba(23, 25, 35, 0.2), 0 8px 40px rgba(99, 179, 237, 0.15);
 }
