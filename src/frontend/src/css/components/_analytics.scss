@@ -6,10 +6,10 @@
 .analytics-section {
   min-height: 100vh;
   background-color: var(--color-primary-bg);
-  padding: 2rem;
+  padding: 2rem 0; /* Remove horizontal padding */
 
   @media (max-width: 768px) {
-    padding: 1rem;
+    padding: 1rem 0; /* Remove horizontal padding on mobile */
   }
 }
 
@@ -25,7 +25,7 @@
 .analytics-header {
   background-color: var(--color-surface);
   border-radius: 1.5rem;
-  padding: 2rem;
+  padding: 2rem 0; /* Remove horizontal padding */
   box-shadow:
     6px 6px 12px var(--color-shadow-dark),
     -6px -6px 12px var(--color-shadow-light);
@@ -35,7 +35,7 @@
   gap: 2rem;
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
+    padding: 1.5rem 0; /* Remove horizontal padding on mobile */
     flex-direction: column;
     gap: 1.5rem;
   }
@@ -92,7 +92,7 @@
 
 .stat-card {
   @extend .wireframe-card !optional;
-  padding: 1.5rem;
+  padding: 1.5rem 0; /* Remove horizontal padding */
   transition: all 0.3s ease;
 
   &:hover {
@@ -117,7 +117,7 @@
   }
 
   @media (max-width: 768px) {
-    padding: 1.25rem;
+    padding: 1.25rem 0; /* Remove horizontal padding on mobile */
   }
 }
 
@@ -199,7 +199,7 @@
 
 .chart-card {
   @extend .wireframe-card !optional;
-  padding: 2rem;
+  padding: 2rem 0; /* Remove horizontal padding */
 
   &:hover {
     background-color: var(--color-surface);
@@ -215,7 +215,7 @@
   }
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
+    padding: 1.5rem 0; /* Remove horizontal padding on mobile */
   }
 }
 
@@ -425,7 +425,7 @@
   }
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
+    padding: 1.5rem 0; /* Remove horizontal padding on mobile */
   }
 }
 
@@ -605,7 +605,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 0; /* Remove horizontal padding */
     border-bottom: 1px solid var(--color-border);
     background: var(--color-surface);
     position: sticky;
@@ -656,14 +656,14 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 2rem;
-    padding: 2rem;
+    padding: 2rem 0; /* Remove horizontal padding */
     max-width: 1400px;
     margin: 0 auto;
 
     @media (max-width: 1024px) {
       grid-template-columns: 1fr;
       gap: 1.5rem;
-      padding: 1.5rem;
+      padding: 1.5rem 0; /* Remove horizontal padding on tablet */
     }
   }
 
@@ -683,7 +683,7 @@
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1.5rem 0; /* Remove horizontal padding */
   }
 
   &__chart-header {
@@ -875,7 +875,7 @@
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1.5rem 0; /* Remove horizontal padding */
 
     h4 {
       font-size: 1.125rem;

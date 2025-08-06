@@ -1,9 +1,9 @@
 // Dashboard component styles with modern gradients for OriginStamp
 .dashboard {
-  padding: var(--spacing-md) var(--spacing-sm);
-  padding-top: calc(var(--spacing-xl) + 60px);
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: var(--spacing-md) var(--spacing-md); /* Add horizontal padding for proper spacing */
+  padding-top: calc(var(--spacing-xl) + 120px); /* Increased top padding to avoid header overlap */
+  max-width: 100%; /* Use full width instead of 1400px */
+  margin: 0; /* Remove auto margin */
   min-height: 100vh;
   background: var(--color-surface);
   color: var(--color-text-primary);
@@ -35,7 +35,13 @@
   }
 
   @media (min-width: 1200px) {
-    padding: var(--spacing-lg) var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-lg); /* Add horizontal padding for larger screens */
+    padding-top: calc(var(--spacing-xl) + 140px); /* More top padding for larger screens */
+  }
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-sm) var(--spacing-sm); /* Smaller horizontal padding on mobile */
+    padding-top: calc(var(--spacing-lg) + 100px); /* Adequate top padding for mobile */
   }
 
   // Loading State
