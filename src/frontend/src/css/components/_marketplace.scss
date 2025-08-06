@@ -274,7 +274,7 @@
   &__container {
     max-width: 100%;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 0; /* Remove horizontal padding */
     padding-top: 6rem; /* Space for header */
     box-sizing: border-box;
   }
