@@ -4,69 +4,85 @@
 
 :root {
   /* =============================================================================
-     COLOR SYSTEM
+     COLOR SYSTEM - ARTIST DUAL-TONE THEME
      ============================================================================= */
 
-  /* Light Theme Colors */
-  --color-primary-bg: #ffffff;
-  --color-primary-text: #0f172a;
-  --color-primary: #0f172a;
+  /* Dual-Tone Artist Colors - Creative yet Comfortable */
+  --color-primary-bg: #fdfcf7;
+  --color-secondary-bg: #f0f4f8;
+  --color-primary: #2d3748;
+  --color-secondary: #4a90a4;
+  --color-primary-text: #2d3748;
+  --color-secondary-text: #4a90a4;
   --color-surface: var(--color-primary-bg);
   --color-on-surface: var(--color-primary-text);
   --color-text-primary: var(--color-primary-text);
-  --color-text-secondary: #334155;
-  --color-text-tertiary: #64748b;
-  --color-surface-hover: #f8fafc;
+  --color-text-secondary: #718096;
+  --color-text-tertiary: #a0aec0;
+  --color-surface-hover: #f7fafc;
 
   /* RGB Values for Surface Colors */
-  --color-surface-rgb: 255, 255, 255;
+  --color-surface-rgb: 253, 252, 247;
+  --color-secondary-bg-rgb: 240, 244, 248;
 
-  /* Shadow Colors for Neumorphic Design */
-  --color-shadow-dark: #d1d5db;
+  /* Shadow Colors for Dual-Tone Design */
+  --color-shadow-dark: #e2e8f0;
   --color-shadow-light: #ffffff;
+  --color-shadow-teal: rgba(74, 144, 164, 0.1);
 
-  /* Interactive States */
-  --color-hover-overlay: rgba(37, 99, 235, 0.15);
-  --color-accent: #1e40af;
-  --color-accent-rgb: 30, 64, 175;
-  --color-accent-hover: #1e3a8a;
+  /* Interactive States - Dual Colors */
+  --color-hover-overlay-primary: rgba(45, 55, 72, 0.1);
+  --color-hover-overlay-secondary: rgba(74, 144, 164, 0.1);
+  --color-accent: #4a90a4;
+  --color-accent-rgb: 74, 144, 164;
+  --color-accent-hover: #3182ce;
+  --color-accent-secondary: #ed8936;
+  --color-accent-secondary-rgb: 237, 137, 54;
 
-  /* Status Colors */
-  --color-error: #dc2626;
-  --color-error-bg: #fef2f2;
-  --color-success: #047857;
-  --color-warning: #b45309;
-  --color-info: #1e40af;
+  /* Status Colors - Artist Palette */
+  --color-error: #e53e3e;
+  --color-error-bg: #fed7d7;
+  --color-success: #38a169;
+  --color-warning: #dd6b20;
+  --color-info: #3182ce;
 
   /* RGB Values for Status Colors */
-  --color-error-rgb: 220, 38, 38;
-  --color-success-rgb: 4, 120, 87;
-  --color-warning-rgb: 180, 83, 9;
-  --color-info-rgb: 30, 64, 175;
+  --color-error-rgb: 229, 62, 62;
+  --color-success-rgb: 56, 161, 105;
+  --color-warning-rgb: 221, 107, 32;
+  --color-info-rgb: 49, 130, 206;
 
-  /* Additional Colors */
-  --color-secondary: #64748b;
-  --color-border: #cbd5e1;
-  --color-border-hover: #94a3b8;
-  --color-text-tertiary: #64748b;
-  --color-surface-disabled: #f1f5f9;
-  --color-primary-rgb: 15, 23, 42;
+  /* Additional Colors - Artist Harmonies */
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e0;
+  --color-border-secondary: #bee3f0;
+  --color-surface-disabled: #f7fafc;
+  --color-primary-rgb: 45, 55, 72;
+  --color-secondary-rgb: 74, 144, 164;
 
   /* RGB Values for Additional Colors */
-  --color-border-rgb: 203, 213, 225;
+  --color-border-rgb: 226, 232, 240;
+  --color-border-secondary-rgb: 190, 227, 240;
 
   /* Animation States */
   --color-recording: #e53e3e;
 
   /* Focus and Selection */
-  --color-focus: var(--color-primary-text);
-  --color-selection-bg: var(--color-primary-text);
+  --color-focus: var(--color-secondary);
+  --color-selection-bg: var(--color-secondary);
   --color-selection-text: var(--color-primary-bg);
 
-  /* Overlay Colors for Neumorphic Effects */
-  --color-white-overlay: rgba(255, 255, 255, 0.1);
-  --color-shadow-overlay: rgba(0, 0, 0, 0.15);
-  --color-white-overlay-light: rgba(255, 255, 255, 0.05);
+  /* Overlay Colors for Creative Effects */
+  --color-white-overlay: rgba(255, 255, 255, 0.8);
+  --color-primary-overlay: rgba(45, 55, 72, 0.05);
+  --color-secondary-overlay: rgba(74, 144, 164, 0.05);
+  --color-creative-overlay: rgba(237, 137, 54, 0.05);
+
+  /* Creative Gradient Combinations */
+  --gradient-primary-secondary: linear-gradient(135deg, #2d3748 0%, #4a90a4 100%);
+  --gradient-warm-cool: linear-gradient(135deg, #ed8936 0%, #4a90a4 100%);
+  --gradient-subtle-primary: linear-gradient(135deg, #fdfcf7 0%, #f0f4f8 100%);
+  --gradient-creative-accent: linear-gradient(135deg, #4a90a4 0%, #ed8936 50%, #38a169 100%);
 
   /* =============================================================================
      TYPOGRAPHY
@@ -145,20 +161,20 @@
   --border-radius-full: 9999px;
 
   /* =============================================================================
-     SHADOWS
+     SHADOWS - DUAL-TONE ARTISTIC
      ============================================================================= */
 
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 3px 0 rgba(45, 55, 72, 0.1), 0 1px 2px 0 rgba(45, 55, 72, 0.06);
   --shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    0 4px 6px -1px rgba(45, 55, 72, 0.1), 0 2px 4px -1px rgba(45, 55, 72, 0.06);
   --shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    0 10px 15px -3px rgba(45, 55, 72, 0.1), 0 4px 6px -2px rgba(45, 55, 72, 0.05);
   --shadow-xl:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    0 20px 25px -5px rgba(45, 55, 72, 0.1), 0 10px 10px -5px rgba(45, 55, 72, 0.04);
   --shadow-hover:
-    0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    0 10px 15px -3px rgba(45, 55, 72, 0.12), 0 4px 6px -2px rgba(74, 144, 164, 0.08);
 
-  /* Neumorphic shadows */
+  /* Dual-tone Neumorphic shadows */
   --shadow-neumorphic-sm:
     2px 2px 8px var(--color-shadow-dark),
     -2px -2px 8px var(--color-shadow-light);
@@ -168,6 +184,13 @@
   --shadow-neumorphic-lg:
     20px 20px 60px var(--color-shadow-dark),
     -20px -20px 60px var(--color-shadow-light);
+
+  /* Creative Shadow Effects */
+  --shadow-creative-primary: 0 4px 20px rgba(45, 55, 72, 0.15);
+  --shadow-creative-secondary: 0 4px 20px rgba(74, 144, 164, 0.15);
+  --shadow-creative-dual: 
+    0 4px 20px rgba(45, 55, 72, 0.1),
+    0 8px 40px rgba(74, 144, 164, 0.1);
 
   /* =============================================================================
      TRANSITIONS & ANIMATIONS
@@ -208,63 +231,85 @@
 }
 
 /* =============================================================================
-   DARK THEME OVERRIDES
+   DARK ARTIST THEME OVERRIDES - CREATIVE DARK PALETTE
    ============================================================================= */
 
 [data-theme="dark"] {
-  --color-primary-bg: #1a1a1a;
-  --color-primary-text: #e2e8f0;
-  --color-primary: #e2e8f0; /* Added missing primary color for dark theme */
+  --color-primary-bg: #1a202c;
+  --color-secondary-bg: #2d3748;
+  --color-primary: #f7fafc;
+  --color-secondary: #63b3ed;
+  --color-primary-text: #f7fafc;
+  --color-secondary-text: #63b3ed;
   --color-surface: var(--color-primary-bg);
   --color-on-surface: var(--color-primary-text);
   --color-text-primary: var(--color-primary-text);
-  --color-text-secondary: #94a3b8;
+  --color-text-secondary: #a0aec0;
 
   /* Dark Theme RGB Values for Surface Colors */
-  --color-surface-rgb: 26, 26, 26;
+  --color-surface-rgb: 26, 32, 44;
+  --color-secondary-bg-rgb: 45, 55, 72;
 
   /* Dark Theme Shadows */
-  --color-shadow-dark: #0f0f0f;
-  --color-shadow-light: #2a2a2a;
+  --color-shadow-dark: #171923;
+  --color-shadow-light: #2d3748;
 
   /* Dark Theme Interactive States */
-  --color-hover-overlay: rgba(30, 41, 59, 0.3);
-  --color-accent: #60a5fa;
-  --color-accent-rgb: 96, 165, 250;
+  --color-hover-overlay-primary: rgba(247, 250, 252, 0.1);
+  --color-hover-overlay-secondary: rgba(99, 179, 237, 0.1);
+  --color-accent: #63b3ed;
+  --color-accent-rgb: 99, 179, 237;
+  --color-accent-secondary: #f6ad55;
+  --color-accent-secondary-rgb: 246, 173, 85;
 
   /* Dark Theme Status Colors */
-  --color-error: #f87171;
-  --color-error-bg: #7f1d1d;
-  --color-success: #4ade80;
-  --color-warning: #fbbf24;
-  --color-info: #60a5fa;
+  --color-error: #fc8181;
+  --color-error-bg: #742a2a;
+  --color-success: #68d391;
+  --color-warning: #f6ad55;
+  --color-info: #63b3ed;
 
   /* Dark Theme RGB Values for Status Colors */
-  --color-error-rgb: 248, 113, 113;
-  --color-success-rgb: 74, 222, 128;
-  --color-warning-rgb: 251, 191, 36;
-  --color-info-rgb: 96, 165, 250;
+  --color-error-rgb: 252, 129, 129;
+  --color-success-rgb: 104, 211, 145;
+  --color-warning-rgb: 246, 173, 85;
+  --color-info-rgb: 99, 179, 237;
 
   /* Dark Theme Additional Colors */
-  --color-secondary: #9ca3af;
-  --color-border: #374151;
-  --color-text-tertiary: #6b7280;
-  --color-surface-disabled: #1f2937;
-  --color-primary-rgb: 226, 232, 240;
+  --color-border: #4a5568;
+  --color-border-secondary: #2b6cb0;
+  --color-surface-disabled: #2d3748;
+  --color-primary-rgb: 247, 250, 252;
+  --color-secondary-rgb: 99, 179, 237;
 
   /* Dark Theme RGB Values for Additional Colors */
-  --color-border-rgb: 55, 65, 81;
+  --color-border-rgb: 74, 85, 104;
+  --color-border-secondary-rgb: 43, 108, 176;
 
   /* Dark Theme Animation States */
-  --color-recording: #ef4444;
+  --color-recording: #fc8181;
 
   /* Dark Theme Focus and Selection */
-  --color-focus: var(--color-primary-text);
-  --color-selection-bg: var(--color-primary-text);
+  --color-focus: var(--color-secondary);
+  --color-selection-bg: var(--color-secondary);
   --color-selection-text: var(--color-primary-bg);
 
-  /* Dark Theme Overlay Colors for Neumorphic Effects */
-  --color-white-overlay: rgba(255, 255, 255, 0.05);
-  --color-shadow-overlay: rgba(0, 0, 0, 0.2);
-  --color-white-overlay-light: rgba(255, 255, 255, 0.02);
+  /* Dark Theme Overlay Colors */
+  --color-white-overlay: rgba(247, 250, 252, 0.05);
+  --color-primary-overlay: rgba(247, 250, 252, 0.03);
+  --color-secondary-overlay: rgba(99, 179, 237, 0.05);
+  --color-creative-overlay: rgba(246, 173, 85, 0.05);
+
+  /* Dark Creative Gradient Combinations */
+  --gradient-primary-secondary: linear-gradient(135deg, #1a202c 0%, #63b3ed 100%);
+  --gradient-warm-cool: linear-gradient(135deg, #f6ad55 0%, #63b3ed 100%);
+  --gradient-subtle-primary: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  --gradient-creative-accent: linear-gradient(135deg, #63b3ed 0%, #f6ad55 50%, #68d391 100%);
+
+  /* Dark Creative Shadow Effects */
+  --shadow-creative-primary: 0 4px 20px rgba(23, 25, 35, 0.3);
+  --shadow-creative-secondary: 0 4px 20px rgba(99, 179, 237, 0.2);
+  --shadow-creative-dual: 
+    0 4px 20px rgba(23, 25, 35, 0.2),
+    0 8px 40px rgba(99, 179, 237, 0.15);
 }
