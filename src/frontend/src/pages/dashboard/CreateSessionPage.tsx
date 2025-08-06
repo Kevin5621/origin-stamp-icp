@@ -44,7 +44,7 @@ const CreateSessionPage: React.FC = () => {
         {/* Header */}
         <div className="create-session__header">
           <button
-            className="btn btn--secondary"
+            className="btn-back"
             onClick={() => navigate("/session")}
           >
             <ArrowLeft size={20} />
@@ -68,7 +68,9 @@ const CreateSessionPage: React.FC = () => {
                   className={`art-type-option ${artType === "physical" ? "art-type-option--active" : ""}`}
                   onClick={() => setArtType("physical")}
                 >
-                  <Camera size={24} />
+                  <div className="art-type-icon">
+                    <Camera size={24} />
+                  </div>
                   <div className="art-type-content">
                     <h4>{t("physical_art_title")}</h4>
                     <p>Traditional media like painting, sculpture, drawing</p>
@@ -79,7 +81,9 @@ const CreateSessionPage: React.FC = () => {
                   className={`art-type-option ${artType === "digital" ? "art-type-option--active" : ""}`}
                   onClick={() => setArtType("digital")}
                 >
-                  <Palette size={24} />
+                  <div className="art-type-icon">
+                    <Palette size={24} />
+                  </div>
                   <div className="art-type-content">
                     <h4>{t("digital_art_title")}</h4>
                     <p>Digital tools like Photoshop, Procreate, 3D software</p>
@@ -130,13 +134,13 @@ const CreateSessionPage: React.FC = () => {
             {/* Form Actions */}
             <div className="form-actions">
               <button
-                className="btn btn--secondary"
+                className="btn-cancel"
                 onClick={() => navigate("/session")}
               >
                 Cancel
               </button>
               <button
-                className="btn btn--primary"
+                className="btn-create"
                 onClick={handleCreateSession}
               >
                 <Plus size={16} />
