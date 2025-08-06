@@ -7,13 +7,12 @@ import {
   BarChart3,
   Upload,
   Eye,
+  Camera,
   TrendingUp,
   CheckCircle,
-  Activity,
   Shield,
   Award,
-  Camera,
-  FileText,
+  Activity,
   Clock,
   Calendar,
   Palette,
@@ -23,7 +22,6 @@ import { ArtworkCard } from "../common/ArtworkCard";
 import {
   type OriginStampStats,
   type ArtworkOverview,
-  type RecentActivity,
   OriginStampDashboardService,
 } from "../../services/dashboardService";
 
@@ -37,7 +35,6 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
 
   // State management
   const [stats, setStats] = useState<OriginStampStats | null>(null);
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [artworks, setArtworks] = useState<ArtworkOverview[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,14 +43,12 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
     const loadDashboardData = async () => {
       try {
         setLoading(true);
-        const [statsData, activityData, artworksData] = await Promise.all([
+        const [statsData, artworksData] = await Promise.all([
           OriginStampDashboardService.getDashboardStats(),
-          OriginStampDashboardService.getRecentActivity(),
           OriginStampDashboardService.getArtworkOverviews(),
         ]);
 
         setStats(statsData);
-        setRecentActivity(activityData);
         setArtworks(artworksData);
       } catch (error) {
         console.error("Failed to load dashboard data:", error);
@@ -64,15 +59,6 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
 
     loadDashboardData();
   }, []);
-
-  // Icon mapping for activity types
-  const iconMap = {
-    artwork_verified: CheckCircle,
-    certificate_issued: Award,
-    session_started: Camera,
-    process_logged: FileText,
-    nft_minted: Shield,
-  };
 
   // Quick actions for OriginStamp
   const quickActions = [
@@ -158,114 +144,116 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
         </div>
       </div>
 
-      {/* Bento Grid Layout */}
-      <div className="dashboard__bento-grid">
-        {/* Main Stats Section */}
-        <div className="dashboard__stats-section">
-          <div className="stats-grid">
-            <div className="stat-card stat-card--primary">
-              <div className="stat-card__icon">
-                <CheckCircle size={24} />
+      {/* Main Stats Section */}
+      <div className="dashboard__stats-section">
+        <div className="stats-grid">
+          <div className="stat-card stat-card--primary">
+            <div className="stat-card__icon">
+              <CheckCircle size={24} />
+            </div>
+            <div className="stat-card__content">
+              <div className="stat-card__value">
+                {stats?.totalArtworks || 0}
               </div>
-              <div className="stat-card__content">
-                <div className="stat-card__value">
-                  {stats?.totalArtworks || 0}
-                </div>
-                <div className="stat-card__label">
-                  {t("total_artworks") || "Total Artworks"}
-                </div>
-                <div className="stat-card__trend">
-                  <TrendingUp size={12} />
-                  <span>
-                    +{stats?.monthlyGrowth || 0}%{" "}
-                    {t("this_month") || "this month"}
-                  </span>
-                </div>
+              <div className="stat-card__label">
+                {t("total_artworks") || "Total Artworks"}
+              </div>
+              <div className="stat-card__trend">
+                <TrendingUp size={12} />
+                <span>
+                  +{stats?.monthlyGrowth || 0}%{" "}
+                  {t("this_month") || "this month"}
+                </span>
               </div>
             </div>
+          </div>
 
-            <div className="stat-card stat-card--success">
-              <div className="stat-card__icon">
-                <Shield size={24} />
+          <div className="stat-card stat-card--success">
+            <div className="stat-card__icon">
+              <Shield size={24} />
+            </div>
+            <div className="stat-card__content">
+              <div className="stat-card__value">
+                {stats?.verifiedArtworks || 0}
               </div>
-              <div className="stat-card__content">
-                <div className="stat-card__value">
-                  {stats?.verifiedArtworks || 0}
-                </div>
-                <div className="stat-card__label">
-                  {t("verified_artworks") || "Verified Artworks"}
-                </div>
-                <div className="stat-card__trend">
-                  <TrendingUp size={12} />
-                  <span>
-                    +{Math.round((stats?.verificationScore || 0) / 10)}%{" "}
-                    {t("this_week") || "this week"}
-                  </span>
-                </div>
+              <div className="stat-card__label">
+                {t("verified_artworks") || "Verified Artworks"}
+              </div>
+              <div className="stat-card__trend">
+                <TrendingUp size={12} />
+                <span>
+                  +{Math.round((stats?.verificationScore || 0) / 10)}%{" "}
+                  {t("this_week") || "this week"}
+                </span>
               </div>
             </div>
+          </div>
 
-            <div className="stat-card stat-card--accent">
-              <div className="stat-card__icon">
-                <Activity size={24} />
+          <div className="stat-card stat-card--accent">
+            <div className="stat-card__icon">
+              <Activity size={24} />
+            </div>
+            <div className="stat-card__content">
+              <div className="stat-card__value">
+                {stats?.activeSessions || 0}
               </div>
-              <div className="stat-card__content">
-                <div className="stat-card__value">
-                  {stats?.activeSessions || 0}
-                </div>
-                <div className="stat-card__label">
-                  {t("active_sessions") || "Active Sessions"}
-                </div>
-                <div className="stat-card__trend">
-                  <Clock size={12} />
-                  <span>{t("in_progress") || "In progress"}</span>
-                </div>
+              <div className="stat-card__label">
+                {t("active_sessions") || "Active Sessions"}
+              </div>
+              <div className="stat-card__trend">
+                <Clock size={12} />
+                <span>{t("in_progress") || "In progress"}</span>
               </div>
             </div>
+          </div>
 
-            <div className="stat-card stat-card--info">
-              <div className="stat-card__icon">
-                <Award size={24} />
+          <div className="stat-card stat-card--info">
+            <div className="stat-card__icon">
+              <Award size={24} />
+            </div>
+            <div className="stat-card__content">
+              <div className="stat-card__value">
+                {stats?.certificatesIssued || 0}
               </div>
-              <div className="stat-card__content">
-                <div className="stat-card__value">
-                  {stats?.certificatesIssued || 0}
-                </div>
-                <div className="stat-card__label">
-                  {t("certificates_issued") || "Certificates Issued"}
-                </div>
-                <div className="stat-card__trend">
-                  <Calendar size={12} />
-                  <span>{t("total_issued") || "Total issued"}</span>
-                </div>
+              <div className="stat-card__label">
+                {t("certificates_issued") || "Certificates Issued"}
+              </div>
+              <div className="stat-card__trend">
+                <Calendar size={12} />
+                <span>{t("total_issued") || "Total issued"}</span>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
+      {/* Modern Compact Grid Layout */}
+      <div className="dashboard__main-content">
         {/* Quick Actions Section */}
-        <div className="dashboard__quick-actions-section">
+        <div className="dashboard__quick-actions">
           <h3 className="section-title">
             {t("quick_actions") || "Quick Actions"}
           </h3>
-          <div className="quick-actions-grid">
+          <div className="quick-actions-compact-grid">
             {quickActions.map((action) => (
               <button
                 key={action.id}
-                className="quick-action-card"
+                className="quick-action-compact"
                 onClick={action.onClick}
               >
-                <div className="quick-action-card__icon">
-                  <action.icon size={20} />
+                <div className="quick-action-compact__icon">
+                  <action.icon size={24} />
                 </div>
-                <div className="quick-action-card__content">
-                  <h4 className="quick-action-card__title">{action.title}</h4>
-                  <p className="quick-action-card__description">
+                <div className="quick-action-compact__content">
+                  <h4 className="quick-action-compact__title">
+                    {action.title}
+                  </h4>
+                  <p className="quick-action-compact__description">
                     {action.description}
                   </p>
                 </div>
-                <div className="quick-action-card__arrow">
-                  <ArrowRight size={16} />
+                <div className="quick-action-compact__arrow">
+                  <ArrowRight size={18} />
                 </div>
               </button>
             ))}
@@ -273,20 +261,21 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
         </div>
 
         {/* Recent Artworks Section */}
-        <div className="dashboard__artworks-section">
+        <div className="dashboard__artworks">
           <div className="section-header">
             <h3 className="section-title">
               {t("recent_artworks") || "Recent Artworks"}
             </h3>
             <button
-              className="btn-secondary-outline"
+              className="btn-view-all"
               onClick={() => navigate("/marketplace")}
             >
               {t("view_all") || "View All"}
+              <ArrowRight size={16} />
             </button>
           </div>
-          <div className="artworks-bento-grid">
-            {artworks.slice(0, 6).map((artwork) => (
+          <div className="artworks-modern-grid">
+            {artworks.slice(0, 8).map((artwork) => (
               <ArtworkCard
                 key={artwork.id}
                 artwork={{
@@ -301,36 +290,6 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
                 variant="modern"
               />
             ))}
-          </div>
-        </div>
-
-        {/* Recent Activity Section */}
-        <div className="dashboard__activity-section">
-          <h3 className="section-title">
-            {t("recent_activity") || "Recent Activity"}
-          </h3>
-          <div className="activity-timeline">
-            {recentActivity.slice(0, 6).map((activity) => {
-              const Icon = iconMap[activity.type] || Activity;
-              return (
-                <div key={activity.id} className="activity-item-modern">
-                  <div className="activity-icon-wrapper">
-                    <Icon className="activity-icon" size={16} />
-                  </div>
-                  <div className="activity-content">
-                    <div className="activity-text">{activity.description}</div>
-                    <div className="activity-meta">
-                      <span className="activity-time">
-                        {new Date(activity.timestamp).toLocaleString()}
-                      </span>
-                      <span className="activity-type">
-                        {activity.type.replace("_", " ")}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
       </div>
