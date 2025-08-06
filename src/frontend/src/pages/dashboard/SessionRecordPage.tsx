@@ -447,29 +447,16 @@ const SessionRecordPage: React.FC = () => {
   return (
     <div className="session-record">
       <div className="session-record__container">
-        {/* Header */}
+        {/* Modern Header */}
         <div className="session-record__header">
-          <button
-            className="btn btn--secondary"
-            onClick={() => navigate("/session")}
-          >
-            <ArrowLeft size={20} />
-            {t("back_to_sessions")}
-          </button>
           <div className="session-record__title">
             <h1>{session.title}</h1>
             <p>{session.description}</p>
           </div>
           <div className="session-record__controls">
-            <button
-              className="btn btn--primary"
-              onClick={handleCompleteSessionAndGenerateNFT}
-              disabled={isGeneratingNFT || session.photos.length === 0}
-            >
-              <Sparkles size={20} />
-              {isGeneratingNFT
-                ? t("generating_nft")
-                : t("complete_and_generate_nft")}
+            <button className="btn-back" onClick={() => navigate("/session")}>
+              <ArrowLeft size={20} />
+              {t("back_to_sessions")}
             </button>
           </div>
         </div>
@@ -726,18 +713,15 @@ const SessionRecordPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Footer Actions */}
+        {/* Modern Footer Actions */}
         <div className="session-record__footer">
-          <button
-            className="btn btn--secondary"
-            onClick={() => navigate("/session")}
-          >
+          <button className="btn-save" onClick={() => navigate("/session")}>
             <Save size={16} />
             {t("save_progress")}
           </button>
 
           <button
-            className="btn btn--primary"
+            className="btn-complete"
             onClick={handleCompleteSessionAndGenerateNFT}
             disabled={isGeneratingNFT || session.photos.length === 0}
           >
