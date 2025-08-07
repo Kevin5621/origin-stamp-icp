@@ -98,9 +98,10 @@ const SessionRecordPage: React.FC = () => {
     if (sessionId) {
       const mockSession: SessionData = {
         id: sessionId,
-        title: "Landscape Painting Study",
-        description:
-          "Watercolor painting of mountain landscape with step-by-step documentation",
+        title: t("session.mock_data.landscape_painting_study_title"),
+        description: t(
+          "session.mock_data.landscape_painting_study_description",
+        ),
         artType: "physical",
         status: "active",
         createdAt: new Date(2024, 7, 1),
@@ -110,7 +111,7 @@ const SessionRecordPage: React.FC = () => {
             id: "1",
             filename: "initial-sketch.jpg",
             timestamp: new Date(2024, 7, 1, 10, 30),
-            description: "Initial pencil sketch of mountain composition",
+            description: t("session.mock_data.initial_sketch_description"),
             fileSize: 2.5 * 1024 * 1024,
             url: "/api/placeholder/400/300",
             step: 1,
@@ -120,7 +121,7 @@ const SessionRecordPage: React.FC = () => {
             id: "2",
             filename: "base-colors.jpg",
             timestamp: new Date(2024, 7, 1, 11, 15),
-            description: "Applied base watercolor washes for sky and mountains",
+            description: t("session.mock_data.base_colors_description"),
             fileSize: 3.1 * 1024 * 1024,
             url: "/api/placeholder/400/300",
             step: 2,
@@ -130,7 +131,7 @@ const SessionRecordPage: React.FC = () => {
       };
       setSession(mockSession);
     }
-  }, [sessionId]);
+  }, [sessionId, t]);
 
   const handleFileSelect = (files: FileList) => {
     // Reset progress states when new files are selected
@@ -165,12 +166,15 @@ const SessionRecordPage: React.FC = () => {
       const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
 
       if (!isValidType) {
-        addToast("error", `File ${file.name} bukan file gambar yang valid`);
+        addToast(
+          "error",
+          t("session.invalid_file_type", { filename: file.name }),
+        );
         return false;
       }
 
       if (!isValidSize) {
-        addToast("error", `File ${file.name} terlalu besar (maksimal 10MB)`);
+        addToast("error", t("session.file_too_large", { filename: file.name }));
         return false;
       }
 
@@ -223,7 +227,9 @@ const SessionRecordPage: React.FC = () => {
         if (duplicates.length > 0) {
           addToast(
             "error",
-            `File berikut sudah ada: ${duplicates.map((f) => f.name).join(", ")}`,
+            t("session.duplicate_files", {
+              filenames: duplicates.map((f) => f.name).join(", "),
+            }),
           );
           return;
         }
@@ -235,12 +241,18 @@ const SessionRecordPage: React.FC = () => {
         const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
 
         if (!isValidType) {
-          addToast("error", `File ${file.name} bukan file gambar yang valid`);
+          addToast(
+            "error",
+            t("session.invalid_file_type", { filename: file.name }),
+          );
           return false;
         }
 
         if (!isValidSize) {
-          addToast("error", `File ${file.name} terlalu besar (maksimal 10MB)`);
+          addToast(
+            "error",
+            t("session.file_too_large", { filename: file.name }),
+          );
           return false;
         }
 
@@ -265,7 +277,7 @@ const SessionRecordPage: React.FC = () => {
     // Prevent multiple uploads
     if (isUploading || uploadInProgress) {
       console.log("Upload already in progress, ignoring new request");
-      addToast("warning", t("upload_already_in_progress"));
+      addToast("warning", t("session.upload_already_in_progress_wait"));
       return;
     }
 
@@ -286,7 +298,7 @@ const SessionRecordPage: React.FC = () => {
 
     addToast(
       "info",
-      `${t("starting_upload")} ${filesArray.length} ${t("files")}...`,
+      t("session.starting_upload_files", { count: filesArray.length }),
     );
 
     const newPhotos: PhotoLog[] = [];
@@ -297,7 +309,7 @@ const SessionRecordPage: React.FC = () => {
         // Check for cancellation before processing file
         if (cancelRef.current) {
           console.log("Upload cancelled at file", i);
-          addToast("warning", t("upload_cancelled_by_user"));
+          addToast("warning", t("session.upload_cancelled_by_user_message"));
           return; // Exit immediately and discard all files
         }
 
@@ -308,7 +320,7 @@ const SessionRecordPage: React.FC = () => {
           // Check for cancellation at each progress step
           if (cancelRef.current) {
             console.log("Upload cancelled during progress at", progress, "%");
-            addToast("warning", t("upload_cancelled_by_user"));
+            addToast("warning", t("session.upload_cancelled_by_user_message"));
             return; // Exit immediately and discard all files
           }
 
@@ -319,18 +331,19 @@ const SessionRecordPage: React.FC = () => {
         // Final check before adding file to array
         if (cancelRef.current) {
           console.log("Upload cancelled before adding file to array");
-          addToast("warning", t("upload_cancelled_by_user"));
+          addToast("warning", t("session.upload_cancelled_by_user_message"));
           return; // Exit immediately and discard all files
         }
 
         // Add file to photos array only if not cancelled
-        console.log("Adding file:", file.name);
+        console.log(t("session.adding_file", { filename: file.name }));
         newPhotos.push({
           id: `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
           filename: file.name,
           timestamp: new Date(),
           description:
-            stepDescription || `${t("step")} ${session.currentStep + i + 1}`,
+            stepDescription ||
+            `${t("session.step")} ${session.currentStep + i + 1}`,
           fileSize: file.size,
           url: URL.createObjectURL(file),
           step: session.currentStep + i + 1,
@@ -342,7 +355,11 @@ const SessionRecordPage: React.FC = () => {
 
       // Update session with new photos only if not cancelled
       if (!cancelRef.current && newPhotos.length > 0) {
-        console.log("Updating session with", newPhotos.length, "new photos");
+        console.log(
+          t("session.updating_session_with_photos", {
+            count: newPhotos.length,
+          }),
+        );
         setSession((prev) => {
           if (!prev) return null;
           return {
@@ -351,13 +368,16 @@ const SessionRecordPage: React.FC = () => {
             currentStep: prev.currentStep + newPhotos.length,
           };
         });
-        addToast("success", `${newPhotos.length} ${t("files_uploaded")}`);
+        addToast(
+          "success",
+          t("session.files_uploaded", { count: newPhotos.length }),
+        );
       } else {
-        console.log("Session not updated - cancelled or no photos");
+        console.log(t("session.session_not_updated_cancelled"));
       }
     } catch (error) {
       console.log("Upload error:", error);
-      addToast("error", t("error_uploading_file"));
+      addToast("error", t("session.upload_error", { error: error.message }));
     } finally {
       // Reset all states
       setSelectedFiles(null);
@@ -384,7 +404,9 @@ const SessionRecordPage: React.FC = () => {
       if (photoToDelete) {
         addToast(
           "success",
-          `${t("photo")} "${photoToDelete.filename}" ${t("deleted_successfully")}`,
+          t("session.photo_deleted_success", {
+            filename: photoToDelete.filename,
+          }),
         );
       }
     }
@@ -394,7 +416,7 @@ const SessionRecordPage: React.FC = () => {
     if (!session) return;
 
     setIsGeneratingNFT(true);
-    addToast("info", t("starting_nft_generation"));
+    addToast("info", t("session.starting_nft_generation_process"));
 
     // Simulate NFT generation process
     setTimeout(() => {
@@ -408,10 +430,7 @@ const SessionRecordPage: React.FC = () => {
           : null,
       );
       setIsGeneratingNFT(false);
-      addToast(
-        "success",
-        `${t("nft_generated")}! ${t("redirecting_to_certificate")}`,
-      );
+      addToast("success", t("session.nft_generated_success_redirecting"));
 
       // Navigate to certificate page
       navigate(`/certificate/${session.id}`);
@@ -421,7 +440,12 @@ const SessionRecordPage: React.FC = () => {
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const sizes = [
+      t("session.file_size_bytes"),
+      t("session.file_size_kb"),
+      t("session.file_size_mb"),
+      t("session.file_size_gb"),
+    ];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
@@ -438,7 +462,7 @@ const SessionRecordPage: React.FC = () => {
       <div className="session-record">
         <div className="session-record__loading">
           <div className="loading-spinner" />
-          <p>Loading session...</p>
+          <p>{t("session.loading_session")}</p>
         </div>
       </div>
     );
@@ -450,13 +474,13 @@ const SessionRecordPage: React.FC = () => {
         {/* Modern Header */}
         <div className="session-record__header">
           <div className="session-record__title">
-            <h1>{session.title}</h1>
-            <p>{session.description}</p>
+            <h1>{t("session.mock_data.landscape_painting_study_title")}</h1>
+            <p>{t("session.mock_data.landscape_painting_study_description")}</p>
           </div>
           <div className="session-record__controls">
             <button className="btn-back" onClick={() => navigate("/session")}>
               <ArrowLeft size={20} />
-              {t("back_to_sessions")}
+              {t("session.back_to_sessions")}
             </button>
           </div>
         </div>
@@ -465,11 +489,11 @@ const SessionRecordPage: React.FC = () => {
         <div className="session-record__status">
           <div className="recording-indicator">
             <div className="recording-dot" />
-            <span>{t("recording")}</span>
+            <span>{t("session.recording")}</span>
           </div>
           <div className="session-info">
             <div className="photo-count">
-              {session.photos.length} {t("photos")}
+              {session.photos.length} {t("session.photos")}
             </div>
           </div>
         </div>
@@ -478,7 +502,7 @@ const SessionRecordPage: React.FC = () => {
           {/* Upload Section */}
           <div className="session-record__upload">
             <div className="upload-card">
-              <h2>{t("upload_progress_photos_to_s3")}</h2>
+              <h2>{t("session.upload_progress_photos_to_s3")}</h2>
 
               {/* File Drop Zone */}
               <div
@@ -501,12 +525,12 @@ const SessionRecordPage: React.FC = () => {
 
                 <div className="upload-content">
                   <Camera size={32} />
-                  <h3>{t("drop_photos_here_or_click_to_browse")}</h3>
-                  <p>{t("support_multiple_photos_up_to_10mb_each")}</p>
+                  <h3>{t("session.drop_photos_here_or_click_to_browse")}</h3>
+                  <p>{t("session.support_multiple_photos_up_to_10mb_each")}</p>
 
                   <label htmlFor="photo-upload" className="btn btn--primary">
                     <Upload size={16} />
-                    {t("choose_photos")}
+                    {t("session.choose_photos")}
                   </label>
                 </div>
               </div>
@@ -515,17 +539,19 @@ const SessionRecordPage: React.FC = () => {
               {selectedFiles && (
                 <div className="selected-files">
                   <h3>
-                    {t("selected_files")} ({selectedFiles.length})
+                    {t("session.selected_files")} ({selectedFiles.length})
                   </h3>
 
                   <div className="step-description">
-                    <label htmlFor="step-desc">{t("step_description")}</label>
+                    <label htmlFor="step-desc">
+                      {t("session.step_description")}
+                    </label>
                     <input
                       id="step-desc"
                       type="text"
                       value={stepDescription}
                       onChange={(e) => setStepDescription(e.target.value)}
-                      placeholder={t("describe_this_step")}
+                      placeholder={t("session.describe_this_step")}
                       className="form-input"
                     />
                   </div>
@@ -553,8 +579,8 @@ const SessionRecordPage: React.FC = () => {
                       <div className="progress-info">
                         <span>
                           {shouldCancelUpload
-                            ? t("upload_cancelled")
-                            : `${t("uploading")} ${uploadedFiles} ${t("of")} ${totalFiles} ${t("files")}`}
+                            ? t("session.upload_cancelled")
+                            : `${t("session.uploading")} ${uploadedFiles} ${t("session.of")} ${totalFiles} ${t("session.files")}`}
                         </span>
                         <span>
                           {shouldCancelUpload
@@ -614,10 +640,10 @@ const SessionRecordPage: React.FC = () => {
                       disabled={isCancelling}
                     >
                       {isCancelling
-                        ? t("cancelling")
+                        ? t("session.cancelling")
                         : isUploading || uploadInProgress
-                          ? t("cancel_upload")
-                          : t("cancel")}
+                          ? t("session.cancel_upload")
+                          : t("session.cancel")}
                     </button>
                     <button
                       className="btn btn--primary"
@@ -625,7 +651,9 @@ const SessionRecordPage: React.FC = () => {
                       disabled={false}
                     >
                       <Plus size={16} />
-                      {isUploading ? t("uploading_to_s3") : t("upload_to_s3")}
+                      {isUploading
+                        ? t("session.uploading_to_s3")
+                        : t("session.upload_to_s3")}
                     </button>
                   </div>
                 </div>
@@ -636,14 +664,14 @@ const SessionRecordPage: React.FC = () => {
           {/* Photo Log */}
           <div className="session-record__log">
             <div className="log-header">
-              <h2>{t("photo_log")}</h2>
+              <h2>{t("session.photo_log")}</h2>
               <div className="log-stats">
                 <span>
-                  {session.photos.length} {t("photos")}
+                  {session.photos.length} {t("session.photos")}
                 </span>
                 <span>•</span>
                 <span>
-                  {t("step")} {session.currentStep}
+                  {t("session.step")} {session.currentStep}
                 </span>
               </div>
             </div>
@@ -651,8 +679,12 @@ const SessionRecordPage: React.FC = () => {
             {session.photos.length === 0 ? (
               <div className="log-empty">
                 <FileText size={48} />
-                <h3>{t("no_photos_uploaded_yet")}</h3>
-                <p>{t("upload_your_first_progress_photo_to_start_s3_log")}</p>
+                <h3>{t("session.no_photos_uploaded_yet")}</h3>
+                <p>
+                  {t(
+                    "session.upload_your_first_progress_photo_to_start_s3_log",
+                  )}
+                </p>
               </div>
             ) : (
               <div className="log-timeline">
@@ -699,7 +731,7 @@ const SessionRecordPage: React.FC = () => {
                             <>
                               <span>•</span>
                               <span className="s3-key">
-                                {t("s3_key")}: {photo.s3Key}
+                                {t("session.s3_key")}: {photo.s3Key}
                               </span>
                             </>
                           )}
@@ -717,7 +749,7 @@ const SessionRecordPage: React.FC = () => {
         <div className="session-record__footer">
           <button className="btn-save" onClick={() => navigate("/session")}>
             <Save size={16} />
-            {t("save_progress")}
+            {t("session.save_progress")}
           </button>
 
           <button
@@ -727,8 +759,8 @@ const SessionRecordPage: React.FC = () => {
           >
             <Sparkles size={16} />
             {isGeneratingNFT
-              ? t("generating_nft")
-              : t("complete_and_generate_nft")}
+              ? t("session.generating_nft")
+              : t("session.complete_and_generate_nft")}
           </button>
         </div>
       </div>
