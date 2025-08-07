@@ -42,9 +42,10 @@ const SessionPage: React.FC = () => {
       const mockSessions: SessionData[] = [
         {
           id: "1",
-          title: "Landscape Painting Study",
-          description:
-            "Watercolor painting of mountain landscape with step-by-step documentation",
+          title: t("session.mock_data.landscape_painting_study_title"),
+          description: t(
+            "session.mock_data.landscape_painting_study_description",
+          ),
           artType: "physical",
           createdAt: new Date(2024, 7, 1),
           updatedAt: new Date(2024, 7, 2),
@@ -53,9 +54,10 @@ const SessionPage: React.FC = () => {
         },
         {
           id: "2",
-          title: "Digital Portrait Series",
-          description:
-            "Character design exploration using Photoshop with automated logging",
+          title: t("session.mock_data.digital_portrait_series_title"),
+          description: t(
+            "session.mock_data.digital_portrait_series_description",
+          ),
           artType: "digital",
           createdAt: new Date(2024, 7, 3),
           updatedAt: new Date(2024, 7, 3),
@@ -64,9 +66,8 @@ const SessionPage: React.FC = () => {
         },
         {
           id: "3",
-          title: "Sculpture Progress",
-          description:
-            "Clay sculpture documentation from initial sketches to final form",
+          title: t("session.mock_data.sculpture_progress_title"),
+          description: t("session.mock_data.sculpture_progress_description"),
           artType: "physical",
           createdAt: new Date(2024, 6, 28),
           updatedAt: new Date(2024, 7, 1),
@@ -79,7 +80,7 @@ const SessionPage: React.FC = () => {
       setSessions(mockSessions);
       setIsLoading(false);
     }, 800);
-  }, []);
+  }, [t]);
 
   const handleContinueSession = (sessionId: string) => {
     navigate(`/sessions/${sessionId}`);

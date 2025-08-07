@@ -1,4 +1,7 @@
 {
+  "settings": "Settings",
+  "settings_description": "Manage your account and preferences",
+  "back": "Back",
   "account_information": "Account Information",
   "username_password_login": "Username & Password Login",
   "username_password_description": "Login using registered username and password",
@@ -8,6 +11,9 @@
   "google_login_description": "Login using your Google account",
   "unknown_login": "Unknown Login Method",
   "unknown_login_description": "Login method cannot be identified",
+  "username": "Username",
+  "email": "Email",
+  "icp_principal": "ICP Principal",
   "security_settings": "Security Settings",
   "change_password": "Change Password",
   "current_password": "Current Password",
