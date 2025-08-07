@@ -166,13 +166,9 @@
       transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 
       &:hover {
-        transform: translateY(-2px);
-
         .logo-icon {
-          transform: scale(1.08);
-          box-shadow:
-            0 15px 35px rgba(102, 126, 234, 0.3),
-            0 5px 15px rgba(118, 75, 162, 0.2);
+          border-color: var(--color-accent);
+          box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.2);
         }
       }
     }
@@ -186,11 +182,9 @@
       justify-content: center;
       font-weight: 700;
       font-size: 1.125rem;
-      color: white;
-      background: var(--gradient-primary-secondary);
-      box-shadow:
-        0 4px 12px rgba(var(--color-primary-rgb), 0.15),
-        0 2px 8px rgba(var(--color-secondary-rgb), 0.1);
+      color: var(--color-accent);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -233,17 +227,13 @@
     }
 
     &:hover {
-      background: var(--color-accent);
-      color: white;
+      background: rgba(var(--color-accent-rgb), 0.05);
+      color: var(--color-accent);
       border-color: var(--color-accent);
-      transform: translateY(-1px);
-      box-shadow:
-        0 4px 12px rgba(var(--color-accent-rgb), 0.2),
-        0 2px 8px rgba(var(--color-accent-rgb), 0.1);
+      box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
 
       svg {
-        color: white;
-        transform: scale(1.05);
+        color: var(--color-accent);
       }
     }
 
@@ -269,11 +259,8 @@
     position: relative;
 
     &:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 8px 20px rgba(var(--color-primary-rgb), 0.08),
-        0 4px 12px rgba(var(--color-secondary-rgb), 0.05);
       border-color: var(--color-accent);
+      box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
     }
 
     .user-avatar {
@@ -281,10 +268,8 @@
       height: 46px;
       border-radius: 16px;
       overflow: hidden;
-      background: var(--gradient-primary-secondary);
-      box-shadow:
-        0 4px 12px rgba(var(--color-primary-rgb), 0.15),
-        0 2px 8px rgba(var(--color-secondary-rgb), 0.1);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
       transition: all 0.3s ease;
 
       img {
@@ -295,10 +280,8 @@
       }
 
       &:hover {
-        transform: scale(1.05);
-        box-shadow:
-          0 6px 16px rgba(var(--color-primary-rgb), 0.2),
-          0 3px 10px rgba(var(--color-secondary-rgb), 0.15);
+        border-color: var(--color-accent);
+        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
       }
     }
 
@@ -339,11 +322,9 @@
       height: 46px;
       border-radius: 16px;
       overflow: hidden;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      box-shadow:
-        0 6px 20px rgba(102, 126, 234, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
 
       img {
         width: 100%;
@@ -353,10 +334,8 @@
       }
 
       &:hover {
-        transform: scale(1.08);
-        box-shadow:
-          0 8px 25px rgba(102, 126, 234, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        border-color: var(--color-accent);
+        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
       }
     }
   }
@@ -416,16 +395,12 @@
 
       &:hover {
         color: var(--color-accent);
-        transform: translateY(-2px) translateX(4px);
-        background: var(--color-hover-overlay-secondary);
+        background: rgba(var(--color-accent-rgb), 0.05);
         border-color: var(--color-accent);
-        box-shadow:
-          0 6px 16px rgba(var(--color-accent-rgb), 0.1),
-          0 3px 8px rgba(var(--color-accent-rgb), 0.05);
+        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
 
         svg {
           color: var(--color-accent);
-          transform: scale(1.05);
         }
 
         .menu-label {
@@ -438,14 +413,10 @@
         color: white;
         background: var(--color-accent);
         border-color: var(--color-accent);
-        transform: translateY(-1px) translateX(4px);
-        box-shadow:
-          0 8px 20px rgba(var(--color-accent-rgb), 0.2),
-          0 4px 12px rgba(var(--color-accent-rgb), 0.1);
+        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.2);
 
         svg {
           color: white;
-          transform: scale(1.05);
         }
 
         .menu-label {
@@ -454,10 +425,8 @@
         }
 
         &:hover {
-          transform: translateY(-2px) translateX(6px);
-          box-shadow:
-            0 10px 25px rgba(var(--color-accent-rgb), 0.25),
-            0 5px 15px rgba(var(--color-accent-rgb), 0.15);
+          background: var(--color-accent);
+          box-shadow: 0 6px 16px rgba(var(--color-accent-rgb), 0.25);
         }
       }
     }
@@ -528,16 +497,12 @@
 
       &:hover {
         border-color: var(--color-accent);
-        background: var(--color-hover-overlay-secondary);
+        background: rgba(var(--color-accent-rgb), 0.05);
         color: var(--color-accent);
-        transform: translateY(-2px);
-        box-shadow:
-          0 6px 16px rgba(var(--color-accent-rgb), 0.1),
-          0 3px 8px rgba(var(--color-accent-rgb), 0.05);
+        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
 
         svg {
           color: var(--color-accent);
-          transform: scale(1.1);
         }
 
         span {
@@ -569,11 +534,10 @@
       margin-bottom: 0.5rem;
 
       &:hover {
-        background: var(--color-hover-overlay-primary);
-        color: var(--color-primary-text);
-        border-color: var(--color-border-hover);
-        transform: translateX(4px);
-        box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.08);
+        background: rgba(var(--color-accent-rgb), 0.05);
+        color: var(--color-accent);
+        border-color: var(--color-accent);
+        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
 
         svg {
           transform: scale(1.05);
