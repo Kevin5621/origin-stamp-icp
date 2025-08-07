@@ -36,7 +36,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-sm);
   font-weight: 500;
-  
+
   &:hover {
     color: var(--color-text-primary);
     background-color: var(--color-surface);
@@ -406,7 +406,7 @@ input:checked + .toggle-slider {
     var(--color-success) 0%,
     var(--color-success) 100%
   );
-  box-shadow: 
+  box-shadow:
     inset 0 2px 4px rgba(0, 0, 0, 0.1),
     0 0 0 3px rgba(var(--color-success-rgb), 0.1);
 
@@ -505,7 +505,7 @@ input:checked + .toggle-slider {
     rgba(var(--color-error-rgb), 0.02),
     rgba(var(--color-error-rgb), 0.05)
   );
-  
+
   &:hover {
     border-color: var(--color-error);
     background: linear-gradient(
