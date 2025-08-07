@@ -15,6 +15,9 @@ import {
   EyeOff,
   Save,
   Trash2,
+  Lock,
+  Monitor,
+  AlertTriangle,
 } from "lucide-react";
 
 interface User {
@@ -117,16 +120,19 @@ const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content with Dashboard Layout */}
+      {/* Main Content with Bento Layout */}
       <div className="dashboard__main-content">
-        <div className="settings-container">
-          {/* Account Information */}
-          <div className="settings-section">
-            <div className="section-header">
-              <h3 className="section-title">{t("account_information")}</h3>
+        <div className="settings-bento-grid">
+          {/* Account Information - Large Card */}
+          <div className="settings-bento-card settings-bento-card--large">
+            <div className="bento-card-header">
+              <div className="bento-card-icon">
+                <User size={24} strokeWidth={2} />
+              </div>
+              <h3 className="bento-card-title">{t("account_information")}</h3>
             </div>
 
-            <div className="settings-card wireframe-card">
+            <div className="bento-card-content">
               <div className="login-method-info">
                 <div
                   className="login-method-icon"
@@ -135,7 +141,7 @@ const SettingsPage: React.FC = () => {
                   {loginInfo.icon}
                 </div>
                 <div className="login-method-details">
-                  <h3 className="login-method-title">{loginInfo.title}</h3>
+                  <h4 className="login-method-title">{loginInfo.title}</h4>
                   <p className="login-method-description">
                     {loginInfo.description}
                   </p>
@@ -165,16 +171,17 @@ const SettingsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Security Settings */}
+          {/* Security Settings - Medium Card */}
           {user?.loginMethod === "username" && (
-            <div className="settings-section">
-              <div className="section-header">
-                <h3 className="section-title">{t("security_settings")}</h3>
+            <div className="settings-bento-card settings-bento-card--medium">
+              <div className="bento-card-header">
+                <div className="bento-card-icon">
+                  <Lock size={24} strokeWidth={2} />
+                </div>
+                <h3 className="bento-card-title">{t("security_settings")}</h3>
               </div>
 
-              <div className="settings-card wireframe-card">
-                <h3 className="settings-card-title">{t("change_password")}</h3>
-
+              <div className="bento-card-content">
                 <div className="password-form">
                   <div className="form-group">
                     <label className="form-label">
@@ -247,182 +254,195 @@ const SettingsPage: React.FC = () => {
             </div>
           )}
 
-          {/* Notification Settings */}
-          <div className="settings-section">
-            <div className="section-header">
-              <h3 className="section-title">{t("notification_settings")}</h3>
+          {/* Notification Settings - Medium Card */}
+          <div className="settings-bento-card settings-bento-card--medium">
+            <div className="bento-card-header">
+              <div className="bento-card-icon">
+                <Bell size={24} strokeWidth={2} />
+              </div>
+              <h3 className="bento-card-title">{t("notification_settings")}</h3>
             </div>
 
-            <div className="settings-card wireframe-card">
-              <div className="notification-option">
-                <div className="notification-info">
-                  <Bell size={20} strokeWidth={2} />
-                  <div>
-                    <h4 className="notification-title">
-                      {t("email_notifications")}
-                    </h4>
-                    <p className="notification-description">
-                      {t("email_notifications_description")}
-                    </p>
+            <div className="bento-card-content">
+              <div className="notification-options">
+                <div className="notification-option">
+                  <div className="notification-info">
+                    <Bell size={20} strokeWidth={2} />
+                    <div>
+                      <h4 className="notification-title">
+                        {t("email_notifications")}
+                      </h4>
+                      <p className="notification-description">
+                        {t("email_notifications_description")}
+                      </p>
+                    </div>
                   </div>
+                  <label className="toggle-switch">
+                    <input
+                      type="checkbox"
+                      checked={notifications.email}
+                      onChange={(e) =>
+                        setNotifications({
+                          ...notifications,
+                          email: e.target.checked,
+                        })
+                      }
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
                 </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifications.email}
-                    onChange={(e) =>
-                      setNotifications({
-                        ...notifications,
-                        email: e.target.checked,
-                      })
-                    }
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
 
-              <div className="notification-option">
-                <div className="notification-info">
-                  <Smartphone size={20} strokeWidth={2} />
-                  <div>
-                    <h4 className="notification-title">
-                      {t("push_notifications")}
-                    </h4>
-                    <p className="notification-description">
-                      {t("push_notifications_description")}
-                    </p>
+                <div className="notification-option">
+                  <div className="notification-info">
+                    <Smartphone size={20} strokeWidth={2} />
+                    <div>
+                      <h4 className="notification-title">
+                        {t("push_notifications")}
+                      </h4>
+                      <p className="notification-description">
+                        {t("push_notifications_description")}
+                      </p>
+                    </div>
                   </div>
+                  <label className="toggle-switch">
+                    <input
+                      type="checkbox"
+                      checked={notifications.push}
+                      onChange={(e) =>
+                        setNotifications({
+                          ...notifications,
+                          push: e.target.checked,
+                        })
+                      }
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
                 </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifications.push}
-                    onChange={(e) =>
-                      setNotifications({
-                        ...notifications,
-                        push: e.target.checked,
-                      })
-                    }
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
 
-              <div className="notification-option">
-                <div className="notification-info">
-                  <Key size={20} strokeWidth={2} />
-                  <div>
-                    <h4 className="notification-title">
-                      {t("project_updates")}
-                    </h4>
-                    <p className="notification-description">
-                      {t("project_updates_description")}
-                    </p>
+                <div className="notification-option">
+                  <div className="notification-info">
+                    <Key size={20} strokeWidth={2} />
+                    <div>
+                      <h4 className="notification-title">
+                        {t("project_updates")}
+                      </h4>
+                      <p className="notification-description">
+                        {t("project_updates_description")}
+                      </p>
+                    </div>
                   </div>
+                  <label className="toggle-switch">
+                    <input
+                      type="checkbox"
+                      checked={notifications.projectUpdates}
+                      onChange={(e) =>
+                        setNotifications({
+                          ...notifications,
+                          projectUpdates: e.target.checked,
+                        })
+                      }
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
                 </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifications.projectUpdates}
-                    onChange={(e) =>
-                      setNotifications({
-                        ...notifications,
-                        projectUpdates: e.target.checked,
-                      })
-                    }
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
 
-              <div className="notification-option">
-                <div className="notification-info">
-                  <Shield size={20} strokeWidth={2} />
-                  <div>
-                    <h4 className="notification-title">
-                      {t("security_alerts")}
-                    </h4>
-                    <p className="notification-description">
-                      {t("security_alerts_description")}
-                    </p>
+                <div className="notification-option">
+                  <div className="notification-info">
+                    <Shield size={20} strokeWidth={2} />
+                    <div>
+                      <h4 className="notification-title">
+                        {t("security_alerts")}
+                      </h4>
+                      <p className="notification-description">
+                        {t("security_alerts_description")}
+                      </p>
+                    </div>
                   </div>
+                  <label className="toggle-switch">
+                    <input
+                      type="checkbox"
+                      checked={notifications.securityAlerts}
+                      onChange={(e) =>
+                        setNotifications({
+                          ...notifications,
+                          securityAlerts: e.target.checked,
+                        })
+                      }
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
                 </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifications.securityAlerts}
-                    onChange={(e) =>
-                      setNotifications({
-                        ...notifications,
-                        securityAlerts: e.target.checked,
-                      })
-                    }
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {/* Appearance Settings */}
-          <div className="settings-section">
-            <div className="section-header">
-              <h3 className="section-title">{t("appearance_settings")}</h3>
-            </div>
-
-            <div className="settings-card wireframe-card">
-              <div className="appearance-option">
-                <div className="appearance-info">
-                  <Palette size={20} strokeWidth={2} />
-                  <div>
-                    <h4 className="appearance-title">{t("theme")}</h4>
-                    <p className="appearance-description">
-                      {t("theme_description")}
-                    </p>
-                  </div>
-                </div>
-                <select
-                  value={theme}
-                  onChange={(e) =>
-                    setTheme(e.target.value as "light" | "dark" | "auto")
-                  }
-                  className="theme-select"
-                >
-                  <option value="light">{t("light_theme")}</option>
-                  <option value="dark">{t("dark_theme")}</option>
-                  <option value="auto">{t("auto_theme")}</option>
-                </select>
-              </div>
-
-              <div className="appearance-option">
-                <div className="appearance-info">
-                  <Globe size={20} strokeWidth={2} />
-                  <div>
-                    <h4 className="appearance-title">{t("language")}</h4>
-                    <p className="appearance-description">
-                      {t("language_description")}
-                    </p>
-                  </div>
-                </div>
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  className="language-select"
-                >
-                  <option value="id">Bahasa Indonesia</option>
-                  <option value="en">English</option>
-                </select>
               </div>
             </div>
           </div>
 
-          {/* Danger Zone */}
-          <div className="settings-section">
-            <div className="section-header">
-              <h3 className="section-title">{t("danger_zone")}</h3>
+          {/* Appearance Settings - Small Card */}
+          <div className="settings-bento-card settings-bento-card--small">
+            <div className="bento-card-header">
+              <div className="bento-card-icon">
+                <Monitor size={24} strokeWidth={2} />
+              </div>
+              <h3 className="bento-card-title">{t("appearance_settings")}</h3>
             </div>
 
-            <div className="settings-card wireframe-card danger-card">
+            <div className="bento-card-content">
+              <div className="appearance-options">
+                <div className="appearance-option">
+                  <div className="appearance-info">
+                    <Palette size={20} strokeWidth={2} />
+                    <div>
+                      <h4 className="appearance-title">{t("theme")}</h4>
+                      <p className="appearance-description">
+                        {t("theme_description")}
+                      </p>
+                    </div>
+                  </div>
+                  <select
+                    value={theme}
+                    onChange={(e) =>
+                      setTheme(e.target.value as "light" | "dark" | "auto")
+                    }
+                    className="theme-select"
+                  >
+                    <option value="light">{t("light_theme")}</option>
+                    <option value="dark">{t("dark_theme")}</option>
+                    <option value="auto">{t("auto_theme")}</option>
+                  </select>
+                </div>
+
+                <div className="appearance-option">
+                  <div className="appearance-info">
+                    <Globe size={20} strokeWidth={2} />
+                    <div>
+                      <h4 className="appearance-title">{t("language")}</h4>
+                      <p className="appearance-description">
+                        {t("language_description")}
+                      </p>
+                    </div>
+                  </div>
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className="language-select"
+                  >
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="en">English</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Danger Zone - Small Card */}
+          <div className="settings-bento-card settings-bento-card--small settings-bento-card--danger">
+            <div className="bento-card-header">
+              <div className="bento-card-icon">
+                <AlertTriangle size={24} strokeWidth={2} />
+              </div>
+              <h3 className="bento-card-title">{t("danger_zone")}</h3>
+            </div>
+
+            <div className="bento-card-content">
               <div className="danger-info">
                 <Trash2 size={20} strokeWidth={2} />
                 <div>
