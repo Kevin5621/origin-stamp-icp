@@ -39,7 +39,8 @@ const Model: React.FC<{ src: string; onLoad?: () => void }> = memo(
       const box = new Box3().setFromObject(scene);
       const center = box.getCenter(new Vector3());
       scene.position.sub(center);
-      scene.position.y += (box.max.y - box.min.y) / 4;
+      // Posisi yang lebih turun untuk halaman How It Works
+      scene.position.y += (box.max.y - box.min.y) / 5;
 
       if (onLoad) onLoad();
     }, [scene, onLoad]);
@@ -93,7 +94,7 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
         }}
         shadows
         camera={{
-          position: [0, 0, 3.5],
+          position: [0, 0, 4],
           fov: 50,
           near: 0.1,
           far: 1000,
@@ -139,15 +140,16 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
           )}
           {(enableInteraction || enableRotation) && !enableCameraAnimation && (
             <OrbitControls
-              enablePan={enableInteraction}
-              enableZoom={enableInteraction}
-              enableRotate={enableInteraction || enableRotation}
+              enablePan={false}
+              enableZoom={false}
+              enableRotate={enableRotation}
               minDistance={3}
               maxDistance={8}
               autoRotate={enableRotation}
               autoRotateSpeed={0.8}
               maxPolarAngle={Math.PI * 0.65}
               minPolarAngle={Math.PI * 0.2}
+              target={[0, 0, 0]}
             />
           )}
           <Preload all />
