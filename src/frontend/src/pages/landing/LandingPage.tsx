@@ -7,6 +7,7 @@ import { TypingEffect } from "../../utils";
 import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
 import { useCursorSpotlight } from "../../hooks/useCursorSpotlight";
+import { useLenis } from "../../hooks/useLenis";
 
 const LandingPage: React.FC = () => {
   const { t } = useTranslation();
@@ -18,6 +19,7 @@ const LandingPage: React.FC = () => {
   const currentTheme = useTheme();
 
   useCursorSpotlight();
+  const lenis = useLenis(); // Mengaktifkan smooth scroll dengan Lenis
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -37,11 +39,13 @@ const LandingPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
+    if (!lenis) return;
+
+    const handleScroll = (e: any) => {
       const windowHeight = window.innerHeight;
       const documentHeight =
         document.documentElement.scrollHeight - windowHeight;
-      const scrolled = window.scrollY;
+      const scrolled = e.scroll;
       const normalizedProgress = Math.min(
         Math.max(0, scrolled / documentHeight),
         1,
@@ -53,9 +57,16 @@ const LandingPage: React.FC = () => {
         layout.setAttribute("data-scroll", scrollProgressCSS.toString());
       }
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
+    // Gunakan event listener dari Lenis
+    lenis.on("scroll", handleScroll);
+
+    return () => {
+      if (lenis) {
+        lenis.off("scroll", handleScroll);
+      }
+    };
+  }, [lenis]);
 
   const handleTypingComplete = () => {
     setShowButton(true);
