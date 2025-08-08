@@ -261,7 +261,7 @@ const CertificateDetailPage: React.FC = () => {
           <Card className="certificate-detail-page__certificate-card">
             <div className="certificate-detail-page__certificate-header">
               <div className="certificate-detail-page__certificate-logo">
-                <Award size={48} className="text-primary" />
+                <Award size={33} className="text-primary" />
                 <h2>OriginStamp</h2>
                 <p>{t("certificate_of_authenticity")}</p>
               </div>
@@ -376,7 +376,7 @@ const CertificateDetailPage: React.FC = () => {
                   <div className="certificate-detail-page__qr-code">
                     {/* Mock QR Code - akan diganti dengan library QR code */}
                     <div className="certificate-detail-page__qr-mock">
-                      <QrCode size={120} />
+                      <QrCode size={84} />
                       <p>{t("scan_to_verify")}</p>
                     </div>
                   </div>

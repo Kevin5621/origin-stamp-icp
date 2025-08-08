@@ -81,7 +81,7 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
           </>
         ) : (
           <div className="image-placeholder">
-            <Image size={32} />
+            <Image size={22} />
             <span>{t("no_image") || "No Image"}</span>
           </div>
         )}

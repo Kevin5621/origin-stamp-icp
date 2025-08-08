@@ -282,7 +282,7 @@ const CertificatesPage: React.FC = () => {
           ) : (
             <div className="empty-state">
               <div className="empty-icon">
-                <FileText size={44} strokeWidth={1} />
+                <FileText size={30} strokeWidth={1} />
               </div>
               <h3 className="empty-title">{t("no_certificates_found")}</h3>
               <p className="empty-description">

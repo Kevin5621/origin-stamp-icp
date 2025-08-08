@@ -60,7 +60,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, errorInfo, onRetry }) => {
 
           {/* Error Icon */}
           <div className="error-page__icon">
-            <AlertTriangle size={80} className="error-icon" />
+            <AlertTriangle size={56} className="error-icon" />
           </div>
 
           {/* Error Message */}
@@ -85,7 +85,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, errorInfo, onRetry }) => {
             </h3>
             <div className="error-page__links-grid">
               <button className="quick-link-card" onClick={handleGoHome}>
-                <Home size={24} />
+                <Home size={16} />
                 <span>
                   {isAuthenticated
                     ? t("dashboard", "Dashboard")
@@ -97,12 +97,12 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, errorInfo, onRetry }) => {
                 className="quick-link-card"
                 onClick={handleExploreMarketplace}
               >
-                <Compass size={24} />
+                <Compass size={16} />
                 <span>{t("marketplace", "Marketplace")}</span>
               </button>
 
               <button className="quick-link-card" onClick={handleRetry}>
-                <RefreshCw size={24} />
+                <RefreshCw size={16} />
                 <span>{t("retry", "Try Again")}</span>
               </button>
             </div>

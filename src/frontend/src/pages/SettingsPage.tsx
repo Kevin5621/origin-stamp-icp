@@ -102,17 +102,17 @@ const SettingsPage: React.FC = () => {
   return (
     <div className="dashboard">
       {/* Header with Dashboard Consistency */}
-      <div className="dashboard__bento-header">
-        <div className="dashboard__welcome-card">
-          <div className="welcome-card__content">
+      <div className="dashboard__header">
+        <div className="dashboard__welcome-section">
+          <div className="welcome-section__content">
             <div className="settings-header-left">
               <button onClick={handleBack} className="settings-back-btn">
                 <ArrowLeft size={20} strokeWidth={2} />
                 <span>{t("back")}</span>
               </button>
             </div>
-            <h1 className="welcome-card__title">{t("settings")}</h1>
-            <p className="welcome-card__subtitle">
+            <h1 className="welcome-section__title">{t("settings")}</h1>
+            <p className="welcome-section__subtitle">
               {t("settings_description") ||
                 "Manage your account and preferences"}
             </p>
@@ -127,7 +127,7 @@ const SettingsPage: React.FC = () => {
           <div className="settings-bento-card settings-bento-card--large">
             <div className="bento-card-header">
               <div className="bento-card-icon">
-                <User size={24} strokeWidth={2} />
+                <User size={16} strokeWidth={2} />
               </div>
               <h3 className="bento-card-title">{t("account_information")}</h3>
             </div>
@@ -176,7 +176,7 @@ const SettingsPage: React.FC = () => {
             <div className="settings-bento-card settings-bento-card--medium">
               <div className="bento-card-header">
                 <div className="bento-card-icon">
-                  <Lock size={24} strokeWidth={2} />
+                  <Lock size={16} strokeWidth={2} />
                 </div>
                 <h3 className="bento-card-title">{t("security_settings")}</h3>
               </div>
@@ -258,7 +258,7 @@ const SettingsPage: React.FC = () => {
           <div className="settings-bento-card settings-bento-card--medium">
             <div className="bento-card-header">
               <div className="bento-card-icon">
-                <Bell size={24} strokeWidth={2} />
+                <Bell size={16} strokeWidth={2} />
               </div>
               <h3 className="bento-card-title">{t("notification_settings")}</h3>
             </div>
@@ -380,7 +380,7 @@ const SettingsPage: React.FC = () => {
           <div className="settings-bento-card settings-bento-card--small">
             <div className="bento-card-header">
               <div className="bento-card-icon">
-                <Monitor size={24} strokeWidth={2} />
+                <Monitor size={16} strokeWidth={2} />
               </div>
               <h3 className="bento-card-title">{t("appearance_settings")}</h3>
             </div>
@@ -437,7 +437,7 @@ const SettingsPage: React.FC = () => {
           <div className="settings-bento-card settings-bento-card--small settings-bento-card--danger">
             <div className="bento-card-header">
               <div className="bento-card-icon">
-                <AlertTriangle size={24} strokeWidth={2} />
+                <AlertTriangle size={16} strokeWidth={2} />
               </div>
               <h3 className="bento-card-title">{t("danger_zone")}</h3>
             </div>

@@ -133,7 +133,7 @@ const SessionPage: React.FC = () => {
         <div className="session__welcome">
           <div className="session__welcome-content">
             <div className="session__welcome-icon">
-              <Camera size={32} />
+              <Camera size={22} />
             </div>
             <div className="session__welcome-text">
               <h1>{t("session.active_sessions")}</h1>
@@ -162,7 +162,7 @@ const SessionPage: React.FC = () => {
             {sessions.length === 0 ? (
               <div className="session__empty-state">
                 <div className="session__empty-icon">
-                  <FolderOpen size={64} />
+                  <FolderOpen size={30} />
                 </div>
                 <h3>{t("session.no_active_sessions")}</h3>
                 <p>{t("session.no_sessions_description")}</p>

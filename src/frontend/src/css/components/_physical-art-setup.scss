@@ -127,7 +127,8 @@
 }
 
 .btn-create-session {
-  @extend .btn-wireframe !optional;
+  @extend .btn !optional;
+  @extend .btn--primary !optional;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
