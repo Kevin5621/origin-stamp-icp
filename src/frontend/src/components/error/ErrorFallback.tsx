@@ -55,8 +55,8 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
           {/* Error Icon */}
           <div className="error-fallback__icon">
             <svg
-              width="80"
-              height="80"
+              width="56"
+              height="56"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

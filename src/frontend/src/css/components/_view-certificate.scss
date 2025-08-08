@@ -49,8 +49,8 @@
     text-align: center;
 
     .loading-spinner {
-      width: 40px;
-      height: 40px;
+      width: 28px !important; /* 40px * 0.7 = 28px */
+      height: 28px !important;
       border: 3px solid var(--color-border);
       border-top: 3px solid var(--color-accent);
       border-radius: 50%;

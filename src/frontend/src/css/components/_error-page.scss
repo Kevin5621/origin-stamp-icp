@@ -104,6 +104,12 @@
   color: var(--color-error);
   opacity: 0.8;
   animation: errorIconPulse 2s ease-in-out infinite;
+  width: 42px !important; /* 60px * 0.7 = 42px */
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
 }
 
 @keyframes errorIconPulse {
@@ -192,6 +198,12 @@
 
 .quick-link-card svg {
   flex-shrink: 0;
+  width: 16.8px !important; /* 24px * 0.7 = 16.8px */
+  height: 16.8px !important;
+  min-width: 16.8px !important;
+  min-height: 16.8px !important;
+  max-width: 16.8px !important;
+  max-height: 16.8px !important;
 }
 
 .quick-link-card span {
@@ -371,8 +383,12 @@
   }
 
   .error-icon {
-    width: 60px;
-    height: 60px;
+    width: 28px !important; /* 40px * 0.7 = 28px */
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
   }
 }
 

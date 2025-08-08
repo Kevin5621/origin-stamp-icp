@@ -3,6 +3,43 @@
    ============================================================================= */
 
 /* =============================================================================
+   GLOBAL ICON RESPONSIVE SETTINGS
+   ============================================================================= */
+
+/* Pengaturan global untuk icon di responsive design */
+@media (max-width: 768px) {
+  /* Mempertahankan ukuran minimum untuk icon di tablet - diperkecil 70% */
+  svg {
+    min-width: 0.7rem !important;
+    min-height: 0.7rem !important;
+  }
+
+  .btn-icon,
+  .btn-icon-mini,
+  .icon-button,
+  [class*="icon"] {
+    min-width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
+    min-height: 1.05rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mempertahankan ukuran minimum untuk icon di mobile - diperkecil 70% */
+  svg {
+    min-width: 0.6125rem !important; /* 0.875rem * 0.7 = 0.6125rem */
+    min-height: 0.6125rem !important;
+  }
+
+  .btn-icon,
+  .btn-icon-mini,
+  .icon-button,
+  [class*="icon"] {
+    min-width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
+    min-height: 0.875rem !important;
+  }
+}
+
+/* =============================================================================
    MOBILE PORTRAIT (max-width: 480px)
    ============================================================================= */
 

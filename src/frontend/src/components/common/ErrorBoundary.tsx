@@ -39,7 +39,7 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="error-boundary">
           <div className="error-boundary-content">
-            <AlertTriangle size={48} strokeWidth={1} />
+            <AlertTriangle size={33} strokeWidth={1} />
             <h3>Terjadi Kesalahan</h3>
             <p>Maaf, terjadi kesalahan saat memuat komponen ini.</p>
             <button

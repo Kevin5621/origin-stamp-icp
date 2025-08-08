@@ -49,7 +49,7 @@ const NotFoundPage: React.FC = () => {
 
           {/* Error Icon */}
           <div className="not-found-page__icon">
-            <FileQuestion size={80} className="not-found-icon" />
+            <FileQuestion size={56} className="not-found-icon" />
           </div>
 
           {/* Error Message */}
@@ -72,7 +72,7 @@ const NotFoundPage: React.FC = () => {
             </h3>
             <div className="not-found-page__links-grid">
               <button className="quick-link-card" onClick={handleGoHome}>
-                <Home size={24} />
+                <Home size={16} />
                 <span>
                   {isAuthenticated
                     ? t("dashboard", "Dashboard")
@@ -84,12 +84,12 @@ const NotFoundPage: React.FC = () => {
                 className="quick-link-card"
                 onClick={handleExploreMarketplace}
               >
-                <Compass size={24} />
+                <Compass size={16} />
                 <span>{t("marketplace", "Marketplace")}</span>
               </button>
 
               <button className="quick-link-card" onClick={handleSearch}>
-                <Search size={24} />
+                <Search size={16} />
                 <span>{t("search", "Search")}</span>
               </button>
             </div>

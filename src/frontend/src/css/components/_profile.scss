@@ -158,8 +158,8 @@
 }
 
 .profile-card__avatar {
-  width: 64px;
-  height: 64px;
+  width: 44.8px !important; /* 64px * 0.7 = 44.8px */
+  height: 44.8px !important;
   border-radius: 50%;
   background: linear-gradient(
     135deg,
@@ -364,8 +364,8 @@
   }
 
   .profile-card__avatar {
-    width: 56px;
-    height: 56px;
+    width: 39.2px !important; /* 56px * 0.7 = 39.2px */
+    height: 39.2px !important;
   }
 
   .profile-card__initials {

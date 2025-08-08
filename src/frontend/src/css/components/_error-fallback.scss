@@ -95,6 +95,12 @@
   color: var(--color-error);
   opacity: 0.8;
   animation: errorFallbackIconPulse 2s ease-in-out infinite;
+  width: 56px !important; /* 80px * 0.7 = 56px */
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
 }
 
 @keyframes errorFallbackIconPulse {
@@ -358,8 +364,12 @@
   }
 
   .error-fallback-icon {
-    width: 60px;
-    height: 60px;
+    width: 42px !important; /* 60px * 0.7 = 42px */
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
   }
 }
 

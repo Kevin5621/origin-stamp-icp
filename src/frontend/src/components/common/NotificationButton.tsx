@@ -286,7 +286,7 @@ export const NotificationButton: React.FC<NotificationButtonProps> = ({
             <div className="notification-panel__list">
               {notifications.length === 0 ? (
                 <div className="notification-panel__empty">
-                  <Bell size={48} className="notification-panel__empty-icon" />
+                  <Bell size={33} className="notification-panel__empty-icon" />
                   <p className="notification-panel__empty-text">
                     {t("no_notifications")}
                   </p>

@@ -199,7 +199,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
     return (
       <div className="setup-content">
         <div className="error-state">
-          <AlertCircle size={48} className="error-icon" />
+          <AlertCircle size={33} className="error-icon" />
           <h3>{t("s3_not_configured")}</h3>
           <p>{t("s3_configuration_required")}</p>
         </div>
@@ -273,7 +273,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
             >
-              <Camera size={48} strokeWidth={1} />
+              <Camera size={33} strokeWidth={1} />
               <h4>{t("upload_process_photos")}</h4>
               <p>{t("drag_and_drop_or_click")}</p>
               <p className="upload-info">

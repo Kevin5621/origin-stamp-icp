@@ -524,7 +524,7 @@ const SessionRecordPage: React.FC = () => {
                 />
 
                 <div className="upload-content">
-                  <Camera size={32} />
+                  <Camera size={22} />
                   <h3>{t("session.drop_photos_here_or_click_to_browse")}</h3>
                   <p>{t("session.support_multiple_photos_up_to_10mb_each")}</p>
 
@@ -678,7 +678,7 @@ const SessionRecordPage: React.FC = () => {
 
             {session.photos.length === 0 ? (
               <div className="log-empty">
-                <FileText size={48} />
+                <FileText size={33} />
                 <h3>{t("session.no_photos_uploaded_yet")}</h3>
                 <p>
                   {t(

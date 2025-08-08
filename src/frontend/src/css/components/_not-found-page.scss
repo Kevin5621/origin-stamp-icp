@@ -104,6 +104,12 @@
   color: var(--color-text-tertiary);
   opacity: 0.6;
   animation: notFoundIconSway 4s ease-in-out infinite;
+  width: 42px !important; /* 60px * 0.7 = 42px */
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
 }
 
 @keyframes notFoundIconSway {
@@ -190,6 +196,12 @@
 
 .quick-link-card svg {
   flex-shrink: 0;
+  width: 16.8px !important; /* 24px * 0.7 = 16.8px */
+  height: 16.8px !important;
+  min-width: 16.8px !important;
+  min-height: 16.8px !important;
+  max-width: 16.8px !important;
+  max-height: 16.8px !important;
 }
 
 .quick-link-card span {
@@ -287,8 +299,12 @@
   }
 
   .not-found-icon {
-    width: 60px;
-    height: 60px;
+    width: 28px !important; /* 40px * 0.7 = 28px */
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
   }
 }
 

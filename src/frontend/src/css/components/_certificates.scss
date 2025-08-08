@@ -468,8 +468,8 @@
 }
 
 .certificate-icon {
-  width: 48px;
-  height: 48px;
+  width: 33.6px !important; /* 48px * 0.7 = 33.6px */
+  height: 33.6px !important;
   border-radius: var(--border-radius-lg);
   display: flex;
   align-items: center;
@@ -484,14 +484,41 @@
   flex-shrink: 0;
   transition: all 0.3s ease;
 
+  svg {
+    width: 16.8px !important; /* 24px * 0.7 = 16.8px */
+    height: 16.8px !important;
+    min-width: 16.8px !important;
+    min-height: 16.8px !important;
+    max-width: 16.8px !important;
+    max-height: 16.8px !important;
+  }
+
   @media (max-width: 768px) {
-    width: 40px;
-    height: 40px;
+    width: 28px !important; /* 40px * 0.7 = 28px */
+    height: 28px !important;
+
+    svg {
+      width: 14px !important; /* 20px * 0.7 = 14px */
+      height: 14px !important;
+      min-width: 14px !important;
+      min-height: 14px !important;
+      max-width: 14px !important;
+      max-height: 14px !important;
+    }
   }
 
   @media (max-width: 480px) {
-    width: 36px;
-    height: 36px;
+    width: 25.2px !important; /* 36px * 0.7 = 25.2px */
+    height: 25.2px !important;
+
+    svg {
+      width: 12.6px !important; /* 18px * 0.7 = 12.6px */
+      height: 12.6px !important;
+      min-width: 12.6px !important;
+      min-height: 12.6px !important;
+      max-width: 12.6px !important;
+      max-height: 12.6px !important;
+    }
   }
 }
 
