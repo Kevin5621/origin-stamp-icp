@@ -91,16 +91,22 @@
   width: 100%;
 }
 
+/* =============================================================================
+   ERROR FALLBACK ICON - OVERRIDE KHUSUS
+   ============================================================================= */
+
+.error-fallback__icon .error-fallback-icon,
 .error-fallback-icon {
   color: var(--color-error);
   opacity: 0.8;
   animation: errorFallbackIconPulse 2s ease-in-out infinite;
-  width: 56px !important; /* 80px * 0.7 = 56px */
-  height: 56px !important;
-  min-width: 56px !important;
-  min-height: 56px !important;
-  max-width: 56px !important;
-  max-height: 56px !important;
+  width: 29.4px !important;
+  height: 29.4px !important;
+  min-width: 29.4px !important;
+  min-height: 29.4px !important;
+  max-width: 29.4px !important;
+  max-height: 29.4px !important;
+  flex-shrink: 0 !important;
 }
 
 @keyframes errorFallbackIconPulse {
@@ -363,13 +369,15 @@
     min-width: unset;
   }
 
+  .error-fallback__icon .error-fallback-icon,
   .error-fallback-icon {
-    width: 42px !important; /* 60px * 0.7 = 42px */
-    height: 42px !important;
-    min-width: 42px !important;
-    min-height: 42px !important;
-    max-width: 42px !important;
-    max-height: 42px !important;
+    width: 25.2px !important;
+    height: 25.2px !important;
+    min-width: 25.2px !important;
+    min-height: 25.2px !important;
+    max-width: 25.2px !important;
+    max-height: 25.2px !important;
+    flex-shrink: 0 !important;
   }
 }
 
@@ -388,5 +396,15 @@
 
   .error-fallback__description {
     font-size: 0.9rem;
+  }
+
+  .error-fallback-icon {
+    width: 21px !important; /* 30px * 0.7 = 21px */
+    height: 21px !important;
+    min-width: 21px !important;
+    min-height: 21px !important;
+    max-width: 21px !important;
+    max-height: 21px !important;
+    flex-shrink: 0 !important;
   }
 }
