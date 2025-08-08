@@ -173,8 +173,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 33.6px; /* 48px * 0.7 = 33.6px */
+  height: 33.6px;
   border-radius: var(--border-radius-lg);
   background: rgba(var(--color-secondary-rgb), 0.1);
   color: var(--color-secondary);
@@ -216,8 +216,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 33.6px; /* 48px * 0.7 = 33.6px */
+  height: 33.6px;
   border-radius: var(--border-radius-lg);
   background: rgba(var(--color-secondary-rgb), 0.1);
   flex-shrink: 0;
