@@ -591,7 +591,7 @@
     margin-right: auto;
   }
 
-  .landing-hero-buttons .btn-wireframe {
+  .landing-hero-buttons .btn {
     width: 100%;
     max-width: 280px;
   }
@@ -607,101 +607,13 @@
     max-width: 260px;
   }
 
-  .landing-hero-buttons .btn-wireframe {
+  .landing-hero-buttons .btn {
     max-width: 240px;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-sm);
     padding: var(--spacing-sm) var(--spacing-md);
   }
 
   .landing-secondary-link {
     font-size: 0.8125rem;
-  }
-}
-
-/* =============================================================================
-   WIREFRAME ELEMENTS IN LANDING PAGE
-   ============================================================================= */
-
-/* Wireframe elements within landing page */
-.landing-layout .btn-wireframe {
-  border: 2px solid var(--color-primary-text);
-  background-color: transparent;
-  color: var(--color-primary-text);
-  border-radius: 0; // Sharp edges for wireframe
-  font-family: var(--font-family-mono, "Courier New", monospace);
-  text-transform: uppercase;
-  font-weight: var(--font-weight-bold);
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-primary-text);
-    color: var(--color-surface);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-
-  &:focus {
-    outline: 3px solid var(--color-primary-text);
-    outline-offset: 2px;
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
-}
-
-.landing-layout .wireframe {
-  border: 2px solid var(--color-primary-text);
-  background-color: transparent;
-  color: var(--color-primary-text);
-  border-radius: 0; // Sharp edges
-  font-family: var(--font-family-mono, "Courier New", monospace);
-  text-transform: uppercase;
-  font-weight: var(--font-weight-bold);
-}
-
-.landing-layout .wireframe-input {
-  border: 2px solid var(--color-primary-text);
-  background-color: transparent;
-  color: var(--color-primary-text);
-  border-radius: 0; // Sharp edges
-  font-family: var(--font-family-mono, "Courier New", monospace);
-  text-transform: uppercase;
-  font-weight: var(--font-weight-bold);
-
-  &::placeholder {
-    color: var(--color-primary-text);
-    opacity: 0.6;
-    text-transform: uppercase;
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-primary-text);
-    box-shadow: 0 0 0 3px var(--color-primary-text);
-    outline-offset: 2px;
-  }
-}
-
-/* Wireframe title variant */
-.landing-title--wireframe {
-  font-family: var(--font-family-mono, "Courier New", monospace);
-  text-transform: uppercase;
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-primary-text);
-  border: 2px solid var(--color-primary-text);
-  padding: var(--spacing-md);
-  border-radius: 0; // Sharp edges
-  background-color: transparent;
-  display: inline-block;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-primary-text);
-    color: var(--color-surface);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 }

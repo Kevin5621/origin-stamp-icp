@@ -243,7 +243,7 @@ const CertificatesPage: React.FC = () => {
                   <div className="certificate-actions">
                     <button
                       onClick={() => handleViewCertificate(cert.id)}
-                      className="action-btn wireframe-button"
+                      className="btn btn--secondary"
                       title="View Certificate"
                     >
                       <Eye size={16} strokeWidth={2} />
@@ -251,7 +251,7 @@ const CertificatesPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() => handleDownloadCertificate(cert.id)}
-                      className="action-btn wireframe-button"
+                      className="btn btn--secondary"
                       title="Download Certificate"
                     >
                       <Download size={16} strokeWidth={2} />
@@ -261,7 +261,7 @@ const CertificatesPage: React.FC = () => {
                       onClick={() =>
                         handleShareCertificate(cert.certificateUrl)
                       }
-                      className="action-btn wireframe-button"
+                      className="btn btn--secondary"
                       title="Share Certificate"
                     >
                       <Share2 size={16} strokeWidth={2} />
@@ -269,7 +269,7 @@ const CertificatesPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() => handleCopyLink(cert.certificateUrl)}
-                      className="action-btn wireframe-button"
+                      className="btn btn--secondary"
                       title="Copy Link"
                     >
                       <Copy size={16} strokeWidth={2} />
@@ -282,7 +282,7 @@ const CertificatesPage: React.FC = () => {
           ) : (
             <div className="empty-state">
               <div className="empty-icon">
-                <FileText size={64} strokeWidth={1} />
+                <FileText size={44} strokeWidth={1} />
               </div>
               <h3 className="empty-title">{t("no_certificates_found")}</h3>
               <p className="empty-description">

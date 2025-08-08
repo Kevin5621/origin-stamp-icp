@@ -133,7 +133,7 @@ const HowItWorksPage: React.FC = () => {
           <div className="how-it-works-hero-actions">
             <button
               type="button"
-              className="btn-wireframe btn-wireframe--primary"
+              className="btn btn--primary"
               onClick={handleGetStarted}
             >
               {t("cta_button")}
@@ -613,7 +613,7 @@ const HowItWorksPage: React.FC = () => {
               <div className="how-it-works-cta-actions">
                 <button
                   type="button"
-                  className="btn-wireframe btn-wireframe--primary btn-wireframe--large"
+                  className="btn btn--primary btn--lg"
                   onClick={handleGetStarted}
                 >
                   {t("cta_button")}

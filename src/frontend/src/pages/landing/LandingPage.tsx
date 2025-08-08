@@ -111,7 +111,7 @@ const LandingPage: React.FC = () => {
           <div className="landing-hero-buttons">
             <button
               type="button"
-              className="btn-wireframe btn-wireframe--primary"
+              className="btn btn--primary"
               aria-label={t("get_started_button")}
               style={{
                 opacity: showButton ? 1 : 0,
@@ -125,7 +125,7 @@ const LandingPage: React.FC = () => {
 
             <button
               type="button"
-              className="btn-wireframe btn-wireframe--secondary"
+              className="btn btn--outline"
               aria-label={t(
                 "explore_marketplace_button",
                 "Explore Marketplace",
@@ -291,7 +291,7 @@ const LandingPage: React.FC = () => {
           <div style={{ marginTop: "2rem" }}>
             <button
               type="button"
-              className="btn-wireframe"
+              className="btn btn--primary"
               aria-label={t("start_verification_button")}
               onClick={handleGetStarted}
             >

@@ -86,6 +86,62 @@
     }
   }
 
+  // Success button
+  &--success {
+    background: var(--color-success);
+    color: white;
+    border-color: var(--color-success);
+
+    &:hover {
+      background: #2f855a;
+      border-color: #2f855a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(var(--color-success-rgb), 0.25);
+    }
+  }
+
+  // Error button
+  &--error {
+    background: var(--color-error);
+    color: white;
+    border-color: var(--color-error);
+
+    &:hover {
+      background: #c53030;
+      border-color: #c53030;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(var(--color-error-rgb), 0.25);
+    }
+  }
+
+  // Warning button
+  &--warning {
+    background: var(--color-warning);
+    color: white;
+    border-color: var(--color-warning);
+
+    &:hover {
+      background: #c05621;
+      border-color: #c05621;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(var(--color-warning-rgb), 0.25);
+    }
+  }
+
+  // Info button
+  &--info {
+    background: var(--color-info);
+    color: white;
+    border-color: var(--color-info);
+
+    &:hover {
+      background: #2b6cb0;
+      border-color: #2b6cb0;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(var(--color-info-rgb), 0.25);
+    }
+  }
+
   // Size variants
   &--sm {
     padding: var(--spacing-xs) var(--spacing-sm);
@@ -100,229 +156,6 @@
   }
 }
 
-.btn-wireframe {
-  background-color: transparent;
-  color: var(--color-on-surface);
-  border: 2px solid var(--color-primary-text);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  font-weight: var(--font-weight-bold);
-  font-size: 0.875rem;
-  letter-spacing: var(--letter-spacing-tight);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  outline: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  min-height: 44px;
-  box-sizing: border-box;
-  border-radius: 0; // Explicitly no border radius for sharp edges
-  text-transform: uppercase;
-  font-family: var(--font-family-mono, "Courier New", monospace);
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-primary-text);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  &:hover {
-    background-color: var(--color-primary-text);
-    color: var(--color-surface) !important;
-    border-color: var(--color-primary-text);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-
-  &:focus-visible {
-    border-color: var(--color-primary-text);
-    color: var(--color-primary-text);
-    outline: 3px solid var(--color-primary-text);
-    outline-offset: 2px;
-  }
-
-  &:active {
-    border-color: var(--color-primary-text);
-    color: var(--color-surface);
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
-    &::before {
-      opacity: 1;
-    }
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-
-    &::before {
-      opacity: 0;
-    }
-
-    &:hover {
-      border-color: var(--color-primary-text);
-      color: var(--color-on-surface);
-      transform: none;
-      box-shadow: none;
-    }
-  }
-}
-
-/* Dark theme hover state */
-[data-theme="dark"] .btn-wireframe:hover {
-  background-color: #fff;
-  color: var(--color-surface);
-  border-color: #fff;
-}
-
-/* =============================================================================
-   BUTTON SIZE VARIANTS
-   ============================================================================= */
-
-.btn-wireframe--small {
-  padding: var(--spacing-xs) var(--spacing-md);
-  font-size: 0.8125rem;
-  min-height: 36px;
-}
-
-.btn-wireframe--large {
-  padding: var(--spacing-md) var(--spacing-xl);
-  font-size: 1rem;
-  min-height: 52px;
-}
-
-/* =============================================================================
-   BUTTON COLOR VARIANTS
-   ============================================================================= */
-
-.btn-wireframe--primary {
-  border-color: var(--color-primary-text);
-  color: var(--color-primary-text);
-  background-color: transparent;
-
-  &:hover {
-    background-color: var(--color-primary-text);
-    color: var(--color-surface);
-    border-color: var(--color-primary-text);
-  }
-
-  &::before {
-    background: var(--color-primary-text);
-  }
-}
-
-.btn-wireframe--secondary {
-  border-color: var(--color-text-secondary);
-  color: var(--color-text-secondary);
-  background-color: transparent;
-
-  &:hover {
-    background-color: var(--color-text-secondary);
-    color: var(--color-surface);
-    border-color: var(--color-text-secondary);
-  }
-
-  &::before {
-    background: var(--color-text-secondary);
-  }
-}
-
-.btn-wireframe--success {
-  border-color: var(--color-success);
-  color: var(--color-success);
-
-  &:hover {
-    background-color: var(--color-success);
-    color: var(--color-surface);
-  }
-
-  &::before {
-    background: var(--color-success);
-  }
-}
-
-.btn-wireframe--error {
-  border-color: var(--color-error);
-  color: var(--color-error);
-
-  &:hover {
-    background-color: var(--color-error);
-    color: var(--color-surface);
-  }
-
-  &::before {
-    background: var(--color-error);
-  }
-}
-
-.btn-wireframe--warning {
-  border-color: var(--color-warning);
-  color: var(--color-warning);
-
-  &:hover {
-    background-color: var(--color-warning);
-    color: var(--color-surface);
-  }
-
-  &::before {
-    background: var(--color-warning);
-  }
-}
-
-/* =============================================================================
-   CIRCULAR BUTTON COMPONENTS
-   ============================================================================= */
-
-.theme-toggle,
-.language-toggle,
-.btn-login-circular {
-  background-color: var(--color-surface);
-  color: var(--color-on-surface);
-  box-shadow: var(--shadow-neumorphic-sm);
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  transition: var(--theme-transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-
-  &:active {
-    box-shadow: var(--shadow-inset);
-  }
-}
-
-/* Styling untuk theme toggle dan language toggle di luar header */
-.theme-toggle:not(.floating-header .theme-toggle) svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  transition: var(--theme-transition);
-}
-
-.language-toggle:not(.floating-header .language-toggle) svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: var(--border-radius-full);
-  object-fit: cover;
-}
-
 /* =============================================================================
    BUTTON WITH ICONS
    ============================================================================= */
@@ -333,9 +166,20 @@
   gap: var(--spacing-sm);
 
   .btn-icon {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    min-width: 0.875rem;
+    min-height: 0.875rem;
+    flex-shrink: 0;
     transition: transform var(--transition-normal);
+
+    svg {
+      width: inherit !important;
+      height: inherit !important;
+      min-width: inherit !important;
+      min-height: inherit !important;
+      flex-shrink: 0 !important;
+    }
   }
 
   &:hover .btn-icon {
@@ -349,26 +193,26 @@
 
 .btn-group {
   display: flex;
-  gap: 0; // No gap for seamless connection
+  gap: 0;
 
-  .btn-wireframe {
-    border-radius: 0; // Explicitly no border radius for sharp edges
+  .btn {
+    border-radius: 0;
     margin: 0;
-    border-right-width: 1px; // Thinner border between buttons
+    border-right-width: 1px;
 
     &:first-child {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+      border-top-left-radius: var(--border-radius-md);
+      border-bottom-left-radius: var(--border-radius-md);
     }
 
     &:last-child {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-      border-right-width: 2px; // Full border for last button
+      border-top-right-radius: var(--border-radius-md);
+      border-bottom-right-radius: var(--border-radius-md);
+      border-right-width: 1px;
     }
 
     &:not(:last-child) {
-      border-right-color: var(--color-primary-text);
+      border-right-color: var(--color-border);
     }
   }
 }
@@ -378,21 +222,21 @@
    ============================================================================= */
 
 @media (max-width: 768px) {
-  .btn-wireframe {
+  .btn {
     padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     min-height: 40px;
   }
 
-  .btn-wireframe--small {
+  .btn--small {
     padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: 0.75rem;
+    font-size: var(--font-size-xs);
     min-height: 32px;
   }
 
-  .btn-wireframe--large {
+  .btn--large {
     padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: 0.9375rem;
+    font-size: var(--font-size-md);
     min-height: 48px;
   }
 
@@ -405,15 +249,15 @@
 }
 
 @media (max-width: 480px) {
-  .btn-wireframe {
+  .btn {
     padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: 0.8125rem;
+    font-size: var(--font-size-xs);
     min-height: 36px;
   }
 
-  .btn-wireframe--large {
+  .btn--large {
     padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     min-height: 44px;
   }
 
@@ -423,4 +267,48 @@
     width: 2.25rem;
     height: 2.25rem;
   }
+}
+
+/* =============================================================================
+   CIRCULAR BUTTON COMPONENTS
+   ============================================================================= */
+
+.theme-toggle,
+.language-toggle,
+.btn-login-circular {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  box-shadow: var(--shadow-sm);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: var(--theme-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+  }
+
+  &:active {
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* Styling untuk theme toggle dan language toggle di luar header */
+.theme-toggle:not(.floating-header .theme-toggle) svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: var(--theme-transition);
+}
+
+.language-toggle:not(.floating-header .language-toggle) svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: var(--border-radius-full);
+  object-fit: cover;
 }
