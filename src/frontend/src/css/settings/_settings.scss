@@ -8,22 +8,22 @@
      ============================================================================= */
 
   /* Dual-Tone Artist Colors - Creative yet Comfortable */
-  --color-primary-bg: #fdfcf7;
-  --color-secondary-bg: #f0f4f8;
+  --color-primary-bg: #f5f4f0;
+  --color-secondary-bg: #e8edf2;
   --color-primary: #2d3748;
   --color-secondary: #4a90a4;
   --color-primary-text: #2d3748;
   --color-secondary-text: #4a90a4;
-  --color-surface: var(--color-primary-bg);
+  --color-surface: #f0f0eb;
   --color-on-surface: var(--color-primary-text);
   --color-text-primary: var(--color-primary-text);
   --color-text-secondary: #718096;
   --color-text-tertiary: #a0aec0;
-  --color-surface-hover: #f7fafc;
+  --color-surface-hover: #f0f2f5;
 
   /* RGB Values for Surface Colors */
-  --color-surface-rgb: 253, 252, 247;
-  --color-secondary-bg-rgb: 240, 244, 248;
+  --color-surface-rgb: 240, 240, 235;
+  --color-secondary-bg-rgb: 232, 237, 242;
 
   /* Shadow Colors for Dual-Tone Design */
   --color-shadow-dark: #e2e8f0;
@@ -53,16 +53,16 @@
   --color-info-rgb: 49, 130, 206;
 
   /* Additional Colors - Artist Harmonies */
-  --color-border: #e2e8f0;
-  --color-border-hover: #cbd5e0;
-  --color-border-secondary: #bee3f0;
-  --color-surface-disabled: #f7fafc;
+  --color-border: #cbd5e0;
+  --color-border-hover: #a0aec0;
+  --color-border-secondary: #a0c4d4;
+  --color-surface-disabled: #f0f2f5;
   --color-primary-rgb: 45, 55, 72;
   --color-secondary-rgb: 74, 144, 164;
 
   /* RGB Values for Additional Colors */
-  --color-border-rgb: 226, 232, 240;
-  --color-border-secondary-rgb: 190, 227, 240;
+  --color-border-rgb: 203, 213, 224;
+  --color-border-secondary-rgb: 160, 196, 212;
 
   /* Animation States */
   --color-recording: #e53e3e;

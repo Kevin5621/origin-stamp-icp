@@ -249,7 +249,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
           <button
             onClick={handleCreateSession}
             disabled={isCreatingSession || !artTitle.trim()}
-            className="btn-create-session wireframe-button primary"
+            className="btn btn--primary"
           >
             {isCreatingSession ? t("creating_session") : t("create_session")}
           </button>
@@ -268,7 +268,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
 
           <div className="upload-area-container">
             <div
-              className="upload-area wireframe-card"
+              className="upload-area"
               onDragOver={handleDragOver}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
