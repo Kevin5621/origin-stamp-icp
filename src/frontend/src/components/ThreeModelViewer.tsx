@@ -1,52 +1,53 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, Preload } from "@react-three/drei";
 import { Suspense, useEffect, useState, memo } from "react";
+import { useCameraAnimation } from "../hooks/useCameraAnimation";
+import { Box3, Vector3 } from "three";
 
 interface ThreeModelViewerProps {
   src: string;
   enableInteraction?: boolean;
   enableRotation?: boolean;
   theme?: "light" | "dark";
+  scrollProgress?: number;
+  enableCameraAnimation?: boolean;
 }
 
-// Komponen terpisah untuk model dengan preloading
-const Model: React.FC<{ src: string; onLoad?: () => void }> = memo(
-  ({ src, onLoad }) => {
-    const { scene } = useGLTF(src);
+const CameraController: React.FC<{
+  scrollProgress: number;
+  enabled: boolean;
+}> = ({ scrollProgress, enabled }) => {
+  useCameraAnimation({ scrollProgress, enabled });
+  return null;
+};
 
-    useEffect(() => {
-      // Optimasi scene
-      scene.traverse((child) => {
-        if ("isMesh" in child && child.isMesh) {
-          (child as any).castShadow = true;
-          (child as any).receiveShadow = true;
-          // Optimasi material
-          if ((child as any).material) {
-            (child as any).material.needsUpdate = true;
-          }
+const Model: React.FC<{ src: string; onLoad?: () => void }> = memo(({ src, onLoad }) => {
+  const { scene } = useGLTF(src);
+
+  useEffect(() => {
+    scene.traverse((child) => {
+      if ("isMesh" in child && child.isMesh) {
+        (child as any).castShadow = true;
+        (child as any).receiveShadow = true;
+        if ((child as any).material) {
+          (child as any).material.needsUpdate = true;
         }
-      });
-
-      // Notify parent component that model is loaded
-      if (onLoad) {
-        onLoad();
       }
-    }, [scene, onLoad]);
+    });
 
-    return (
-      <primitive
-        object={scene}
-        position={[0, 0, 0]}
-        rotation={[0, -Math.PI / 2, 0]}
-        scale={[2, 2, 2]}
-      />
-    );
-  },
-);
+    const box = new Box3().setFromObject(scene);
+    const center = box.getCenter(new Vector3());
+    scene.position.sub(center);
+    scene.position.y += (box.max.y - box.min.y) / 4;
+
+    if (onLoad) onLoad();
+  }, [scene, onLoad]);
+
+  return <primitive object={scene} rotation={[0, -Math.PI / 2, 0]} scale={[2, 2, 2]} />;
+});
 
 Model.displayName = "Model";
 
-// Preload model untuk loading cepat
 useGLTF.preload("/woman-statue.glb");
 
 const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
@@ -55,36 +56,20 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
     enableInteraction = true,
     enableRotation = false,
     theme = "light",
+    scrollProgress = 0,
+    enableCameraAnimation = false,
   }) => {
     const [isLoaded, setIsLoaded] = useState(false);
-
-    // Menghitung intensitas lighting berdasarkan tema
     const getLightIntensity = () => {
       switch (theme) {
         case "light":
-          return {
-            ambient: 2,
-            directional: 1.0,
-            point: 0.6,
-            spot: 0.4,
-          };
+          return { ambient: 2, directional: 1.0, point: 0.6, spot: 0.4 };
         case "dark":
-          return {
-            ambient: 0.4,
-            directional: 0.6,
-            point: 0.3,
-            spot: 0.2,
-          };
+          return { ambient: 0.4, directional: 0.6, point: 0.3, spot: 0.2 };
         default:
-          return {
-            ambient: 0.6,
-            directional: 0.8,
-            point: 0.4,
-            spot: 0.3,
-          };
+          return { ambient: 0.6, directional: 0.8, point: 0.4, spot: 0.3 };
       }
     };
-
     const lightIntensity = getLightIntensity();
 
     return (
@@ -105,14 +90,9 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
           near: 0.1,
           far: 1000,
         }}
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance",
-        }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         dpr={[1, 2]}
       >
-        {/* Lighting yang optimal berdasarkan tema */}
         <ambientLight intensity={lightIntensity.ambient} />
         <directionalLight
           position={[3, 4, 3]}
@@ -122,8 +102,6 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
           shadow-mapSize-height={2048}
         />
         <pointLight position={[-3, 3, -3]} intensity={lightIntensity.point} />
-
-        {/* Tambahan lighting khusus untuk bagian atas model */}
         <spotLight
           position={[0, 6, 2]}
           intensity={lightIntensity.spot * 1.2}
@@ -132,18 +110,16 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
           color="#ffffff"
           target-position={[0, 1, 0]}
         />
-
-        {/* Rim light untuk highlight kontur */}
-        <directionalLight
-          position={[-2, 2, -2]}
-          intensity={lightIntensity.directional * 0.3}
-          color="#e0e7ff"
-        />
-
+        <directionalLight position={[-2, 2, -2]} intensity={lightIntensity.directional * 0.3} color="#e0e7ff" />
         <Suspense fallback={null}>
           <Model src={src} onLoad={() => setIsLoaded(true)} />
-          {/* OrbitControls dengan batasan yang lebih optimal untuk viewing bagian atas */}
-          {(enableInteraction || enableRotation) && (
+          {enableCameraAnimation && (
+            <CameraController
+              scrollProgress={scrollProgress}
+              enabled={enableCameraAnimation && !enableInteraction && !enableRotation}
+            />
+          )}
+          {(enableInteraction || enableRotation) && !enableCameraAnimation && (
             <OrbitControls
               enablePan={enableInteraction}
               enableZoom={enableInteraction}

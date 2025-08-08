@@ -8,29 +8,23 @@ import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
 import { useCursorSpotlight } from "../../hooks/useCursorSpotlight";
 
-/**
- * Landing Page - Halaman utama aplikasi
- * Tidak memerlukan autentikasi
- */
 const LandingPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [showButton, setShowButton] = useState(false);
   const [show3DModel, setShow3DModel] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const currentTheme = useTheme();
 
-  // Initialize cursor spotlight effect
   useCursorSpotlight();
 
-  // Immediate redirect to dashboard if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/dashboard", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
-  // Preload 3D model saat komponen mount
   useEffect(() => {
     const preloadModel = async () => {
       try {
@@ -42,28 +36,26 @@ const LandingPage: React.FC = () => {
     preloadModel();
   }, []);
 
-  // Handle scroll events for 3D model animation
   useEffect(() => {
     const handleScroll = () => {
-      // Update data-scroll attribute for CSS animations
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight - windowHeight;
+      const scrolled = window.scrollY;
+      const normalizedProgress = Math.min(Math.max(0, scrolled / documentHeight), 1);
+      setScrollProgress(normalizedProgress);
       const layout = document.querySelector(".landing-layout");
       if (layout) {
-        const scrollProgress = Math.min(Math.floor(window.scrollY / 500), 4);
-        layout.setAttribute("data-scroll", scrollProgress.toString());
+        const scrollProgressCSS = Math.min(Math.floor(scrolled / 500), 4);
+        layout.setAttribute("data-scroll", scrollProgressCSS.toString());
       }
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleTypingComplete = () => {
     setShowButton(true);
-    setTimeout(() => {
-      setShow3DModel(true);
-    }, 800);
+    setTimeout(() => setShow3DModel(true), 800);
   };
 
   const handleGetStarted = () => {
@@ -80,19 +72,18 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="landing-layout">
-      {/* 3D Model Background - Fixed Position */}
       <div className="landing-3d-background">
         {show3DModel && (
           <ThreeModelViewer
             src="/woman-statue.glb"
             enableInteraction={false}
-            enableRotation={true}
+            enableRotation={false}
+            enableCameraAnimation={true}
+            scrollProgress={scrollProgress}
             theme={currentTheme}
           />
         )}
       </div>
-
-      {/* Hero Section */}
       <section id="hero" className="landing-hero">
         <div className="landing-hero-content">
           <h1 id="welcome-title" className="landing-title">
@@ -104,10 +95,7 @@ const LandingPage: React.FC = () => {
               onComplete={handleTypingComplete}
             />
           </h1>
-
           <p className="landing-subtitle">{t("hero_subtitle")}</p>
-
-          {/* Hero Buttons */}
           <div className="landing-hero-buttons">
             <button
               type="button"
@@ -122,14 +110,10 @@ const LandingPage: React.FC = () => {
             >
               {t("get_started_button")}
             </button>
-
             <button
               type="button"
               className="btn btn--outline"
-              aria-label={t(
-                "explore_marketplace_button",
-                "Explore Marketplace",
-              )}
+              aria-label={t("explore_marketplace_button", "Explore Marketplace")}
               style={{
                 opacity: showButton ? 1 : 0,
                 transition: "opacity 0.5s ease-in-out",
@@ -140,8 +124,6 @@ const LandingPage: React.FC = () => {
               {t("explore_marketplace_button", "Explore Marketplace")}
             </button>
           </div>
-
-          {/* Secondary Action Link */}
           <div
             className="landing-secondary-action"
             style={{
@@ -161,133 +143,75 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Problem Section */}
-      <section
-        id="problem"
-        className="landing-section landing-section--problem"
-      >
+      <section id="problem" className="landing-section landing-section--problem">
         <div className="landing-container">
           <h2 className="landing-section-title">{t("problem_title")}</h2>
-          <p className="landing-section-description">
-            {t("problem_description")}
-          </p>
+          <p className="landing-section-description">{t("problem_description")}</p>
         </div>
       </section>
-
-      {/* Solution Section */}
-      <section
-        id="solution"
-        className="landing-section landing-section--solution"
-      >
+      <section id="solution" className="landing-section landing-section--solution">
         <div className="landing-container">
           <h2 className="landing-section-title">{t("solution_title")}</h2>
-          <p className="landing-section-description">
-            {t("solution_description")}
-          </p>
+          <p className="landing-section-description">{t("solution_description")}</p>
         </div>
       </section>
-
-      {/* How It Works Section */}
-      <section
-        id="howitworks"
-        className="landing-section landing-section--how-it-works"
-      >
+      <section id="howitworks" className="landing-section landing-section--how-it-works">
         <div className="landing-container">
           <h2 className="landing-section-title">{t("how_it_works_title")}</h2>
-
           <div className="landing-steps">
             <div className="landing-step">
               <div className="landing-step-content">
                 <div className="landing-step-number">1</div>
                 <h3 className="landing-step-title">{t("step_1_title")}</h3>
-                <p className="landing-step-description">
-                  {t("step_1_description")}
-                </p>
+                <p className="landing-step-description">{t("step_1_description")}</p>
               </div>
             </div>
-
             <div className="landing-step">
               <div className="landing-step-content">
                 <div className="landing-step-number">2</div>
                 <h3 className="landing-step-title">{t("step_2_title")}</h3>
-                <p className="landing-step-description">
-                  {t("step_2_description")}
-                </p>
+                <p className="landing-step-description">{t("step_2_description")}</p>
               </div>
             </div>
-
             <div className="landing-step">
               <div className="landing-step-content">
                 <div className="landing-step-number">3</div>
                 <h3 className="landing-step-title">{t("step_3_title")}</h3>
-                <p className="landing-step-description">
-                  {t("step_3_description")}
-                </p>
+                <p className="landing-step-description">{t("step_3_description")}</p>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Why OriginStamp Section */}
-      <section
-        id="why-originstamp"
-        className="landing-section landing-section--why-originstamp"
-      >
+      <section id="why-originstamp" className="landing-section landing-section--why-originstamp">
         <div className="landing-container">
-          <h2 className="landing-section-title">
-            {t("why_originstamp_title")}
-          </h2>
-
+          <h2 className="landing-section-title">{t("why_originstamp_title")}</h2>
           <div className="landing-features">
             <div className="landing-feature">
               <div className="landing-feature-content">
-                <h3 className="landing-feature-title">
-                  {t("feature_1_title")}
-                </h3>
-                <p className="landing-feature-description">
-                  {t("feature_1_description")}
-                </p>
+                <h3 className="landing-feature-title">{t("feature_1_title")}</h3>
+                <p className="landing-feature-description">{t("feature_1_description")}</p>
               </div>
             </div>
-
             <div className="landing-feature">
               <div className="landing-feature-content">
-                <h3 className="landing-feature-title">
-                  {t("feature_2_title")}
-                </h3>
-                <p className="landing-feature-description">
-                  {t("feature_2_description")}
-                </p>
+                <h3 className="landing-feature-title">{t("feature_2_title")}</h3>
+                <p className="landing-feature-description">{t("feature_2_description")}</p>
               </div>
             </div>
-
             <div className="landing-feature">
               <div className="landing-feature-content">
-                <h3 className="landing-feature-title">
-                  {t("feature_3_title")}
-                </h3>
-                <p className="landing-feature-description">
-                  {t("feature_3_description")}
-                </p>
+                <h3 className="landing-feature-title">{t("feature_3_title")}</h3>
+                <p className="landing-feature-description">{t("feature_3_description")}</p>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Final Call to Action Section */}
-      <section
-        id="final-cta"
-        className="landing-section landing-section--final-cta"
-      >
+      <section id="final-cta" className="landing-section landing-section--final-cta">
         <div className="landing-container">
           <h2 className="landing-section-title">{t("final_cta_title")}</h2>
-          <p className="landing-section-description">
-            {t("final_cta_description")}
-          </p>
-
+          <p className="landing-section-description">{t("final_cta_description")}</p>
           <div style={{ marginTop: "2rem" }}>
             <button
               type="button"
