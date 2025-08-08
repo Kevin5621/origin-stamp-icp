@@ -16,8 +16,10 @@
   padding: 0 !important;
   margin: 0 !important;
   overflow-x: hidden !important;
-  overflow-y: hidden !important;
+  overflow-y: auto !important;
   position: relative;
+  /* Memastikan smooth scroll bekerja dengan baik */
+  scroll-behavior: auto;
 }
 
 .landing-layout ~ .app-floating-header {
