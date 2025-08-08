@@ -21,30 +21,38 @@ const CameraController: React.FC<{
   return null;
 };
 
-const Model: React.FC<{ src: string; onLoad?: () => void }> = memo(({ src, onLoad }) => {
-  const { scene } = useGLTF(src);
+const Model: React.FC<{ src: string; onLoad?: () => void }> = memo(
+  ({ src, onLoad }) => {
+    const { scene } = useGLTF(src);
 
-  useEffect(() => {
-    scene.traverse((child) => {
-      if ("isMesh" in child && child.isMesh) {
-        (child as any).castShadow = true;
-        (child as any).receiveShadow = true;
-        if ((child as any).material) {
-          (child as any).material.needsUpdate = true;
+    useEffect(() => {
+      scene.traverse((child) => {
+        if ("isMesh" in child && child.isMesh) {
+          (child as any).castShadow = true;
+          (child as any).receiveShadow = true;
+          if ((child as any).material) {
+            (child as any).material.needsUpdate = true;
+          }
         }
-      }
-    });
+      });
 
-    const box = new Box3().setFromObject(scene);
-    const center = box.getCenter(new Vector3());
-    scene.position.sub(center);
-    scene.position.y += (box.max.y - box.min.y) / 4;
+      const box = new Box3().setFromObject(scene);
+      const center = box.getCenter(new Vector3());
+      scene.position.sub(center);
+      scene.position.y += (box.max.y - box.min.y) / 4;
 
-    if (onLoad) onLoad();
-  }, [scene, onLoad]);
+      if (onLoad) onLoad();
+    }, [scene, onLoad]);
 
-  return <primitive object={scene} rotation={[0, -Math.PI / 2, 0]} scale={[2, 2, 2]} />;
-});
+    return (
+      <primitive
+        object={scene}
+        rotation={[0, -Math.PI / 2, 0]}
+        scale={[2, 2, 2]}
+      />
+    );
+  },
+);
 
 Model.displayName = "Model";
 
@@ -90,7 +98,11 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
           near: 0.1,
           far: 1000,
         }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+        }}
         dpr={[1, 2]}
       >
         <ambientLight intensity={lightIntensity.ambient} />
@@ -110,13 +122,19 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
           color="#ffffff"
           target-position={[0, 1, 0]}
         />
-        <directionalLight position={[-2, 2, -2]} intensity={lightIntensity.directional * 0.3} color="#e0e7ff" />
+        <directionalLight
+          position={[-2, 2, -2]}
+          intensity={lightIntensity.directional * 0.3}
+          color="#e0e7ff"
+        />
         <Suspense fallback={null}>
           <Model src={src} onLoad={() => setIsLoaded(true)} />
           {enableCameraAnimation && (
             <CameraController
               scrollProgress={scrollProgress}
-              enabled={enableCameraAnimation && !enableInteraction && !enableRotation}
+              enabled={
+                enableCameraAnimation && !enableInteraction && !enableRotation
+              }
             />
           )}
           {(enableInteraction || enableRotation) && !enableCameraAnimation && (
