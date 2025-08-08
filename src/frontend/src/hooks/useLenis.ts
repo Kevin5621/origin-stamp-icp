@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import Lenis from '@studio-freight/lenis';
+import { useEffect, useRef } from "react";
+import Lenis from "@studio-freight/lenis";
 
 export const useLenis = () => {
   const lenisRef = useRef<Lenis | null>(null);
@@ -14,8 +14,8 @@ export const useLenis = () => {
         wheelMultiplier: 1,
         touchMultiplier: 2,
         infinite: false,
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
+        orientation: "vertical",
+        gestureOrientation: "vertical",
       });
 
       // RAF loop untuk Lenis
@@ -38,4 +38,4 @@ export const useLenis = () => {
   }, []);
 
   return lenisRef.current;
-}; 
+};
