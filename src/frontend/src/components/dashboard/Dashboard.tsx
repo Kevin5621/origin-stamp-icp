@@ -5,16 +5,13 @@ import { useTranslation } from "react-i18next";
 import {
   Plus,
   BarChart3,
-  Upload,
   Eye,
   Camera,
   TrendingUp,
   CheckCircle,
   Shield,
-  Award,
   Activity,
   Clock,
-  Calendar,
   Palette,
   ArrowRight,
 } from "lucide-react";
@@ -33,12 +30,10 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
   const navigate = useNavigate();
   const { t } = useTranslation("dashboard");
 
-  // State management
   const [stats, setStats] = useState<OriginStampStats | null>(null);
   const [artworks, setArtworks] = useState<ArtworkOverview[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Load dashboard data
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
@@ -60,16 +55,7 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
     loadDashboardData();
   }, []);
 
-  // Quick actions for OriginStamp
   const quickActions = [
-    {
-      id: "upload-artwork",
-      icon: Upload,
-      title: t("upload_artwork") || "Upload Artwork",
-      description:
-        t("upload_artwork_desc") || "Start artwork verification process",
-      onClick: () => navigate("/create-session"),
-    },
     {
       id: "start-session",
       icon: Camera,
@@ -106,7 +92,6 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
 
   return (
     <div className="dashboard">
-      {/* Modern Bento Header */}
       <div className="dashboard__bento-header">
         <div className="dashboard__welcome-card">
           <div className="welcome-card__content">
@@ -144,7 +129,6 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
         </div>
       </div>
 
-      {/* Main Stats Section */}
       <div className="dashboard__stats-section">
         <div className="stats-grid">
           <div className="stat-card stat-card--primary">
@@ -206,30 +190,10 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
               </div>
             </div>
           </div>
-
-          <div className="stat-card stat-card--info">
-            <div className="stat-card__icon">
-              <Award size={24} />
-            </div>
-            <div className="stat-card__content">
-              <div className="stat-card__value">
-                {stats?.certificatesIssued || 0}
-              </div>
-              <div className="stat-card__label">
-                {t("certificates_issued") || "Certificates Issued"}
-              </div>
-              <div className="stat-card__trend">
-                <Calendar size={12} />
-                <span>{t("total_issued") || "Total issued"}</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Modern Compact Grid Layout */}
       <div className="dashboard__main-content">
-        {/* Quick Actions Section */}
         <div className="dashboard__quick-actions">
           <h3 className="section-title">
             {t("quick_actions") || "Quick Actions"}
@@ -260,7 +224,6 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
           </div>
         </div>
 
-        {/* Recent Artworks Section */}
         <div className="dashboard__artworks">
           <div className="section-header">
             <h3 className="section-title">
@@ -275,7 +238,7 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
             </button>
           </div>
           <div className="artworks-modern-grid">
-            {artworks.slice(0, 8).map((artwork) => (
+            {artworks.slice(0, 6).map((artwork) => (
               <ArtworkCard
                 key={artwork.id}
                 artwork={{
