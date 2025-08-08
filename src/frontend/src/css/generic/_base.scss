@@ -89,6 +89,17 @@ svg {
     min-height: inherit !important;
     flex-shrink: 0 !important;
   }
+
+  /* Khusus untuk error-fallback-icon, jangan gunakan inherit */
+  .error-fallback-icon {
+    width: 29.4px !important;
+    height: 29.4px !important;
+    min-width: 29.4px !important;
+    min-height: 29.4px !important;
+    max-width: 29.4px !important;
+    max-height: 29.4px !important;
+    flex-shrink: 0 !important;
+  }
 }
 
 /* =============================================================================
@@ -98,7 +109,6 @@ svg {
 /* Override untuk semua icon yang sudah diperkecil */
 .not-found-icon,
 .error-icon,
-.error-fallback-icon,
 .stat-card__icon svg,
 .analytics__stat-icon svg,
 .bento-card-icon svg,
@@ -111,6 +121,16 @@ svg {
   min-height: inherit !important;
   max-width: inherit !important;
   max-height: inherit !important;
+}
+
+/* Override khusus untuk error-fallback-icon */
+.error-fallback-icon {
+  width: 29.4px !important;
+  height: 29.4px !important;
+  min-width: 29.4px !important;
+  min-height: 29.4px !important;
+  max-width: 29.4px !important;
+  max-height: 29.4px !important;
 }
 
 /* Override untuk quick-link-card icons */

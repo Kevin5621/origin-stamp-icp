@@ -55,8 +55,8 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
           {/* Error Icon */}
           <div className="error-fallback__icon">
             <svg
-              width="56"
-              height="56"
+              width="29.4px"
+              height="29.4px"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -88,7 +88,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
             </h3>
             <div className="error-fallback__links-grid">
               <button className="quick-link-card" onClick={handleGoHome}>
-                <Home size={24} />
+                <Home size={16} />
                 <span>
                   {isAuthenticated
                     ? t("dashboard", "Dashboard")
@@ -100,12 +100,12 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
                 className="quick-link-card"
                 onClick={handleExploreMarketplace}
               >
-                <Compass size={24} />
+                <Compass size={16} />
                 <span>{t("marketplace", "Marketplace")}</span>
               </button>
 
               <button className="quick-link-card" onClick={handleRetry}>
-                <RefreshCw size={24} />
+                <RefreshCw size={16} />
                 <span>{t("retry", "Try Again")}</span>
               </button>
             </div>
