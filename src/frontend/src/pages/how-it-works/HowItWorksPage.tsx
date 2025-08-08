@@ -85,6 +85,7 @@ const HowItWorksPage: React.FC = () => {
             src="/woman-statue.glb"
             enableInteraction={false}
             enableRotation={true}
+            enableCameraAnimation={false}
             theme={currentTheme}
           />
         )}
