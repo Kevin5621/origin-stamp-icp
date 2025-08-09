@@ -377,7 +377,9 @@ const SessionRecordPage: React.FC = () => {
       }
     } catch (error) {
       console.log("Upload error:", error);
-      addToast("error", t("session.upload_error", { error: error.message }));
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      addToast("error", t("session.upload_error", { error: errorMessage }));
     } finally {
       // Reset all states
       setSelectedFiles(null);

@@ -101,25 +101,6 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div className="dashboard">
-      {/* Header with Dashboard Consistency */}
-      <div className="dashboard__header">
-        <div className="dashboard__welcome-section">
-          <div className="welcome-section__content">
-            <div className="settings-header-left">
-              <button onClick={handleBack} className="settings-back-btn">
-                <ArrowLeft size={20} strokeWidth={2} />
-                <span>{t("back")}</span>
-              </button>
-            </div>
-            <h1 className="welcome-section__title">{t("settings")}</h1>
-            <p className="welcome-section__subtitle">
-              {t("settings_description") ||
-                "Manage your account and preferences"}
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Main Content with Bento Layout */}
       <div className="dashboard__main-content">
         <div className="settings-bento-grid">
