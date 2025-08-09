@@ -201,7 +201,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const getLogoText = () => {
-    return variant === "marketplace" ? "IC Vibe" : "OriginStamp";
+    return variant === "marketplace" ? "Marketplace" : "OriginStamp";
   };
 
   const getLogoIcon = () => {
