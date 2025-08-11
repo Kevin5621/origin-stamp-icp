@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {
-  ArrowLeft,
   User,
   Shield,
   Key,
@@ -45,10 +44,6 @@ const SettingsPage: React.FC = () => {
   });
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
   const [language, setLanguage] = useState("id");
-
-  const handleBack = () => {
-    navigate(-1);
-  };
 
   const handleSavePassword = () => {
     // Implement password change logic
