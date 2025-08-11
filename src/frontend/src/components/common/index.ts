@@ -11,3 +11,6 @@ export { NotificationButton } from "./NotificationButton";
 export { Toast } from "./Toast";
 export { default as ToastContainer } from "./ToastContainer";
 export { ArtworkCard } from "./ArtworkCard";
+
+// UI Components
+export { ErrorDisplay } from "../ui/ErrorDisplay";
