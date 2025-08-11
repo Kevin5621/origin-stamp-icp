@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useToastContext } from "../contexts/ToastContext";
+import { useToast } from "../contexts/ToastContext";
 
 interface ErrorHandlerOptions {
   /** Custom error handler function */
@@ -44,7 +44,7 @@ interface ErrorHandlerOptions {
  * ```
  */
 export const useErrorHandler = (options: ErrorHandlerOptions = {}) => {
-  const toast = useToastContext();
+  const toast = useToast();
   const { t } = useTranslation("common");
 
   const getErrorMessage = useCallback(

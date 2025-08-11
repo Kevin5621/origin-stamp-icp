@@ -3,7 +3,7 @@ import type { LoginResult } from "../../../../declarations/backend/backend.did";
 import { backendService } from "../../services/backendService";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
-import { useToastContext } from "../../contexts/ToastContext";
+import { useToast } from "../../contexts/ToastContext";
 import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 
 interface LoginFormProps {
@@ -17,7 +17,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const { t } = useTranslation("auth");
   const { login } = useAuth();
-  const { success, error } = useToastContext();
+  const { success, error } = useToast();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
