@@ -11,6 +11,7 @@ interface ThreeModelViewerProps {
   theme?: "light" | "dark";
   scrollProgress?: number;
   enableCameraAnimation?: boolean;
+  onLoad?: () => void; // Callback ketika model selesai loading
 }
 
 const CameraController: React.FC<{
@@ -26,20 +27,34 @@ const Model: React.FC<{ src: string; onLoad?: () => void }> = memo(
     const { scene } = useGLTF(src);
 
     useEffect(() => {
+      // Optimasi scene untuk performance
       scene.traverse((child) => {
         if ("isMesh" in child && child.isMesh) {
-          (child as any).castShadow = true;
-          (child as any).receiveShadow = true;
-          if ((child as any).material) {
-            (child as any).material.needsUpdate = true;
+          const mesh = child as any;
+          mesh.castShadow = false; // Nonaktifkan shadow untuk performance
+          mesh.receiveShadow = false;
+
+          // Optimasi material
+          if (mesh.material) {
+            mesh.material.needsUpdate = true;
+            // Kurangi kompleksitas material
+            if (mesh.material.map) {
+              mesh.material.map.generateMipmaps = false;
+            }
+          }
+
+          // Optimasi geometry
+          if (mesh.geometry) {
+            mesh.geometry.computeBoundingBox();
+            mesh.geometry.computeBoundingSphere();
           }
         }
       });
 
+      // Posisi model
       const box = new Box3().setFromObject(scene);
       const center = box.getCenter(new Vector3());
       scene.position.sub(center);
-      // Posisi yang lebih turun untuk halaman How It Works
       scene.position.y += (box.max.y - box.min.y) / 5;
 
       if (onLoad) onLoad();
@@ -57,6 +72,7 @@ const Model: React.FC<{ src: string; onLoad?: () => void }> = memo(
 
 Model.displayName = "Model";
 
+// Preload model dengan prioritas tinggi
 useGLTF.preload("/woman-statue.glb");
 
 const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
@@ -67,32 +83,42 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
     theme = "light",
     scrollProgress = 0,
     enableCameraAnimation = false,
+    onLoad,
   }) => {
     const [isLoaded, setIsLoaded] = useState(false);
+
     const getLightIntensity = () => {
       switch (theme) {
         case "light":
-          return { ambient: 2, directional: 1.0, point: 0.6, spot: 0.4 };
+          return { ambient: 1.5, directional: 0.8 }; // Kurangi lighting untuk performance
         case "dark":
-          return { ambient: 0.4, directional: 0.6, point: 0.3, spot: 0.2 };
+          return { ambient: 0.4, directional: 0.6 };
         default:
-          return { ambient: 0.6, directional: 0.8, point: 0.4, spot: 0.3 };
+          return { ambient: 0.8, directional: 0.7 };
       }
     };
+
     const lightIntensity = getLightIntensity();
+
+    const handleModelLoad = () => {
+      setIsLoaded(true);
+      if (onLoad) {
+        onLoad();
+      }
+    };
 
     return (
       <Canvas
         style={{
           width: "100%",
           height: "100%",
-          opacity: isLoaded ? 1 : 0,
-          transition: "opacity 0.5s ease-in-out",
+          opacity: isLoaded ? 1 : 0.3, // Mulai dengan opacity rendah
+          transition: "opacity 0.3s ease-in-out", // Transisi lebih cepat
           background: "transparent",
           position: "relative",
           overflow: "hidden",
         }}
-        shadows
+        shadows={false} // Nonaktifkan shadow untuk performance
         camera={{
           position: [0, 0, 4],
           fov: 50,
@@ -100,36 +126,25 @@ const ThreeModelViewer: React.FC<Readonly<ThreeModelViewerProps>> = memo(
           far: 1000,
         }}
         gl={{
-          antialias: true,
+          antialias: false, // Nonaktifkan antialiasing untuk performance
           alpha: true,
           powerPreference: "high-performance",
+          stencil: false, // Nonaktifkan stencil buffer
+          depth: true,
         }}
-        dpr={[1, 2]}
+        dpr={[1, 1.5]} // Kurangi device pixel ratio untuk performance
+        performance={{ min: 0.5 }} // Set minimum performance
       >
+        {/* Lighting yang disederhanakan untuk performance */}
         <ambientLight intensity={lightIntensity.ambient} />
         <directionalLight
           position={[3, 4, 3]}
           intensity={lightIntensity.directional}
-          castShadow
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
+          castShadow={false}
         />
-        <pointLight position={[-3, 3, -3]} intensity={lightIntensity.point} />
-        <spotLight
-          position={[0, 6, 2]}
-          intensity={lightIntensity.spot * 1.2}
-          angle={0.4}
-          penumbra={0.3}
-          color="#ffffff"
-          target-position={[0, 1, 0]}
-        />
-        <directionalLight
-          position={[-2, 2, -2]}
-          intensity={lightIntensity.directional * 0.3}
-          color="#e0e7ff"
-        />
+
         <Suspense fallback={null}>
-          <Model src={src} onLoad={() => setIsLoaded(true)} />
+          <Model src={src} onLoad={handleModelLoad} />
           {enableCameraAnimation && (
             <CameraController
               scrollProgress={scrollProgress}
