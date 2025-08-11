@@ -14,7 +14,8 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [showButton, setShowButton] = useState(false);
-  const [show3DModel, setShow3DModel] = useState(false);
+  const [show3DModel, setShow3DModel] = useState(true); // Langsung true untuk render model
+  const [modelLoaded, setModelLoaded] = useState(false); // State untuk tracking model loading
   const [scrollProgress, setScrollProgress] = useState(0);
   const currentTheme = useTheme();
 
@@ -27,15 +28,40 @@ const LandingPage: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  // Preload model segera saat komponen mount
   useEffect(() => {
     const preloadModel = async () => {
       try {
-        useGLTF.preload("/woman-statue.glb");
+        // Preload model dengan prioritas tinggi
+        await useGLTF.preload("/woman-statue.glb");
+        console.log("3D model preloaded successfully");
+        setModelLoaded(true);
       } catch (error) {
         console.warn("Failed to preload 3D model:", error);
       }
     };
+
+    // Jalankan preload segera tanpa delay
     preloadModel();
+
+    // Tambahan: Force render model setelah preload
+    const timer = setTimeout(() => {
+      if (!modelLoaded) {
+        setModelLoaded(true);
+      }
+    }, 100); // Timeout pendek untuk memastikan model mulai render
+
+    return () => clearTimeout(timer);
+  }, [modelLoaded]);
+
+  // Optimasi: Mulai render model segera setelah komponen mount
+  useEffect(() => {
+    // Mulai render model tanpa menunggu animasi typing
+    const immediateRenderTimer = setTimeout(() => {
+      setShow3DModel(true);
+    }, 50); // Delay minimal untuk memastikan DOM ready
+
+    return () => clearTimeout(immediateRenderTimer);
   }, []);
 
   useEffect(() => {
@@ -70,7 +96,11 @@ const LandingPage: React.FC = () => {
 
   const handleTypingComplete = () => {
     setShowButton(true);
-    setTimeout(() => setShow3DModel(true), 800);
+    // Hapus delay untuk model 3D - sudah langsung muncul
+  };
+
+  const handleModelLoad = () => {
+    setModelLoaded(true);
   };
 
   const handleGetStarted = () => {
@@ -96,7 +126,14 @@ const LandingPage: React.FC = () => {
             enableCameraAnimation={true}
             scrollProgress={scrollProgress}
             theme={currentTheme}
+            onLoad={handleModelLoad}
           />
+        )}
+        {/* Loading indicator yang subtle */}
+        {show3DModel && !modelLoaded && (
+          <div className="landing-3d-loading">
+            <div className="landing-3d-loading-spinner"></div>
+          </div>
         )}
       </div>
       <section id="hero" className="landing-hero">
