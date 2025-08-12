@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Clock,
@@ -26,84 +26,80 @@ const AnalyticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState("30d");
   const [selectedMetric, setSelectedMetric] = useState("projects");
 
-  // Debug: Log when component mounts
-  useEffect(() => {
-    console.log("AnalyticsPage mounted");
-    console.log("Current location:", window.location.pathname);
-  }, []);
+  // Memoized analytics data untuk performa optimal
+  const analyticsData = useMemo(
+    () => ({
+      overview: {
+        totalProjects: 24,
+        totalCertificates: 18,
+        totalHours: 156,
+        totalActions: 2847,
+        activeUsers: 3,
+        completionRate: 85,
+      },
+      trends: {
+        projectsGrowth: 12.5,
+        certificatesGrowth: 8.3,
+        hoursGrowth: -2.1,
+        actionsGrowth: 15.7,
+      },
+      monthlyData: [
+        { month: "Jan", projects: 4, certificates: 3, hours: 45 },
+        { month: "Feb", projects: 6, certificates: 5, hours: 52 },
+        { month: "Mar", projects: 8, certificates: 7, hours: 48 },
+        { month: "Apr", projects: 6, certificates: 3, hours: 11 },
+      ],
+      projects: [
+        {
+          id: 1,
+          title: "Abstract Composition",
+          type: "digital_art",
+          status: "completed",
+          progress: 100,
+          sessions: 3,
+          lastSession: "2 hours ago",
+          thumbnail:
+            "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=150&h=150&fit=crop&crop=center",
+        },
+        {
+          id: 2,
+          title: "Landscape Painting",
+          type: "traditional_art",
+          status: "in_progress",
+          progress: 75,
+          sessions: 2,
+          lastSession: "4 hours ago",
+          thumbnail:
+            "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=150&h=150&fit=crop&crop=center",
+        },
+        {
+          id: 3,
+          title: "Web Application",
+          type: "digital_art",
+          status: "completed",
+          progress: 100,
+          sessions: 5,
+          lastSession: "1 day ago",
+          thumbnail:
+            "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=150&h=150&fit=crop&crop=center",
+        },
+        {
+          id: 4,
+          title: "Digital Artwork",
+          type: "digital_art",
+          status: "completed",
+          progress: 100,
+          sessions: 4,
+          lastSession: "2 days ago",
+          thumbnail:
+            "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=150&h=150&fit=crop&crop=center",
+        },
+      ],
+    }),
+    [],
+  );
 
-  // Mock data untuk analytics
-  const analyticsData = {
-    overview: {
-      totalProjects: 24,
-      totalCertificates: 18,
-      totalHours: 156,
-      totalActions: 2847,
-      activeUsers: 3,
-      completionRate: 85,
-    },
-    trends: {
-      projectsGrowth: 12.5,
-      certificatesGrowth: 8.3,
-      hoursGrowth: -2.1,
-      actionsGrowth: 15.7,
-    },
-    monthlyData: [
-      { month: "Jan", projects: 4, certificates: 3, hours: 45 },
-      { month: "Feb", projects: 6, certificates: 5, hours: 52 },
-      { month: "Mar", projects: 8, certificates: 7, hours: 48 },
-      { month: "Apr", projects: 6, certificates: 3, hours: 11 },
-    ],
-
-    projects: [
-      {
-        id: 1,
-        title: "Abstract Composition",
-        type: "digital_art",
-        status: "completed",
-        progress: 100,
-        sessions: 3,
-        lastSession: "2 hours ago",
-        thumbnail:
-          "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=150&h=150&fit=crop&crop=center",
-      },
-      {
-        id: 2,
-        title: "Landscape Painting",
-        type: "traditional_art",
-        status: "in_progress",
-        progress: 75,
-        sessions: 2,
-        lastSession: "4 hours ago",
-        thumbnail:
-          "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=150&h=150&fit=crop&crop=center",
-      },
-      {
-        id: 3,
-        title: "Web Application",
-        type: "digital_art",
-        status: "completed",
-        progress: 100,
-        sessions: 5,
-        lastSession: "1 day ago",
-        thumbnail:
-          "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=150&h=150&fit=crop&crop=center",
-      },
-      {
-        id: 4,
-        title: "Digital Artwork",
-        type: "digital_art",
-        status: "completed",
-        progress: 100,
-        sessions: 4,
-        lastSession: "2 days ago",
-        thumbnail:
-          "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=150&h=150&fit=crop&crop=center",
-      },
-    ],
-  };
-
-  const getGrowthIcon = (value: number) => {
+  const getGrowthIcon = useCallback((value: number) => {
     if (value > 0)
       return (
         <ArrowUpRight size={16} strokeWidth={2} className="text-success" />
@@ -113,13 +109,13 @@ const AnalyticsPage: React.FC = () => {
         <ArrowDownRight size={16} strokeWidth={2} className="text-error" />
       );
     return <Minus size={16} strokeWidth={2} className="text-secondary" />;
-  };
+  }, []);
 
-  const getGrowthColor = (value: number) => {
+  const getGrowthColor = useCallback((value: number) => {
     if (value > 0) return "var(--color-success)";
     if (value < 0) return "var(--color-error)";
     return "var(--color-text-secondary)";
-  };
+  }, []);
 
   return (
     <div className="analytics">

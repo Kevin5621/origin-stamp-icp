@@ -85,12 +85,11 @@
 }
 
 .transformable-notification__icon {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   opacity: 1;
-  transform: scale(1) rotate(0deg);
+  transform: scale(1);
   position: relative;
   z-index: 2;
-  will-change: transform, opacity;
 }
 
 @keyframes pulse {
@@ -121,8 +120,7 @@
     -12px -12px 24px var(--color-shadow-light);
   border: 1px solid var(--color-border);
   z-index: 1002;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, transform;
+  transition: all 0.3s ease;
   overflow: hidden;
   display: flex;
   flex-direction: column;

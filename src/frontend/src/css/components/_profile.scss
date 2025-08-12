@@ -42,16 +42,12 @@
   font-weight: 600;
   font-size: 0.875rem;
   letter-spacing: 0.025em;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   box-shadow:
     6px 6px 12px var(--color-shadow-dark),
     -6px -6px 12px var(--color-shadow-light);
   position: relative;
   overflow: hidden;
-  transform-origin: center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, width, height, border-radius;
   transform: scale(1);
 }
 
@@ -60,7 +56,7 @@
   box-shadow:
     8px 8px 16px var(--color-shadow-dark),
     -8px -8px 16px var(--color-shadow-light);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
 }
 
 .transformable-avatar--expanded .transformable-avatar__circle:hover {
@@ -68,7 +64,7 @@
   box-shadow:
     12px 12px 24px var(--color-shadow-dark),
     -12px -12px 24px var(--color-shadow-light);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
 }
 
 .transformable-avatar__initials {
