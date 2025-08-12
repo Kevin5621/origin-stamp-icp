@@ -34,37 +34,49 @@ export const TransformableAvatar: React.FC<TransformableAvatarProps> = ({
     <div
       className={`transformable-avatar ${isExpanded ? "transformable-avatar--expanded" : ""} ${className}`}
     >
-      <button
+      <div
         onClick={onToggle}
         className="transformable-avatar__button"
+        role="button"
+        tabIndex={0}
         aria-label={isExpanded ? t("close_profile") : t("open_profile")}
         title={isExpanded ? t("close_profile") : t("open_profile")}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onToggle();
+          }
+        }}
       >
         <div className="transformable-avatar__circle">
           <span className="transformable-avatar__initials">{initials}</span>
 
           {isExpanded && (
             <>
-              <button
-                onClick={onLogout}
-                className="profile-card__logout-btn profile-card__logout-btn--floating"
-                aria-label={t("logout")}
-                title={t("logout")}
-                type="button"
-              >
-                <LogOut size={16} strokeWidth={2} />
-              </button>
               <div className="transformable-avatar__content">
                 <ProfileCard
                   user={user}
-                  onLogout={() => {}}
+                  onLogout={onLogout}
                   onSettings={onSettings}
                 />
               </div>
             </>
           )}
         </div>
-      </button>
+      </div>
+
+      {/* Logout button dipindah ke luar button utama */}
+      {isExpanded && (
+        <button
+          onClick={onLogout}
+          className="profile-card__logout-btn profile-card__logout-btn--floating"
+          aria-label={t("logout")}
+          title={t("logout")}
+          type="button"
+        >
+          <LogOut size={16} strokeWidth={2} />
+        </button>
+      )}
     </div>
   );
 };
