@@ -31,55 +31,48 @@ const SessionPage: React.FC = () => {
   const { t } = useTranslation("session");
   const navigate = useNavigate();
   const [sessions, setSessions] = useState<SessionData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Load active sessions (dummy data)
+  // Load active sessions (dummy data) - langsung load tanpa loading state
   useEffect(() => {
-    // Simulate API call delay
-    setTimeout(() => {
-      // Mock data - bisa diubah untuk testing empty state
-      // Set ke [] untuk testing empty state
-      const mockSessions: SessionData[] = [
-        {
-          id: "1",
-          title: t("session.mock_data.landscape_painting_study_title"),
-          description: t(
-            "session.mock_data.landscape_painting_study_description",
-          ),
-          artType: "physical",
-          createdAt: new Date(2024, 7, 1),
-          updatedAt: new Date(2024, 7, 2),
-          status: "active",
-          photoCount: 12,
-        },
-        {
-          id: "2",
-          title: t("session.mock_data.digital_portrait_series_title"),
-          description: t(
-            "session.mock_data.digital_portrait_series_description",
-          ),
-          artType: "digital",
-          createdAt: new Date(2024, 7, 3),
-          updatedAt: new Date(2024, 7, 3),
-          status: "active",
-          photoCount: 8,
-        },
-        {
-          id: "3",
-          title: t("session.mock_data.sculpture_progress_title"),
-          description: t("session.mock_data.sculpture_progress_description"),
-          artType: "physical",
-          createdAt: new Date(2024, 6, 28),
-          updatedAt: new Date(2024, 7, 1),
-          status: "completed",
-          photoCount: 25,
-        },
-      ];
+    // Mock data - bisa diubah untuk testing empty state
+    // Set ke [] untuk testing empty state
+    const mockSessions: SessionData[] = [
+      {
+        id: "1",
+        title: t("session.mock_data.landscape_painting_study_title"),
+        description: t(
+          "session.mock_data.landscape_painting_study_description",
+        ),
+        artType: "physical",
+        createdAt: new Date(2024, 7, 1),
+        updatedAt: new Date(2024, 7, 2),
+        status: "active",
+        photoCount: 12,
+      },
+      {
+        id: "2",
+        title: t("session.mock_data.digital_portrait_series_title"),
+        description: t("session.mock_data.digital_portrait_series_description"),
+        artType: "digital",
+        createdAt: new Date(2024, 7, 3),
+        updatedAt: new Date(2024, 7, 3),
+        status: "active",
+        photoCount: 8,
+      },
+      {
+        id: "3",
+        title: t("session.mock_data.sculpture_progress_title"),
+        description: t("session.mock_data.sculpture_progress_description"),
+        artType: "physical",
+        createdAt: new Date(2024, 6, 28),
+        updatedAt: new Date(2024, 7, 1),
+        status: "completed",
+        photoCount: 25,
+      },
+    ];
 
-      // Untuk testing empty state, ganti dengan: setSessions([]);
-      setSessions(mockSessions);
-      setIsLoading(false);
-    }, 800);
+    // Untuk testing empty state, ganti dengan: setSessions([]);
+    setSessions(mockSessions);
   }, [t]);
 
   const handleContinueSession = (sessionId: string) => {
@@ -114,17 +107,6 @@ const SessionPage: React.FC = () => {
       </span>
     );
   };
-
-  if (isLoading) {
-    return (
-      <div className="session">
-        <div className="session__loading">
-          <div className="loading-spinner" />
-          <p>{t("session.loading_sessions")}</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="session">
