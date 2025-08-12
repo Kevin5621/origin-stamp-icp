@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -18,28 +18,11 @@ import {
   Award,
 } from "lucide-react";
 import { KaryaService } from "../../services/artService";
-import { KaryaWithLogs } from "../../types/karya";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
-import { Loader } from "../../components/common/Loader";
+import { usePreloadData } from "../../hooks/usePreloadData";
+import { DashboardLoader } from "../../components/common/DashboardLoader";
 import { Button } from "../../components/common/Button";
 import { Card } from "../../components/common/Card";
-
-interface AnalyticsData {
-  views: number;
-  engagement: number;
-  completion_rate: number;
-  avg_session_duration: number;
-  price_history: PricePoint[];
-  performance_metrics: PerformanceMetric[];
-  audience_demographics: AudienceData;
-  verification_score: number;
-}
-
-interface PricePoint {
-  date: string;
-  value: number;
-  volume: number;
-}
 
 interface PerformanceMetric {
   metric: string;
@@ -48,72 +31,47 @@ interface PerformanceMetric {
   trend: "up" | "down" | "stable";
 }
 
-interface AudienceData {
-  age_groups: { age: string; percentage: number }[];
-  locations: { location: string; percentage: number }[];
-  interests: { interest: string; percentage: number }[];
-}
-
 const AnalyticsDetailPage: React.FC = () => {
   const { karyaId } = useParams<{ karyaId: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { handleError, safeExecute } = useErrorHandler({
+  useErrorHandler({
     context: "AnalyticsDetailPage",
   });
 
-  const [karya, setKarya] = useState<KaryaWithLogs | null>(null);
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
-    null,
-  );
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
     "overview" | "performance" | "audience" | "verification"
   >("overview");
 
-  // Load analytics data from service
-  const loadAnalyticsData = async (
-    karyaId: string,
-  ): Promise<AnalyticsData | null> => {
-    const analyticsData = await KaryaService.getKaryaAnalytics(karyaId);
-    if (!analyticsData) return null;
+  // Preload data dengan caching dan background fetch
+  const { data: karya, loading: karyaLoading } = usePreloadData(
+    `karya-${karyaId}`,
+    () => KaryaService.getKaryaById(karyaId!),
+    { immediate: !!karyaId, background: true },
+  );
 
-    return {
-      views: analyticsData.views,
-      engagement: analyticsData.engagement,
-      completion_rate: analyticsData.completion_rate,
-      avg_session_duration: analyticsData.avg_session_duration,
-      price_history: analyticsData.price_history,
-      performance_metrics:
-        analyticsData.performance_metrics as PerformanceMetric[],
-      audience_demographics: analyticsData.audience_demographics,
-      verification_score: analyticsData.verification_score,
-    };
-  };
+  const { data: analyticsData, loading: analyticsLoading } = usePreloadData(
+    `analytics-${karyaId}`,
+    async () => {
+      const analyticsData = await KaryaService.getKaryaAnalytics(karyaId!);
+      if (!analyticsData) return null;
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (!karyaId) return;
+      return {
+        views: analyticsData.views,
+        engagement: analyticsData.engagement,
+        completion_rate: analyticsData.completion_rate,
+        avg_session_duration: analyticsData.avg_session_duration,
+        price_history: analyticsData.price_history,
+        performance_metrics:
+          analyticsData.performance_metrics as PerformanceMetric[],
+        audience_demographics: analyticsData.audience_demographics,
+        verification_score: analyticsData.verification_score,
+      };
+    },
+    { immediate: !!karyaId && !!karya, background: true },
+  );
 
-      try {
-        setLoading(true);
-        const karyaData = await KaryaService.getKaryaById(karyaId);
-        if (karyaData) {
-          setKarya(karyaData);
-          const analytics = await loadAnalyticsData(karyaId);
-          if (analytics) {
-            setAnalyticsData(analytics);
-          }
-        }
-      } catch (error) {
-        handleError(error as Error, "loadData");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    safeExecute(loadData, "loadData");
-  }, [karyaId]);
+  const loading = karyaLoading || analyticsLoading;
 
   const handleBack = () => {
     navigate(-1);
@@ -146,10 +104,7 @@ const AnalyticsDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="analytics-detail-page">
-        <div className="analytics-detail-page__loading">
-          <Loader />
-          <p>{t("loading_analytics")}</p>
-        </div>
+        <DashboardLoader message={t("loading_analytics")} variant="skeleton" />
       </div>
     );
   }

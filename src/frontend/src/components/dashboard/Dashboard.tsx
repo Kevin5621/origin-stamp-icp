@@ -61,24 +61,24 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
     {
       id: "start-session",
       icon: Camera,
-      title: t("start_session") || "Start Session",
-      description: t("start_session_desc") || "Begin physical art session",
+      title: t("start_session"),
+      description: t("start_session_desc"),
       onClick: () => navigate("/sessions/new"),
       gradient: "from-blue-500 to-cyan-500",
     },
     {
       id: "view-collection",
       icon: Eye,
-      title: t("view_collection") || "View Collection",
-      description: t("view_collection_desc") || "Browse verified artworks",
+      title: t("view_collection"),
+      description: t("view_collection_desc"),
       onClick: () => navigate("/marketplace"),
       gradient: "from-purple-500 to-pink-500",
     },
     {
       id: "analytics",
       icon: BarChart3,
-      title: t("analytics") || "Analytics",
-      description: t("analytics_desc") || "View verification metrics",
+      title: t("analytics"),
+      description: t("analytics_desc"),
       onClick: () => navigate("/analytics"),
       gradient: "from-orange-500 to-red-500",
     },
@@ -88,8 +88,7 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
     return (
       <div className="dashboard">
         <div className="dashboard__loading">
-          <div className="loading-spinner" />
-          <p>{t("loading") || "Loading OriginStamp Dashboard..."}</p>
+          <p>{t("loading_dashboard")}</p>
         </div>
       </div>
     );
@@ -102,31 +101,31 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
         <div className="dashboard__hero">
           <div className="hero__content">
             <div className="hero__greeting">
-              <h1 className="hero__title">
-                Hi, <span className="hero__name">Artist</span>! 👋
-              </h1>
-              <p className="hero__subtitle">
-                Ready to create something amazing today?
-              </p>
+              <h1 className="hero__title">{t("hero_greeting")}</h1>
+              <p className="hero__subtitle">{t("hero_subtitle")}</p>
             </div>
             <div className="hero__stats">
               <div className="hero-stat">
                 <div className="hero-stat__number">
                   {stats?.totalArtworks || 0}
                 </div>
-                <div className="hero-stat__label">Artworks</div>
+                <div className="hero-stat__label">
+                  {t("hero_stats_artworks")}
+                </div>
               </div>
               <div className="hero-stat">
                 <div className="hero-stat__number">
                   {stats?.verifiedArtworks || 0}
                 </div>
-                <div className="hero-stat__label">Verified</div>
+                <div className="hero-stat__label">
+                  {t("hero_stats_verified")}
+                </div>
               </div>
               <div className="hero-stat">
                 <div className="hero-stat__number">
                   {stats?.activeSessions || 0}
                 </div>
-                <div className="hero-stat__label">Active</div>
+                <div className="hero-stat__label">{t("hero_stats_active")}</div>
               </div>
             </div>
           </div>
@@ -136,7 +135,7 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
               onClick={() => navigate("/create-session")}
             >
               <Plus size={16} />
-              <span>Create New</span>
+              <span>{t("hero_create_button")}</span>
               <Sparkles size={14} />
             </button>
           </div>
@@ -171,14 +170,13 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
         {/* Recent Artworks - Layout konsisten */}
         <div className="dashboard__recent-artworks">
           <div className="recent-artworks__header">
-            <h3 className="recent-artworks__title">
-              {t("recent_artworks") || "Recent Artworks"}
-            </h3>
+            <h3 className="recent-artworks__title">{t("recent_artworks")}</h3>
             <button
               className="recent-artworks__view-all"
               onClick={() => navigate("/marketplace")}
             >
-              View All <ArrowRight size={12} /> {/* Ikon arrow lebih kecil */}
+              {t("recent_artworks_view_all")} <ArrowRight size={12} />{" "}
+              {/* Ikon arrow lebih kecil */}
             </button>
           </div>
           <div className="recent-artworks__grid">
