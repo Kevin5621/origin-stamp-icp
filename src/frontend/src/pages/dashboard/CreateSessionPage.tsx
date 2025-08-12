@@ -1,5 +1,5 @@
 // src/frontend/src/pages/dashboard/CreateSessionPage.tsx
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Camera, Palette } from "lucide-react";
@@ -15,7 +15,7 @@ const CreateSessionPage: React.FC = () => {
   const [artType, setArtType] = useState<"physical" | "digital">("physical");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const handleCreateSession = () => {
+  const handleCreateSession = useCallback(() => {
     // Reset errors
     setErrors({});
 
@@ -36,7 +36,7 @@ const CreateSessionPage: React.FC = () => {
 
     // Redirect ke halaman recording session
     navigate(`/sessions/${sessionId}`);
-  };
+  }, [sessionTitle, t, navigate]);
 
   return (
     <div className="create-session">
@@ -69,8 +69,8 @@ const CreateSessionPage: React.FC = () => {
                     <Camera size={24} />
                   </div>
                   <div className="art-type-content">
-                    <h4>{t("physical_art_title")}</h4>
-                    <p>Traditional media like painting, sculpture, drawing</p>
+                    <h4>{t("physical_art_option_title")}</h4>
+                    <p>{t("physical_art_option_description")}</p>
                   </div>
                 </button>
                 <button
@@ -82,8 +82,8 @@ const CreateSessionPage: React.FC = () => {
                     <Palette size={24} />
                   </div>
                   <div className="art-type-content">
-                    <h4>{t("digital_art_title")}</h4>
-                    <p>Digital tools like Photoshop, Procreate, 3D software</p>
+                    <h4>{t("digital_art_option_title")}</h4>
+                    <p>{t("digital_art_option_description")}</p>
                   </div>
                 </button>
               </div>
@@ -122,7 +122,7 @@ const CreateSessionPage: React.FC = () => {
                 id="session-description"
                 value={sessionDescription}
                 onChange={(e) => setSessionDescription(e.target.value)}
-                placeholder="Describe your creative session, goals, or inspiration..."
+                placeholder={t("describe_session_placeholder")}
                 className="form-textarea"
                 rows={4}
               />
@@ -134,11 +134,11 @@ const CreateSessionPage: React.FC = () => {
                 className="btn-cancel"
                 onClick={() => navigate("/session")}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button className="btn-create" onClick={handleCreateSession}>
                 <Plus size={16} />
-                Create Session
+                {t("create_session_button")}
               </button>
             </div>
           </div>
