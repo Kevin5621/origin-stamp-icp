@@ -131,7 +131,7 @@ const LoginPage: React.FC = () => {
                 </button>
                 <button
                   onClick={handleGoogleLogin}
-                  className="auth-page-btn auth-page-btn--google"
+                  className="auth-page-btn auth-page-btn--icp"
                 >
                   <img
                     src="/assets/google-logo.svg"
@@ -142,7 +142,7 @@ const LoginPage: React.FC = () => {
                 </button>
                 <button
                   onClick={handleShowCustomLogin}
-                  className="auth-page-btn auth-page-btn--custom"
+                  className="auth-page-btn auth-page-btn--icp"
                 >
                   <span>{t("login_with_username_password")}</span>
                 </button>

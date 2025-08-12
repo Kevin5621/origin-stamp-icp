@@ -326,7 +326,7 @@ export function Login({ className = "" }: LoginProps) {
 
                     <button
                       onClick={handleGoogleLogin}
-                      className="auth-btn auth-btn--google"
+                      className="auth-btn auth-btn--icp"
                       aria-label={t("login_with_google")}
                     >
                       <img
@@ -340,7 +340,7 @@ export function Login({ className = "" }: LoginProps) {
 
                     <button
                       onClick={handleShowCustomLogin}
-                      className="auth-btn auth-btn--custom"
+                      className="auth-btn auth-btn--icp"
                       aria-label={t("login_with_username_password")}
                     >
                       <span>{t("login_with_username_password")}</span>
