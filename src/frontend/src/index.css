@@ -4,6 +4,7 @@
 @import "./css/settings/_settings.scss";
 
 /* Component styles */
+@import "./css/components/_sidebar.scss";
 @import "./css/components/_dashboard.scss";
 @import "./css/components/_artwork-card.scss";
 @import "./css/components/_session.scss";
