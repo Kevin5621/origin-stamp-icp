@@ -72,11 +72,23 @@ const LandingPage: React.FC = () => {
       const documentHeight =
         document.documentElement.scrollHeight - windowHeight;
       const scrolled = e.scroll;
+
+      // Validasi nilai scroll untuk mencegah error
+      if (
+        typeof scrolled !== "number" ||
+        isNaN(scrolled) ||
+        documentHeight <= 0
+      ) {
+        setScrollProgress(0);
+        return;
+      }
+
       const normalizedProgress = Math.min(
         Math.max(0, scrolled / documentHeight),
         1,
       );
       setScrollProgress(normalizedProgress);
+
       const layout = document.querySelector(".landing-layout");
       if (layout) {
         const scrollProgressCSS = Math.min(Math.floor(scrolled / 500), 4);
