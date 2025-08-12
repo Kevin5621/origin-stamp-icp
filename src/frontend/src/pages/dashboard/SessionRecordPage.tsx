@@ -14,7 +14,7 @@ import {
   Plus,
   Sparkles,
 } from "lucide-react";
-import { useToast } from "../../contexts/ToastContext";
+import { useToastContext } from "../../contexts/ToastContext";
 
 // Types for photo logs
 interface PhotoLog {
@@ -46,7 +46,7 @@ interface SessionData {
 const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
-  const { addToast } = useToast();
+  const { addToast } = useToastContext();
   const { t } = useTranslation("session");
 
   const [session, setSession] = useState<SessionData | null>(null);
@@ -63,11 +63,6 @@ const SessionRecordPage: React.FC = () => {
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
   const cancelRef = useRef<boolean>(false);
 
-  // Debug effect untuk melihat perubahan location
-  useEffect(() => {
-    console.log("SessionPage location changed to:", location.pathname);
-  }, [location.pathname]);
-
   // Reset progress states when selectedFiles changes
   useEffect(() => {
     if (!selectedFiles) {
@@ -80,18 +75,6 @@ const SessionRecordPage: React.FC = () => {
       setIsCancelling(false);
     }
   }, [selectedFiles]);
-
-  // Debug shouldCancelUpload changes
-  useEffect(() => {
-    console.log("shouldCancelUpload changed to:", shouldCancelUpload);
-
-    // If cancelled, reset progress immediately for visual feedback
-    if (shouldCancelUpload) {
-      console.log("Resetting progress due to cancellation");
-      setUploadProgress(0);
-      setUploadedFiles(0);
-    }
-  }, [shouldCancelUpload]);
 
   // Load session data (dummy data)
   useEffect(() => {

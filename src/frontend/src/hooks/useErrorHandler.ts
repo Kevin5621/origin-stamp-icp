@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useToast } from "../contexts/ToastContext";
+import { useToastContext } from "../contexts/ToastContext";
 
 interface ErrorHandlerOptions {
   /** Custom error handler function */
@@ -44,7 +44,7 @@ interface ErrorHandlerOptions {
  * ```
  */
 export const useErrorHandler = (options: ErrorHandlerOptions = {}) => {
-  const toast = useToast();
+  const toast = useToastContext();
   const { t } = useTranslation("common");
 
   const getErrorMessage = useCallback(
@@ -98,16 +98,6 @@ export const useErrorHandler = (options: ErrorHandlerOptions = {}) => {
 
   const handleError = useCallback(
     (error: Error, context?: string) => {
-      const errorContext = context || options.context || "component";
-
-      // Log error untuk debugging dengan informasi yang lebih detail
-      console.error(`[${new Date().toISOString()}] Error in ${errorContext}:`, {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-        context: errorContext,
-      });
-
       // Call custom error handler jika ada
       if (options.onError) {
         options.onError(error, context);

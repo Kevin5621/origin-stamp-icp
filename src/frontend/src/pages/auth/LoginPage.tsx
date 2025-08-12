@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { useToast } from "../../contexts/ToastContext";
+import { useToastContext } from "../../contexts/ToastContext";
 import { LoginForm } from "../../components/login/LoginForm";
 import { useTranslation } from "react-i18next";
 import { AuthClient } from "@dfinity/auth-client";
@@ -14,7 +14,7 @@ import { googleAuthService } from "../../services/googleAuth";
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
-  const { success, error } = useToast();
+  const { success, error } = useToastContext();
   const { isAuthenticated, loginWithInternetIdentity, loginWithGoogle } =
     useAuth();
   const [showCustomLogin, setShowCustomLogin] = useState(false);
