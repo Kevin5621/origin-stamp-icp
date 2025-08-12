@@ -30,7 +30,7 @@
 
   /* Additional outline for better light theme visibility */
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -1px;
     left: -1px;
@@ -192,7 +192,11 @@
 
       &:hover {
         .logo-text {
-          background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary-text) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--color-accent) 0%,
+            var(--color-primary-text) 100%
+          );
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -208,7 +212,11 @@
       letter-spacing: -0.015em;
       transition: all 0.3s ease;
       text-transform: uppercase;
-      background: linear-gradient(135deg, var(--color-primary-text) 0%, var(--color-accent) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--color-primary-text) 0%,
+        var(--color-accent) 100%
+      );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
