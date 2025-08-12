@@ -18,7 +18,13 @@ const CameraController: React.FC<{
   scrollProgress: number;
   enabled: boolean;
 }> = ({ scrollProgress, enabled }) => {
-  useCameraAnimation({ scrollProgress, enabled });
+  // Validasi scrollProgress untuk mencegah error
+  const safeScrollProgress =
+    typeof scrollProgress === "number" && !isNaN(scrollProgress)
+      ? Math.max(0, Math.min(1, scrollProgress))
+      : 0;
+
+  useCameraAnimation({ scrollProgress: safeScrollProgress, enabled });
   return null;
 };
 

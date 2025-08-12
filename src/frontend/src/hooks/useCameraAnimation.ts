@@ -95,10 +95,25 @@ export const useCameraAnimation = ({
   const currentLookAt = useRef(new Vector3());
   const currentFOV = useRef(75);
 
+  // Validasi scrollProgress untuk mencegah error
+  const safeScrollProgress = Math.max(0, Math.min(1, scrollProgress || 0));
+
   // Setup posisi awal kamera dari posisi pertama
   useEffect(() => {
     if (!enabled) return;
+
+    // Pastikan CAMERA_POSITIONS tersedia dan valid
+    if (!CAMERA_POSITIONS || CAMERA_POSITIONS.length === 0) {
+      console.warn("CAMERA_POSITIONS tidak tersedia");
+      return;
+    }
+
     const initialPos = CAMERA_POSITIONS[0];
+    if (!initialPos || !initialPos.position || !initialPos.target) {
+      console.warn("Posisi awal kamera tidak valid");
+      return;
+    }
+
     camera.position.set(...initialPos.position);
     camera.lookAt(...initialPos.target);
     if ("fov" in camera) {
@@ -114,12 +129,31 @@ export const useCameraAnimation = ({
   // Dengan 6 posisi, transisi menjadi lebih halus dan fokus
   useEffect(() => {
     if (!enabled) return;
-    const progress = scrollProgress * (CAMERA_POSITIONS.length - 1);
+
+    // Validasi CAMERA_POSITIONS
+    if (!CAMERA_POSITIONS || CAMERA_POSITIONS.length === 0) {
+      return;
+    }
+
+    const progress = safeScrollProgress * (CAMERA_POSITIONS.length - 1);
     const currentIndex = Math.floor(progress);
     const nextIndex = Math.min(currentIndex + 1, CAMERA_POSITIONS.length - 1);
     const lerpFactor = progress - currentIndex;
+
     const currentPos = CAMERA_POSITIONS[currentIndex];
     const nextPos = CAMERA_POSITIONS[nextIndex];
+
+    // Validasi posisi kamera
+    if (
+      !currentPos ||
+      !nextPos ||
+      !currentPos.position ||
+      !nextPos.position ||
+      !currentPos.target ||
+      !nextPos.target
+    ) {
+      return;
+    }
 
     // Interpolasi posisi kamera untuk transisi yang halus
     const interpolatedPosition = [
@@ -148,7 +182,7 @@ export const useCameraAnimation = ({
     targetPosition.current.set(...interpolatedPosition);
     targetLookAt.current.set(...interpolatedTarget);
     targetFOV.current = interpolatedFOV;
-  }, [scrollProgress, enabled]);
+  }, [safeScrollProgress, enabled]);
 
   // Update frame-by-frame untuk animasi yang halus
   // Dengan 6 posisi, transisi menjadi lebih responsif
@@ -175,13 +209,17 @@ export const useCameraAnimation = ({
 
   return {
     currentCameraPosition: (() => {
-      const progress = scrollProgress * (CAMERA_POSITIONS.length - 1);
+      // Validasi sebelum mengakses array
+      if (!CAMERA_POSITIONS || CAMERA_POSITIONS.length === 0) {
+        return null;
+      }
+
+      const progress = safeScrollProgress * (CAMERA_POSITIONS.length - 1);
       const currentIndex = Math.floor(progress);
-      return CAMERA_POSITIONS[
-        Math.min(currentIndex, CAMERA_POSITIONS.length - 1)
-      ];
+      const safeIndex = Math.min(currentIndex, CAMERA_POSITIONS.length - 1);
+      return CAMERA_POSITIONS[safeIndex];
     })(),
     cameraPositions: CAMERA_POSITIONS,
-    scrollSectionProgress: scrollProgress * (CAMERA_POSITIONS.length - 1),
+    scrollSectionProgress: safeScrollProgress * (CAMERA_POSITIONS.length - 1),
   };
 };
