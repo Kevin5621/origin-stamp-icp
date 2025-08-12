@@ -78,13 +78,15 @@ const LoginPage: React.FC = () => {
         onError: (err) => {
           console.error("Internet Identity login failed:", err);
           error(
-            t("login_failed", { message: "Internet Identity login failed" }),
+            t("login_failed", { message: t("internet_identity_login_failed") }),
           );
         },
       });
     } catch (err) {
       console.error("Error during Internet Identity login:", err);
-      error(t("login_failed", { message: "Internet Identity login failed" }));
+      error(
+        t("login_failed", { message: t("internet_identity_login_failed") }),
+      );
     }
   };
 
@@ -98,19 +100,6 @@ const LoginPage: React.FC = () => {
     } catch (err) {
       console.error("Google login failed:", err);
       error(t("login_failed", { message: t("google_login_failed") }));
-    }
-  };
-
-  // Implement registration with Gmail (Google)
-  const handleGoogleSignup = async () => {
-    try {
-      const userInfo = await googleAuthService.signUp();
-      loginWithGoogle(userInfo);
-      navigate("/dashboard");
-      success(t("register_success"));
-    } catch (err) {
-      console.error("Google signup failed:", err);
-      error(t("register_failed", { message: t("google_signup_failed") }));
     }
   };
 
@@ -150,20 +139,6 @@ const LoginPage: React.FC = () => {
                     className="auth-page-btn-icon"
                   />
                   <span>{t("login_with_google")}</span>
-                </button>
-                <div className="auth-page-divider">
-                  <span>{t("or")}</span>
-                </div>
-                <button
-                  onClick={handleGoogleSignup}
-                  className="auth-page-btn auth-page-btn--signup"
-                >
-                  <img
-                    src="/assets/google-logo.svg"
-                    alt="Google"
-                    className="auth-page-btn-icon"
-                  />
-                  <span>{t("signup_with_google")}</span>
                 </button>
                 <button
                   onClick={handleShowCustomLogin}

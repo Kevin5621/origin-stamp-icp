@@ -216,20 +216,6 @@ export function Login({ className = "" }: LoginProps) {
     }
   }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
 
-  // Implement registration with Gmail (Google)
-  const handleGoogleSignup = useCallback(async () => {
-    try {
-      const userInfo = await googleAuthService.signUp();
-      loginWithGoogle(userInfo);
-      handleCloseModal();
-      navigate("/dashboard");
-      success(t("register_success"));
-    } catch (err) {
-      console.error("Google signup failed:", err);
-      error(t("register_failed", { message: t("google_signup_failed") }));
-    }
-  }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
-
   // Render transformable avatar jika sudah login
   if (isAuthenticated && user) {
     return (
@@ -350,24 +336,6 @@ export function Login({ className = "" }: LoginProps) {
                         aria-hidden="true"
                       />
                       <span>{t("login_with_google")}</span>
-                    </button>
-
-                    <div className="auth-divider" role="separator">
-                      <span>{t("or")}</span>
-                    </div>
-
-                    <button
-                      onClick={handleGoogleSignup}
-                      className="auth-btn auth-btn--signup"
-                      aria-label={t("signup_with_google")}
-                    >
-                      <img
-                        src="/assets/google-logo.svg"
-                        alt=""
-                        className="auth-btn-icon"
-                        aria-hidden="true"
-                      />
-                      <span>{t("signup_with_google")}</span>
                     </button>
 
                     <button

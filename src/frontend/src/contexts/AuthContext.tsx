@@ -67,14 +67,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const identity = client.getIdentity();
           const principal = identity.getPrincipal().toString();
 
-          const userData = {
-            username: `User ${principal.slice(0, 8)}...`,
-            loginTime: new Date().toLocaleString(),
-            principal,
-            loginMethod: "icp" as const,
-          };
-          setUser(userData);
-          localStorage.setItem("auth-user", JSON.stringify(userData));
+          // Only auto-login if no user is already logged in or if the current user is ICP
+          const savedUser = localStorage.getItem("auth-user");
+          const currentUser = savedUser ? JSON.parse(savedUser) : null;
+
+          if (!currentUser || currentUser.loginMethod === "icp") {
+            const userData = {
+              username: `User ${principal.slice(0, 8)}...`,
+              loginTime: new Date().toLocaleString(),
+              principal,
+              loginMethod: "icp" as const,
+            };
+            setUser(userData);
+            localStorage.setItem("auth-user", JSON.stringify(userData));
+          }
         }
       } catch (error) {
         console.error("Error initializing AuthClient:", error);

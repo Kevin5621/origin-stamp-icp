@@ -96,7 +96,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       setResult(registerResult);
 
       if (registerResult.success) {
+        // Auto-login after successful registration
+        if (registerResult.username?.[0]) {
+          login(registerResult.username[0]);
+        }
+
         showToast("success", t("register_success"));
+
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        }
       } else {
         showToast(
           "error",
