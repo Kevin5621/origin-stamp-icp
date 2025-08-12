@@ -2,6 +2,20 @@
    COMPONENTS: FLOATING MINIMALIST SIDEBAR
    ============================================================================= */
 
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100vh;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: var(--z-index-fixed);
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .app-sidebar {
   width: 280px;
   background: rgba(var(--color-surface-rgb), 0.95);
@@ -15,7 +29,7 @@
   height: calc(100vh - 3rem);
   overflow-y: auto;
   overflow-x: visible;
-  z-index: 1050;
+  z-index: var(--z-index-fixed);
   padding: 1.5rem 0;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   box-sizing: border-box;
@@ -645,7 +659,7 @@
     top: 0;
     width: 280px;
     transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    z-index: 1000;
+    z-index: var(--z-index-fixed);
 
     &.sidebar-open {
       left: 0;
