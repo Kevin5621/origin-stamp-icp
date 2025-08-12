@@ -280,6 +280,7 @@ export class PhysicalArtService {
   ): Promise<PhysicalArtSession | null> {
     try {
       const result = await backend.get_session_details(sessionId);
+      // Result is [] | [PhysicalArtSession], so extract the session if it exists
       return result.length > 0 && result[0] ? result[0] : null;
     } catch (error) {
       console.error("Failed to get session details:", error);
@@ -293,10 +294,13 @@ export class PhysicalArtService {
   static async getUserSessions(
     username: string,
   ): Promise<PhysicalArtSession[]> {
+    console.log("PhysicalArtService: Getting sessions for user:", username);
     try {
-      return await backend.get_user_sessions(username);
+      const result = await backend.get_user_sessions(username);
+      console.log("PhysicalArtService: Backend returned sessions:", result);
+      return result;
     } catch (error) {
-      console.error("Failed to get user sessions:", error);
+      console.error("PhysicalArtService: Failed to get user sessions:", error);
       return [];
     }
   }

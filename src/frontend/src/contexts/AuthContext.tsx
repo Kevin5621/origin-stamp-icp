@@ -43,14 +43,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Load user from localStorage first (immediate authentication check)
   useEffect(() => {
+    console.log("AuthContext: Loading user from localStorage...");
     const savedUser = localStorage.getItem("auth-user");
+    console.log("AuthContext: Found saved user:", savedUser);
+
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        console.log("AuthContext: Parsed user:", parsedUser);
+        setUser(parsedUser);
       } catch (error) {
-        console.error("Error parsing saved user:", error);
+        console.error("AuthContext: Error parsing saved user:", error);
         localStorage.removeItem("auth-user");
       }
+    } else {
+      console.log("AuthContext: No saved user found");
     }
   }, []);
 

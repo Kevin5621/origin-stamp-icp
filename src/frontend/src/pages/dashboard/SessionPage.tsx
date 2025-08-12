@@ -11,8 +11,12 @@ import {
   Plus,
   FolderOpen,
 } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
+import PhysicalArtService, {
+  PhysicalArtSession,
+} from "../../services/physicalArtService";
 
-// Types for session management
+// Types for session management - Updated to match smart contract data
 interface SessionData {
   id: string;
   title: string;
@@ -20,67 +24,96 @@ interface SessionData {
   artType: "physical" | "digital";
   createdAt: Date;
   updatedAt: Date;
-  status: "active" | "completed";
+  status: "draft" | "active" | "completed";
   photoCount: number;
+  username: string;
 }
 
 /**
- * Session Page - Simplified untuk menampilkan session yang bisa dilanjutkan
+ * Session Page - Displays user sessions from smart contract
  */
 const SessionPage: React.FC = () => {
   const { t } = useTranslation("session");
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [sessions, setSessions] = useState<SessionData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Load active sessions (dummy data)
+  // Helper function to convert smart contract session to SessionData
+  const convertSmartContractSession = (
+    smartContractSession: PhysicalArtSession,
+  ): SessionData => {
+    return {
+      id: smartContractSession.session_id,
+      title: smartContractSession.art_title,
+      description: smartContractSession.description,
+      artType: "physical", // All sessions from smart contract are physical art
+      createdAt: new Date(Number(smartContractSession.created_at) / 1000000), // Convert nanoseconds to milliseconds
+      updatedAt: new Date(Number(smartContractSession.updated_at) / 1000000),
+      status: smartContractSession.status as "draft" | "active" | "completed",
+      photoCount: smartContractSession.uploaded_photos.length,
+      username: smartContractSession.username,
+    };
+  };
+
+  // Load sessions from smart contract
   useEffect(() => {
-    // Simulate API call delay
-    setTimeout(() => {
-      // Mock data - bisa diubah untuk testing empty state
-      // Set ke [] untuk testing empty state
-      const mockSessions: SessionData[] = [
-        {
-          id: "1",
-          title: t("session.mock_data.landscape_painting_study_title"),
-          description: t(
-            "session.mock_data.landscape_painting_study_description",
-          ),
-          artType: "physical",
-          createdAt: new Date(2024, 7, 1),
-          updatedAt: new Date(2024, 7, 2),
-          status: "active",
-          photoCount: 12,
-        },
-        {
-          id: "2",
-          title: t("session.mock_data.digital_portrait_series_title"),
-          description: t(
-            "session.mock_data.digital_portrait_series_description",
-          ),
-          artType: "digital",
-          createdAt: new Date(2024, 7, 3),
-          updatedAt: new Date(2024, 7, 3),
-          status: "active",
-          photoCount: 8,
-        },
-        {
-          id: "3",
-          title: t("session.mock_data.sculpture_progress_title"),
-          description: t("session.mock_data.sculpture_progress_description"),
-          artType: "physical",
-          createdAt: new Date(2024, 6, 28),
-          updatedAt: new Date(2024, 7, 1),
-          status: "completed",
-          photoCount: 25,
-        },
-      ];
+    const loadUserSessions = async () => {
+      console.log("SessionPage: Starting to load sessions...");
+      console.log("SessionPage: Current user:", user);
 
-      // Untuk testing empty state, ganti dengan: setSessions([]);
-      setSessions(mockSessions);
-      setIsLoading(false);
-    }, 800);
-  }, [t]);
+      // For testing - create a test user if none exists
+      if (!user?.username) {
+        console.log(
+          "SessionPage: No user found, creating test user for development",
+        );
+
+        // Check if there's a test user we can use
+        const testUser = {
+          username: "testuser",
+          loginTime: new Date().toISOString(),
+          loginMethod: "username" as const,
+        };
+
+        // Save to localStorage and manually set user for testing
+        localStorage.setItem("auth-user", JSON.stringify(testUser));
+
+        console.log(
+          "SessionPage: Test user created, please refresh or login properly",
+        );
+        setError(
+          "Please login or refresh the page to see sessions. For testing, user 'testuser' is available.",
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("SessionPage: Loading sessions for user:", user.username);
+
+      try {
+        setError(null);
+        const userSessions = await PhysicalArtService.getUserSessions(
+          user.username,
+        );
+        console.log("SessionPage: Raw sessions from backend:", userSessions);
+
+        const convertedSessions = userSessions.map(convertSmartContractSession);
+        console.log("SessionPage: Converted sessions:", convertedSessions);
+
+        setSessions(convertedSessions);
+      } catch (error) {
+        console.error("SessionPage: Failed to load sessions:", error);
+        setError("Failed to load sessions. Please try again.");
+        setSessions([]);
+      } finally {
+        setIsLoading(false);
+        console.log("SessionPage: Finished loading sessions");
+      }
+    };
+
+    loadUserSessions();
+  }, [user?.username]);
 
   const handleContinueSession = (sessionId: string) => {
     navigate(`/sessions/${sessionId}`);
@@ -104,16 +137,62 @@ const SessionPage: React.FC = () => {
 
   const getStatusBadge = (status: SessionData["status"]) => {
     const statusClasses = {
+      draft: "session__status--draft",
       active: "session__status--active",
       completed: "session__status--completed",
     };
 
+    const statusLabels = {
+      draft: t("session.status.draft"),
+      active: t("session.status.active"),
+      completed: t("session.status.completed"),
+    };
+
     return (
       <span className={`session__status ${statusClasses[status]}`}>
-        {status}
+        {statusLabels[status]}
       </span>
     );
   };
+
+  if (!user) {
+    return (
+      <div className="session">
+        <div className="session__loading">
+          <p>{t("session.please_login")}</p>
+          <div style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#666" }}>
+            <p>Debug: No user found in AuthContext</p>
+            <p>
+              Current localStorage auth-user:{" "}
+              {localStorage.getItem("auth-user") || "null"}
+            </p>
+            <button
+              onClick={() => {
+                const testUser = {
+                  username: "testuser",
+                  loginTime: new Date().toISOString(),
+                  loginMethod: "username" as const,
+                };
+                localStorage.setItem("auth-user", JSON.stringify(testUser));
+                window.location.reload();
+              }}
+              style={{
+                marginTop: "1rem",
+                padding: "0.5rem 1rem",
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Login as testuser (Development)
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -121,6 +200,22 @@ const SessionPage: React.FC = () => {
         <div className="session__loading">
           <div className="loading-spinner" />
           <p>{t("session.loading_sessions")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="session">
+        <div className="session__error">
+          <p>{error}</p>
+          <button
+            className="btn-retry"
+            onClick={() => window.location.reload()}
+          >
+            {t("session.retry")}
+          </button>
         </div>
       </div>
     );
@@ -229,6 +324,16 @@ const SessionPage: React.FC = () => {
                     </div>
 
                     <div className="session__session-actions">
+                      {session.status === "draft" && (
+                        <button
+                          className="btn-continue"
+                          onClick={() => handleContinueSession(session.id)}
+                        >
+                          <Play size={16} />
+                          {t("session.continue_session")}
+                        </button>
+                      )}
+
                       {session.status === "active" && (
                         <button
                           className="btn-continue"
@@ -255,6 +360,82 @@ const SessionPage: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Development Login Button */}
+        {process.env.NODE_ENV === "development" && (
+          <div
+            style={{
+              marginTop: "20px",
+              padding: "15px",
+              backgroundColor: "#f0f0f0",
+              borderRadius: "5px",
+            }}
+          >
+            <p>
+              <strong>Development Mode:</strong>
+            </p>
+            <button
+              onClick={() => {
+                const adminUser = {
+                  username: "admin",
+                  loginTime: new Date().toLocaleString(),
+                  loginMethod: "username" as const,
+                };
+                localStorage.setItem("auth-user", JSON.stringify(adminUser));
+                window.location.reload();
+              }}
+              style={{
+                backgroundColor: "#9C27B0",
+                color: "white",
+                padding: "8px 16px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                marginRight: "10px",
+              }}
+            >
+              Login as admin (has sessions now)
+            </button>
+            <button
+              onClick={() => {
+                const testUser = {
+                  username: "testuser",
+                  loginTime: new Date().toLocaleString(),
+                  loginMethod: "username" as const,
+                };
+                localStorage.setItem("auth-user", JSON.stringify(testUser));
+                window.location.reload();
+              }}
+              style={{
+                backgroundColor: "#2196F3",
+                color: "white",
+                padding: "8px 16px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                marginRight: "10px",
+              }}
+            >
+              Login as testuser
+            </button>
+            <button
+              onClick={() => {
+                localStorage.removeItem("auth-user");
+                window.location.reload();
+              }}
+              style={{
+                backgroundColor: "#f44336",
+                color: "white",
+                padding: "8px 16px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

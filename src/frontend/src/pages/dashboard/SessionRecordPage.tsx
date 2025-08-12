@@ -15,29 +15,38 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useToastContext } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
+import PhysicalArtService, {
+  PhysicalArtSession,
+} from "../../services/physicalArtService";
+import { backend } from "../../../../declarations/backend";
+import { Principal } from "@dfinity/principal";
 
-// Types for photo logs
+// Types for photo logs - updated to match smart contract
 interface PhotoLog {
   id: string;
   filename: string;
   timestamp: Date;
   description: string;
   fileSize: number;
-  url: string; // Preview URL
+  url: string; // Photo URL from smart contract
   step: number;
   s3Key?: string; // S3 storage key
 }
 
+// Updated interface to match smart contract data
 interface SessionData {
   id: string;
   title: string;
   description: string;
   artType: "physical" | "digital";
-  status: "active" | "completed";
+  status: "draft" | "active" | "completed";
   createdAt: Date;
   photos: PhotoLog[];
   currentStep: number;
   nftGenerated?: boolean;
+  username: string;
+  updatedAt: Date;
 }
 
 /**
@@ -47,9 +56,12 @@ const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
   const { addToast } = useToastContext();
+  const { user } = useAuth();
   const { t } = useTranslation("session");
 
   const [session, setSession] = useState<SessionData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [dragActive, setDragActive] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
@@ -65,8 +77,10 @@ const SessionRecordPage: React.FC = () => {
 
   // Debug effect untuk melihat perubahan location
   useEffect(() => {
-    console.log("SessionPage location changed to:", location.pathname);
-  }, [location.pathname]);
+    console.log("SessionRecordPage location changed to:", location.pathname);
+    console.log("Raw sessionId from useParams:", sessionId);
+    console.log("URL parameters:", window.location.pathname);
+  }, [sessionId]);
 
   // Reset progress states when selectedFiles changes
   useEffect(() => {
@@ -93,45 +107,108 @@ const SessionRecordPage: React.FC = () => {
     }
   }, [shouldCancelUpload]);
 
-  // Load session data (dummy data)
+  // Helper function to convert smart contract session to SessionData
+  const convertSmartContractSession = (
+    smartContractSession: PhysicalArtSession,
+  ): SessionData => {
+    // Convert uploaded photos to PhotoLog format
+    const photos: PhotoLog[] = smartContractSession.uploaded_photos.map(
+      (url, index) => ({
+        id: `photo-${index + 1}`,
+        filename: url.split("/").pop() || `photo-${index + 1}.jpg`,
+        timestamp: new Date(Number(smartContractSession.updated_at) / 1000000),
+        description: `Photo ${index + 1}`,
+        fileSize: 0, // File size not stored in smart contract
+        url: url,
+        step: index + 1,
+        s3Key: url.split("/").slice(-2).join("/"), // Extract S3 key from URL
+      }),
+    );
+
+    return {
+      id: smartContractSession.session_id,
+      title: smartContractSession.art_title,
+      description: smartContractSession.description,
+      artType: "physical",
+      status: smartContractSession.status as "draft" | "active" | "completed",
+      createdAt: new Date(Number(smartContractSession.created_at) / 1000000),
+      updatedAt: new Date(Number(smartContractSession.updated_at) / 1000000),
+      username: smartContractSession.username,
+      photos: photos,
+      currentStep: photos.length,
+      nftGenerated: false, // This would need to be checked against NFT records
+    };
+  };
+
+  // Load session data from smart contract
   useEffect(() => {
-    if (sessionId) {
-      const mockSession: SessionData = {
-        id: sessionId,
-        title: t("session.mock_data.landscape_painting_study_title"),
-        description: t(
-          "session.mock_data.landscape_painting_study_description",
-        ),
-        artType: "physical",
-        status: "active",
-        createdAt: new Date(2024, 7, 1),
-        currentStep: 1,
-        photos: [
-          {
-            id: "1",
-            filename: "initial-sketch.jpg",
-            timestamp: new Date(2024, 7, 1, 10, 30),
-            description: t("session.mock_data.initial_sketch_description"),
-            fileSize: 2.5 * 1024 * 1024,
-            url: "/api/placeholder/400/300",
-            step: 1,
-            s3Key: "sessions/1/photos/initial-sketch.jpg",
-          },
-          {
-            id: "2",
-            filename: "base-colors.jpg",
-            timestamp: new Date(2024, 7, 1, 11, 15),
-            description: t("session.mock_data.base_colors_description"),
-            fileSize: 3.1 * 1024 * 1024,
-            url: "/api/placeholder/400/300",
-            step: 2,
-            s3Key: "sessions/1/photos/base-colors.jpg",
-          },
-        ],
-      };
-      setSession(mockSession);
-    }
-  }, [sessionId, t]);
+    const loadSessionData = async () => {
+      if (!sessionId) {
+        setError("Session ID is required");
+        setIsLoading(false);
+        return;
+      }
+
+      // Parse session ID - remove 'session-' prefix if present
+      const cleanSessionId = sessionId.startsWith("session-")
+        ? sessionId.replace("session-", "")
+        : sessionId;
+
+      console.log("Original sessionId from URL:", sessionId);
+      console.log("Cleaned sessionId for backend:", cleanSessionId);
+
+      try {
+        setError(null);
+        const sessionDetails =
+          await PhysicalArtService.getSessionDetails(cleanSessionId);
+
+        console.log("Session details received:", sessionDetails);
+
+        if (!sessionDetails) {
+          console.log("Session not found with ID:", cleanSessionId);
+
+          // Try to get available sessions for better error message
+          let availableSessionsInfo = "";
+          if (user?.username) {
+            try {
+              const userSessions = await PhysicalArtService.getUserSessions(
+                user.username,
+              );
+              if (userSessions.length > 0) {
+                const sessionIds = userSessions
+                  .map((s) => s.session_id)
+                  .join(", ");
+                availableSessionsInfo = ` Available sessions for ${user.username}: ${sessionIds}`;
+              } else {
+                availableSessionsInfo = ` No sessions found for user ${user.username}. Create a new session first.`;
+              }
+            } catch (e) {
+              console.log("Could not fetch available sessions:", e);
+            }
+          }
+
+          setError(
+            `Session with ID "${sessionId}" not found. This session may not exist or may have been deleted.${availableSessionsInfo}`,
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        const convertedSession = convertSmartContractSession(sessionDetails);
+        console.log("Converted session:", convertedSession);
+        setSession(convertedSession);
+      } catch (error) {
+        console.error("Failed to load session:", error);
+        setError(
+          `Failed to load session "${sessionId}". Please check if the session exists and try again.`,
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadSessionData();
+  }, [sessionId]);
 
   const handleFileSelect = (files: FileList) => {
     // Reset progress states when new files are selected
@@ -304,56 +381,57 @@ const SessionRecordPage: React.FC = () => {
     const newPhotos: PhotoLog[] = [];
 
     try {
-      // Simple upload simulation
+      // Real upload to S3 and smart contract
       for (let i = 0; i < filesArray.length; i++) {
         // Check for cancellation before processing file
         if (cancelRef.current) {
           console.log("Upload cancelled at file", i);
           addToast("warning", t("session.upload_cancelled_by_user_message"));
-          return; // Exit immediately and discard all files
+          return;
         }
 
         const file = filesArray[i];
 
-        // Simulate file upload with progress
-        for (let progress = 0; progress <= 100; progress += 10) {
-          // Check for cancellation at each progress step
-          if (cancelRef.current) {
-            console.log("Upload cancelled during progress at", progress, "%");
-            addToast("warning", t("session.upload_cancelled_by_user_message"));
-            return; // Exit immediately and discard all files
+        try {
+          // Upload file using PhysicalArtService
+          const uploadResult = await PhysicalArtService.uploadPhoto(
+            session.id,
+            file,
+          );
+
+          if (uploadResult.success && uploadResult.file_url) {
+            // Create photo log entry
+            const newPhoto: PhotoLog = {
+              id: `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
+              filename: file.name,
+              timestamp: new Date(),
+              description:
+                stepDescription ||
+                `${t("session.step")} ${session.currentStep + i + 1}`,
+              fileSize: file.size,
+              url: uploadResult.file_url, // Real S3 URL
+              step: session.currentStep + i + 1,
+              s3Key:
+                uploadResult.file_id ||
+                `sessions/${session.id}/photos/${file.name}`,
+            };
+
+            newPhotos.push(newPhoto);
+
+            // Update progress
+            setUploadProgress(((i + 1) * 100) / filesArray.length);
+            setUploadedFiles(i + 1);
+          } else {
+            throw new Error(uploadResult.message || "Upload failed");
           }
-
-          setUploadProgress((i * 100 + progress) / filesArray.length);
-          await new Promise((resolve) => setTimeout(resolve, 50));
+        } catch (uploadError) {
+          console.error("Failed to upload file:", uploadError);
+          addToast("error", `Failed to upload ${file.name}: ${uploadError}`);
+          // Continue with other files
         }
-
-        // Final check before adding file to array
-        if (cancelRef.current) {
-          console.log("Upload cancelled before adding file to array");
-          addToast("warning", t("session.upload_cancelled_by_user_message"));
-          return; // Exit immediately and discard all files
-        }
-
-        // Add file to photos array only if not cancelled
-        console.log(t("session.adding_file", { filename: file.name }));
-        newPhotos.push({
-          id: `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
-          filename: file.name,
-          timestamp: new Date(),
-          description:
-            stepDescription ||
-            `${t("session.step")} ${session.currentStep + i + 1}`,
-          fileSize: file.size,
-          url: URL.createObjectURL(file),
-          step: session.currentStep + i + 1,
-          s3Key: `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
-        });
-
-        setUploadedFiles(i + 1);
       }
 
-      // Update session with new photos only if not cancelled
+      // Update local session state if not cancelled
       if (!cancelRef.current && newPhotos.length > 0) {
         console.log(
           t("session.updating_session_with_photos", {
@@ -368,6 +446,7 @@ const SessionRecordPage: React.FC = () => {
             currentStep: prev.currentStep + newPhotos.length,
           };
         });
+
         addToast(
           "success",
           t("session.files_uploaded", { count: newPhotos.length }),
@@ -395,48 +474,108 @@ const SessionRecordPage: React.FC = () => {
     }
   };
 
-  const handleDeletePhoto = (photoId: string) => {
-    if (session) {
-      const photoToDelete = session.photos.find((p) => p.id === photoId);
-      setSession({
-        ...session,
-        photos: session.photos.filter((p) => p.id !== photoId),
-      });
+  const handleDeletePhoto = async (photoId: string) => {
+    if (!session) return;
 
-      if (photoToDelete) {
+    const photoToDelete = session.photos.find((p) => p.id === photoId);
+    if (!photoToDelete) return;
+
+    try {
+      // Remove photo from smart contract
+      const success = await PhysicalArtService.removePhotoFromSession(
+        session.id,
+        photoToDelete.url,
+      );
+
+      if (success) {
+        // Update local state
+        setSession({
+          ...session,
+          photos: session.photos.filter((p) => p.id !== photoId),
+        });
+
         addToast(
           "success",
           t("session.photo_deleted_success", {
             filename: photoToDelete.filename,
           }),
         );
+      } else {
+        addToast("error", "Failed to delete photo from smart contract");
       }
+    } catch (error) {
+      console.error("Failed to delete photo:", error);
+      addToast("error", "Failed to delete photo");
     }
   };
 
   const handleCompleteSessionAndGenerateNFT = async () => {
-    if (!session) return;
+    if (!session || !user) return;
 
     setIsGeneratingNFT(true);
     addToast("info", t("session.starting_nft_generation_process"));
 
-    // Simulate NFT generation process
-    setTimeout(() => {
-      setSession((prev) =>
-        prev
-          ? {
-              ...prev,
-              status: "completed",
-              nftGenerated: true,
-            }
-          : null,
+    try {
+      // First, update session status to completed
+      const statusUpdated = await PhysicalArtService.updateSessionStatus(
+        session.id,
+        "completed",
       );
-      setIsGeneratingNFT(false);
-      addToast("success", t("session.nft_generated_success_redirecting"));
 
-      // Navigate to certificate page
-      navigate(`/certificate/${session.id}`);
-    }, 3000);
+      if (!statusUpdated) {
+        throw new Error("Failed to update session status");
+      }
+
+      // Create recipient account (user's principal)
+      const userPrincipal = Principal.fromText(
+        user.principal || Principal.anonymous().toString(),
+      );
+      const recipient = {
+        owner: userPrincipal,
+        subaccount: [] as [],
+      };
+
+      // Additional attributes for the NFT
+      const additionalAttributes: [string, string][] = [
+        ["creation_method", "physical_art_documentation"],
+        ["total_photos", session.photos.length.toString()],
+        ["completion_date", new Date().toISOString()],
+      ];
+
+      // Mint NFT from session
+      const mintResult = await backend.mint_nft_from_session(
+        session.id,
+        recipient,
+        additionalAttributes,
+      );
+
+      if ("Ok" in mintResult) {
+        const tokenId = mintResult.Ok;
+
+        // Update local session state
+        setSession((prev) =>
+          prev
+            ? {
+                ...prev,
+                status: "completed",
+                nftGenerated: true,
+              }
+            : null,
+        );
+
+        addToast("success", `NFT generated successfully! Token ID: ${tokenId}`);
+
+        // Navigate to certificate page with token ID
+        navigate(`/certificate/${session.id}?tokenId=${tokenId}`);
+      } else {
+        throw new Error(mintResult.Err);
+      }
+    } catch (error) {
+      console.error("Failed to generate NFT:", error);
+      addToast("error", `Failed to generate NFT: ${error}`);
+    } finally {
+      setIsGeneratingNFT(false);
+    }
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -459,12 +598,167 @@ const SessionRecordPage: React.FC = () => {
     });
   };
 
-  if (!session) {
+  if (isLoading) {
     return (
       <div className="session-record">
         <div className="session-record__loading">
           <div className="loading-spinner" />
           <p>{t("session.loading_session")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    const isNoSessionsError = error.includes("No sessions found for user");
+
+    return (
+      <div className="session-record">
+        <div className="session-record__error">
+          <h2>Session Error</h2>
+          <p>{error}</p>
+          <div className="error-actions">
+            <button
+              className="btn-retry"
+              onClick={() => window.location.reload()}
+            >
+              {t("session.retry")}
+            </button>
+            <button className="btn-back" onClick={() => navigate("/session")}>
+              {t("session.back_to_sessions")}
+            </button>
+            {isNoSessionsError && (
+              <button
+                className="btn-create-session"
+                onClick={() => navigate("/create-session")}
+                style={{
+                  backgroundColor: "#4CAF50",
+                  color: "white",
+                  padding: "10px 20px",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                }}
+              >
+                Create New Session
+              </button>
+            )}
+          </div>
+          {sessionId && (
+            <div className="session-info">
+              <p>
+                <strong>Session ID:</strong> {sessionId}
+              </p>
+              <p>
+                <em>
+                  Tip: Make sure you're using a valid session ID from your
+                  sessions list.
+                </em>
+              </p>
+            </div>
+          )}
+
+          {/* Development Login Button */}
+          {process.env.NODE_ENV === "development" && (
+            <div
+              style={{
+                marginTop: "20px",
+                padding: "15px",
+                backgroundColor: "#f0f0f0",
+                borderRadius: "5px",
+              }}
+            >
+              <p>
+                <strong>Development Mode:</strong>
+              </p>
+              <button
+                onClick={() => {
+                  const testUser = {
+                    username: "testuser",
+                    loginTime: new Date().toLocaleString(),
+                    loginMethod: "username" as const,
+                  };
+                  localStorage.setItem("auth-user", JSON.stringify(testUser));
+                  window.location.reload();
+                }}
+                style={{
+                  backgroundColor: "#2196F3",
+                  color: "white",
+                  padding: "8px 16px",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  marginRight: "10px",
+                }}
+              >
+                Login as testuser (has sessions)
+              </button>
+              <button
+                onClick={async () => {
+                  if (!user?.username) {
+                    alert("No user logged in");
+                    return;
+                  }
+                  try {
+                    const sessionId = await PhysicalArtService.createSession(
+                      user.username,
+                      "Demo Session for " + user.username,
+                      "Demo session created for testing",
+                    );
+                    addToast(
+                      "success",
+                      `Demo session created with ID: ${sessionId}`,
+                    );
+                    navigate(`/session-record/session-${sessionId}`);
+                  } catch (error) {
+                    console.error("Failed to create demo session:", error);
+                    addToast("error", "Failed to create demo session");
+                  }
+                }}
+                style={{
+                  backgroundColor: "#FF9800",
+                  color: "white",
+                  padding: "8px 16px",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  marginRight: "10px",
+                }}
+              >
+                Create Demo Session for {user?.username || "current user"}
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("auth-user");
+                  window.location.reload();
+                }}
+                style={{
+                  backgroundColor: "#f44336",
+                  color: "white",
+                  padding: "8px 16px",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="session-record">
+        <div className="session-record__error">
+          <p>{t("session.session_not_found")}</p>
+          <button className="btn-back" onClick={() => navigate("/session")}>
+            {t("session.back_to_sessions")}
+          </button>
         </div>
       </div>
     );

@@ -254,6 +254,13 @@
     "continue_session": "Lanjutkan Sesi",
     "view_certificate": "Lihat Sertifikat",
     "loading_sessions": "Memuat sesi...",
+    "please_login": "Silakan login untuk melihat sesi Anda",
+    "retry": "Coba Lagi",
+    "status": {
+      "draft": "Draft",
+      "active": "Aktif",
+      "completed": "Selesai"
+    },
     "session_title_required": "Judul sesi diperlukan",
     "back_to_sessions": "Kembali ke Sesi",
     "create_new_session_title": "Buat Sesi Baru",

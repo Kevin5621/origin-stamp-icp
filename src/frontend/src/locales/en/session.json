@@ -254,6 +254,13 @@
     "continue_session": "Continue Session",
     "view_certificate": "View Certificate",
     "loading_sessions": "Loading sessions...",
+    "please_login": "Please login to view your sessions",
+    "retry": "Retry",
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "completed": "Completed"
+    },
     "session_title_required": "Session title is required",
     "back_to_sessions": "Back to Sessions",
     "create_new_session_title": "Create New Session",
