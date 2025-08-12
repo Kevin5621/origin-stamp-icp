@@ -808,7 +808,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: var(--z-index-modal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -824,6 +824,7 @@
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   transition: all 0.3s ease;
+  z-index: var(--z-index-modal-backdrop);
 }
 
 .modal-content {
@@ -840,6 +841,7 @@
     0 20px 60px rgba(var(--color-secondary-rgb), 0.15),
     0 10px 30px rgba(0, 0, 0, 0.1);
   animation: modalSlideIn 0.3s ease-out;
+  z-index: var(--z-index-modal);
 
   &::before {
     content: "";
