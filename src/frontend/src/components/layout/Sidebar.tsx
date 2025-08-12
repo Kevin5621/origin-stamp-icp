@@ -222,7 +222,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* Logo */}
           <div className="sidebar-logo">
             <Link to={getLogoPath()} className="logo-link">
-              <div className="logo-icon">{getLogoIcon()}</div>
               {!isCollapsed && (
                 <span className="logo-text">{getLogoText()}</span>
               )}
