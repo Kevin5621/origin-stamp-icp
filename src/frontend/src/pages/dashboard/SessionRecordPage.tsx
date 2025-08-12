@@ -14,7 +14,7 @@ import {
   Plus,
   Sparkles,
 } from "lucide-react";
-import { useToastContext } from "../../contexts/ToastContext";
+import { useToast } from "../../contexts/ToastContext";
 
 // Types for photo logs
 interface PhotoLog {
@@ -46,7 +46,7 @@ interface SessionData {
 const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
-  const { addToast } = useToastContext();
+  const { addToast } = useToast();
   const { t } = useTranslation("session");
 
   const [session, setSession] = useState<SessionData | null>(null);
@@ -378,7 +378,7 @@ const SessionRecordPage: React.FC = () => {
     } catch (error) {
       console.log("Upload error:", error);
       const errorMessage =
-        error instanceof Error ? error.message : String(error);
+        error instanceof Error ? error.message : "Unknown error";
       addToast("error", t("session.upload_error", { error: errorMessage }));
     } finally {
       // Reset all states
