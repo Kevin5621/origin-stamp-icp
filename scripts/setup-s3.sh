@@ -116,21 +116,35 @@ else
 fi
 
 # Get canister ID for backend
+echo "🔍 Getting backend canister ID for $NETWORK network..."
 if [[ "$NETWORK" == "ic" ]]; then
-    BACKEND_CANISTER_ID=$(dfx canister id backend --network ic 2>/dev/null || echo "")
+    echo "   Executing: dfx canister id backend --network ic"
+    if BACKEND_CANISTER_ID=$(dfx canister id backend --network ic 2>&1); then
+        echo "   Success: Got canister ID: $BACKEND_CANISTER_ID"
+    else
+        echo "❌ Backend canister not deployed yet on IC network. Deploy first, then run this script."
+        echo "💡 Run: dfx deploy backend --network ic"
+        echo "   Error output: $BACKEND_CANISTER_ID"
+        exit 1
+    fi
     NETWORK_FLAG="--network ic"
 else
-    BACKEND_CANISTER_ID=$(dfx canister id backend 2>/dev/null || echo "")
+    echo "   Executing: dfx canister id backend --network local"
+    if BACKEND_CANISTER_ID=$(dfx canister id backend --network local 2>&1); then
+        echo "   Success: Got canister ID: $BACKEND_CANISTER_ID"
+    else
+        echo "❌ Backend canister not deployed yet on local network. Deploy first, then run this script."
+        echo "💡 Run: dfx deploy backend --network local"
+        echo "   Error output: $BACKEND_CANISTER_ID"
+        exit 1
+    fi
     NETWORK_FLAG="--network local"
 fi
 
-if [ -z "$BACKEND_CANISTER_ID" ]; then
-    echo "❌ Backend canister not deployed yet on $NETWORK network. Deploy first, then run this script."
-    if [[ "$NETWORK" == "ic" ]]; then
-        echo "💡 Run: dfx deploy backend --network ic"
-    else
-        echo "💡 Run: dfx deploy backend"
-    fi
+# Validate canister ID format
+if [[ ! "$BACKEND_CANISTER_ID" =~ ^[a-z0-9-]{5}-[a-z0-9-]{5}-[a-z0-9-]{5}-[a-z0-9-]{5}-[a-z0-9-]{3}$ ]]; then
+    echo "❌ Invalid canister ID format: $BACKEND_CANISTER_ID"
+    echo "💡 Please ensure the backend canister is properly deployed"
     exit 1
 fi
 
@@ -138,75 +152,93 @@ echo "🔧 Configuring S3 for backend canister: $BACKEND_CANISTER_ID on $NETWORK
 
 # Check current S3 configuration status
 echo "📋 Checking current S3 configuration status..."
-CURRENT_STATUS=$(dfx canister call backend get_s3_config_status $NETWORK_FLAG 2>/dev/null || echo "false")
-echo "   Current status: $CURRENT_STATUS"
+if CURRENT_STATUS=$(dfx canister call backend get_s3_config_status $NETWORK_FLAG 2>&1); then
+    echo "   Current status: $CURRENT_STATUS"
+else
+    echo "   Could not check current status (canister may not have this method yet)"
+    CURRENT_STATUS="false"
+fi
 
 # Configure S3 settings in the canister with proper endpoint handling
 echo "⚙️  Applying S3 configuration..."
 
+# Prepare S3 configuration command
 if [ -n "$S3_ENDPOINT" ] && [ "$S3_ENDPOINT" != "" ]; then
     # Use custom endpoint
-    dfx canister call backend configure_s3 "(
-        record {
-            access_key_id = \"$S3_ACCESS_KEY\";
-            secret_access_key = \"$S3_SECRET_KEY\";
-            region = \"$S3_REGION\";
-            endpoint = opt \"$S3_ENDPOINT\";
-            bucket_name = \"$S3_BUCKET_NAME\";
-        }
-    )" $NETWORK_FLAG
+    echo "   Using custom S3 endpoint: $S3_ENDPOINT"
+    S3_CONFIG_CMD="dfx canister call backend configure_s3 '(record {
+        access_key_id = \"$S3_ACCESS_KEY\";
+        secret_access_key = \"$S3_SECRET_KEY\";
+        region = \"$S3_REGION\";
+        endpoint = opt \"$S3_ENDPOINT\";
+        bucket_name = \"$S3_BUCKET_NAME\";
+    })' $NETWORK_FLAG"
 else
     # Use null endpoint for AWS S3
-    dfx canister call backend configure_s3 "(
-        record {
-            access_key_id = \"$S3_ACCESS_KEY\";
-            secret_access_key = \"$S3_SECRET_KEY\";
-            region = \"$S3_REGION\";
-            endpoint = null;
-            bucket_name = \"$S3_BUCKET_NAME\";
-        }
-    )" $NETWORK_FLAG
+    echo "   Using AWS S3 default endpoint"
+    S3_CONFIG_CMD="dfx canister call backend configure_s3 '(record {
+        access_key_id = \"$S3_ACCESS_KEY\";
+        secret_access_key = \"$S3_SECRET_KEY\";
+        region = \"$S3_REGION\";
+        endpoint = null;
+        bucket_name = \"$S3_BUCKET_NAME\";
+    })' $NETWORK_FLAG"
 fi
 
-if [ $? -eq 0 ]; then
-    echo "✅ S3 configuration completed successfully!"
-    echo "   - Network: $NETWORK"
-    echo "   - Canister ID: $BACKEND_CANISTER_ID"
-    echo "   - Access Key: ${S3_ACCESS_KEY:0:8}***"
-    echo "   - Region: $S3_REGION"
-    if [ -n "$S3_ENDPOINT" ] && [ "$S3_ENDPOINT" != "" ]; then
-        echo "   - Endpoint: $S3_ENDPOINT"
-    else
-        echo "   - Endpoint: AWS S3 (default)"
+# Execute S3 configuration
+echo "   Executing configuration command..."
+if eval "$S3_CONFIG_CMD"; then
+    echo "✅ S3 configuration command executed successfully!"
+else
+    echo "❌ Failed to configure S3"
+    echo "💡 Command that failed: $S3_CONFIG_CMD"
+    if [[ "$NETWORK" == "ic" ]]; then
+        echo "💡 Note: IC mainnet operations may require sufficient cycles in your wallet"
     fi
-    echo "   - Bucket: $S3_BUCKET_NAME"
-    
-    # Verify configuration was applied
-    echo "🔍 Verifying S3 configuration..."
-    NEW_STATUS=$(dfx canister call backend get_s3_config_status $NETWORK_FLAG 2>/dev/null || echo "false")
+    exit 1
+fi
+
+# Provide summary of configuration
+echo "✅ S3 configuration completed successfully!"
+echo "   - Network: $NETWORK"
+echo "   - Canister ID: $BACKEND_CANISTER_ID"
+echo "   - Access Key: ${S3_ACCESS_KEY:0:8}***"
+echo "   - Region: $S3_REGION"
+if [ -n "$S3_ENDPOINT" ] && [ "$S3_ENDPOINT" != "" ]; then
+    echo "   - Endpoint: $S3_ENDPOINT"
+else
+    echo "   - Endpoint: AWS S3 (default)"
+fi
+echo "   - Bucket: $S3_BUCKET_NAME"
+
+# Verify configuration was applied
+echo "🔍 Verifying S3 configuration..."
+if NEW_STATUS=$(dfx canister call backend get_s3_config_status $NETWORK_FLAG 2>&1); then
     if [ "$NEW_STATUS" = "(true)" ]; then
         echo "✅ S3 configuration verified successfully!"
         
         # Test upload URL generation
         echo "🧪 Testing upload URL generation..."
-        TEST_RESULT=$(dfx canister call backend generate_upload_url '("test-session", record { filename="test.jpg"; content_type="image/jpeg"; file_size=1024 })' $NETWORK_FLAG 2>/dev/null || echo "failed")
-        if [[ "$TEST_RESULT" == *"Ok"* ]]; then
-            echo "✅ Upload URL generation test passed!"
+        if TEST_RESULT=$(dfx canister call backend generate_upload_url '("test-session", record { filename="test.jpg"; content_type="image/jpeg"; file_size=1024 })' $NETWORK_FLAG 2>&1); then
+            if [[ "$TEST_RESULT" == *"Ok"* ]]; then
+                echo "✅ Upload URL generation test passed!"
+            else
+                echo "⚠️  Upload URL generation test failed: $TEST_RESULT"
+                echo "💡 Configuration is saved but upload functionality may need debugging"
+            fi
         else
-            echo "⚠️  Upload URL generation test failed, but configuration is saved"
+            echo "⚠️  Upload URL generation test failed: $TEST_RESULT"
             if [[ "$NETWORK" == "ic" ]]; then
                 echo "💡 Note: On IC mainnet, some operations may take longer or require cycles"
             fi
         fi
     else
-        echo "⚠️  S3 configuration saved but verification failed"
+        echo "⚠️  S3 configuration verification failed: $NEW_STATUS"
+        echo "💡 Configuration may have been saved but is not properly active"
     fi
 else
-    echo "❌ Failed to configure S3"
-    if [[ "$NETWORK" == "ic" ]]; then
-        echo "💡 Note: IC mainnet operations may require sufficient cycles in your wallet"
-    fi
-    exit 1
+    echo "⚠️  Could not verify S3 configuration: $NEW_STATUS"
+    echo "💡 Configuration may have been saved but verification method is not available"
 fi
 
 echo "=== S3 Configuration Complete for $NETWORK network ==="
