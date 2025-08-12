@@ -40,7 +40,7 @@ const CreateSessionPage: React.FC = () => {
 
   return (
     <div className="create-session">
-      <div className="create-session__container">
+      <div className="create-session-layout">
         {/* Header */}
         <div className="create-session__header">
           <button className="btn-back" onClick={() => navigate("/session")}>
