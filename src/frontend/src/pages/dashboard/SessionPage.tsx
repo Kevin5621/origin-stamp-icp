@@ -128,7 +128,7 @@ const SessionPage: React.FC = () => {
 
   return (
     <div className="session">
-      <div className="session__container">
+      <div className="session-layout">
         {/* Modern Welcome Section */}
         <div className="session__welcome">
           <div className="session__welcome-content">
