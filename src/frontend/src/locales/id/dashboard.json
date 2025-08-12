@@ -235,5 +235,12 @@
   "recent_artworks": "Karya Terbaru",
   "view_all": "Lihat Semua",
   "artwork_description_placeholder": "Karya seni digital yang indah dibuat dengan presisi",
-  "complete": "selesai"
+  "complete": "selesai",
+  "hero_greeting": "Hai, Seniman! 👋",
+  "hero_subtitle": "Siap membuat sesuatu yang menakjubkan hari ini?",
+  "hero_stats_artworks": "Karya",
+  "hero_stats_verified": "Terverifikasi",
+  "hero_stats_active": "Aktif",
+  "hero_create_button": "Buat Baru",
+  "recent_artworks_view_all": "Lihat Semua"
 }
