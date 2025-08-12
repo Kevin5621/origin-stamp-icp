@@ -45,3 +45,6 @@ export const useToastContext = (): ToastContextType => {
   }
   return context;
 };
+
+// Re-export useToast hook for backward compatibility
+export { useToast } from "../hooks/useToast";

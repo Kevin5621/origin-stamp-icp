@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LoginForm } from "./LoginForm";
 import { useAuth } from "../../contexts/AuthContext";
-import { useToastContext } from "../../contexts/ToastContext";
+import { useToast } from "../../contexts/ToastContext";
 import { TransformableAvatar } from "../profile/TransformableAvatar";
 import { AuthClient } from "@dfinity/auth-client";
 import { googleAuthService } from "../../services/googleAuth";
@@ -17,7 +17,7 @@ interface LoginProps {
 export function Login({ className = "" }: LoginProps) {
   const { t } = useTranslation("auth");
   const navigate = useNavigate();
-  const { success, error } = useToastContext();
+  const { success, error } = useToast();
   const {
     user,
     isAuthenticated,
