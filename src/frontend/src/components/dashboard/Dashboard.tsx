@@ -14,6 +14,8 @@ import {
   Clock,
   Palette,
   ArrowRight,
+  Sparkles,
+  Zap,
 } from "lucide-react";
 import { ArtworkCard } from "../common/ArtworkCard";
 import {
@@ -62,6 +64,7 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
       title: t("start_session") || "Start Session",
       description: t("start_session_desc") || "Begin physical art session",
       onClick: () => navigate("/sessions/new"),
+      gradient: "from-blue-500 to-cyan-500",
     },
     {
       id: "view-collection",
@@ -69,6 +72,7 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
       title: t("view_collection") || "View Collection",
       description: t("view_collection_desc") || "Browse verified artworks",
       onClick: () => navigate("/marketplace"),
+      gradient: "from-purple-500 to-pink-500",
     },
     {
       id: "analytics",
@@ -76,6 +80,7 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
       title: t("analytics") || "Analytics",
       description: t("analytics_desc") || "View verification metrics",
       onClick: () => navigate("/analytics"),
+      gradient: "from-orange-500 to-red-500",
     },
   ];
 
@@ -92,166 +97,93 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
 
   return (
     <div className="dashboard">
-      <div className="dashboard__bento-header">
-        <div className="dashboard__welcome-card">
-          <div className="welcome-card__content">
-            <h1 className="welcome-card__title">
-              {t("welcome_title") || "Welcome to OriginStamp"}
-            </h1>
-            <p className="welcome-card__subtitle">
-              {t("welcome_subtitle") ||
-                "Create, verify, and showcase your art with blockchain technology"}
-            </p>
-            <div className="welcome-card__stats">
-              <div className="stat-chip">
-                <Palette size={16} />
-                <span>
-                  {stats?.totalArtworks || 0} {t("artworks") || "artworks"}
-                </span>
+      <div className="dashboard-layout">
+        {/* Hero Section - Layout konsisten dengan certificates */}
+        <div className="dashboard__hero">
+          <div className="hero__content">
+            <div className="hero__greeting">
+              <h1 className="hero__title">
+                Hi, <span className="hero__name">Artist</span>! 👋
+              </h1>
+              <p className="hero__subtitle">
+                Ready to create something amazing today?
+              </p>
+            </div>
+            <div className="hero__stats">
+              <div className="hero-stat">
+                <div className="hero-stat__number">
+                  {stats?.totalArtworks || 0}
+                </div>
+                <div className="hero-stat__label">Artworks</div>
               </div>
-              <div className="stat-chip">
-                <Shield size={16} />
-                <span>
-                  {stats?.verifiedArtworks || 0} {t("verified") || "verified"}
-                </span>
+              <div className="hero-stat">
+                <div className="hero-stat__number">
+                  {stats?.verifiedArtworks || 0}
+                </div>
+                <div className="hero-stat__label">Verified</div>
+              </div>
+              <div className="hero-stat">
+                <div className="hero-stat__number">
+                  {stats?.activeSessions || 0}
+                </div>
+                <div className="hero-stat__label">Active</div>
               </div>
             </div>
           </div>
-          <div className="welcome-card__actions">
+          <div className="hero__action">
             <button
-              className="btn-primary-modern"
+              className="hero__create-btn"
               onClick={() => navigate("/create-session")}
             >
-              <Plus size={18} />
-              {t("create_artwork") || "Create Artwork"}
+              <Plus size={16} />
+              <span>Create New</span>
+              <Sparkles size={14} />
             </button>
           </div>
         </div>
-      </div>
 
-      <div className="dashboard__stats-section">
-        <div className="stats-grid">
-          <div className="stat-card stat-card--primary">
-            <div className="stat-card__icon">
-              <CheckCircle size={24} />
-            </div>
-            <div className="stat-card__content">
-              <div className="stat-card__value">
-                {stats?.totalArtworks || 0}
-              </div>
-              <div className="stat-card__label">
-                {t("total_artworks") || "Total Artworks"}
-              </div>
-              <div className="stat-card__trend">
-                <TrendingUp size={12} />
-                <span>
-                  +{stats?.monthlyGrowth || 0}%{" "}
-                  {t("this_month") || "this month"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="stat-card stat-card--success">
-            <div className="stat-card__icon">
-              <Shield size={24} />
-            </div>
-            <div className="stat-card__content">
-              <div className="stat-card__value">
-                {stats?.verifiedArtworks || 0}
-              </div>
-              <div className="stat-card__label">
-                {t("verified_artworks") || "Verified Artworks"}
-              </div>
-              <div className="stat-card__trend">
-                <TrendingUp size={12} />
-                <span>
-                  +{Math.round((stats?.verificationScore || 0) / 10)}%{" "}
-                  {t("this_week") || "this week"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="stat-card stat-card--accent">
-            <div className="stat-card__icon">
-              <Activity size={24} />
-            </div>
-            <div className="stat-card__content">
-              <div className="stat-card__value">
-                {stats?.activeSessions || 0}
-              </div>
-              <div className="stat-card__label">
-                {t("active_sessions") || "Active Sessions"}
-              </div>
-              <div className="stat-card__trend">
-                <Clock size={12} />
-                <span>{t("in_progress") || "In progress"}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="dashboard__main-content">
-        <div className="dashboard__quick-actions">
-          <h3 className="section-title">
-            {t("quick_actions") || "Quick Actions"}
-          </h3>
-          <div className="quick-actions-compact-grid">
+        {/* Quick Actions - Ikon lebih kecil */}
+        <div className="dashboard__quick-actions-modern">
+          <div className="quick-actions-modern__grid">
             {quickActions.map((action) => (
-              <button
+              <div
                 key={action.id}
-                className="quick-action-compact"
+                className="quick-action-modern"
                 onClick={action.onClick}
               >
-                <div className="quick-action-compact__icon">
-                  <action.icon size={24} />
+                <div className="quick-action-modern__icon">
+                  <action.icon size={16} /> {/* Ikon lebih kecil */}
                 </div>
-                <div className="quick-action-compact__content">
-                  <h4 className="quick-action-compact__title">
-                    {action.title}
-                  </h4>
-                  <p className="quick-action-compact__description">
+                <div className="quick-action-modern__content">
+                  <h3 className="quick-action-modern__title">{action.title}</h3>
+                  <p className="quick-action-modern__description">
                     {action.description}
                   </p>
                 </div>
-                <div className="quick-action-compact__arrow">
-                  <ArrowRight size={18} />
+                <div className="quick-action-modern__arrow">
+                  <ArrowRight size={12} /> {/* Ikon arrow lebih kecil */}
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         </div>
 
-        <div className="dashboard__artworks">
-          <div className="section-header">
-            <h3 className="section-title">
+        {/* Recent Artworks - Layout konsisten */}
+        <div className="dashboard__recent-artworks">
+          <div className="recent-artworks__header">
+            <h3 className="recent-artworks__title">
               {t("recent_artworks") || "Recent Artworks"}
             </h3>
             <button
-              className="btn-view-all"
+              className="recent-artworks__view-all"
               onClick={() => navigate("/marketplace")}
             >
-              {t("view_all") || "View All"}
-              <ArrowRight size={16} />
+              View All <ArrowRight size={12} /> {/* Ikon arrow lebih kecil */}
             </button>
           </div>
-          <div className="artworks-modern-grid">
-            {artworks.slice(0, 6).map((artwork) => (
-              <ArtworkCard
-                key={artwork.id}
-                artwork={{
-                  ...artwork,
-                  description:
-                    (artwork as any).description ||
-                    t("artwork_description_placeholder") ||
-                    "Beautiful digital artwork created with precision",
-                  rating: (artwork as any).rating || 4.8,
-                }}
-                onClick={() => navigate(`/karya/${artwork.id}`)}
-                variant="modern"
-              />
+          <div className="recent-artworks__grid">
+            {artworks.slice(0, 3).map((artwork) => (
+              <ArtworkCard key={artwork.id} artwork={artwork} />
             ))}
           </div>
         </div>
