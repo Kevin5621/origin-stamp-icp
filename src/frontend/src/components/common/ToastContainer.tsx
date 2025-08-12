@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Toast } from "../../hooks/useToast";
+import { Toast } from "../../contexts/ToastContext"; // Import type dari context baru
 
 interface ToastContainerProps {
   toasts: Toast[];
@@ -102,7 +102,10 @@ const ToastContainer: React.FC<ToastContainerProps> = ({
   toasts,
   onRemove,
 }) => {
-  if (toasts.length === 0) return null;
+  if (toasts.length === 0) {
+    console.log("No toasts to display");
+    return null;
+  }
 
   return (
     <div className="toast-container">

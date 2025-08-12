@@ -210,6 +210,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
+
       <section
         id="problem"
         className="landing-section landing-section--problem"

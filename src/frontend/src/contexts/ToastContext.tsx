@@ -1,6 +1,20 @@
-import React, { createContext, useContext, ReactNode } from "react";
-import { useToast, ToastType } from "../hooks/useToast";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useCallback,
+} from "react";
 import ToastContainer from "../components/common/ToastContainer";
+
+export type ToastType = "success" | "error" | "warning" | "info";
+
+export interface Toast {
+  id: string;
+  type: ToastType;
+  message: string;
+  duration?: number;
+}
 
 interface ToastContextType {
   success: (message: string, duration?: number) => string;
@@ -18,8 +32,59 @@ interface ToastProviderProps {
 }
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
-  const { toasts, addToast, removeToast, success, error, warning, info } =
-    useToast();
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
+  const addToast = useCallback(
+    (type: ToastType, message: string, duration: number = 5000) => {
+      const id = Date.now().toString();
+      const newToast: Toast = { id, type, message, duration };
+
+      setToasts((prev) => {
+        const newToasts = [...prev, newToast];
+        return newToasts;
+      });
+
+      // Auto remove toast after duration
+      setTimeout(() => {
+        removeToast(id);
+      }, duration);
+
+      return id;
+    },
+    [],
+  );
+
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  }, []);
+
+  const success = useCallback(
+    (message: string, duration?: number) => {
+      return addToast("success", message, duration);
+    },
+    [addToast],
+  );
+
+  const error = useCallback(
+    (message: string, duration?: number) => {
+      return addToast("error", message, duration);
+    },
+    [addToast],
+  );
+
+  const warning = useCallback(
+    (message: string, duration?: number) => {
+      return addToast("warning", message, duration);
+    },
+    [addToast],
+  );
+
+  const info = useCallback(
+    (message: string, duration?: number) => {
+      return addToast("info", message, duration);
+    },
+    [addToast],
+  );
 
   const value: ToastContextType = {
     success,
@@ -45,6 +110,3 @@ export const useToastContext = (): ToastContextType => {
   }
   return context;
 };
-
-// Re-export useToast hook for backward compatibility
-export { useToast } from "../hooks/useToast";
