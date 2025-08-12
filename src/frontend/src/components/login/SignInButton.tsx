@@ -178,7 +178,7 @@ const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <span>{t("login_with_internet_identity")}</span>
               </button>
 
-              <button className="auth-btn auth-btn--google">
+              <button className="auth-btn auth-btn--icp">
                 <img
                   src="/assets/google-logo.svg"
                   alt=""
@@ -190,7 +190,7 @@ const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
               <button
                 onClick={handleShowCustomLogin}
-                className="auth-btn auth-btn--custom"
+                className="auth-btn auth-btn--icp"
                 aria-label={t("login_with_username_password")}
               >
                 <span>{t("login_with_username_password")}</span>
