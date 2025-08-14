@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppLayout } from "../../components/layout/AppLayout";
 import { MarketplaceHeader } from "../../components/marketplace/MarketplaceHeader";
-import { MarketplaceMainContent } from "../../components/marketplace/MarketplaceMainContent";
-import { MarketplacePriceList } from "../../components/marketplace/MarketplacePriceList";
 import { CategoryFilter } from "../../components/marketplace/CategoryFilter";
 import { HeroBanner } from "../../components/marketplace/HeroBanner";
 import { FeaturedCollections } from "../../components/marketplace/FeaturedCollections";
@@ -13,7 +11,6 @@ export const MarketplaceHomePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedTimeframe, setSelectedTimeframe] = useState("24h");
   const [selectedView, setSelectedView] = useState<"grid" | "list">("grid");
-  const [isPriceListCollapsed, setIsPriceListCollapsed] = useState(false);
 
   // Mock data for featured collection
   const featuredCollection = {
@@ -91,60 +88,6 @@ export const MarketplaceHomePage: React.FC = () => {
     },
   ];
 
-  // Mock data for top collections
-  const topCollections = [
-    {
-      id: "bored-ape",
-      name: "Bored Ape Yacht Club",
-      image:
-        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
-      floorPrice: "25.5",
-      currency: "ICP",
-      change: 12.5,
-      verified: true,
-    },
-    {
-      id: "cryptopunks",
-      name: "CryptoPunks",
-      image:
-        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
-      floorPrice: "45.2",
-      currency: "ICP",
-      change: -2.1,
-      verified: true,
-    },
-    {
-      id: "azuki",
-      name: "Azuki",
-      image:
-        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
-      floorPrice: "2.08",
-      currency: "ICP",
-      change: 6.2,
-      verified: true,
-    },
-    {
-      id: "fidenza",
-      name: "Fidenza by Tyler Hobbs",
-      image:
-        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
-      floorPrice: "34.89",
-      currency: "ICP",
-      change: 2.6,
-      verified: false,
-    },
-    {
-      id: "doodles",
-      name: "Doodles",
-      image:
-        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
-      floorPrice: "1.04",
-      currency: "ICP",
-      change: 6.3,
-      verified: true,
-    },
-  ];
-
   const handleSearch = (query: string) => {
     console.log("Search query:", query);
     // Implement search functionality
@@ -157,17 +100,15 @@ export const MarketplaceHomePage: React.FC = () => {
 
   return (
     <AppLayout variant="marketplace">
-      <div
-        className={`marketplace-page ${isPriceListCollapsed ? "marketplace-layout--pricelist-collapsed" : ""}`}
-      >
+      <div className="marketplace">
         {/* Header */}
         <MarketplaceHeader
           onSearch={handleSearch}
           onConnectWallet={handleConnectWallet}
         />
 
-        {/* Main Content */}
-        <MarketplaceMainContent>
+        {/* Main Layout Container - Konsisten dengan dashboard */}
+        <div className="marketplace-layout">
           {/* Category Filter */}
           <CategoryFilter
             selectedCategory={selectedCategory}
@@ -194,15 +135,7 @@ export const MarketplaceHomePage: React.FC = () => {
             title={t("featuredDrops.title")}
             subtitle={t("featuredDrops.subtitle")}
           />
-        </MarketplaceMainContent>
-
-        {/* Right Price List Sidebar */}
-        <MarketplacePriceList
-          collections={topCollections}
-          title="TOP COLLECTIONS"
-          isCollapsed={isPriceListCollapsed}
-          onToggleCollapse={setIsPriceListCollapsed}
-        />
+        </div>
       </div>
     </AppLayout>
   );
