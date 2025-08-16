@@ -95,7 +95,7 @@ const CertificatesPage: React.FC = () => {
   const handleShareCertificate = (certUrl: string) => {
     if (navigator.share) {
       navigator.share({
-        title: "Certificate of Authenticity",
+        title: t("certificate_of_authenticity"),
         text: "Check out this verified artwork certificate",
         url: certUrl,
       });
@@ -166,28 +166,28 @@ const CertificatesPage: React.FC = () => {
               placeholder={t("search_certificates_placeholder")}
               value={searchTerm}
               onChange={handleSearch}
-              className="search-input wireframe-input"
+              className="search-input"
             />
           </div>
           <div className="filter-controls">
-            <div className="filter-tabs wireframe-tabs">
+            <div className="filter-tabs">
               <button
-                className={`filter-tab wireframe-tab ${filterStatus === "all" ? "active" : ""}`}
+                className={`filter-tab ${filterStatus === "all" ? "active" : ""}`}
                 onClick={() => handleFilterChange("all")}
               >
-                All
+                {t("all")}
               </button>
               <button
-                className={`filter-tab wireframe-tab ${filterStatus === "verified" ? "active" : ""}`}
+                className={`filter-tab ${filterStatus === "verified" ? "active" : ""}`}
                 onClick={() => handleFilterChange("verified")}
               >
-                Verified
+                {t("verified")}
               </button>
               <button
-                className={`filter-tab wireframe-tab ${filterStatus === "pending" ? "active" : ""}`}
+                className={`filter-tab ${filterStatus === "pending" ? "active" : ""}`}
                 onClick={() => handleFilterChange("pending")}
               >
-                Pending
+                {t("pending")}
               </button>
             </div>
           </div>
@@ -198,7 +198,7 @@ const CertificatesPage: React.FC = () => {
           {filteredCertificates.length > 0 ? (
             <div className="certificates-grid">
               {filteredCertificates.map((cert) => (
-                <div key={cert.id} className="certificate-card wireframe-card">
+                <div key={cert.id} className="certificate-card">
                   <div className="certificate-header">
                     <div className="certificate-icon">
                       <FileText size={24} strokeWidth={2} />
@@ -243,7 +243,7 @@ const CertificatesPage: React.FC = () => {
                   <div className="certificate-actions">
                     <button
                       onClick={() => handleViewCertificate(cert.id)}
-                      className="action-btn wireframe-button"
+                      className="btn btn--secondary"
                       title="View Certificate"
                     >
                       <Eye size={16} strokeWidth={2} />
@@ -251,7 +251,7 @@ const CertificatesPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() => handleDownloadCertificate(cert.id)}
-                      className="action-btn wireframe-button"
+                      className="btn btn--secondary"
                       title="Download Certificate"
                     >
                       <Download size={16} strokeWidth={2} />
@@ -261,7 +261,7 @@ const CertificatesPage: React.FC = () => {
                       onClick={() =>
                         handleShareCertificate(cert.certificateUrl)
                       }
-                      className="action-btn wireframe-button"
+                      className="btn btn--secondary"
                       title="Share Certificate"
                     >
                       <Share2 size={16} strokeWidth={2} />
@@ -269,7 +269,7 @@ const CertificatesPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() => handleCopyLink(cert.certificateUrl)}
-                      className="action-btn wireframe-button"
+                      className="btn btn--secondary"
                       title="Copy Link"
                     >
                       <Copy size={16} strokeWidth={2} />
@@ -280,9 +280,9 @@ const CertificatesPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="empty-state wireframe-card">
+            <div className="empty-state">
               <div className="empty-icon">
-                <FileText size={64} strokeWidth={1} />
+                <FileText size={30} strokeWidth={1} />
               </div>
               <h3 className="empty-title">{t("no_certificates_found")}</h3>
               <p className="empty-description">
@@ -293,7 +293,7 @@ const CertificatesPage: React.FC = () => {
               {!searchTerm && filterStatus === "all" && (
                 <button
                   onClick={() => navigate("/dashboard")}
-                  className="btn-new-project wireframe-button primary"
+                  className="btn-new-project"
                 >
                   {t("create_new_project")}
                 </button>
@@ -309,7 +309,7 @@ const CertificatesPage: React.FC = () => {
               className="modal-overlay"
               onClick={() => setSelectedCertificate(null)}
             />
-            <div className="modal-content wireframe-card">
+            <div className="modal-content">
               <div className="modal-header">
                 <h2>{t("certificate_preview")}</h2>
                 <button
@@ -335,14 +335,14 @@ const CertificatesPage: React.FC = () => {
               <div className="modal-actions">
                 <button
                   onClick={() => handleDownloadCertificate(selectedCertificate)}
-                  className="wireframe-button primary"
+                  className="btn-modal primary"
                 >
                   <Download size={16} strokeWidth={2} />
                   {t("download_pdf")}
                 </button>
                 <button
                   onClick={() => setSelectedCertificate(null)}
-                  className="wireframe-button"
+                  className="btn-modal secondary"
                 >
                   {t("close")}
                 </button>

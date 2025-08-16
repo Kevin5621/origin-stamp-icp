@@ -1,4 +1,5 @@
 import { ReactNode, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ToastProps {
   type: "success" | "error" | "warning" | "info";
@@ -18,6 +19,8 @@ export function Toast({
   onClose,
   duration = 5000,
 }: ToastProps) {
+  const { t } = useTranslation("common");
+
   useEffect(() => {
     if (isVisible && duration > 0) {
       const timer = setTimeout(() => {
@@ -37,7 +40,7 @@ export function Toast({
         <button
           className="toast-close"
           onClick={onClose}
-          aria-label="Close notification"
+          aria-label={t("close_toast")}
         >
           ×
         </button>

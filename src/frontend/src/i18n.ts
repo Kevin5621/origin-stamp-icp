@@ -61,8 +61,8 @@ i18n
         marketplace: marketplaceId,
       },
     },
-    lng: "en", // default language
-    fallbackLng: "en", // fallback language if translation is not found
+    lng: "id", // default language
+    fallbackLng: "id", // fallback language if translation is not found
     interpolation: {
       escapeValue: false, // react already escapes by default
     },

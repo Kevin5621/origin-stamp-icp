@@ -1,164 +1,66 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MarketplaceHeader } from "../../components/marketplace/MarketplaceHeader";
+import { AppLayout } from "../../components/layout/AppLayout";
+import { Navbar } from "../../components/marketplace/Navbar";
 import { CategoryFilter } from "../../components/marketplace/CategoryFilter";
 import { HeroBanner } from "../../components/marketplace/HeroBanner";
 import { FeaturedCollections } from "../../components/marketplace/FeaturedCollections";
-import { MarketplaceSidebar } from "../../components/marketplace/MarketplaceSidebar";
-import { MarketplaceMainContent } from "../../components/marketplace/MarketplaceMainContent";
-import { MarketplacePriceList } from "../../components/marketplace/MarketplacePriceList";
 
 export const MarketplaceHomePage: React.FC = () => {
   const { t } = useTranslation("marketplace");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedTimeframe, setSelectedTimeframe] = useState("1d");
+  const [selectedTimeframe, setSelectedTimeframe] = useState("24h");
   const [selectedView, setSelectedView] = useState<"grid" | "list">("grid");
 
-  // Mock data untuk featured collection
+  // Mock data for featured collection
   const featuredCollection = {
-    id: "off-the-grid",
-    name: "Off The Grid",
-    creator: "Gunz",
-    image: "https://placehold.co/800x400",
-    floorPrice: "11.00",
+    id: "featured-1",
+    name: "Bored Ape Yacht Club",
+    creator: "Yuga Labs",
+    image:
+      "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+    floorPrice: "25.5",
     currency: "ICP",
-    items: 6821231,
+    items: 10000,
     totalVolume: "1.6M",
     listedPercentage: "< 0.1%",
     previewImages: [
-      "https://placehold.co/100x100",
-      "https://placehold.co/100x100",
-      "https://placehold.co/100x100",
+      "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
     ],
+    change: 12.5,
+    verified: true,
+    description: "The most exclusive NFT collection in the world",
   };
 
-  // Mock data untuk featured collections
+  // Mock data for featured collections
   const featuredCollections = [
     {
-      id: "moonbirds",
-      name: "Moonbirds",
-      image: "https://placehold.co/300x200",
-      floorPrice: "1.92",
+      id: "bored-ape",
+      name: "Bored Ape Yacht Club",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      floorPrice: "25.5",
       currency: "ICP",
-      change: 17.1,
-      verified: true,
-    },
-    {
-      id: "off-the-grid",
-      name: "Off The Grid",
-      image: "https://placehold.co/300x200",
-      floorPrice: "11.00",
-      currency: "ICP",
-      change: -75.6,
-      verified: true,
-    },
-    {
-      id: "on-chain-all-stars",
-      name: "On-Chain All-Stars",
-      image: "https://placehold.co/300x200",
-      floorPrice: "0.0035",
-      currency: "ICP",
-      change: -18.7,
-      verified: false,
-    },
-    {
-      id: "overture",
-      name: "Overture by Mitchell F. Chan",
-      image: "https://placehold.co/300x200",
-      floorPrice: "0.32",
-      currency: "ICP",
-      change: 0,
-      verified: false,
-    },
-  ];
-
-  // Mock data untuk collection list
-  const topCollections = [
-    {
-      id: "pudgy-penguins",
-      name: "Pudgy Penguins",
-      image: "https://placehold.co/40x40",
-      floorPrice: "15.96",
-      currency: "ICP",
-      change: 1.3,
+      change: 12.5,
       verified: true,
     },
     {
       id: "cryptopunks",
       name: "CryptoPunks",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=CP",
-      floorPrice: "50.99",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
+      floorPrice: "45.2",
       currency: "ICP",
-      change: 0,
-      verified: true,
-    },
-    {
-      id: "bored-ape-yacht-club",
-      name: "Bored Ape Yacht Club",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=BAYC",
-      floorPrice: "12.67",
-      currency: "ICP",
-      change: 4.6,
-      verified: true,
-    },
-    {
-      id: "milady-maker",
-      name: "Milady Maker",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=MM",
-      floorPrice: "3.20",
-      currency: "ICP",
-      change: 5.8,
-      verified: false,
-    },
-    {
-      id: "moonbirds",
-      name: "Moonbirds",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=MB",
-      floorPrice: "1.92",
-      currency: "ICP",
-      change: 17.1,
-      verified: true,
-    },
-    {
-      id: "rektguy",
-      name: "rektguy",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=RK",
-      floorPrice: "1.35",
-      currency: "ICP",
-      change: 18.5,
-      verified: false,
-    },
-    {
-      id: "lil-pudgys",
-      name: "Lil Pudgys",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=LP",
-      floorPrice: "1.73",
-      currency: "ICP",
-      change: 4.3,
-      verified: false,
-    },
-    {
-      id: "dx-terminal",
-      name: "DX Terminal",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=DX",
-      floorPrice: "< 0.01",
-      currency: "ICP",
-      change: 0.9,
-      verified: false,
-    },
-    {
-      id: "mutant-ape-yacht-club",
-      name: "Mutant Ape Yacht Club",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=MAYC",
-      floorPrice: "1.89",
-      currency: "ICP",
-      change: 4.6,
+      change: -2.1,
       verified: true,
     },
     {
       id: "azuki",
       name: "Azuki",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=AZ",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "2.08",
       currency: "ICP",
       change: 6.2,
@@ -167,7 +69,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "fidenza",
       name: "Fidenza by Tyler Hobbs",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=FD",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "34.89",
       currency: "ICP",
       change: 2.6,
@@ -176,7 +79,8 @@ export const MarketplaceHomePage: React.FC = () => {
     {
       id: "doodles",
       name: "Doodles",
-      image: "https://via.placeholder.com/40x40/374151/ffffff?text=DD",
+      image:
+        "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png",
       floorPrice: "1.04",
       currency: "ICP",
       change: 6.3,
@@ -195,51 +99,41 @@ export const MarketplaceHomePage: React.FC = () => {
   };
 
   return (
-    <div className="marketplace-page">
-      {/* Header */}
-      <MarketplaceHeader
-        onSearch={handleSearch}
-        onConnectWallet={handleConnectWallet}
-      />
+    <AppLayout variant="marketplace">
+      <div className="marketplace">
+        {/* Modern fixed Navbar */}
+        <Navbar onSearch={handleSearch} onConnectWallet={handleConnectWallet} />
 
-      {/* Left Sidebar */}
-      <MarketplaceSidebar onSectionChange={() => {}} />
+        {/* Main Layout Container - Konsisten dengan dashboard */}
+        <div className="marketplace-layout">
+          {/* Category Filter */}
+          <CategoryFilter
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            selectedTimeframe={selectedTimeframe}
+            onTimeframeChange={setSelectedTimeframe}
+            selectedView={selectedView}
+            onViewChange={setSelectedView}
+          />
 
-      {/* Main Content */}
-      <MarketplaceMainContent>
-        {/* Category Filter */}
-        <CategoryFilter
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          selectedTimeframe={selectedTimeframe}
-          onTimeframeChange={setSelectedTimeframe}
-          selectedView={selectedView}
-          onViewChange={setSelectedView}
-        />
+          {/* Hero Banner */}
+          <HeroBanner featuredCollection={featuredCollection} />
 
-        {/* Hero Banner */}
-        <HeroBanner featuredCollection={featuredCollection} />
+          {/* Featured Collections */}
+          <FeaturedCollections
+            collections={featuredCollections}
+            title={t("featuredCollections.title")}
+            subtitle={t("featuredCollections.subtitle")}
+          />
 
-        {/* Featured Collections */}
-        <FeaturedCollections
-          collections={featuredCollections}
-          title={t("featuredCollections.title")}
-          subtitle={t("featuredCollections.subtitle")}
-        />
-
-        {/* Featured Drops */}
-        <FeaturedCollections
-          collections={[]}
-          title={t("featuredDrops.title")}
-          subtitle={t("featuredDrops.subtitle")}
-        />
-      </MarketplaceMainContent>
-
-      {/* Right Price List Sidebar */}
-      <MarketplacePriceList
-        collections={topCollections}
-        title="TOP COLLECTIONS"
-      />
-    </div>
+          {/* Featured Drops */}
+          <FeaturedCollections
+            collections={[]}
+            title={t("featuredDrops.title")}
+            subtitle={t("featuredDrops.subtitle")}
+          />
+        </div>
+      </div>
+    </AppLayout>
   );
 };

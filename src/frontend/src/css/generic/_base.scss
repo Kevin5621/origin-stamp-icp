@@ -57,6 +57,126 @@ body {
 }
 
 /* =============================================================================
+   GLOBAL ICON & SVG SETTINGS - Mencegah icon mengecil
+   ============================================================================= */
+
+/* Pengaturan global untuk SVG dan icon */
+svg {
+  /* Memastikan icon tidak mengecil secara otomatis */
+  flex-shrink: 0;
+  /* Mencegah icon dari scaling down */
+  min-width: auto;
+  min-height: auto;
+  /* Mempertahankan aspect ratio */
+  preserveaspectratio: xMidYMid meet;
+}
+
+/* Pengaturan untuk icon button dan interactive elements */
+.btn-icon,
+.btn-icon-mini,
+.icon-button,
+[class*="icon"] {
+  /* Memastikan ukuran minimum untuk icon - diperkecil 70% */
+  min-width: 0.7rem;
+  min-height: 0.7rem;
+  flex-shrink: 0;
+
+  svg {
+    /* Memastikan SVG di dalam icon button tidak mengecil */
+    width: inherit !important;
+    height: inherit !important;
+    min-width: inherit !important;
+    min-height: inherit !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Khusus untuk error-fallback-icon, jangan gunakan inherit */
+  .error-fallback-icon {
+    width: 29.4px !important;
+    height: 29.4px !important;
+    min-width: 29.4px !important;
+    min-height: 29.4px !important;
+    max-width: 29.4px !important;
+    max-height: 29.4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* =============================================================================
+   GLOBAL ICON SIZE OVERRIDE - Memastikan perubahan ukuran berhasil
+   ============================================================================= */
+
+/* Override untuk semua icon yang sudah diperkecil */
+.not-found-icon,
+.error-icon,
+.stat-card__icon svg,
+.analytics__stat-icon svg,
+.bento-card-icon svg,
+.login-method-icon svg,
+.quick-action-compact__icon svg,
+.stat-icon svg {
+  width: inherit !important;
+  height: inherit !important;
+  min-width: inherit !important;
+  min-height: inherit !important;
+  max-width: inherit !important;
+  max-height: inherit !important;
+}
+
+/* Override khusus untuk error-fallback-icon */
+.error-fallback-icon {
+  width: 29.4px !important;
+  height: 29.4px !important;
+  min-width: 29.4px !important;
+  min-height: 29.4px !important;
+  max-width: 29.4px !important;
+  max-height: 29.4px !important;
+}
+
+/* Override untuk quick-link-card icons */
+.quick-link-card svg {
+  width: 16.8px !important;
+  height: 16.8px !important;
+  min-width: 16.8px !important;
+  min-height: 16.8px !important;
+  max-width: 16.8px !important;
+  max-height: 16.8px !important;
+}
+
+/* Pengaturan responsive untuk icon - mencegah mengecil terlalu banyak */
+@media (max-width: 768px) {
+  svg {
+    /* Mempertahankan ukuran minimum untuk tablet - diperkecil 70% */
+    min-width: 0.7rem;
+    min-height: 0.7rem;
+  }
+
+  .btn-icon,
+  .btn-icon-mini,
+  .icon-button {
+    /* Mempertahankan ukuran minimum untuk tablet - diperkecil 70% */
+    min-width: 1.05rem;
+    min-height: 1.05rem;
+  }
+}
+
+@media (max-width: 480px) {
+  svg {
+    /* Mempertahankan ukuran minimum untuk mobile - diperkecil 70% */
+    min-width: 0.6125rem;
+    min-height: 0.6125rem;
+  }
+
+  .btn-icon,
+  .btn-icon-mini,
+  .icon-button {
+    /* Mempertahankan ukuran minimum untuk mobile - diperkecil 70% */
+    min-width: 0.875rem;
+    min-height: 0.875rem;
+  }
+}
+
+/* =============================================================================
    CUSTOM SCROLLBAR
    ============================================================================= */
 

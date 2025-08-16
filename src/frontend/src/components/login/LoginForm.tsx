@@ -96,7 +96,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       setResult(registerResult);
 
       if (registerResult.success) {
+        // Auto-login after successful registration
+        if (registerResult.username?.[0]) {
+          login(registerResult.username[0]);
+        }
+
         showToast("success", t("register_success"));
+
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        }
       } else {
         showToast(
           "error",
@@ -143,6 +152,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !loading) {
+                e.preventDefault();
+                handleLogin();
+              }
+            }}
             className="auth-form-input"
             placeholder={t("login_username_placeholder")}
             disabled={loading}
@@ -160,6 +175,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !loading) {
+                  e.preventDefault();
+                  handleLogin();
+                }
+              }}
               className="auth-form-input"
               placeholder={t("login_password_placeholder")}
               disabled={loading}
@@ -181,8 +202,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
         <div className="auth-form-actions">
           <button
-            type="button"
-            onClick={handleLogin}
+            type="submit"
             disabled={loading}
             className="auth-form-btn auth-form-btn--login"
           >

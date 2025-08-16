@@ -1,9 +1,9 @@
-import React, { ReactNode } from "react";
+import React, { useState } from "react";
 import { Sidebar } from "./Sidebar";
 
 interface AppLayoutProps {
-  children: ReactNode;
-  variant?: "default" | "marketplace" | "dashboard";
+  children: React.ReactNode;
+  variant?: "default" | "dashboard" | "marketplace";
   showSidebar?: boolean;
   onSectionChange?: (section: string) => void;
 }
@@ -14,27 +14,38 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   showSidebar = true,
   onSectionChange = () => {},
 }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   const getLayoutClass = () => {
     if (!showSidebar) return "layout-main-content";
 
+    let baseClass = "";
     switch (variant) {
-      case "marketplace":
-        return "layout-with-sidebar layout-with-sidebar--marketplace";
       case "dashboard":
-        return "layout-with-sidebar";
+        baseClass = "layout-with-sidebar";
+        break;
+      case "marketplace":
+        baseClass = "layout-with-sidebar";
+        break;
       default:
-        return "layout-with-sidebar";
+        baseClass = "layout-with-sidebar";
     }
+
+    if (isCollapsed) {
+      baseClass += " layout-with-sidebar--collapsed";
+    }
+
+    return baseClass;
   };
 
   const getSidebarVariant = () => {
     switch (variant) {
-      case "marketplace":
-        return "marketplace";
       case "dashboard":
         return "dashboard";
+      case "marketplace":
+        return "marketplace";
       default:
-        return "general";
+        return "dashboard";
     }
   };
 
@@ -44,6 +55,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <Sidebar
           variant={getSidebarVariant()}
           onSectionChange={onSectionChange}
+          isCollapsed={isCollapsed}
+          onToggleCollapse={setIsCollapsed}
         />
       )}
 

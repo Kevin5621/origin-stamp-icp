@@ -21,7 +21,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
   onSessionCreated,
   onPhotosUploaded,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("session");
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -54,7 +54,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
       const sessionId = await PhysicalArtService.createSession(
         user.username,
         artTitle.trim(),
-        description.trim() || "Physical artwork creation process",
+        description.trim() || t("physical_art_setup.description_default"),
       );
 
       setSessionId(sessionId);
@@ -141,7 +141,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
           ...newProgress.get(file.name)!,
           status: "failed",
           progress: 0,
-          error: error instanceof Error ? error.message : "Upload failed",
+          error: error instanceof Error ? error.message : t("upload_failed"),
         });
       }
 
@@ -199,7 +199,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
     return (
       <div className="setup-content">
         <div className="error-state">
-          <AlertCircle size={48} className="error-icon" />
+          <AlertCircle size={33} className="error-icon" />
           <h3>{t("s3_not_configured")}</h3>
           <p>{t("s3_configuration_required")}</p>
         </div>
@@ -249,7 +249,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
           <button
             onClick={handleCreateSession}
             disabled={isCreatingSession || !artTitle.trim()}
-            className="btn-create-session wireframe-button primary"
+            className="btn btn--primary"
           >
             {isCreatingSession ? t("creating_session") : t("create_session")}
           </button>
@@ -258,7 +258,9 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
         <div className="upload-section">
           <div className="session-info">
             <h3 className="session-title">{artTitle}</h3>
-            <p className="session-id">Session ID: {sessionId}</p>
+            <p className="session-id">
+              {t("session_id")}: {sessionId}
+            </p>
             {description && (
               <p className="session-description">{description}</p>
             )}
@@ -266,12 +268,12 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
 
           <div className="upload-area-container">
             <div
-              className="upload-area wireframe-card"
+              className="upload-area"
               onDragOver={handleDragOver}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
             >
-              <Camera size={48} strokeWidth={1} />
+              <Camera size={33} strokeWidth={1} />
               <h4>{t("upload_process_photos")}</h4>
               <p>{t("drag_and_drop_or_click")}</p>
               <p className="upload-info">

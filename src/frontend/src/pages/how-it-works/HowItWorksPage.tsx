@@ -23,6 +23,13 @@ const HowItWorksPage: React.FC = () => {
   // Initialize cursor spotlight effect
   useCursorSpotlight();
 
+  // Immediate redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   // Preload 3D model saat komponen mount
   useEffect(() => {
     const preloadModel = async () => {
@@ -78,6 +85,7 @@ const HowItWorksPage: React.FC = () => {
             src="/woman-statue.glb"
             enableInteraction={false}
             enableRotation={true}
+            enableCameraAnimation={false}
             theme={currentTheme}
           />
         )}
@@ -126,7 +134,7 @@ const HowItWorksPage: React.FC = () => {
           <div className="how-it-works-hero-actions">
             <button
               type="button"
-              className="btn-wireframe btn-wireframe--primary"
+              className="btn btn--primary"
               onClick={handleGetStarted}
             >
               {t("cta_button")}
@@ -606,7 +614,7 @@ const HowItWorksPage: React.FC = () => {
               <div className="how-it-works-cta-actions">
                 <button
                   type="button"
-                  className="btn-wireframe btn-wireframe--primary btn-wireframe--large"
+                  className="btn btn--primary btn--lg"
                   onClick={handleGetStarted}
                 >
                   {t("cta_button")}

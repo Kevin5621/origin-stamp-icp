@@ -127,7 +127,8 @@
 }
 
 .btn-create-session {
-  @extend .btn-wireframe !optional;
+  @extend .btn !optional;
+  @extend .btn--primary !optional;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -150,12 +151,6 @@
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-xl);
   box-shadow: var(--shadow-neumorphic-md);
-}
-
-.session-info {
-  margin-bottom: var(--spacing-xl);
-  padding-bottom: var(--spacing-lg);
-  border-bottom: 2px solid var(--color-text-primary);
 }
 
 .session-title {

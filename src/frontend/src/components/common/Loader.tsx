@@ -1,9 +1,16 @@
 /**
  * Loading indicator component with semantic Neumorphic classes
  */
-export function Loader() {
+interface LoaderProps {
+  size?: "small" | "medium" | "large";
+  className?: string;
+}
+
+export function Loader({ size = "medium", className = "" }: LoaderProps) {
   return (
-    <div className="loading-container">
+    <div
+      className={`loading-container loading-container--${size} ${className}`}
+    >
       <div className="loading-spinner" />
     </div>
   );

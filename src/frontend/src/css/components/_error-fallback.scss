@@ -1,0 +1,410 @@
+/* ==========================================================================
+   Error Fallback Styles - Modern Clean Design (Consistent with Not Found Page)
+   ========================================================================== */
+
+.error-fallback {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-error-rgb), 0.02) 100%
+  );
+  padding: var(--spacing-xl);
+}
+
+.error-fallback__container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.error-fallback__content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  padding: var(--spacing-3xl);
+  text-align: center;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: errorFallbackSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes errorFallbackSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =============================================================================
+   ERROR FALLBACK NUMBER
+   ============================================================================= */
+
+.error-fallback__number {
+  margin-bottom: var(--spacing-lg);
+}
+
+.error-fallback-number {
+  font-size: 6rem;
+  font-weight: 900;
+  background: linear-gradient(
+    135deg,
+    var(--color-error) 0%,
+    var(--color-warning) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  animation: errorFallbackNumberFloat 3s ease-in-out infinite;
+}
+
+@keyframes errorFallbackNumberFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* =============================================================================
+   ERROR FALLBACK ICON
+   ============================================================================= */
+
+.error-fallback__icon {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* =============================================================================
+   ERROR FALLBACK ICON - OVERRIDE KHUSUS
+   ============================================================================= */
+
+.error-fallback__icon .error-fallback-icon,
+.error-fallback-icon {
+  color: var(--color-error);
+  opacity: 0.8;
+  animation: errorFallbackIconPulse 2s ease-in-out infinite;
+  width: 29.4px !important;
+  height: 29.4px !important;
+  min-width: 29.4px !important;
+  min-height: 29.4px !important;
+  max-width: 29.4px !important;
+  max-height: 29.4px !important;
+  flex-shrink: 0 !important;
+}
+
+@keyframes errorFallbackIconPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* =============================================================================
+   ERROR FALLBACK MESSAGE
+   ============================================================================= */
+
+.error-fallback__message {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.error-fallback__title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md);
+  letter-spacing: -0.025em;
+}
+
+.error-fallback__description {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =============================================================================
+   QUICK LINKS
+   ============================================================================= */
+
+.error-fallback__quick-links {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.error-fallback__quick-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-lg);
+}
+
+.error-fallback__links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--spacing-md);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.quick-link-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  background: var(--color-surface-variant);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.quick-link-card:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.quick-link-card svg {
+  flex-shrink: 0;
+}
+
+.quick-link-card span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* =============================================================================
+   ERROR FALLBACK ACTIONS
+   ============================================================================= */
+
+.error-fallback__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  align-items: center;
+}
+
+.error-fallback__action-btn {
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  justify-content: center;
+}
+
+/* =============================================================================
+   ERROR FALLBACK DETAILS (DEVELOPMENT)
+   ============================================================================= */
+
+.error-fallback__details {
+  margin-bottom: var(--spacing-xl);
+  text-align: left;
+  background: rgba(var(--color-warning-rgb), 0.05);
+  border: 1px solid rgba(var(--color-warning-rgb), 0.15);
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  animation: errorFallbackDetailsSlideIn 0.4s ease-out;
+}
+
+@keyframes errorFallbackDetailsSlideIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 400px;
+  }
+}
+
+.error-fallback__details-summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-warning);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.error-fallback__details-summary:hover {
+  color: var(--color-warning-hover);
+}
+
+.error-fallback__details-content {
+  margin-top: var(--spacing-md);
+}
+
+.error-code-block {
+  margin-bottom: var(--spacing-md);
+}
+
+.error-code-block h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-xs);
+}
+
+.error-code-block code {
+  display: block;
+  font-family: "Fira Code", "Monaco", "Consolas", monospace;
+  font-size: 0.875rem;
+  color: var(--color-info);
+  background: rgba(var(--color-info-rgb), 0.05);
+  border: 1px solid rgba(var(--color-info-rgb), 0.15);
+  border-radius: 6px;
+  padding: var(--spacing-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.error-fallback__error-text {
+  font-family: "Fira Code", "Monaco", "Consolas", monospace;
+  font-size: 0.8rem;
+  color: var(--color-error);
+  background: rgba(var(--color-error-rgb), 0.05);
+  border: 1px solid rgba(var(--color-error-rgb), 0.15);
+  border-radius: 6px;
+  padding: var(--spacing-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* =============================================================================
+   HELP TEXT
+   ============================================================================= */
+
+.error-fallback__help {
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.error-fallback-help-text {
+  font-size: 0.875rem;
+  color: var(--color-text-tertiary);
+  margin: 0;
+  font-style: italic;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .error-fallback {
+    padding: var(--spacing-lg);
+  }
+
+  .error-fallback__content {
+    padding: var(--spacing-2xl);
+  }
+
+  .error-fallback-number {
+    font-size: 4.5rem;
+  }
+
+  .error-fallback__title {
+    font-size: 1.875rem;
+  }
+
+  .error-fallback__description {
+    font-size: 1rem;
+  }
+
+  .error-fallback__links-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--spacing-sm);
+  }
+
+  .quick-link-card {
+    padding: var(--spacing-md);
+  }
+
+  .quick-link-card span {
+    font-size: 0.8rem;
+  }
+
+  .error-fallback__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .error-fallback__action-btn {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .error-fallback__icon .error-fallback-icon,
+  .error-fallback-icon {
+    width: 25.2px !important;
+    height: 25.2px !important;
+    min-width: 25.2px !important;
+    min-height: 25.2px !important;
+    max-width: 25.2px !important;
+    max-height: 25.2px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-fallback__content {
+    padding: var(--spacing-xl);
+  }
+
+  .error-fallback-number {
+    font-size: 3.5rem;
+  }
+
+  .error-fallback__title {
+    font-size: 1.5rem;
+  }
+
+  .error-fallback__description {
+    font-size: 0.9rem;
+  }
+
+  .error-fallback-icon {
+    width: 21px !important; /* 30px * 0.7 = 21px */
+    height: 21px !important;
+    min-width: 21px !important;
+    min-height: 21px !important;
+    max-width: 21px !important;
+    max-height: 21px !important;
+    flex-shrink: 0 !important;
+  }
+}

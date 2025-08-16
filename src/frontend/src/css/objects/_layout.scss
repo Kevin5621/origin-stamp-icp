@@ -18,7 +18,7 @@
 .page-container {
   margin: 0 auto;
   max-width: 90rem;
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg) 0; /* No horizontal padding for maximum content width */
   transition: var(--theme-transition);
 }
 
@@ -26,17 +26,26 @@
    MAIN CONTENT LAYOUT
    ============================================================================= */
 
-.main-content {
-  padding-top: 6rem; /* Space for floating header */
-  margin-bottom: 6rem; /* Space for navigation */
-  min-height: calc(100vh - 12rem);
-  transition: var(--theme-transition);
-  width: 100%;
+.layout-main-content {
+  flex: 1;
+  background: var(--color-surface);
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+  padding: var(--spacing-xl) 0; /* Top padding only, no horizontal padding */
+  overflow-y: auto;
   position: relative;
 
+  /* Better container width for content */
+  max-width: 100%;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    padding: var(--spacing-lg) 0; /* Top padding only on tablets */
+  }
+
   @media (max-width: 768px) {
-    padding-top: 5rem;
-    margin-bottom: 5rem;
+    padding: var(--spacing-md) 0; /* Top padding only on mobile */
+    margin-left: 0;
   }
 }
 
@@ -210,7 +219,7 @@
 
 @media (max-width: 768px) {
   .page-container {
-    padding: var(--spacing-md);
+    padding: var(--spacing-md) 0; /* No horizontal padding on mobile */
   }
 
   .grid--2-cols,
@@ -228,7 +237,7 @@
 
 @media (max-width: 480px) {
   .page-container {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-sm) 0; /* No horizontal padding on small mobile */
   }
 
   .section {

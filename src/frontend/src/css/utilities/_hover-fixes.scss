@@ -6,9 +6,7 @@
 /* Individual components should handle their own hover states */
 
 /* Button hover fixes - removed forced color changes */
-.btn-wireframe,
-.surface-wireframe,
-.form-input-wireframe,
+.btn,
 .action-btn,
 .project-action-btn,
 .art-type-card,
@@ -25,9 +23,7 @@
 
 /* Dark theme specific hover fixes - removed forced color changes */
 [data-theme="dark"] {
-  .btn-wireframe,
-  .surface-wireframe,
-  .form-input-wireframe,
+  .btn,
   .action-btn,
   .project-action-btn,
   .art-type-card,
@@ -105,9 +101,7 @@
 /* Individual components should handle their own focus states */
 
 /* Animation for smooth color transitions */
-.btn-wireframe,
-.surface-wireframe,
-.form-input-wireframe,
+.btn,
 .action-btn,
 .project-action-btn,
 .art-type-card,

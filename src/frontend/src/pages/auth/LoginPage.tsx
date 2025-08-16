@@ -19,12 +19,19 @@ const LoginPage: React.FC = () => {
     useAuth();
   const [showCustomLogin, setShowCustomLogin] = useState(false);
 
-  // Redirect jika sudah login
+  // Immediate redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     }
   }, [isAuthenticated, navigate]);
+
+  // Also check immediately on component mount
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, []);
 
   const handleLoginSuccess = () => {
     navigate("/dashboard");
@@ -71,13 +78,15 @@ const LoginPage: React.FC = () => {
         onError: (err) => {
           console.error("Internet Identity login failed:", err);
           error(
-            t("login_failed", { message: "Internet Identity login failed" }),
+            t("login_failed", { message: t("internet_identity_login_failed") }),
           );
         },
       });
     } catch (err) {
       console.error("Error during Internet Identity login:", err);
-      error(t("login_failed", { message: "Internet Identity login failed" }));
+      error(
+        t("login_failed", { message: t("internet_identity_login_failed") }),
+      );
     }
   };
 
@@ -90,20 +99,7 @@ const LoginPage: React.FC = () => {
       success(t("login_success", { username: userInfo.name }));
     } catch (err) {
       console.error("Google login failed:", err);
-      error(t("login_failed", { message: "Google login failed" }));
-    }
-  };
-
-  // Implement registration with Gmail (Google)
-  const handleGoogleSignup = async () => {
-    try {
-      const userInfo = await googleAuthService.signUp();
-      loginWithGoogle(userInfo);
-      navigate("/dashboard");
-      success(t("register_success"));
-    } catch (err) {
-      console.error("Google signup failed:", err);
-      error(t("register_failed", { message: "Google signup failed" }));
+      error(t("login_failed", { message: t("google_login_failed") }));
     }
   };
 
@@ -135,7 +131,7 @@ const LoginPage: React.FC = () => {
                 </button>
                 <button
                   onClick={handleGoogleLogin}
-                  className="auth-page-btn auth-page-btn--google"
+                  className="auth-page-btn auth-page-btn--icp"
                 >
                   <img
                     src="/assets/google-logo.svg"
@@ -144,23 +140,9 @@ const LoginPage: React.FC = () => {
                   />
                   <span>{t("login_with_google")}</span>
                 </button>
-                <div className="auth-page-divider">
-                  <span>{t("or")}</span>
-                </div>
-                <button
-                  onClick={handleGoogleSignup}
-                  className="auth-page-btn auth-page-btn--signup"
-                >
-                  <img
-                    src="/assets/google-logo.svg"
-                    alt="Google"
-                    className="auth-page-btn-icon"
-                  />
-                  <span>{t("signup_with_google")}</span>
-                </button>
                 <button
                   onClick={handleShowCustomLogin}
-                  className="auth-page-btn auth-page-btn--custom"
+                  className="auth-page-btn auth-page-btn--icp"
                 >
                   <span>{t("login_with_username_password")}</span>
                 </button>

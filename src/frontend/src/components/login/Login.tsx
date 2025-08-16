@@ -193,7 +193,7 @@ export function Login({ className = "" }: LoginProps) {
         onError: (err) => {
           console.error("Internet Identity login failed:", err);
           error(
-            t("login_failed", { message: "Internet Identity login failed" }),
+            t("login_failed", { message: t("internet_identity_login_failed") }),
           );
         },
       });
@@ -212,21 +212,7 @@ export function Login({ className = "" }: LoginProps) {
       success(t("login_success", { username: userInfo.name }));
     } catch (err) {
       console.error("Google login failed:", err);
-      error(t("login_failed", { message: "Google login failed" }));
-    }
-  }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
-
-  // Implement registration with Gmail (Google)
-  const handleGoogleSignup = useCallback(async () => {
-    try {
-      const userInfo = await googleAuthService.signUp();
-      loginWithGoogle(userInfo);
-      handleCloseModal();
-      navigate("/dashboard");
-      success(t("register_success"));
-    } catch (err) {
-      console.error("Google signup failed:", err);
-      error(t("register_failed", { message: "Google signup failed" }));
+      error(t("login_failed", { message: t("google_login_failed") }));
     }
   }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
 
@@ -340,7 +326,7 @@ export function Login({ className = "" }: LoginProps) {
 
                     <button
                       onClick={handleGoogleLogin}
-                      className="auth-btn auth-btn--google"
+                      className="auth-btn auth-btn--icp"
                       aria-label={t("login_with_google")}
                     >
                       <img
@@ -352,27 +338,9 @@ export function Login({ className = "" }: LoginProps) {
                       <span>{t("login_with_google")}</span>
                     </button>
 
-                    <div className="auth-divider" role="separator">
-                      <span>{t("or")}</span>
-                    </div>
-
-                    <button
-                      onClick={handleGoogleSignup}
-                      className="auth-btn auth-btn--signup"
-                      aria-label={t("signup_with_google")}
-                    >
-                      <img
-                        src="/assets/google-logo.svg"
-                        alt=""
-                        className="auth-btn-icon"
-                        aria-hidden="true"
-                      />
-                      <span>{t("signup_with_google")}</span>
-                    </button>
-
                     <button
                       onClick={handleShowCustomLogin}
-                      className="auth-btn auth-btn--custom"
+                      className="auth-btn auth-btn--icp"
                       aria-label={t("login_with_username_password")}
                     >
                       <span>{t("login_with_username_password")}</span>

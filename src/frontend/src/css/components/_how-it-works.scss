@@ -20,6 +20,45 @@
   position: relative;
 }
 
+/* 3D Model Background khusus untuk How It Works */
+.how-it-works-layout .landing-3d-background {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 200vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  padding-top: 5vh !important;
+}
+
+.how-it-works-layout .landing-3d-background > div {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  position: relative !important;
+  padding-top: 5vh !important;
+}
+
+.how-it-works-layout .landing-3d-background canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  object-fit: contain !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  image-rendering: crisp-edges !important;
+  position: absolute !important;
+  top: 5vh !important;
+  left: 0 !important;
+}
+
 /* Custom scrollbar for how it works page */
 .how-it-works-layout::-webkit-scrollbar {
   width: 8px;
@@ -244,6 +283,22 @@
   margin: 0;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Khusus untuk section phases - tidak mempengaruhi posisi 3D model */
+.how-it-works-section--phases {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  background: transparent !important;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 10vh;
 }
 
 .how-it-works-container {
@@ -779,32 +834,32 @@
    BUTTON STYLES
    ============================================================================= */
 
-.btn-wireframe--primary {
-  background: rgba(var(--color-primary-rgb), 0.2);
-  border-color: rgba(var(--color-primary-rgb), 0.6);
-  color: var(--color-primary-text);
+.btn--primary {
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: white;
 }
 
-.btn-wireframe--primary:hover {
-  background: rgba(var(--color-primary-rgb), 0.3);
-  border-color: rgba(var(--color-primary-rgb), 0.8);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(var(--color-primary-rgb), 0.3);
+.btn--primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(var(--color-secondary-rgb), 0.25);
 }
 
-.btn-wireframe--secondary {
-  background: rgba(var(--color-surface-rgb), 0.2);
-  border-color: rgba(var(--color-primary-rgb), 0.4);
-  color: var(--color-text-primary);
+.btn--outline {
+  background: transparent;
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
-.btn-wireframe--secondary:hover {
-  background: rgba(var(--color-surface-rgb), 0.3);
-  border-color: rgba(var(--color-primary-rgb), 0.6);
-  transform: translateY(-2px);
+.btn--outline:hover {
+  background: var(--color-secondary);
+  color: white;
+  transform: translateY(-1px);
 }
 
-.btn-wireframe--large {
+.btn--lg {
   padding: 1rem 2rem;
   font-size: 1.1rem;
   font-weight: 600;

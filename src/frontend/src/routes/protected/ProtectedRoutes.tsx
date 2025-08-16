@@ -3,6 +3,7 @@ import { Route } from "react-router-dom";
 import { RouteConfig } from "../../types/routes";
 import DashboardPage from "../../pages/dashboard/DashboardPage";
 import SessionPage from "../../pages/dashboard/SessionPage";
+import SessionRecordPage from "../../pages/dashboard/SessionRecordPage";
 import FinalizationPage from "../../pages/dashboard/FinalizationPage";
 import VerificationPage from "../../pages/dashboard/VerificationPage";
 
@@ -22,7 +23,16 @@ export const protectedRoutes: RouteConfig[] = [
   {
     path: "/session",
     element: SessionPage,
-    title: "Session",
+    title: "Session Management",
+    isProtected: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/sessions/:sessionId",
+    element: SessionRecordPage,
+    title: "Session Recording",
     isProtected: true,
     meta: {
       requiresAuth: true,
