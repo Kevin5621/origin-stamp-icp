@@ -9,7 +9,14 @@
 .app-header {
   margin-bottom: var(--spacing-2xl);
   text-align: center;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-fixed);
+  background-color: var(--color-surface);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+  transition: var(--transition-normal);
 }
 
 .header-content {
@@ -55,19 +62,10 @@
   right: 0;
   z-index: var(--z-index-fixed);
   padding: var(--spacing-lg);
-  transition: var(--transition-normal);
   pointer-events: none;
-  will-change: transform, opacity;
-
-  &.floating-header--visible {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  &.floating-header--hidden {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
+  transform: translateY(0);
+  opacity: 1;
+  transition: none; /* Menghapus animasi hide/show */
 }
 
 .floating-header-content {
@@ -78,8 +76,6 @@
   padding: var(--spacing-md);
   pointer-events: auto;
   min-height: 3.5rem;
-  transition: var(--transition-normal);
-  will-change: transform, box-shadow;
   position: relative;
   isolation: isolate;
   flex-wrap: nowrap;
@@ -130,11 +126,102 @@
   flex-shrink: 0;
 }
 
+.floating-header__unauthenticated {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+}
+
 .floating-header__right {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   flex-shrink: 0;
+}
+
+/* =============================================================================
+   HEADER BUTTON CONSISTENCY
+   ============================================================================= */
+
+.floating-header .sign-in-btn {
+  min-width: 80px !important;
+  height: 40px !important;
+  font-size: 0.875rem !important;
+  padding: var(--spacing-xs) var(--spacing-md) !important;
+  border-radius: var(--border-radius-md) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  transition: all 0.2s ease !important;
+  background-color: var(--color-primary-text) !important;
+  color: var(--color-surface) !important;
+  border: none !important;
+  box-shadow: var(--shadow-neumorphic-sm) !important;
+
+  &:hover {
+    background-color: var(--color-primary-text) !important;
+    color: var(--color-surface) !important;
+    transform: scale(1.05) !important;
+    box-shadow: var(--shadow-neumorphic-md) !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text) !important;
+    outline-offset: 2px !important;
+  }
+}
+
+/* Override button styling untuk header dengan spesifisitas yang lebih tinggi */
+.floating-header .theme-toggle,
+.floating-header .language-toggle {
+  /* Memastikan ukuran button tetap konsisten */
+  min-width: 40px !important;
+  min-height: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-on-surface) !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  box-shadow: var(--shadow-neumorphic-sm) !important;
+
+  &:hover {
+    background-color: var(--color-hover-overlay) !important;
+    transform: scale(1.05) !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Mempertahankan ukuran icon yang sudah ada */
+  svg {
+    width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
+    height: 0.875rem !important;
+    transition: var(--theme-transition) !important;
+  }
+
+  /* Khusus untuk language toggle dengan flag SVG */
+  .language-toggle svg {
+    width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
+    height: 1.05rem !important;
+    border-radius: var(--border-radius-full) !important;
+  }
+
+  /* Khusus untuk language toggle dengan flag image */
+  img {
+    width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
+    height: 1.05rem !important;
+    border-radius: var(--border-radius-full) !important;
+    object-fit: cover !important;
+  }
 }
 
 .floating-header__authenticated {
@@ -187,6 +274,82 @@
     background-color: rgba(var(--color-surface-rgb), 0.15);
     border-color: rgba(var(--color-border-rgb, 55, 65, 81), 0.3);
   }
+}
+
+/* =============================================================================
+   STICKY HEADER DARK THEME
+   ============================================================================= */
+
+[data-theme="dark"] .app-header {
+  background-color: rgba(var(--color-surface-rgb), 0.95);
+  border-bottom-color: var(--color-border);
+  backdrop-filter: blur(12px);
+}
+
+/* =============================================================================
+   STICKY HEADER VARIANTS
+   ============================================================================= */
+
+/* Sticky header untuk halaman dashboard */
+.dashboard__bento-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  background-color: var(--color-surface);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+  margin-bottom: var(--spacing-xl);
+  transition: var(--transition-normal);
+}
+
+/* Sticky header untuk halaman certificates */
+.certificates-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  background-color: var(--color-surface);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+  margin-bottom: var(--spacing-xl);
+  transition: var(--transition-normal);
+}
+
+/* Sticky header untuk halaman analytics */
+.analytics__header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  background-color: var(--color-surface);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+  margin-bottom: var(--spacing-xl);
+  transition: var(--transition-normal);
+}
+
+/* Sticky header untuk halaman settings */
+.dashboard__header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  background-color: var(--color-surface);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+  margin-bottom: var(--spacing-xl);
+  transition: var(--transition-normal);
+}
+
+/* Dark theme untuk sticky headers */
+[data-theme="dark"] .dashboard__bento-header,
+[data-theme="dark"] .certificates-header,
+[data-theme="dark"] .analytics__header,
+[data-theme="dark"] .dashboard__header {
+  background-color: rgba(var(--color-surface-rgb), 0.95);
+  border-bottom-color: var(--color-border);
+  backdrop-filter: blur(12px);
 }
 
 /* =============================================================================
@@ -246,6 +409,14 @@
    ============================================================================= */
 
 @media (max-width: 768px) {
+  .app-header,
+  .dashboard__bento-header,
+  .certificates-header,
+  .analytics__header,
+  .dashboard__header {
+    padding: var(--spacing-md) 0;
+  }
+
   .floating-header {
     padding: var(--spacing-md);
   }
@@ -264,6 +435,28 @@
   .floating-header__right {
     gap: var(--spacing-xs);
   }
+
+  /* Mempertahankan ukuran icon di tablet */
+  .floating-header .theme-toggle,
+  .floating-header .language-toggle {
+    width: 40px !important;
+    height: 40px !important;
+
+    svg {
+      width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
+      height: 0.875rem !important;
+    }
+
+    .language-toggle svg {
+      width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
+      height: 1.05rem !important;
+    }
+
+    img {
+      width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
+      height: 1.05rem !important;
+    }
+  }
 }
 
 @media (max-width: 480px) {
@@ -279,6 +472,28 @@
   .floating-header__authenticated,
   .floating-header__unauthenticated {
     gap: var(--spacing-xs);
+  }
+
+  /* Mempertahankan ukuran icon di mobile dengan sedikit penyesuaian */
+  .floating-header .theme-toggle,
+  .floating-header .language-toggle {
+    width: 36px !important;
+    height: 36px !important;
+
+    svg {
+      width: 0.7875rem !important; /* 1.125rem * 0.7 = 0.7875rem */
+      height: 0.7875rem !important;
+    }
+
+    .language-toggle svg {
+      width: 0.9625rem !important; /* 1.375rem * 0.7 = 0.9625rem */
+      height: 0.9625rem !important;
+    }
+
+    img {
+      width: 0.9625rem !important; /* 1.375rem * 0.7 = 0.9625rem */
+      height: 0.9625rem !important;
+    }
   }
 }
 
@@ -382,6 +597,14 @@
 }
 
 @media (max-width: 640px) {
+  .app-header,
+  .dashboard__bento-header,
+  .certificates-header,
+  .analytics__header,
+  .dashboard__header {
+    padding: var(--spacing-md) 0;
+  }
+
   .floating-header {
     padding: var(--spacing-md);
   }
@@ -396,6 +619,14 @@
 }
 
 @media (max-width: 480px) {
+  .app-header,
+  .dashboard__bento-header,
+  .certificates-header,
+  .analytics__header,
+  .dashboard__header {
+    padding: var(--spacing-sm) 0;
+  }
+
   .floating-header {
     padding: var(--spacing-sm);
   }
@@ -409,5 +640,73 @@
 
   .main-content {
     padding-top: 4rem;
+  }
+}
+
+/* =============================================================================
+   HEADER ICON OVERRIDE - Mencegah icon mengecil
+   ============================================================================= */
+
+/* Override untuk theme toggle icon */
+.floating-header .theme-toggle svg {
+  width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
+  height: 0.875rem !important;
+  min-width: 0.875rem !important;
+  min-height: 0.875rem !important;
+  transition: var(--theme-transition) !important;
+}
+
+/* Override untuk language toggle icon */
+.floating-header .language-toggle svg {
+  width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
+  height: 1.05rem !important;
+  min-width: 1.05rem !important;
+  min-height: 1.05rem !important;
+  border-radius: var(--border-radius-full) !important;
+}
+
+/* Override untuk language toggle image */
+.floating-header .language-toggle img {
+  width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
+  height: 1.05rem !important;
+  min-width: 1.05rem !important;
+  min-height: 1.05rem !important;
+  border-radius: var(--border-radius-full) !important;
+  object-fit: cover !important;
+}
+
+/* =============================================================================
+   RESPONSIVE HEADER ICONS
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .floating-header .theme-toggle svg {
+    width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
+    height: 0.875rem !important;
+    min-width: 0.875rem !important;
+    min-height: 0.875rem !important;
+  }
+
+  .floating-header .language-toggle svg {
+    width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
+    height: 1.05rem !important;
+    min-width: 1.05rem !important;
+    min-height: 1.05rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-header .theme-toggle svg {
+    width: 0.7875rem !important; /* 1.125rem * 0.7 = 0.7875rem */
+    height: 0.7875rem !important;
+    min-width: 0.7875rem !important;
+    min-height: 0.7875rem !important;
+  }
+
+  .floating-header .language-toggle svg {
+    width: 0.9625rem !important; /* 1.375rem * 0.7 = 0.9625rem */
+    height: 0.9625rem !important;
+    min-width: 0.9625rem !important;
+    min-height: 0.9625rem !important;
   }
 }

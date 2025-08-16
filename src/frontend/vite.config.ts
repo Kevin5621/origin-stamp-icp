@@ -13,6 +13,16 @@ export default defineConfig({
   build: {
     outDir: "dist/",
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
+      },
+    },
   },
   optimizeDeps: {
     esbuildOptions: {
@@ -45,8 +55,9 @@ export default defineConfig({
       },
     },
     allowedHosts: [
+      "originstamp.csalab.id",
       "originstamp.csalab.app",
-      "originstamp.csalab.dev",
+      "originstamp-dev.csalab.app",
       "localhost",
     ],
   },

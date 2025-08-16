@@ -4,7 +4,7 @@
 
 .transformable-avatar {
   position: relative;
-  z-index: 1000;
+  z-index: var(--z-index-fixed);
   isolation: isolate;
   width: 3rem;
   height: 3rem;
@@ -18,9 +18,16 @@
   padding: 0;
   cursor: pointer;
   position: relative;
-  z-index: 1002;
+  z-index: var(--z-index-fixed);
   width: 100%;
   height: 100%;
+  user-select: none;
+  outline: none;
+}
+
+.transformable-avatar__button:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .transformable-avatar__circle {
@@ -35,16 +42,12 @@
   font-weight: 600;
   font-size: 0.875rem;
   letter-spacing: 0.025em;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   box-shadow:
     6px 6px 12px var(--color-shadow-dark),
     -6px -6px 12px var(--color-shadow-light);
   position: relative;
   overflow: hidden;
-  transform-origin: center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, width, height, border-radius;
   transform: scale(1);
 }
 
@@ -53,7 +56,7 @@
   box-shadow:
     8px 8px 16px var(--color-shadow-dark),
     -8px -8px 16px var(--color-shadow-light);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
 }
 
 .transformable-avatar--expanded .transformable-avatar__circle:hover {
@@ -61,7 +64,7 @@
   box-shadow:
     12px 12px 24px var(--color-shadow-dark),
     -12px -12px 24px var(--color-shadow-light);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
 }
 
 .transformable-avatar__initials {
@@ -90,7 +93,7 @@
     12px 12px 24px var(--color-shadow-dark),
     -12px -12px 24px var(--color-shadow-light);
   transform: scale(1);
-  z-index: 1002;
+  z-index: var(--z-index-fixed);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -139,13 +142,14 @@
    ============================================================================= */
 
 .profile-card {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  opacity: 1;
-  gap: 16px;
+  position: relative;
+  z-index: var(--z-index-fixed);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--spacing-2xl);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .profile-card__header {
@@ -158,8 +162,8 @@
 }
 
 .profile-card__avatar {
-  width: 64px;
-  height: 64px;
+  width: 44.8px !important; /* 64px * 0.7 = 44.8px */
+  height: 44.8px !important;
   border-radius: 50%;
   background: linear-gradient(
     135deg,
@@ -325,9 +329,10 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  z-index: 10;
+  z-index: var(--z-index-fixed);
   background: var(--color-surface);
   color: var(--color-error);
+  border: none;
   border-radius: 50%;
   padding: 10px;
   width: 36px;
@@ -338,6 +343,13 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-card__logout-btn--floating:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .profile-card__logout-btn--floating span {
@@ -364,8 +376,8 @@
   }
 
   .profile-card__avatar {
-    width: 56px;
-    height: 56px;
+    width: 39.2px !important; /* 56px * 0.7 = 39.2px */
+    height: 39.2px !important;
   }
 
   .profile-card__initials {

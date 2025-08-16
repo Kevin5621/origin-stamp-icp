@@ -10,7 +10,7 @@ export function AppNavigation() {
   const location = useLocation();
   const currentView = location.pathname;
   return (
-    <nav className="app-navigation" aria-label="Navigasi utama">
+    <nav className="app-navigation" aria-label={t("navigation.main")}>
       <div className="nav-container">
         <button
           onClick={() => navigate("/dashboard")}

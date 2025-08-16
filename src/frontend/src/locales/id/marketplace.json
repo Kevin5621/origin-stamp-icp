@@ -1,7 +1,4 @@
 {
-  "search": {
-    "placeholder": "Cari OriginStamp"
-  },
   "connectWallet": "Hubungkan Wallet",
   "nav": {
     "explore": "Jelajahi",
@@ -44,7 +41,9 @@
     "create": "Buat",
     "activity": "Aktivitas",
     "rankings": "Peringkat",
-    "stats": "Statistik"
+    "stats": "Statistik",
+    "collapse": "Tutup Sidebar",
+    "expand": "Buka Sidebar"
   },
   "hero": {
     "title": "Temukan Seni Digital Unik",
@@ -156,5 +155,7 @@
     "priceRequired": "Harga yang valid diperlukan",
     "fileRequired": "Silakan pilih file",
     "createFailed": "Gagal membuat NFT"
-  }
+  },
+  "wallet": "Dompet",
+  "notifications": "Notifikasi"
 }

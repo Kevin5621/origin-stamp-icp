@@ -3,9 +3,13 @@ export { CategoryFilter } from "./CategoryFilter";
 export { HeroBanner } from "./HeroBanner";
 export { FeaturedCollections } from "./FeaturedCollections";
 export { CollectionList } from "./CollectionList";
-export { Sidebar } from "./Sidebar";
+export { CollectionFilterBar } from "./CollectionFilterBar";
+export { CollectionGrid } from "./CollectionGrid";
+export { CollectionCard } from "./CollectionCard";
+
+export * from "../../css/components/marketplace/Navbar.module.scss";
+export * from "./Navbar";
 
 // New modular components
-export { MarketplaceSidebar } from "./MarketplaceSidebar";
 export { MarketplaceMainContent } from "./MarketplaceMainContent";
 export { MarketplacePriceList } from "./MarketplacePriceList";

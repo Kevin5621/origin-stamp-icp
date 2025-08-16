@@ -406,7 +406,7 @@ const KaryaDetailPage: React.FC = () => {
           <Card className="karya-detail-page__preview-card">
             <div className="karya-detail-page__preview">
               <div className="karya-detail-page__preview-placeholder">
-                <Eye size={64} />
+                <Eye size={30} />
                 <p>{t("preview_placeholder")}</p>
               </div>
             </div>

@@ -1,35 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Compass,
-  Grid,
-  List,
-  Anchor,
   Settings,
   Home,
   BarChart3,
   Award,
   Wallet,
-  Bell,
   Plus,
   User,
   Folder,
+  ChevronLeft,
+  ChevronRight,
+  Grid,
+  List,
+  Anchor,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 interface SidebarProps {
   onSectionChange?: (section: string) => void;
-  variant?: "marketplace" | "dashboard" | "general";
+  isCollapsed?: boolean;
+  onToggleCollapse?: (collapsed: boolean) => void;
+  variant?: "dashboard" | "marketplace";
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   onSectionChange = () => {},
-  variant = "general",
+  isCollapsed: externalIsCollapsed,
+  onToggleCollapse,
+  variant = "dashboard",
 }) => {
   const { t } = useTranslation("common");
+  const { t: tMarketplace } = useTranslation("marketplace");
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
+
+  // Internal state for collapse if not controlled externally
+  const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
+
+  const isCollapsed = externalIsCollapsed ?? internalIsCollapsed;
+
+  const handleToggleCollapse = () => {
+    const newCollapsedState = !isCollapsed;
+    if (onToggleCollapse) {
+      onToggleCollapse(newCollapsedState);
+    } else {
+      setInternalIsCollapsed(newCollapsedState);
+    }
+  };
 
   const getMenuItems = () => {
     if (variant === "marketplace") {
@@ -37,81 +57,123 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {
           id: "explore",
           icon: Compass,
-          label: t("sidebar.explore"),
+          label: tMarketplace("sidebar.explore"),
           path: "/marketplace",
         },
         {
           id: "collections",
           icon: Grid,
-          label: t("sidebar.collections"),
-          path: "/marketplace/collections",
+          label: tMarketplace("sidebar.collections"),
+          path: "/marketplace-collections",
         },
         {
           id: "create",
           icon: Plus,
-          label: t("sidebar.create"),
+          label: tMarketplace("sidebar.create"),
           path: "/marketplace/create",
         },
         {
           id: "activity",
           icon: List,
-          label: t("sidebar.activity"),
+          label: tMarketplace("sidebar.activity"),
           path: "/marketplace/activity",
         },
         {
           id: "rankings",
           icon: Anchor,
-          label: t("sidebar.rankings"),
+          label: tMarketplace("sidebar.rankings"),
           path: "/marketplace/rankings",
         },
         {
           id: "stats",
           icon: BarChart3,
-          label: t("sidebar.stats"),
+          label: tMarketplace("sidebar.stats"),
           path: "/marketplace/stats",
         },
       ];
-    } else {
+    }
+
+    // Dashboard menu items
+    return [
+      {
+        id: "dashboard",
+        icon: Home,
+        label: t("sidebar.dashboard"),
+        path: "/dashboard",
+      },
+      {
+        id: "session",
+        icon: User,
+        label: t("sidebar.session"),
+        path: "/session",
+      },
+      {
+        id: "certificates",
+        icon: Award,
+        label: t("sidebar.certificates"),
+        path: "/certificates",
+      },
+      {
+        id: "analytics",
+        icon: BarChart3,
+        label: t("sidebar.analytics"),
+        path: "/analytics",
+      },
+      {
+        id: "portfolio",
+        icon: Folder,
+        label: t("sidebar.portfolio"),
+        path: "/portfolio",
+      },
+      {
+        id: "settings",
+        icon: Settings,
+        label: t("sidebar.settings"),
+        path: "/settings",
+      },
+    ];
+  };
+
+  const getBottomMenuItems = () => {
+    if (variant === "marketplace") {
       return [
-        { id: "dashboard", icon: Home, label: "Dashboard", path: "/dashboard" },
-        { id: "session", icon: User, label: "Session", path: "/session" },
+        {
+          id: "dashboard",
+          icon: Home,
+          label: t("sidebar.dashboard"),
+          path: "/dashboard",
+        },
         {
           id: "certificates",
           icon: Award,
-          label: "Certificates",
+          label: t("sidebar.certificates"),
           path: "/certificates",
         },
         {
           id: "analytics",
           icon: BarChart3,
-          label: "Analytics",
+          label: t("sidebar.analytics"),
           path: "/analytics",
-        },
-        {
-          id: "portfolio",
-          icon: Folder,
-          label: "Portfolio",
-          path: "/portfolio",
         },
         {
           id: "settings",
           icon: Settings,
-          label: "Settings",
+          label: t("sidebar.settings"),
           path: "/settings",
         },
       ];
     }
-  };
 
-  const bottomMenuItems = [
-    {
-      id: "marketplace",
-      icon: Compass,
-      label: "Marketplace",
-      path: "/marketplace",
-    },
-    { id: "home", icon: Home, label: "Home", path: "/" },
-  ];
+    return [
+      {
+        id: "marketplace",
+        icon: Compass,
+        label: t("sidebar.marketplace"),
+        path: "/marketplace",
+      },
+      { id: "home", icon: Home, label: t("sidebar.home"), path: "/" },
+    ];
+  };
 
   const isActive = (path: string) => {
     return (
@@ -121,48 +183,86 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const getUserBalance = () => {
     // Mock balance - in real app this would come from wallet
-    return isAuthenticated ? "0.00 ICP" : "0.00 ICP";
+    return "0.00 ICP";
   };
 
   const getUserName = () => {
-    if (!isAuthenticated) return "Guest User";
-    return user?.username || "User";
+    if (!isAuthenticated) return t("sidebar.guest_user");
+    return user?.username || t("sidebar.user");
   };
 
   const getUserAvatar = () => {
-    if (!isAuthenticated) return "/api/placeholder/40/40";
-    return user?.picture || "/api/placeholder/40/40";
+    if (!isAuthenticated)
+      return "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png";
+    return (
+      user?.picture ||
+      "https://raw.githubusercontent.com/csalab-id/csalab-id.github.io/refs/heads/main/images/logo.png"
+    );
+  };
+
+  const getLogoText = () => {
+    return variant === "marketplace" ? "Marketplace" : "OriginStamp";
+  };
+
+  const getLogoIcon = () => {
+    return variant === "marketplace" ? "IC" : "OS";
+  };
+
+  const getLogoPath = () => {
+    return variant === "marketplace" ? "/marketplace" : "/";
   };
 
   return (
-    <nav className="app-sidebar">
+    <nav
+      className={`app-sidebar ${isCollapsed ? "app-sidebar--collapsed" : ""} app-sidebar--${variant}`}
+    >
       <div className="sidebar-container">
-        {/* Logo */}
-        <div className="sidebar-logo">
-          <Link to="/" className="logo-link">
-            <div className="logo-icon">🖼️</div>
-            <span className="logo-text">OriginStamp</span>
-          </Link>
+        {/* Professional Header Section */}
+        <div className="sidebar-header">
+          {/* Logo */}
+          <div className="sidebar-logo">
+            <Link to={getLogoPath()} className="logo-link">
+              {!isCollapsed && (
+                <span className="logo-text">{getLogoText()}</span>
+              )}
+            </Link>
+          </div>
+
+          {/* Collapse Toggle Button */}
+          <button
+            className="sidebar-collapse-toggle"
+            onClick={handleToggleCollapse}
+            title={isCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
+          >
+            {isCollapsed ? (
+              <ChevronRight size={16} />
+            ) : (
+              <ChevronLeft size={16} />
+            )}
+          </button>
         </div>
 
         {/* User Profile Section */}
-        <div className="sidebar-user">
-          <div className="user-avatar">
-            <img src={getUserAvatar()} alt="User" />
+        {!isCollapsed && (
+          <div className="sidebar-user">
+            <div className="user-avatar">
+              <img src={getUserAvatar()} alt="User" />
+            </div>
+            <div className="user-info">
+              <div className="user-name">{getUserName()}</div>
+              <div className="user-balance">{getUserBalance()}</div>
+            </div>
           </div>
-          <div className="user-info">
-            <div className="user-name">{getUserName()}</div>
-            <div className="user-balance">{getUserBalance()}</div>
+        )}
+
+        {/* Collapsed User Avatar */}
+        {isCollapsed && (
+          <div className="sidebar-user-collapsed">
+            <div className="user-avatar">
+              <img src={getUserAvatar()} alt="User" />
+            </div>
           </div>
-          <div className="user-actions">
-            <button className="action-btn" title="Wallet">
-              <Wallet size={16} />
-            </button>
-            <button className="action-btn" title="Notifications">
-              <Bell size={16} />
-            </button>
-          </div>
-        </div>
+        )}
 
         {/* Main Menu Items */}
         <ul className="sidebar-menu">
@@ -178,7 +278,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   title={item.label}
                 >
                   <Icon size={20} />
-                  <span className="menu-label">{item.label}</span>
+                  {!isCollapsed && (
+                    <span className="menu-label">{item.label}</span>
+                  )}
                 </Link>
               </li>
             );
@@ -186,24 +288,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </ul>
 
         {/* Quick Actions */}
-        <div className="sidebar-quick-actions">
-          <h3 className="section-title">Quick Actions</h3>
-          <div className="quick-actions-grid">
-            <button className="quick-action-btn">
-              <Plus size={16} />
-              <span>Create NFT</span>
-            </button>
-            <button className="quick-action-btn">
-              <Wallet size={16} />
-              <span>Connect Wallet</span>
-            </button>
+        {!isCollapsed && (
+          <div className="sidebar-quick-actions">
+            <h3 className="section-title">{t("quick_actions")}</h3>
+            <div className="quick-actions-grid">
+              <button className="quick-action-btn">
+                <Plus size={16} />
+                <span>{t("create_nft")}</span>
+              </button>
+              <button className="quick-action-btn">
+                <Wallet size={16} />
+                <span>{t("connect_wallet")}</span>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Bottom Menu Items */}
         <div className="sidebar-bottom">
           <ul className="sidebar-menu">
-            {bottomMenuItems.map((item) => {
+            {getBottomMenuItems().map((item) => {
               const Icon = item.icon;
               const isItemActive = isActive(item.path);
               return (
@@ -214,7 +318,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     title={item.label}
                   >
                     <Icon size={20} />
-                    <span className="menu-label">{item.label}</span>
+                    {!isCollapsed && (
+                      <span className="menu-label">{item.label}</span>
+                    )}
                   </Link>
                 </li>
               );

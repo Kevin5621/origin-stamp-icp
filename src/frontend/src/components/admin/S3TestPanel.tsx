@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Upload, CheckCircle, AlertCircle, FileText } from "lucide-react";
 
 /**
@@ -21,6 +22,7 @@ interface TestResult {
 }
 
 const S3TestPanel: React.FC = () => {
+  const { t } = useTranslation("settings");
   const [isTesting, setIsTesting] = useState(false);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -78,7 +80,11 @@ const S3TestPanel: React.FC = () => {
       );
 
       // Step 2: Set S3 Config to Backend
-      addTestResult("Backend Config", true, "Setting S3 config to backend...");
+      addTestResult(
+        t("s3_test.backend_config"),
+        true,
+        t("s3_test.setting_config"),
+      );
 
       // Import backend from declarations
       const { backend } = await import("../../../../declarations/backend");
@@ -87,13 +93,13 @@ const S3TestPanel: React.FC = () => {
         const configResult = await backend.set_s3_config(s3Config);
         if (configResult) {
           addTestResult(
-            "Backend Config",
+            t("s3_test.backend_config"),
             true,
             "S3 configuration set successfully",
           );
         } else {
           addTestResult(
-            "Backend Config",
+            t("s3_test.backend_config"),
             false,
             "Failed to set S3 configuration",
           );
@@ -101,7 +107,7 @@ const S3TestPanel: React.FC = () => {
         }
       } catch (error) {
         addTestResult(
-          "Backend Config",
+          t("s3_test.backend_config"),
           false,
           `Error setting config: ${error}`,
         );
@@ -112,14 +118,22 @@ const S3TestPanel: React.FC = () => {
       try {
         const isConfigured = await backend.get_s3_config_status();
         if (isConfigured) {
-          addTestResult("Config Verify", true, "S3 configuration verified");
+          addTestResult(
+            t("s3_test.config_verify"),
+            true,
+            t("s3_test.config_verified"),
+          );
         } else {
-          addTestResult("Config Verify", false, "S3 configuration not found");
+          addTestResult(
+            t("s3_test.config_verify"),
+            false,
+            t("s3_test.config_not_found"),
+          );
           return;
         }
       } catch (error) {
         addTestResult(
-          "Config Verify",
+          t("s3_test.config_verify"),
           false,
           `Error verifying config: ${error}`,
         );
@@ -135,45 +149,57 @@ const S3TestPanel: React.FC = () => {
           !loginResult.message.includes("already exists")
         ) {
           addTestResult(
-            "User Setup",
+            t("s3_test.user_setup"),
             false,
             `Failed to setup user: ${loginResult.message}`,
           );
           return;
         }
-        addTestResult("User Setup", true, "Test user ready");
+        addTestResult(t("s3_test.user_setup"), true, t("s3_test.user_ready"));
 
         const sessionId = await backend.create_physical_art_session(
           "testuser",
-          "Test Artwork",
+          t("s3_test.test_artwork"),
           "Testing S3 upload functionality",
         );
 
         if (typeof sessionId === "object" && "Ok" in sessionId) {
-          addTestResult("Session", true, `Session created: ${sessionId.Ok}`);
+          addTestResult(
+            t("s3_test.session"),
+            true,
+            `${t("s3_test.session_created")}: ${sessionId.Ok}`,
+          );
 
           // Step 5: Test File Upload if file selected
           if (selectedFile) {
             await testFileUpload(sessionId.Ok);
           } else {
             addTestResult(
-              "File Upload",
+              t("s3_test.file_upload"),
               true,
               "No file selected - skipping upload test",
             );
           }
         } else {
           addTestResult(
-            "Session",
+            t("s3_test.session"),
             false,
-            `Failed to create session: ${sessionId}`,
+            `${t("s3_test.failed_to_create_session")}: ${sessionId}`,
           );
         }
       } catch (error) {
-        addTestResult("Session", false, `Error creating session: ${error}`);
+        addTestResult(
+          t("s3_test.session"),
+          false,
+          `${t("s3_test.error_creating_session")}: ${error}`,
+        );
       }
     } catch (error) {
-      addTestResult("Test Error", false, `Unexpected error: ${error}`);
+      addTestResult(
+        t("s3_test.test_error"),
+        false,
+        `Unexpected error: ${error}`,
+      );
     } finally {
       setIsTesting(false);
     }
@@ -201,7 +227,7 @@ const S3TestPanel: React.FC = () => {
       if (typeof urlResult === "object" && "Ok" in urlResult) {
         const uploadUrl = urlResult.Ok;
         addTestResult(
-          "Presigned URL",
+          t("s3_test.presigned_url"),
           true,
           `URL generated: ${uploadUrl.substring(0, 50)}...`,
         );
@@ -236,13 +262,13 @@ const S3TestPanel: React.FC = () => {
 
             if (typeof confirmResult === "object" && "Ok" in confirmResult) {
               addTestResult(
-                "Upload Confirm",
+                t("s3_test.upload_confirm"),
                 true,
-                "Upload confirmed in backend",
+                t("s3_test.upload_confirmed"),
               );
             } else {
               addTestResult(
-                "Upload Confirm",
+                t("s3_test.upload_confirm"),
                 false,
                 `Failed to confirm: ${confirmResult}`,
               );
@@ -259,13 +285,17 @@ const S3TestPanel: React.FC = () => {
         }
       } else {
         addTestResult(
-          "Presigned URL",
+          t("s3_test.presigned_url"),
           false,
           `Failed to generate URL: ${urlResult}`,
         );
       }
     } catch (error) {
-      addTestResult("Upload Process", false, `Upload process error: ${error}`);
+      addTestResult(
+        t("s3_test.upload_process"),
+        false,
+        `Upload process error: ${error}`,
+      );
     }
   };
 

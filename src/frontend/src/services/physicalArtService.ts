@@ -1,5 +1,9 @@
 import { backend } from "../../../declarations/backend";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 
 // Types for Physical Art Session
 export interface PhysicalArtSession {
@@ -65,35 +69,86 @@ export class PhysicalArtService {
     sessionId: string,
     file: File,
   ): Promise<UploadResult> {
+    console.log(
+      `[S3Upload] Starting upload for session: ${sessionId}, file: ${file.name}`,
+    );
+
     try {
       // Get S3 configuration
       const s3Config = await this.getS3ConfigFromBackend();
 
       if (!s3Config) {
-        throw new Error("S3 configuration not found");
+        console.error("[S3Upload] S3 configuration not found");
+        return {
+          success: false,
+          message: "S3 configuration not found",
+        };
       }
 
-      // Create S3 client
-      const s3Client = new S3Client({
+      console.log(
+        `[S3Upload] S3 config loaded: bucket=${s3Config.bucket_name}, region=${s3Config.region}`,
+      );
+
+      // Validate file type and size
+      if (!this.validateFileType(file)) {
+        console.error(`[S3Upload] Invalid file type: ${file.type}`);
+        return {
+          success: false,
+          message:
+            "Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.",
+        };
+      }
+
+      if (!this.validateFileSize(file)) {
+        console.error(`[S3Upload] File too large: ${file.size} bytes`);
+        return {
+          success: false,
+          message: "File size too large. Maximum size is 10MB.",
+        };
+      }
+
+      // Generate unique key for the file
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+      const fileKey = `physical-art/${sessionId}/${timestamp}-${sanitizedFileName}`;
+
+      console.log(`[S3Upload] Generated file key: ${fileKey}`);
+
+      // Create S3 client with proper endpoint configuration
+      const clientConfig: any = {
         region: s3Config.region,
         credentials: {
           accessKeyId: s3Config.access_key_id,
           secretAccessKey: s3Config.secret_access_key,
         },
-        ...(s3Config.endpoint &&
-        Array.isArray(s3Config.endpoint) &&
-        s3Config.endpoint.length > 0
-          ? { endpoint: s3Config.endpoint[0] }
-          : s3Config.endpoint && typeof s3Config.endpoint === "string"
-            ? { endpoint: s3Config.endpoint }
-            : {}),
-      });
+      };
 
-      // Generate unique key for the file
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const fileKey = `physical-art/${sessionId}/${timestamp}-${file.name}`;
+      // Handle endpoint configuration properly
+      if (s3Config.endpoint) {
+        const endpoint =
+          Array.isArray(s3Config.endpoint) && s3Config.endpoint.length > 0
+            ? s3Config.endpoint[0]
+            : typeof s3Config.endpoint === "string"
+              ? s3Config.endpoint
+              : null;
+
+        if (endpoint) {
+          clientConfig.endpoint = endpoint.startsWith("http")
+            ? endpoint
+            : `https://${endpoint}`;
+          clientConfig.forcePathStyle = true; // Required for S3-compatible services
+          console.log(
+            `[S3Upload] Using custom endpoint: ${clientConfig.endpoint}`,
+          );
+        }
+      } else {
+        console.log(`[S3Upload] Using AWS S3 default endpoint`);
+      }
+
+      const s3Client = new S3Client(clientConfig);
 
       // Convert file to ArrayBuffer for upload
+      console.log(`[S3Upload] Converting file to buffer...`);
       const fileBuffer = await file.arrayBuffer();
 
       // Create PutObject command
@@ -103,39 +158,99 @@ export class PhysicalArtService {
         Body: new Uint8Array(fileBuffer),
         ContentType: file.type,
         ContentLength: file.size,
+        // Add metadata for better file management
+        Metadata: {
+          "session-id": sessionId,
+          "upload-timestamp": new Date().toISOString(),
+          "original-name": file.name,
+        },
       });
 
-      // Upload to S3
-      await s3Client.send(putCommand);
+      // Step 1: Upload to S3 first
+      console.log(`[S3Upload] Uploading to S3...`);
+      try {
+        await s3Client.send(putCommand);
+        console.log(`[S3Upload] S3 upload successful`);
+      } catch (s3Error) {
+        console.error(`[S3Upload] S3 upload failed:`, s3Error);
+        throw new Error(
+          `S3 upload failed: ${s3Error instanceof Error ? s3Error.message : "Unknown S3 error"}`,
+        );
+      }
 
-      // Construct the file URL
-      const fileUrl =
-        s3Config.endpoint &&
-        Array.isArray(s3Config.endpoint) &&
-        s3Config.endpoint.length > 0
-          ? `${s3Config.endpoint[0]}/${s3Config.bucket_name}/${fileKey}`
-          : s3Config.endpoint && typeof s3Config.endpoint === "string"
-            ? `${s3Config.endpoint}/${s3Config.bucket_name}/${fileKey}`
-            : `https://${s3Config.bucket_name}.s3.${s3Config.region}.amazonaws.com/${fileKey}`;
+      // Step 2: Construct the file URL properly
+      let fileUrl: string;
+      if (s3Config.endpoint) {
+        const endpoint =
+          Array.isArray(s3Config.endpoint) && s3Config.endpoint.length > 0
+            ? s3Config.endpoint[0]
+            : typeof s3Config.endpoint === "string"
+              ? s3Config.endpoint
+              : null;
 
-      // Record the uploaded file in the session
-      const recordResult = await backend.upload_photo_to_session(
-        sessionId,
-        fileUrl,
-      );
-
-      if ("Ok" in recordResult && recordResult.Ok) {
-        return {
-          success: true,
-          message: "Photo uploaded successfully",
-          file_url: fileUrl,
-          file_id: fileKey,
-        };
+        if (endpoint) {
+          const baseUrl = endpoint.startsWith("http")
+            ? endpoint
+            : `https://${endpoint}`;
+          fileUrl = `${baseUrl.replace(/\/$/, "")}/${s3Config.bucket_name}/${fileKey}`;
+        } else {
+          fileUrl = `https://${s3Config.bucket_name}.s3.${s3Config.region}.amazonaws.com/${fileKey}`;
+        }
       } else {
-        throw new Error("Failed to record uploaded photo");
+        fileUrl = `https://${s3Config.bucket_name}.s3.${s3Config.region}.amazonaws.com/${fileKey}`;
+      }
+
+      console.log(`[S3Upload] Generated file URL: ${fileUrl}`);
+
+      // Step 3: Record the uploaded file in the session (only after S3 upload success)
+      console.log(`[S3Upload] Recording upload in backend...`);
+      try {
+        const recordResult = await backend.upload_photo_to_session(
+          sessionId,
+          fileUrl,
+        );
+
+        if ("Ok" in recordResult && recordResult.Ok) {
+          console.log(`[S3Upload] Backend record successful`);
+          return {
+            success: true,
+            message: "Photo uploaded successfully",
+            file_url: fileUrl,
+            file_id: fileKey,
+          };
+        } else {
+          const errorMessage =
+            "Err" in recordResult
+              ? recordResult.Err
+              : "Failed to record uploaded photo";
+          console.error(`[S3Upload] Backend record failed: ${errorMessage}`);
+
+          // Cleanup: Delete the S3 file since backend record failed
+          console.log(
+            `[S3Upload] Cleaning up S3 file due to backend failure...`,
+          );
+          try {
+            const deleteCommand = new DeleteObjectCommand({
+              Bucket: s3Config.bucket_name,
+              Key: fileKey,
+            });
+            await s3Client.send(deleteCommand);
+            console.log(`[S3Upload] S3 cleanup successful`);
+          } catch (cleanupError) {
+            console.error(`[S3Upload] S3 cleanup failed:`, cleanupError);
+            // Don't throw here, just log the cleanup failure
+          }
+
+          throw new Error(`Backend record failed: ${errorMessage}`);
+        }
+      } catch (backendError) {
+        console.error(`[S3Upload] Backend record error:`, backendError);
+        throw new Error(
+          `Backend record failed: ${backendError instanceof Error ? backendError.message : "Unknown backend error"}`,
+        );
       }
     } catch (error) {
-      console.error("Upload failed:", error);
+      console.error("[S3Upload] Upload process failed:", error);
       return {
         success: false,
         message: error instanceof Error ? error.message : "Upload failed",
@@ -297,6 +412,128 @@ export class PhysicalArtService {
     });
 
     return { valid, invalid };
+  }
+
+  /**
+   * Test S3 connectivity and configuration
+   */
+  static async testS3Connection(): Promise<{
+    success: boolean;
+    message: string;
+    details?: any;
+  }> {
+    try {
+      // Check if S3 is configured
+      const s3Config = await this.getS3ConfigFromBackend();
+      if (!s3Config) {
+        return {
+          success: false,
+          message: "S3 configuration not found in backend",
+        };
+      }
+
+      // Test S3 client initialization
+      const clientConfig: any = {
+        region: s3Config.region,
+        credentials: {
+          accessKeyId: s3Config.access_key_id,
+          secretAccessKey: s3Config.secret_access_key,
+        },
+      };
+
+      if (s3Config.endpoint) {
+        const endpoint =
+          Array.isArray(s3Config.endpoint) && s3Config.endpoint.length > 0
+            ? s3Config.endpoint[0]
+            : typeof s3Config.endpoint === "string"
+              ? s3Config.endpoint
+              : null;
+
+        if (endpoint) {
+          clientConfig.endpoint = endpoint.startsWith("http")
+            ? endpoint
+            : `https://${endpoint}`;
+          clientConfig.forcePathStyle = true;
+        }
+      }
+
+      // Initialize S3 client to test configuration
+      new S3Client(clientConfig);
+
+      return {
+        success: true,
+        message: "S3 client initialized successfully",
+        details: {
+          bucket: s3Config.bucket_name,
+          region: s3Config.region,
+          endpoint: clientConfig.endpoint || "AWS S3",
+          hasCustomEndpoint: !!clientConfig.endpoint,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `S3 connection test failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        details: { error },
+      };
+    }
+  }
+
+  /**
+   * Initialize S3 configuration from environment variables
+   */
+  static async initializeS3FromEnv(): Promise<boolean> {
+    try {
+      // Check if S3 is already configured
+      const isConfigured = await this.isS3Configured();
+      if (isConfigured) {
+        console.log("S3 is already configured");
+        return true;
+      }
+
+      // Get environment variables (Vite exposes env vars that start with VITE_ or are explicitly configured)
+      const s3Config = {
+        bucket_name: import.meta.env.S3_BUCKET_NAME || "",
+        region: import.meta.env.S3_REGION || "",
+        access_key_id: import.meta.env.S3_ACCESS_KEY || "",
+        secret_access_key: import.meta.env.S3_SECRET_KEY || "",
+        endpoint: import.meta.env.S3_ENDPOINT || undefined,
+      };
+
+      // Validate required fields
+      if (
+        !s3Config.bucket_name ||
+        !s3Config.region ||
+        !s3Config.access_key_id ||
+        !s3Config.secret_access_key
+      ) {
+        console.warn(
+          "S3 environment variables not fully configured. Missing:",
+          {
+            bucket_name: !s3Config.bucket_name,
+            region: !s3Config.region,
+            access_key_id: !s3Config.access_key_id,
+            secret_access_key: !s3Config.secret_access_key,
+          },
+        );
+        return false;
+      }
+
+      // Set S3 configuration in backend
+      const success = await this.setS3Config(s3Config);
+      if (success) {
+        console.log(
+          "S3 configuration initialized successfully from environment variables",
+        );
+      } else {
+        console.error("Failed to initialize S3 configuration");
+      }
+
+      return success;
+    } catch (error) {
+      console.error("Failed to initialize S3 from environment:", error);
+      return false;
+    }
   }
 
   /**

@@ -98,16 +98,6 @@ export const useErrorHandler = (options: ErrorHandlerOptions = {}) => {
 
   const handleError = useCallback(
     (error: Error, context?: string) => {
-      const errorContext = context || options.context || "component";
-
-      // Log error untuk debugging dengan informasi yang lebih detail
-      console.error(`[${new Date().toISOString()}] Error in ${errorContext}:`, {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-        context: errorContext,
-      });
-
       // Call custom error handler jika ada
       if (options.onError) {
         options.onError(error, context);

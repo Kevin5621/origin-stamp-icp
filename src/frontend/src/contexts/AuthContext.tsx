@@ -41,6 +41,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authClient, setAuthClient] = useState<AuthClient | null>(null);
 
+  // Load user from localStorage first (immediate authentication check)
+  useEffect(() => {
+    const savedUser = localStorage.getItem("auth-user");
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error("Error parsing saved user:", error);
+        localStorage.removeItem("auth-user");
+      }
+    }
+  }, []);
+
   // Initialize AuthClient
   useEffect(() => {
     const initAuthClient = async () => {
@@ -54,14 +67,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const identity = client.getIdentity();
           const principal = identity.getPrincipal().toString();
 
-          const userData = {
-            username: `User ${principal.slice(0, 8)}...`,
-            loginTime: new Date().toLocaleString(),
-            principal,
-            loginMethod: "icp" as const,
-          };
-          setUser(userData);
-          localStorage.setItem("auth-user", JSON.stringify(userData));
+          // Only auto-login if no user is already logged in or if the current user is ICP
+          const savedUser = localStorage.getItem("auth-user");
+          const currentUser = savedUser ? JSON.parse(savedUser) : null;
+
+          if (!currentUser || currentUser.loginMethod === "icp") {
+            const userData = {
+              username: `User ${principal.slice(0, 8)}...`,
+              loginTime: new Date().toLocaleString(),
+              principal,
+              loginMethod: "icp" as const,
+            };
+            setUser(userData);
+            localStorage.setItem("auth-user", JSON.stringify(userData));
+          }
         }
       } catch (error) {
         console.error("Error initializing AuthClient:", error);
@@ -69,19 +88,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     initAuthClient();
-  }, []);
-
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem("auth-user");
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error("Error parsing saved user:", error);
-        localStorage.removeItem("auth-user");
-      }
-    }
   }, []);
 
   const login = (username: string) => {

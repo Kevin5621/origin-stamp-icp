@@ -6,14 +6,14 @@ interface HeroBannerProps {
   featuredCollection: {
     id: string;
     name: string;
-    creator: string;
+    creator?: string;
     image: string;
     floorPrice: string;
     currency: string;
-    items: number;
-    totalVolume: string;
-    listedPercentage: string;
-    previewImages: string[];
+    items?: number;
+    totalVolume?: string;
+    listedPercentage?: string;
+    previewImages?: string[];
   };
 }
 
@@ -38,7 +38,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                   <Check className="verified-icon" size={16} />
                 </h2>
                 <p className="collection-creator">
-                  {t("by")} {featuredCollection.creator}
+                  {t("by")} {featuredCollection.creator || "Unknown"}
                 </p>
               </div>
 
@@ -54,20 +54,20 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                 <div className="stat-item">
                   <span className="stat-label">{t("items")}</span>
                   <span className="stat-value">
-                    {featuredCollection.items.toLocaleString()}
+                    {featuredCollection.items?.toLocaleString() || "0"}
                   </span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-label">{t("totalVolume")}</span>
                   <span className="stat-value">
-                    {featuredCollection.totalVolume}{" "}
+                    {featuredCollection.totalVolume || "0"}{" "}
                     {featuredCollection.currency}
                   </span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-label">{t("listed")}</span>
                   <span className="stat-value">
-                    {featuredCollection.listedPercentage}
+                    {featuredCollection.listedPercentage || "0%"}
                   </span>
                 </div>
               </div>
@@ -76,11 +76,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
           {/* Preview Images */}
           <div className="hero-banner__previews">
-            {featuredCollection.previewImages.map((image, index) => (
+            {featuredCollection.previewImages?.map((image, index) => (
               <div key={index} className="preview-image">
                 <img src={image} alt={`Preview ${index + 1}`} />
               </div>
-            ))}
+            )) || null}
           </div>
         </div>
 

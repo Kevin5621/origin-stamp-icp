@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.850.0",
+    "@studio-freight/lenis": "^1.0.42",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/crypto-js": "^4.2.2",
     "autoprefixer": "^10.4.21",
@@ -20,8 +21,10 @@
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-error-boundary": "^6.0.0",
     "react-i18next": "^15.6.0",
-    "react-router-dom": "^7.7.0"
+    "react-router-dom": "^7.7.0",
+    "recharts": "^3.1.2"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",

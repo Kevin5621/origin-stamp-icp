@@ -432,8 +432,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 28px !important; /* 40px * 0.7 = 28px */
+    height: 28px !important;
     background: var(--color-primary-light);
     border-radius: 8px;
     color: var(--color-primary);
@@ -478,8 +478,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: 42px !important; /* 60px * 0.7 = 42px */
+    height: 42px !important;
     background: var(--color-primary);
     border-radius: 50%;
     color: white;
@@ -513,8 +513,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 28px !important; /* 40px * 0.7 = 28px */
+    height: 28px !important;
     background: var(--color-success-light);
     border-radius: 8px;
     color: var(--color-success);

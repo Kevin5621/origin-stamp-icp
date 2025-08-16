@@ -1,0 +1,40 @@
+/* Breadcrumb component styles */
+
+.breadcrumb {
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumbList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.breadcrumbLink {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--btn-secondary-text);
+  }
+}
+
+.breadcrumbCurrent {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.breadcrumbSeparator {
+  margin: 0 0.5rem;
+  color: var(--text-muted);
+}

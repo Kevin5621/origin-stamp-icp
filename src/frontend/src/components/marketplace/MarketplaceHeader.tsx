@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Search, Wallet, Menu, X } from "lucide-react";
+import { Search, Menu, X, ShoppingBag, Plus } from "lucide-react";
 
 interface MarketplaceHeaderProps {
   onSearch: (query: string) => void;
@@ -21,17 +21,36 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
   };
 
   return (
-    <header className="marketplace-header">
-      <div className="marketplace-header__container">
-        {/* Logo */}
-        <div className="marketplace-header__logo">
-          <h1>OriginStamp</h1>
+    <header className="marketplace-floating-header">
+      <div className="marketplace-floating-header-content">
+        {/* Left Side - Logo dan Navigation */}
+        <div className="marketplace-header__left">
+          {/* Logo */}
+          <div className="marketplace-header__logo">
+            <ShoppingBag size={24} />
+            <span className="logo-text">MARKETPLACE</span>
+          </div>
+
+          {/* Navigation */}
+          <nav className="marketplace-header__nav">
+            <ul className="nav-list">
+              <li>
+                <a href="#explore">{t("nav.explore")}</a>
+              </li>
+              <li>
+                <a href="#create">{t("nav.create")}</a>
+              </li>
+              <li>
+                <a href="#collections">{t("nav.collections")}</a>
+              </li>
+            </ul>
+          </nav>
         </div>
 
-        {/* Search Bar */}
+        {/* Center - Search Bar */}
         <form className="marketplace-header__search" onSubmit={handleSearch}>
           <div className="search-input-wrapper">
-            <Search className="search-icon" size={20} />
+            <Search className="search-icon" size={18} />
             <input
               type="text"
               placeholder={t("search.placeholder")}
@@ -43,26 +62,15 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
           </div>
         </form>
 
-        {/* Navigation */}
-        <nav className="marketplace-header__nav">
-          <ul className="nav-list">
-            <li>
-              <a href="#explore">{t("nav.explore")}</a>
-            </li>
-            <li>
-              <a href="#create">{t("nav.create")}</a>
-            </li>
-            <li>
-              <a href="#collections">{t("nav.collections")}</a>
-            </li>
-          </ul>
-        </nav>
+        {/* Right Side - Actions */}
+        <div className="marketplace-header__right">
+          <button className="create-btn">
+            <Plus size={18} />
+            <span>Create</span>
+          </button>
 
-        {/* Actions */}
-        <div className="marketplace-header__actions">
           <button className="connect-wallet-btn" onClick={onConnectWallet}>
-            <Wallet size={16} />
-            {t("connectWallet")}
+            <span>Connect Wallet</span>
           </button>
 
           <button
@@ -76,7 +84,7 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="mobile-menu">
+        <div className="marketplace-mobile-menu">
           <nav className="mobile-nav">
             <ul>
               <li>

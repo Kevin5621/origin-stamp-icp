@@ -164,7 +164,8 @@
 }
 
 .btn-save {
-  @extend .btn-wireframe !optional;
+  @extend .btn !optional;
+  @extend .btn--primary !optional;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -314,13 +315,11 @@
 }
 
 .btn-test {
-  @extend .btn-wireframe !optional;
+  @extend .btn !optional;
+  @extend .btn--success !optional;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  background: var(--color-success);
-  border-color: var(--color-success);
-  color: white;
 }
 
 .btn-test:hover:not(:disabled) {

@@ -5,12 +5,20 @@ interface ButtonProps {
   disabled?: boolean;
   className?: string;
   children: ReactNode;
-  variant?: "primary" | "secondary" | "success" | "error" | "warning" | "info";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "success"
+    | "error"
+    | "warning"
+    | "info"
+    | "outline"
+    | "ghost";
   size?: "small" | "medium" | "large";
 }
 
 /**
- * Reusable button component with wireframe design
+ * Reusable button component with consistent design
  */
 export function Button({
   onClick,
@@ -21,9 +29,9 @@ export function Button({
   size = "medium",
 }: ButtonProps) {
   const getButtonClass = () => {
-    const baseClass = "btn-wireframe";
-    const variantClass = `btn-wireframe--${variant}`;
-    const sizeClass = size !== "medium" ? `btn-wireframe--${size}` : "";
+    const baseClass = "btn";
+    const variantClass = `btn--${variant}`;
+    const sizeClass = size !== "medium" ? `btn--${size}` : "";
 
     return `${baseClass} ${variantClass} ${sizeClass}`.trim();
   };

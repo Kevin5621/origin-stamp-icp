@@ -1,18 +1,21 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/auth/LoginPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import SessionPage from "../pages/dashboard/SessionPage";
+import SessionRecordPage from "../pages/dashboard/SessionRecordPage";
+import CreateSessionPage from "../pages/dashboard/CreateSessionPage";
 import FinalizationPage from "../pages/dashboard/FinalizationPage";
 import VerificationPage from "../pages/dashboard/VerificationPage";
 import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
-import AdminPage from "../pages/admin/AdminPage";
 import SettingsPage from "../pages/SettingsPage";
+import { ErrorPage, NotFoundPage } from "../pages/error";
 import {
   MarketplaceHomePage,
   CollectionDetailPage,
+  CollectionsPage,
 } from "../pages/marketplace";
 
 /**
@@ -35,11 +38,20 @@ export const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+      <Route path="/create-session" element={<CreateSessionPage />} />
       <Route
         path="/session"
         element={
           <ProtectedRoute>
             <SessionPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/sessions/:sessionId"
+        element={
+          <ProtectedRoute>
+            <SessionRecordPage />
           </ProtectedRoute>
         }
       />
@@ -68,14 +80,6 @@ export const AppRoutes: React.FC = () => {
         }
       />
       <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
         path="/settings"
         element={
           <ProtectedRoute>
@@ -86,13 +90,17 @@ export const AppRoutes: React.FC = () => {
 
       {/* Marketplace Routes */}
       <Route path="/marketplace" element={<MarketplaceHomePage />} />
+      <Route path="/marketplace/collections" element={<CollectionsPage />} />
       <Route
         path="/marketplace/collection/:collectionId"
         element={<CollectionDetailPage />}
       />
 
-      {/* Fallback - Redirect ke landing page */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Error Routes */}
+      <Route path="/error" element={<ErrorPage />} />
+
+      {/* Fallback - 404 Page untuk rute yang tidak ditemukan */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

@@ -178,7 +178,7 @@ const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <span>{t("login_with_internet_identity")}</span>
               </button>
 
-              <button className="auth-btn auth-btn--google">
+              <button className="auth-btn auth-btn--icp">
                 <img
                   src="/assets/google-logo.svg"
                   alt=""
@@ -188,23 +188,9 @@ const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <span>{t("login_with_google")}</span>
               </button>
 
-              <div className="auth-divider" role="separator">
-                <span>{t("or")}</span>
-              </div>
-
-              <button className="auth-btn auth-btn--signup">
-                <img
-                  src="/assets/google-logo.svg"
-                  alt=""
-                  className="auth-btn-icon"
-                  aria-hidden="true"
-                />
-                <span>{t("signup_with_google")}</span>
-              </button>
-
               <button
                 onClick={handleShowCustomLogin}
-                className="auth-btn auth-btn--custom"
+                className="auth-btn auth-btn--icp"
                 aria-label={t("login_with_username_password")}
               >
                 <span>{t("login_with_username_password")}</span>
