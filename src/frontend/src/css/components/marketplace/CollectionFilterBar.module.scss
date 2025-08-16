@@ -1,0 +1,193 @@
+/* Collection Filter Bar styles */
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+}
+
+.categoryFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--text-muted);
+      border-radius: 4px;
+    }
+  }
+}
+
+.categoryButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background-color: var(--toggle-btn-bg);
+  border: 1px solid var(--toggle-btn-border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+  }
+}
+
+.categoryButtonActive {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
+}
+
+.filterActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+.sortDropdownContainer {
+  position: relative;
+}
+
+.sortDropdownButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background-color: var(--toggle-btn-bg);
+  border: 1px solid var(--toggle-btn-border);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  
+  &:hover {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+  }
+}
+
+.sortDropdownMenu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 180px;
+  background-color: var(--mobile-menu-bg);
+  border: 1px solid var(--mobile-menu-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  animation: dropdownFadeIn 0.2s ease forwards;
+}
+
+.sortOption {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+  }
+}
+
+.sortOptionActive {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  font-weight: 500;
+}
+
+.searchForm {
+  @media (max-width: 768px) {
+    flex-grow: 1;
+    min-width: 100%;
+  }
+}
+
+.searchInputWrapper {
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--btn-secondary-text);
+    box-shadow: 0 0 0 3px var(--btn-secondary-bg);
+  }
+}
+
+.searchIcon {
+  color: var(--text-muted);
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  border: none;
+  background: transparent;
+  width: 100%;
+  min-width: 200px;
+  font-size: 0.875rem;
+  outline: none;
+  color: var(--input-text);
+
+  &::placeholder {
+    color: var(--input-placeholder);
+  }
+  
+  @media (max-width: 768px) {
+    min-width: unset;
+  }
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -27,7 +27,7 @@ import SettingsPage from "./pages/SettingsPage";
 // Import error pages
 import { ErrorPage, NotFoundPage } from "./pages/error";
 // Import marketplace pages
-import { MarketplaceHomePage, CollectionDetailPage } from "./pages/marketplace";
+import { MarketplaceHomePage, CollectionDetailPage, CollectionsPage } from "./pages/marketplace";
 
 // Component untuk menentukan apakah navbar harus ditampilkan
 function NavigationWrapper() {
@@ -70,6 +70,7 @@ function MainContentWrapper() {
             path="/marketplace/collection/:collectionId"
             element={<CollectionDetailPage />}
           />
+          <Route path="/marketplace-collections" element={<CollectionsPage />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

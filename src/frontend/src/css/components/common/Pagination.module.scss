@@ -1,0 +1,72 @@
+/* Pagination component styles */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.paginationList {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0.25rem;
+}
+
+.paginationItem {
+  display: flex;
+}
+
+.paginationButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--toggle-btn-bg);
+  border: 1px solid var(--toggle-btn-border);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      background-color: var(--toggle-btn-bg);
+      color: var(--text-secondary);
+    }
+  }
+}
+
+.paginationButtonActive {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
+}
+
+.paginationArrow {
+  padding: 0;
+  min-width: 2.25rem;
+}
+
+.paginationEllipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  color: var(--text-secondary);
+}
