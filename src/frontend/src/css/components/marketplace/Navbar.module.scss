@@ -281,7 +281,7 @@
 .mobileActionRow {
   display: flex;
   gap: 0.75rem;
-  
+
   .themeToggleBtn {
     display: flex;
     align-items: center;
@@ -296,7 +296,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     flex: 1;
-    
+
     &:hover {
       background: var(--btn-secondary-bg);
       color: var(--btn-secondary-text);

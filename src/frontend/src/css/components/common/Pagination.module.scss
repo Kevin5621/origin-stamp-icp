@@ -34,16 +34,16 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background-color: var(--btn-secondary-bg);
     color: var(--btn-secondary-text);
   }
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    
+
     &:hover {
       background-color: var(--toggle-btn-bg);
       color: var(--text-secondary);

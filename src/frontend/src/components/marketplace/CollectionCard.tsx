@@ -17,7 +17,9 @@ interface CollectionCardProps {
   };
 }
 
-export const CollectionCard: React.FC<CollectionCardProps> = ({ collection }) => {
+export const CollectionCard: React.FC<CollectionCardProps> = ({
+  collection,
+}) => {
   const { t } = useTranslation("marketplace");
 
   return (
@@ -47,20 +49,26 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ collection }) =>
 
         <div className={styles.collectionStats}>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>{t("collections.floorPrice")}</span>
+            <span className={styles.statLabel}>
+              {t("collections.floorPrice")}
+            </span>
             <span className={styles.statValue}>
               {collection.floorPrice} {collection.currency}
             </span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>{t("collections.totalVolume")}</span>
+            <span className={styles.statLabel}>
+              {t("collections.totalVolume")}
+            </span>
             <span className={styles.statValue}>
               {collection.totalVolume} {collection.currency}
             </span>
           </div>
           <div className={styles.statItem}>
             <span className={styles.statLabel}>{t("collections.items")}</span>
-            <span className={styles.statValue}>{collection.items.toLocaleString()}</span>
+            <span className={styles.statValue}>
+              {collection.items.toLocaleString()}
+            </span>
           </div>
         </div>
       </div>

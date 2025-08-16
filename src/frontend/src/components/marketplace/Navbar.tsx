@@ -47,7 +47,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Link to="/marketplace">{t("nav.explore")}</Link>
                 </li>
                 <li>
-                  <Link to="/marketplace/collections">{t("nav.collections")}</Link>
+                  <Link to="/marketplace/collections">
+                    {t("nav.collections")}
+                  </Link>
                 </li>
                 <li>
                   <Link to="/marketplace/create">{t("nav.create")}</Link>
@@ -129,7 +131,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </Link>
                 </li>
                 <li>
-                  <Link to="/marketplace/collections" onClick={toggleMobileMenu}>
+                  <Link
+                    to="/marketplace/collections"
+                    onClick={toggleMobileMenu}
+                  >
                     {t("nav.collections")}
                   </Link>
                 </li>
@@ -147,12 +152,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   className={styles.themeToggleBtn}
                   onClick={toggleTheme}
-                  aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                  aria-label={
+                    theme === "dark"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
                 >
-                  {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-                  <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                  {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+                  <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
                 </button>
-                
+
                 <button
                   className={styles.connectBtn}
                   onClick={() => {

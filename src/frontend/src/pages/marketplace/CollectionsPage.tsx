@@ -187,12 +187,16 @@ export const CollectionsPage: React.FC = () => {
     switch (selectedSort) {
       case "popular":
         // Sort by total volume for popularity
-        return parseFloat(b.totalVolume.replace(/[^0-9.]/g, "")) - 
-               parseFloat(a.totalVolume.replace(/[^0-9.]/g, ""));
+        return (
+          parseFloat(b.totalVolume.replace(/[^0-9.]/g, "")) -
+          parseFloat(a.totalVolume.replace(/[^0-9.]/g, ""))
+        );
       case "volume":
         // Sort by total volume
-        return parseFloat(b.totalVolume.replace(/[^0-9.]/g, "")) - 
-               parseFloat(a.totalVolume.replace(/[^0-9.]/g, ""));
+        return (
+          parseFloat(b.totalVolume.replace(/[^0-9.]/g, "")) -
+          parseFloat(a.totalVolume.replace(/[^0-9.]/g, ""))
+        );
       case "price":
         // Sort by floor price
         return parseFloat(b.floorPrice) - parseFloat(a.floorPrice);
@@ -206,7 +210,10 @@ export const CollectionsPage: React.FC = () => {
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedCollections.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = sortedCollections.slice(
+    indexOfFirstItem,
+    indexOfLastItem,
+  );
   const totalPages = Math.ceil(sortedCollections.length / itemsPerPage);
 
   const handlePageChange = (pageNumber: number) => {
