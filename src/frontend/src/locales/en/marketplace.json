@@ -3,23 +3,34 @@
   "nav": {
     "explore": "Explore",
     "create": "Create",
-    "collections": "Collections"
+    "collections": "Collections",
+    "marketplace": "Marketplace",
+    "connectWallet": "Connect Wallet"
   },
   "categories": {
     "all": "All",
     "art": "Art",
     "gaming": "Gaming",
     "pfps": "PFPs",
-    "memberships": "Memberships",
+    "membership": "Membership",
     "music": "Music",
     "photography": "Photography"
   },
   "timeframes": {
-    "all": "All"
+    "all": "All",
+    "24h": "24h",
+    "7d": "7d",
+    "30d": "30d",
+    "all-time": "All Time"
   },
   "sort": {
+    "sortBy": "Sort by",
     "top": "Top",
-    "trending": "Trending"
+    "trending": "Trending",
+    "newest": "Newest",
+    "popular": "Most Popular",
+    "volume": "Highest Volume",
+    "price": "Highest Price"
   },
   "view": {
     "list": "List",
@@ -32,6 +43,17 @@
   "listed": "Listed",
   "collection": "COLLECTION",
   "floor": "FLOOR",
+  
+  "collections": {
+    "title": "NFT Collections",
+    "subtitle": "Explore verified NFT collections from top creators on the Internet Computer.",
+    "searchPlaceholder": "Search collections or creators...",
+    "by": "by",
+    "floorPrice": "Floor",
+    "totalVolume": "Volume",
+    "items": "Items",
+    "noResults": "No collections found. Try adjusting your search or filters."
+  },
   "featuredCollections": {
     "title": "Featured Collections",
     "subtitle": "This week's curated collections."

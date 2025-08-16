@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Search, Menu, X, ShoppingBag, Plus } from "lucide-react";
+import { Search, Menu, X, ShoppingBag, Plus, Sun, Moon } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeContext";
 import styles from "../../css/components/marketplace/Navbar.module.scss";
 
 interface NavbarProps {
@@ -13,6 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onConnectWallet = () => {},
 }) => {
   const { t } = useTranslation("marketplace");
+  const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -41,13 +44,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <nav>
               <ul className={styles.navLinks}>
                 <li>
-                  <a href="#explore">{t("nav.explore")}</a>
+                  <Link to="/marketplace">{t("nav.explore")}</Link>
                 </li>
                 <li>
-                  <a href="#create">{t("nav.create")}</a>
+                  <Link to="/marketplace/collections">{t("nav.collections")}</Link>
                 </li>
                 <li>
-                  <a href="#collections">{t("nav.collections")}</a>
+                  <Link to="/marketplace/create">{t("nav.create")}</Link>
                 </li>
               </ul>
             </nav>
@@ -72,6 +75,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Side - Actions */}
           <div className={styles.navRight}>
+            {/* Theme Toggle Button
+            <button 
+              className={styles.themeToggleBtn} 
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button> */}
+
             <button className={styles.createBtn}>
               <Plus size={16} />
               <span>{t("nav.create")}</span>
@@ -112,34 +124,45 @@ export const Navbar: React.FC<NavbarProps> = ({
             <nav>
               <ul className={styles.mobileNavList}>
                 <li>
-                  <a href="#explore" onClick={toggleMobileMenu}>
+                  <Link to="/marketplace" onClick={toggleMobileMenu}>
                     {t("nav.explore")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#create" onClick={toggleMobileMenu}>
-                    {t("nav.create")}
-                  </a>
-                </li>
-                <li>
-                  <a href="#collections" onClick={toggleMobileMenu}>
+                  <Link to="/marketplace/collections" onClick={toggleMobileMenu}>
                     {t("nav.collections")}
-                  </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/marketplace/create" onClick={toggleMobileMenu}>
+                    {t("nav.create")}
+                  </Link>
                 </li>
               </ul>
             </nav>
 
             {/* Mobile Actions */}
             <div className={styles.mobileActions}>
-              <button
-                className={styles.connectBtn}
-                onClick={() => {
-                  onConnectWallet();
-                  toggleMobileMenu();
-                }}
-              >
-                <span>{t("nav.connectWallet")}</span>
-              </button>
+              <div className={styles.mobileActionRow}>
+                <button
+                  className={styles.themeToggleBtn}
+                  onClick={toggleTheme}
+                  aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                  <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                </button>
+                
+                <button
+                  className={styles.connectBtn}
+                  onClick={() => {
+                    onConnectWallet();
+                    toggleMobileMenu();
+                  }}
+                >
+                  <span>{t("nav.connectWallet")}</span>
+                </button>
+              </div>
             </div>
           </div>
         )}
