@@ -1,0 +1,300 @@
+// Navbar.module.scss - Modern glassmorphism navbar with responsive design
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.navbarInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  margin-top: 1rem;
+
+  // Glassmorphism effect using theme variables
+  background: var(--navbar-bg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--navbar-shadow);
+  border: 1px solid var(--navbar-border);
+  transition: all 0.3s ease;
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.015em;
+
+  .logoText {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+.navLinks {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @media (max-width: 768px) {
+    display: none; // Hide on mobile - will show in mobile menu
+  }
+
+  li a {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    transition: color 0.2s ease;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--btn-secondary-text);
+    }
+  }
+}
+
+.navCenter {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 1rem;
+
+  @media (max-width: 992px) {
+    margin: 0 0.75rem;
+  }
+
+  @media (max-width: 768px) {
+    margin: 0;
+    order: 3;
+    max-width: none;
+    width: 100%;
+    display: none; // Hide search on mobile menu closed
+  }
+}
+
+.searchForm {
+  position: relative;
+  width: 100%;
+}
+
+.searchInputWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--btn-secondary-text);
+    box-shadow: 0 0 0 3px var(--btn-secondary-bg);
+  }
+}
+
+.searchIcon {
+  color: var(--text-muted);
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.875rem;
+  outline: none;
+  color: var(--input-text);
+
+  &::placeholder {
+    color: var(--input-placeholder);
+  }
+}
+
+.searchShortcut {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.themeToggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--toggle-btn-bg);
+  border: 1px solid var(--toggle-btn-border);
+  color: var(--toggle-btn-text);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+  }
+}
+
+.createBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    display: none; // Hide on mobile
+  }
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+}
+
+.connectBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px var(--btn-primary-shadow);
+
+  @media (max-width: 768px) {
+    display: none; // Hide on mobile
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 6px 8px var(--btn-primary-shadow);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.mobileMenuBtn {
+  display: none;
+  background: var(--toggle-btn-bg);
+  border: 1px solid var(--toggle-btn-border);
+  color: var(--toggle-btn-text);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: block; // Show on mobile
+  }
+}
+
+// Mobile menu
+.mobileMenu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 1rem;
+  right: 1rem;
+  background: var(--mobile-menu-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px var(--mobile-menu-shadow);
+  padding: 1.5rem;
+  z-index: 1001;
+  transform-origin: top;
+  animation: mobileMenuFadeIn 0.2s ease forwards;
+}
+
+.mobileNavList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin-bottom: 1rem;
+
+    a {
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 1.125rem;
+      text-decoration: none;
+      display: block;
+      padding: 0.5rem 0;
+    }
+  }
+}
+
+.mobileActions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--mobile-menu-border);
+}
+
+.mobileSearchForm {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+@keyframes mobileMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Add a spacer to prevent content from being hidden beneath the navbar
+.navbarSpacer {
+  height: 5rem; // Adjust based on your navbar height + margins
+}
