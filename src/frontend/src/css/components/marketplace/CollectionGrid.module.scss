@@ -5,15 +5,15 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   width: 100%;
-  
+
   @media (max-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   @media (max-width: 992px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @media (max-width: 576px) {
     grid-template-columns: 1fr;
   }
@@ -23,7 +23,7 @@
   text-decoration: none;
   color: inherit;
   transition: transform 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-4px);
   }

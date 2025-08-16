@@ -9,7 +9,7 @@
   border: 1px solid var(--toggle-btn-border);
   transition: all 0.3s ease;
   height: 100%;
-  
+
   &:hover {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     border-color: var(--btn-secondary-border);
@@ -28,7 +28,7 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
-  
+
   .collectionCard:hover & {
     transform: scale(1.05);
   }

@@ -20,7 +20,9 @@ interface CollectionGridProps {
   collections: Collection[];
 }
 
-export const CollectionGrid: React.FC<CollectionGridProps> = ({ collections }) => {
+export const CollectionGrid: React.FC<CollectionGridProps> = ({
+  collections,
+}) => {
   const { t } = useTranslation("marketplace");
 
   if (collections.length === 0) {

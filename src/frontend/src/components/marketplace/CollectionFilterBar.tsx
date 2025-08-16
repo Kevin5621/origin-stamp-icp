@@ -61,7 +61,9 @@ export const CollectionFilterBar: React.FC<CollectionFilterBarProps> = ({
           <button
             key={category.id}
             className={`${styles.categoryButton} ${
-              selectedCategory === category.id ? styles.categoryButtonActive : ""
+              selectedCategory === category.id
+                ? styles.categoryButtonActive
+                : ""
             }`}
             onClick={() => onCategoryChange(category.id)}
           >
@@ -77,7 +79,8 @@ export const CollectionFilterBar: React.FC<CollectionFilterBarProps> = ({
             className={styles.sortDropdownButton}
             onClick={toggleSortDropdown}
           >
-            {t("sort.sortBy")}: {sortOptions.find(opt => opt.id === selectedSort)?.label}
+            {t("sort.sortBy")}:{" "}
+            {sortOptions.find((opt) => opt.id === selectedSort)?.label}
             <ChevronDown size={16} />
           </button>
 
