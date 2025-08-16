@@ -1,0 +1,66 @@
+/* Theme Variables */
+
+:root {
+  /* Light Theme (default) */
+  --navbar-bg: rgba(255, 255, 255, 0.85);
+  --navbar-border: rgba(226, 232, 240, 0.8);
+  --navbar-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+
+  --input-bg: rgba(243, 244, 246, 0.8);
+  --input-border: rgba(209, 213, 219, 0.8);
+  --input-text: #1f2937;
+  --input-placeholder: #9ca3af;
+
+  --btn-primary-bg: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --btn-primary-text: #ffffff;
+  --btn-primary-shadow: rgba(99, 102, 241, 0.25);
+
+  --btn-secondary-bg: rgba(99, 102, 241, 0.1);
+  --btn-secondary-text: #6366f1;
+  --btn-secondary-border: rgba(99, 102, 241, 0.2);
+
+  --toggle-btn-bg: rgba(243, 244, 246, 0.8);
+  --toggle-btn-border: rgba(209, 213, 219, 0.8);
+  --toggle-btn-text: #4b5563;
+
+  --mobile-menu-bg: rgba(255, 255, 255, 0.95);
+  --mobile-menu-shadow: rgba(0, 0, 0, 0.1);
+  --mobile-menu-border: rgba(209, 213, 219, 0.5);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --navbar-bg: rgba(20, 20, 30, 0.85);
+  --navbar-border: rgba(55, 65, 81, 0.5);
+  --navbar-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+
+  --input-bg: rgba(31, 41, 55, 0.8);
+  --input-border: rgba(75, 85, 99, 0.8);
+  --input-text: #e5e7eb;
+  --input-placeholder: #6b7280;
+
+  --btn-primary-bg: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+  --btn-primary-text: #ffffff;
+  --btn-primary-shadow: rgba(129, 140, 248, 0.3);
+
+  --btn-secondary-bg: rgba(129, 140, 248, 0.1);
+  --btn-secondary-text: #818cf8;
+  --btn-secondary-border: rgba(129, 140, 248, 0.2);
+
+  --toggle-btn-bg: rgba(31, 41, 55, 0.8);
+  --toggle-btn-border: rgba(75, 85, 99, 0.8);
+  --toggle-btn-text: #e5e7eb;
+
+  --mobile-menu-bg: rgba(20, 20, 30, 0.95);
+  --mobile-menu-shadow: rgba(0, 0, 0, 0.25);
+  --mobile-menu-border: rgba(75, 85, 99, 0.5);
+}
