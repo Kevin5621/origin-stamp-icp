@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppLayout } from "../../components/layout/AppLayout";
-import { MarketplaceHeader } from "../../components/marketplace/MarketplaceHeader";
+import { Navbar } from "../../components/marketplace/Navbar";
 import { CategoryFilter } from "../../components/marketplace/CategoryFilter";
 import { HeroBanner } from "../../components/marketplace/HeroBanner";
 import { FeaturedCollections } from "../../components/marketplace/FeaturedCollections";
@@ -101,11 +101,8 @@ export const MarketplaceHomePage: React.FC = () => {
   return (
     <AppLayout variant="marketplace">
       <div className="marketplace">
-        {/* Header */}
-        <MarketplaceHeader
-          onSearch={handleSearch}
-          onConnectWallet={handleConnectWallet}
-        />
+        {/* Modern fixed Navbar */}
+        <Navbar onSearch={handleSearch} onConnectWallet={handleConnectWallet} />
 
         {/* Main Layout Container - Konsisten dengan dashboard */}
         <div className="marketplace-layout">
