@@ -63,8 +63,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         />
       )}
 
-      {showHeader && <AppTopHeader />}
-      <main className="layout-main-content">{children}</main>
+      <div className="layout-content-wrapper">
+        {showHeader && <AppTopHeader />}
+        <main className="layout-main-content">{children}</main>
+      </div>
     </div>
   );
 };

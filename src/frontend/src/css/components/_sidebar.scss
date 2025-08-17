@@ -244,10 +244,20 @@
   flex-direction: column;
   margin-left: 280px;
   transition: margin-left 0.2s ease;
+  min-height: 100vh;
+  position: relative;
 
   &--collapsed {
     margin-left: 72px;
   }
+}
+
+.layout-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: 80px; /* Padding untuk header fixed */
 }
 
 @media (max-width: 1024px) {
@@ -265,6 +275,10 @@
     &--collapsed {
       margin-left: 64px;
     }
+  }
+
+  .layout-content-wrapper {
+    padding-top: 75px; /* Padding untuk header fixed di tablet */
   }
 }
 
@@ -287,6 +301,14 @@
     &--collapsed {
       margin-left: 0;
     }
+  }
+
+  .layout-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-top: 70px; /* Padding untuk header fixed di mobile */
   }
 
   .sidebar::before {
@@ -312,6 +334,10 @@
   .sidebar {
     width: 100%;
     max-width: 320px;
+  }
+
+  .layout-content-wrapper {
+    padding-top: 60px; /* Padding untuk header fixed di mobile kecil */
   }
 }
 
