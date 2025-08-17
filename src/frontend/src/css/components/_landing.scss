@@ -22,11 +22,6 @@
   scroll-behavior: auto;
 }
 
-.landing-layout ~ .app-floating-header {
-  z-index: 1000;
-  padding-top: 0 !important;
-}
-
 /* Hide scrollbar for landing page */
 .landing-layout::-webkit-scrollbar {
   display: none;
