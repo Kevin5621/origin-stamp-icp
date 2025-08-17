@@ -1,94 +1,94 @@
-// src/frontend/src/components/dashboard/Dashboard.tsx
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Plus,
-  BarChart3,
-  Eye,
-  Camera,
-  TrendingUp,
-  CheckCircle,
-  Shield,
-  Activity,
-  Clock,
-  Palette,
-  ArrowRight,
-  Sparkles,
-  Zap,
-} from "lucide-react";
-import { ArtworkCard } from "../common/ArtworkCard";
-import {
-  type OriginStampStats,
-  type ArtworkOverview,
-  OriginStampDashboardService,
-} from "../../services/dashboardService";
+import DashboardCard from "./DashboardCard";
+import DashboardStats from "./DashboardStats";
+import DashboardChart from "./DashboardChart";
+import DashboardTable from "./DashboardTable";
+import DashboardLoader from "./DashboardLoader";
+import { dashboardService } from "../../services/dashboardService";
 
-interface DashboardProps {
-  isLoading?: boolean;
+interface DashboardData {
+  totalSessions: number;
+  totalCertificates: number;
+  totalRevenue: number;
+  activeUsers: number;
+  recentSessions: Array<{
+    id: string;
+    title: string;
+    date: string;
+    status: string;
+  }>;
+  revenueData: Array<{
+    month: string;
+    revenue: number;
+  }>;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
-  const navigate = useNavigate();
+const Dashboard: React.FC = () => {
   const { t } = useTranslation("dashboard");
-
-  const [stats, setStats] = useState<OriginStampStats | null>(null);
-  const [artworks, setArtworks] = useState<ArtworkOverview[]>([]);
+  const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadDashboardData = async () => {
+    const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const [statsData, artworksData] = await Promise.all([
-          OriginStampDashboardService.getDashboardStats(),
-          OriginStampDashboardService.getArtworkOverviews(),
-        ]);
-
-        setStats(statsData);
-        setArtworks(artworksData);
-      } catch (error) {
-        console.error("Failed to load dashboard data:", error);
+        const dashboardData = await dashboardService.getDashboardData();
+        setData(dashboardData);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to load dashboard",
+        );
       } finally {
         setLoading(false);
       }
     };
 
-    loadDashboardData();
+    fetchDashboardData();
   }, []);
 
-  const quickActions = [
-    {
-      id: "start-session",
-      icon: Camera,
-      title: t("start_session"),
-      description: t("start_session_desc"),
-      onClick: () => navigate("/sessions/new"),
-      gradient: "from-blue-500 to-cyan-500",
-    },
-    {
-      id: "view-collection",
-      icon: Eye,
-      title: t("view_collection"),
-      description: t("view_collection_desc"),
-      onClick: () => navigate("/marketplace"),
-      gradient: "from-purple-500 to-pink-500",
-    },
-    {
-      id: "analytics",
-      icon: BarChart3,
-      title: t("analytics"),
-      description: t("analytics_desc"),
-      onClick: () => navigate("/analytics"),
-      gradient: "from-orange-500 to-red-500",
-    },
-  ];
+  if (loading) {
+    return <DashboardLoader />;
+  }
 
-  if (loading || isLoading) {
+  if (error) {
     return (
       <div className="dashboard">
-        <div className="dashboard__loading">
-          <p>{t("loading_dashboard")}</p>
+        <div className="dashboard__header">
+          <h1 className="dashboard__title">{t("dashboard")}</h1>
+          <p className="dashboard__subtitle">{t("overview")}</p>
+        </div>
+        <div className="dashboard-empty">
+          <div className="dashboard-empty__icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+          </div>
+          <h3 className="dashboard-empty__title">{t("error_loading")}</h3>
+          <p className="dashboard-empty__description">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="dashboard">
+        <div className="dashboard__header">
+          <h1 className="dashboard__title">{t("dashboard")}</h1>
+          <p className="dashboard__subtitle">{t("overview")}</p>
+        </div>
+        <div className="dashboard-empty">
+          <div className="dashboard-empty__icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+            </svg>
+          </div>
+          <h3 className="dashboard-empty__title">{t("no_data")}</h3>
+          <p className="dashboard-empty__description">
+            {t("no_data_description")}
+          </p>
         </div>
       </div>
     );
@@ -96,93 +96,66 @@ const Dashboard: React.FC<DashboardProps> = ({ isLoading = false }) => {
 
   return (
     <div className="dashboard">
-      <div className="dashboard-layout">
-        {/* Hero Section - Layout konsisten dengan certificates */}
-        <div className="dashboard__hero">
-          <div className="hero__content">
-            <div className="hero__greeting">
-              <h1 className="hero__title">{t("hero_greeting")}</h1>
-              <p className="hero__subtitle">{t("hero_subtitle")}</p>
-            </div>
-            <div className="hero__stats">
-              <div className="hero-stat">
-                <div className="hero-stat__number">
-                  {stats?.totalArtworks || 0}
-                </div>
-                <div className="hero-stat__label">
-                  {t("hero_stats_artworks")}
-                </div>
-              </div>
-              <div className="hero-stat">
-                <div className="hero-stat__number">
-                  {stats?.verifiedArtworks || 0}
-                </div>
-                <div className="hero-stat__label">
-                  {t("hero_stats_verified")}
-                </div>
-              </div>
-              <div className="hero-stat">
-                <div className="hero-stat__number">
-                  {stats?.activeSessions || 0}
-                </div>
-                <div className="hero-stat__label">{t("hero_stats_active")}</div>
-              </div>
-            </div>
-          </div>
-          <div className="hero__action">
-            <button
-              className="hero__create-btn"
-              onClick={() => navigate("/create-session")}
-            >
-              <Plus size={16} />
-              <span>{t("hero_create_button")}</span>
-              <Sparkles size={14} />
-            </button>
-          </div>
-        </div>
+      <div className="dashboard__header">
+        <h1 className="dashboard__title">{t("dashboard")}</h1>
+        <p className="dashboard__subtitle">{t("overview")}</p>
+      </div>
 
-        {/* Quick Actions - Ikon lebih kecil */}
-        <div className="dashboard__quick-actions-modern">
-          <div className="quick-actions-modern__grid">
-            {quickActions.map((action) => (
-              <div
-                key={action.id}
-                className="quick-action-modern"
-                onClick={action.onClick}
-              >
-                <div className="quick-action-modern__icon">
-                  <action.icon size={16} /> {/* Ikon lebih kecil */}
-                </div>
-                <div className="quick-action-modern__content">
-                  <h3 className="quick-action-modern__title">{action.title}</h3>
-                  <p className="quick-action-modern__description">
-                    {action.description}
-                  </p>
-                </div>
-                <div className="quick-action-modern__arrow">
-                  <ArrowRight size={12} /> {/* Ikon arrow lebih kecil */}
-                </div>
-              </div>
-            ))}
+      <div className="dashboard__content">
+        <div className="dashboard__main">
+          <div className="dashboard__section">
+            <DashboardStats
+              stats={[
+                {
+                  title: t("total_sessions"),
+                  value: data.totalSessions,
+                  icon: "session",
+                  trend: "+12%",
+                  trendType: "positive" as const,
+                },
+                {
+                  title: t("total_certificates"),
+                  value: data.totalCertificates,
+                  icon: "certificate",
+                  trend: "+8%",
+                  trendType: "positive" as const,
+                },
+                {
+                  title: t("total_revenue"),
+                  value: `$${data.totalRevenue.toLocaleString()}`,
+                  icon: "revenue",
+                  trend: "+15%",
+                  trendType: "positive" as const,
+                },
+                {
+                  title: t("active_users"),
+                  value: data.activeUsers,
+                  icon: "users",
+                  trend: "+5%",
+                  trendType: "positive" as const,
+                },
+              ]}
+            />
           </div>
-        </div>
 
-        {/* Recent Artworks - Layout konsisten */}
-        <div className="dashboard__recent-artworks">
-          <div className="recent-artworks__header">
-            <h3 className="recent-artworks__title">{t("recent_artworks")}</h3>
-            <button
-              className="recent-artworks__view-all"
-              onClick={() => navigate("/marketplace")}
-            >
-              {t("recent_artworks_view_all")} <ArrowRight size={12} />{" "}
-              {/* Ikon arrow lebih kecil */}
-            </button>
+          <div className="dashboard__section">
+            <DashboardChart
+              title={t("revenue_chart")}
+              data={data.revenueData}
+              type="line"
+            />
           </div>
-          <div className="recent-artworks__grid">
-            {artworks.slice(0, 3).map((artwork) => (
-              <ArtworkCard key={artwork.id} artwork={artwork} />
-            ))}
+
+          <div className="dashboard__section">
+            <DashboardTable
+              title={t("recent_sessions")}
+              data={data.recentSessions}
+              columns={[
+                { key: "title", label: t("session_title") },
+                { key: "date", label: t("date") },
+                { key: "status", label: t("status") },
+              ]}
+            />
           </div>
         </div>
       </div>
