@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Compass,
+  LayoutDashboard,
   Settings,
   Home,
   BarChart3,
@@ -12,6 +12,10 @@ import {
   Grid,
   List,
   Anchor,
+  Compass,
+  Palette,
+  FileText,
+  Activity,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -34,9 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
 
-  // Internal state for collapse if not controlled externally
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
-
   const isCollapsed = externalIsCollapsed ?? internalIsCollapsed;
 
   const handleToggleCollapse = () => {
@@ -65,7 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: "activity",
-          icon: List,
+          icon: Activity,
           label: tMarketplace("sidebar.activity"),
           path: "/marketplace/activity",
         },
@@ -84,17 +86,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ];
     }
 
-    // Dashboard menu items (removed portfolio and deprecated buttons)
     return [
       {
         id: "dashboard",
-        icon: Home,
+        icon: LayoutDashboard,
         label: t("sidebar.dashboard"),
         path: "/dashboard",
       },
       {
         id: "session",
-        icon: User,
+        icon: Palette,
         label: t("sidebar.session"),
         path: "/session",
       },
@@ -118,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       return [
         {
           id: "dashboard",
-          icon: Home,
+          icon: LayoutDashboard,
           label: t("sidebar.dashboard"),
           path: "/dashboard",
         },
@@ -180,7 +181,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""} sidebar--${variant}`}
       aria-label={t("sidebar.main_navigation")}
     >
-      {/* Header */}
       <header className="sidebar__header">
         <Link
           to={getLogoPath()}
@@ -207,7 +207,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </header>
 
-      {/* User Profile */}
       <div className="sidebar__user">
         <div className="sidebar__avatar">
           <img
@@ -226,7 +225,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
       </div>
 
-      {/* Main Navigation */}
       <nav
         className="sidebar__nav"
         aria-label={t("sidebar.primary_navigation")}
@@ -254,7 +252,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </ul>
       </nav>
 
-      {/* Secondary Navigation */}
       <nav
         className="sidebar__secondary"
         aria-label={t("sidebar.secondary_navigation")}

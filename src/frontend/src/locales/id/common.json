@@ -128,7 +128,12 @@
     "guest_user": "Pengguna Tamu",
     "user": "Pengguna",
     "collapse": "Tutup Sidebar",
-    "expand": "Buka Sidebar"
+    "expand": "Buka Sidebar",
+    "main_navigation": "Navigasi Utama",
+    "primary_navigation": "Navigasi Primer",
+    "secondary_navigation": "Navigasi Sekunder",
+    "online": "Daring",
+    "offline": "Luring"
   },
   "quick_actions": "Aksi Cepat",
   "create_nft": "Buat NFT",
