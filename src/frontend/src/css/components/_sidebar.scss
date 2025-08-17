@@ -152,7 +152,7 @@
 
 .sidebar__user-status {
   font-size: var(--text-xs);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   line-height: var(--leading-tight);
 }
 
@@ -189,7 +189,7 @@
   text-decoration: none;
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   background: transparent;
   border: 1px solid transparent;
   transition: all 0.2s ease;
@@ -207,17 +207,17 @@
   }
 
   &--active {
-    background: var(--color-primary);
+    background: var(--color-accent);
     color: var(--color-white);
-    border-color: var(--color-primary);
+    border-color: var(--color-accent);
 
     .sidebar__icon {
       color: var(--color-white);
     }
 
     &:hover {
-      background: var(--color-primary-dark);
-      border-color: var(--color-primary-dark);
+      background: var(--color-accent-dark);
+      border-color: var(--color-accent-dark);
     }
   }
 }
@@ -225,7 +225,7 @@
 .sidebar__icon {
   width: var(--icon-md);
   height: var(--icon-md);
-  color: inherit;
+  color: var(--color-text-primary);
   flex-shrink: 0;
 }
 

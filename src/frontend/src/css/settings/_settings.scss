@@ -201,14 +201,14 @@
 
 [data-theme="dark"] {
   /* Primary Colors - 30% */
-  --color-primary: #f7fafc;
-  --color-primary-light: #e2e8f0;
-  --color-primary-dark: #cbd5e0;
+  --color-primary: #2d3748;
+  --color-primary-light: #4a5568;
+  --color-primary-dark: #1a202c;
   --color-primary-text: #f7fafc;
   --color-primary-bg: #1a202c;
 
   /* Secondary Colors - 10% */
-  --color-secondary: #f7fafc;
+  --color-secondary: #2d3748;
   --color-secondary-text: #f7fafc;
   --color-secondary-bg: #2d3748;
 
@@ -216,13 +216,13 @@
   --color-surface: #1a202c;
   --color-on-surface: #f7fafc;
   --color-text-primary: #f7fafc;
-  --color-text-secondary: #a0aec0;
-  --color-text-tertiary: #718096;
+  --color-text-secondary: #cbd5e0;
+  --color-text-tertiary: #a0aec0;
 
   /* Accent Colors */
-  --color-accent: #f7fafc;
-  --color-accent-light: #e2e8f0;
-  --color-accent-dark: #cbd5e0;
+  --color-accent: #2d3748;
+  --color-accent-light: #4a5568;
+  --color-accent-dark: #1a202c;
 
   /* Status Colors */
   --color-success: #68d391;
@@ -235,6 +235,6 @@
   --color-border-hover: #718096;
 
   /* Interactive States */
-  --color-hover-overlay: rgba(247, 250, 252, 0.1);
-  --color-focus: #f7fafc;
+  --color-hover-overlay: rgba(247, 250, 252, 0.05);
+  --color-focus: #2d3748;
 }
