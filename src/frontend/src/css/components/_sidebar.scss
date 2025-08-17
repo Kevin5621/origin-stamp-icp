@@ -275,6 +275,8 @@
 }
 
 .layout-with-sidebar {
+  display: flex;
+  flex-direction: column;
   margin-left: 280px;
   transition: margin-left 0.2s ease;
 
@@ -314,6 +316,8 @@
 
   .layout-with-sidebar {
     margin-left: 0;
+    display: flex;
+    flex-direction: column;
 
     &--collapsed {
       margin-left: 0;
