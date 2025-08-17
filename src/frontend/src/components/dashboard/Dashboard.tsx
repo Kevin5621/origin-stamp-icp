@@ -55,10 +55,6 @@ const Dashboard: React.FC = () => {
   if (error) {
     return (
       <div className="dashboard">
-        <div className="dashboard__header">
-          <h1 className="dashboard__title">{t("dashboard")}</h1>
-          <p className="dashboard__subtitle">{t("overview")}</p>
-        </div>
         <div className="dashboard-empty">
           <div className="dashboard-empty__icon">
             <svg viewBox="0 0 24 24" fill="currentColor">
@@ -75,10 +71,6 @@ const Dashboard: React.FC = () => {
   if (!data) {
     return (
       <div className="dashboard">
-        <div className="dashboard__header">
-          <h1 className="dashboard__title">{t("dashboard")}</h1>
-          <p className="dashboard__subtitle">{t("overview")}</p>
-        </div>
         <div className="dashboard-empty">
           <div className="dashboard-empty__icon">
             <svg viewBox="0 0 24 24" fill="currentColor">
@@ -96,11 +88,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="dashboard">
-      <div className="dashboard__header">
-        <h1 className="dashboard__title">{t("dashboard")}</h1>
-        <p className="dashboard__subtitle">{t("overview")}</p>
-      </div>
-
       <div className="dashboard__content">
         <div className="dashboard__main">
           <div className="dashboard__section">

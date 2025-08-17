@@ -270,8 +270,7 @@
 
 .dashboard__bento-header,
 .certificates-header,
-.analytics__header,
-.dashboard__header {
+.analytics__header {
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -394,8 +393,7 @@
   .app-header,
   .dashboard__bento-header,
   .certificates-header,
-  .analytics__header,
-  .dashboard__header {
+  .analytics__header {
     padding: var(--space-4) 0;
   }
 
@@ -465,8 +463,7 @@
   .app-header,
   .dashboard__bento-header,
   .certificates-header,
-  .analytics__header,
-  .dashboard__header {
+  .analytics__header {
     padding: var(--space-3) 0;
   }
 
@@ -620,8 +617,7 @@
   .floating-header-content,
   .dashboard__bento-header,
   .certificates-header,
-  .analytics__header,
-  .dashboard__header {
+  .analytics__header {
     transition: none;
   }
 }
