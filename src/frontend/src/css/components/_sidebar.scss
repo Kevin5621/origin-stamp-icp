@@ -34,7 +34,7 @@
 
   /* Flat Design - NO shadows, gradients, or 3D effects */
   box-shadow: none;
-  
+
   /* Dark Theme Support */
   [data-theme="dark"] & {
     background-color: var(--color-surface);
@@ -129,18 +129,18 @@
   border-radius: var(--radius-md);
   padding: var(--padding-xs);
   cursor: pointer;
-  
+
   /* Size (Following 8pt Grid) */
   width: var(--touch-target-min);
   height: var(--touch-target-min);
   min-width: var(--touch-target-min);
   min-height: var(--touch-target-min);
-  
+
   /* Layout */
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   /* Colors */
   color: var(--color-text-secondary);
   transition: var(--transition-colors);
@@ -163,7 +163,7 @@
   /* Dark Theme */
   [data-theme="dark"] & {
     border-color: var(--color-border);
-    
+
     &:hover {
       background-color: var(--color-gray-800);
     }
@@ -210,7 +210,7 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   line-height: var(--leading-snug);
-  
+
   /* Text Overflow Handling */
   white-space: nowrap;
   overflow: hidden;
@@ -268,21 +268,21 @@
   gap: var(--space-3);
   padding: var(--padding-sm) var(--padding-md);
   border-radius: var(--radius-md);
-  
+
   /* Typography */
   text-decoration: none;
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
   line-height: var(--leading-snug);
-  
+
   /* Colors (60% Neutral Base) */
   color: var(--color-text-secondary);
   background-color: transparent;
   border: 1px solid transparent;
-  
+
   /* Transitions */
   transition: var(--transition-colors);
-  
+
   /* Touch Target */
   min-height: var(--touch-target-min);
 
@@ -342,7 +342,7 @@
   color: inherit;
   font-size: inherit;
   font-weight: inherit;
-  
+
   /* Text Overflow Handling */
   white-space: nowrap;
   overflow: hidden;
@@ -389,7 +389,7 @@
     transform: translateX(-100%);
     transition: transform var(--transition-normal) var(--ease-out);
     width: 280px;
-    
+
     &--open {
       transform: translateX(0);
     }
