@@ -20,7 +20,7 @@
 .neumorphic-card {
   background: var(--color-surface);
   box-shadow: var(--shadow-neumorphic-md);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--radius-xl);
   transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
@@ -87,17 +87,17 @@
    ============================================================================= */
 
 .surface--small {
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
 }
 
 .surface--medium {
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
 }
 
 .surface--large {
-  padding: var(--spacing-lg);
+  padding: var(--space-6);
   border-radius: var(--border-radius-lg);
 }
 

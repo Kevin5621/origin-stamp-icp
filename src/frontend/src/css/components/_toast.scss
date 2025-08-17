@@ -9,14 +9,14 @@
 .toast-container {
   position: fixed;
   top: 120px;
-  right: 20px;
+  right: var(--space-5);
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
   max-width: 400px;
   pointer-events: none;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
 
   @media (max-width: 768px) {
     top: 80px;
@@ -34,14 +34,14 @@
 .toast-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--space-3);
+  padding: var(--space-4);
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   border-left: 4px solid;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(20px);
   pointer-events: auto;
   min-width: 300px;
   max-width: 400px;
@@ -81,10 +81,11 @@
 
 .toast-message {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
-  color: var(--color-text);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
   word-wrap: break-word;
+  font-family: var(--font-family-primary);
 }
 
 .toast-close {

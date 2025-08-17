@@ -6,7 +6,7 @@
 .settings-bento-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: var(--spacing-lg);
+  gap: var(--space-8);
   width: 100%;
   max-width: none;
   margin: 0;
@@ -20,24 +20,25 @@
 .settings-header-left {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-sm);
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 
 .settings-back-btn {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--space-2);
   color: var(--color-text-secondary);
-  transition: all 0.3s ease;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--color-border);
+  transition: var(--transition-normal);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border);
   background: var(--color-surface);
   cursor: pointer;
   font-family: var(--font-family-primary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-wide);
 
   &:hover {
     color: var(--color-accent);
@@ -53,10 +54,10 @@
 
 .settings-bento-card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-2xl);
-  padding: var(--spacing-xl);
-  transition: all 0.3s ease;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-12);
+  transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
 

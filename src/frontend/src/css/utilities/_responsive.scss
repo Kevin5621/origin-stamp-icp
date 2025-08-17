@@ -46,7 +46,7 @@
 @media (max-width: 480px) {
   /* Layout adjustments */
   .page-container {
-    padding: var(--spacing-sm);
+    padding: var(--space-3);
   }
 
   /* Card adjustments */
@@ -54,7 +54,7 @@
   .session-main-card,
   .process-summary-card,
   .certificate-card {
-    padding: var(--spacing-lg);
+    padding: var(--space-6);
   }
 
   /* Header adjustments */
@@ -64,17 +64,17 @@
   .verification-header {
     flex-direction: column;
     text-align: center;
-    gap: var(--spacing-md);
+    gap: var(--space-4);
   }
 
   /* Navigation adjustments */
   .nav-container {
-    padding: var(--spacing-sm);
+    padding: var(--space-3);
   }
 
   .nav-button {
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.875rem;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
   }
 
   .nav-button span {
@@ -83,17 +83,17 @@
 
   /* Grid adjustments */
   .hero-features {
-    gap: var(--spacing-md);
+    gap: var(--space-4);
   }
 
   .feature-card {
-    padding: var(--spacing-lg);
+    padding: var(--space-6);
   }
 
   .metrics-grid,
   .verification-stats-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+    gap: var(--space-4);
   }
 
   /* Typography adjustments */

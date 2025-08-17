@@ -1,5 +1,5 @@
 .marketplace-main {
-  background: var(--color-white);
+  background: var(--color-surface);
   min-height: 100vh;
 
   &__content {
@@ -44,8 +44,8 @@
 }
 
 .marketplace-header {
-  background: var(--color-white);
-  border-bottom: 1px solid var(--color-gray-200);
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-border);
   padding: var(--space-6) 0;
 
   &__container {
@@ -64,14 +64,16 @@
   &__title {
     font-size: var(--text-3xl);
     font-weight: var(--font-weight-bold);
-    color: var(--color-gray-900);
+    color: var(--color-text-primary);
     margin: 0 0 var(--space-2) 0;
+    letter-spacing: var(--tracking-tight);
   }
 
   &__subtitle {
     font-size: var(--text-base);
-    color: var(--color-gray-600);
+    color: var(--color-text-secondary);
     margin: 0;
+    font-family: var(--font-family-primary);
   }
 
   &__actions {
@@ -84,14 +86,16 @@
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-4);
-    background: var(--color-primary);
-    color: var(--color-white);
+    background: var(--color-primary-text);
+    color: var(--color-surface);
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     font-size: var(--text-sm);
     font-weight: var(--font-weight-medium);
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: var(--transition-normal);
+    font-family: var(--font-family-primary);
+    letter-spacing: var(--tracking-wide);
 
     &:hover {
       background: var(--color-primary-light);

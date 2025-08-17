@@ -18,7 +18,7 @@
 .page-container {
   margin: 0 auto;
   max-width: 90rem;
-  padding: var(--spacing-lg) 0; /* No horizontal padding for maximum content width */
+  padding: var(--space-8) 0;
   transition: var(--theme-transition);
 }
 
@@ -31,22 +31,20 @@
   background: var(--color-surface);
   min-height: 0;
   transition: margin-left 0.3s ease;
-  padding: var(--spacing-xl) 0; /* Normal padding karena sudah ada padding di wrapper */
+  padding: var(--space-12) 0;
   overflow-y: auto;
   position: relative;
   z-index: 1;
   width: 100%;
-
-  /* Better container width for content */
   max-width: 100%;
   margin: 0 auto;
 
   @media (max-width: 1024px) {
-    padding: var(--spacing-lg) 0; /* Normal padding karena sudah ada padding di wrapper */
+    padding: var(--space-8) 0;
   }
 
   @media (max-width: 768px) {
-    padding: var(--spacing-md) 0; /* Normal padding karena sudah ada padding di wrapper */
+    padding: var(--space-4) 0;
     margin-left: 0;
   }
 }
@@ -93,7 +91,7 @@
 
 .grid {
   display: grid;
-  gap: var(--spacing-md);
+  gap: var(--space-4);
 }
 
 .grid--2-cols {
