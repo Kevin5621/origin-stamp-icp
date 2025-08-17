@@ -1,161 +1,21 @@
 {
-  "connectWallet": "Hubungkan Wallet",
-  "nav": {
-    "explore": "Jelajahi",
-    "create": "Buat",
-    "collections": "Koleksi"
-  },
+  "title": "Marketplace",
+  "subtitle": "Jelajahi karya seni digital terverifikasi",
+  "search": "Cari",
+  "search_placeholder": "Cari karya seni, seniman, atau kategori...",
+  "filters": "Filter",
+  "all_categories": "Semua Kategori",
+  "price_range": "Rentang Harga",
+  "min_price": "Harga Minimum",
+  "max_price": "Harga Maksimum",
+  "apply": "Terapkan",
+  "reset": "Reset",
+  "results_count": "{{count}} hasil ditemukan",
   "categories": {
-    "all": "Semua",
-    "art": "Seni",
-    "gaming": "Gaming",
-    "pfps": "PFPs",
-    "memberships": "Membership",
-    "music": "Musik",
-    "photography": "Fotografi"
-  },
-  "timeframes": {
-    "all": "Semua"
-  },
-  "sort": {
-    "top": "Teratas",
-    "trending": "Trending"
-  },
-  "view": {
-    "list": "Daftar",
-    "grid": "Grid"
-  },
-  "by": "Oleh",
-  "featuredCollections": {
-    "title": "Koleksi Unggulan",
-    "subtitle": "Koleksi kurasi minggu ini."
-  },
-  "featuredDrops": {
-    "title": "Drops Unggulan",
-    "subtitle": "Live dan upcoming drops minggu ini."
-  },
-  "topCollections": "KOLEKSI TERATAS",
-  "sidebar": {
-    "explore": "Jelajahi",
-    "collections": "Koleksi",
-    "create": "Buat",
-    "activity": "Aktivitas",
-    "rankings": "Peringkat",
-    "stats": "Statistik",
-    "collapse": "Tutup Sidebar",
-    "expand": "Buka Sidebar"
-  },
-  "hero": {
-    "title": "Temukan Seni Digital Unik",
-    "subtitle": "Jelajahi karya seni digital terverifikasi dengan sertifikasi OriginStamp. Setiap karya menceritakan kisah penciptaan yang unik.",
-    "searchPlaceholder": "Cari NFT, koleksi, atau kreator...",
-    "createNFT": "Buat & Jual",
-    "featured": "NFT Unggulan"
-  },
-  "stats": {
-    "totalNFTs": "Total NFT",
-    "totalVolume": "Total Volume",
-    "activeUsers": "Pengguna Aktif",
-    "totalSales": "Total Penjualan"
-  },
-  "main": {
-    "title": "Jelajahi NFT"
-  },
-  "empty": {
-    "title": "NFT Tidak Ditemukan",
-    "description": "Coba sesuaikan filter Anda atau cari yang lain.",
-    "clearFilters": "Hapus Filter"
-  },
-  "search": {
-    "placeholder": "Cari NFT, koleksi, kreator...",
-    "button": "Cari",
-    "filters": "Filter",
-    "category": "Kategori",
-    "allCategories": "Semua Kategori",
-    "digitalArt": "Seni Digital",
-    "photography": "Fotografi",
     "abstract": "Abstrak",
-    "portrait": "Portrait",
-    "priceRange": "Rentang Harga",
-    "sortBy": "Urutkan Berdasarkan",
-    "newest": "Terbaru",
-    "oldest": "Terlama",
-    "priceLow": "Harga: Rendah ke Tinggi",
-    "priceHigh": "Harga: Tinggi ke Rendah",
-    "popular": "Paling Populer",
-    "originStampVerified": "Terverifikasi OriginStamp",
-    "creatorVerified": "Kreator Terverifikasi",
-    "cancel": "Batal",
-    "apply": "Terapkan Filter",
-    "searching": "Mencari...",
-    "resultsFor": "Hasil pencarian untuk",
-    "resultsFound": "hasil ditemukan",
-    "all": "Semua",
-    "nfts": "NFT",
-    "collections": "Koleksi",
-    "users": "Pengguna",
-    "noResults": "Tidak ada hasil ditemukan",
-    "noResultsDescription": "Coba sesuaikan istilah pencarian atau jelajahi marketplace kami.",
-    "browseMarketplace": "Jelajahi Marketplace",
-    "followers": "Pengikut",
-    "sales": "Penjualan",
-    "volume": "Volume"
+    "digital": "Digital",
+    "traditional": "Tradisional",
+    "sculpture": "Patung"
   },
-  "nftDetail": {
-    "back": "Kembali",
-    "creator": "Kreator",
-    "description": "Deskripsi",
-    "created": "Dibuat",
-    "views": "Dilihat",
-    "collection": "Koleksi",
-    "currentPrice": "Harga Saat Ini",
-    "buyNow": "Beli Sekarang",
-    "buying": "Memproses...",
-    "auctionEnds": "Lelang berakhir dalam 2 hari",
-    "placeBid": "Ajukan Penawaran",
-    "sold": "Terjual",
-    "originStampCertificate": "Sertifikat OriginStamp",
-    "certificateDescription": "Karya seni ini telah diverifikasi dengan OriginStamp, memberikan bukti proses penciptaan dan keaslian.",
-    "certificateId": "ID Sertifikat",
-    "creationProcess": "Proses Penciptaan",
-    "verified": "Terverifikasi",
-    "notVerified": "Tidak Terverifikasi",
-    "viewCertificate": "Lihat Sertifikat",
-    "moreFromCreator": "Lainnya dari kreator ini",
-    "notFound": "NFT Tidak Ditemukan",
-    "notFoundDescription": "NFT yang Anda cari tidak ada atau telah dihapus.",
-    "backToMarketplace": "Kembali ke Marketplace"
-  },
-  "create": {
-    "title": "Buat NFT Baru",
-    "back": "Kembali",
-    "uploadFile": "Upload File",
-    "dragAndDrop": "Seret dan lepas file Anda di sini",
-    "orClickToBrowse": "atau klik untuk memilih",
-    "supportedFormats": "Format yang didukung: JPG, PNG, GIF, WebP (Maks 10MB)",
-    "nftDetails": "Detail NFT",
-    "titleLabel": "Judul",
-    "titlePlaceholder": "Masukkan judul NFT",
-    "description": "Deskripsi",
-    "descriptionPlaceholder": "Jelaskan NFT Anda",
-    "price": "Harga",
-    "collection": "Koleksi",
-    "collectionPlaceholder": "Nama koleksi (opsional)",
-    "tags": "Tag",
-    "addTag": "Tambah tag",
-    "originStamp": "Verifikasi OriginStamp",
-    "originStampDescription": "NFT Anda akan otomatis diverifikasi dengan OriginStamp, memberikan bukti proses penciptaan dan keaslian.",
-    "benefit1": "Riwayat penciptaan yang tidak dapat diubah",
-    "benefit2": "Bukti keaslian",
-    "benefit3": "Nilai dan kepercayaan yang meningkat",
-    "createNFT": "Buat NFT",
-    "creating": "Membuat...",
-    "titleRequired": "Judul diperlukan",
-    "descriptionRequired": "Deskripsi diperlukan",
-    "priceRequired": "Harga yang valid diperlukan",
-    "fileRequired": "Silakan pilih file",
-    "createFailed": "Gagal membuat NFT"
-  },
-  "wallet": "Dompet",
-  "notifications": "Notifikasi"
+  "price_format": "Rp {{price}}"
 }
