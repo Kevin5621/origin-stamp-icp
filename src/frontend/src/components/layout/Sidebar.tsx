@@ -182,8 +182,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       {/* Header */}
       <header className="sidebar__header">
-        <Link 
-          to={getLogoPath()} 
+        <Link
+          to={getLogoPath()}
           className="sidebar__logo"
           aria-label={getLogoText()}
         >
@@ -203,19 +203,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           aria-label={isCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
           aria-expanded={!isCollapsed}
         >
-          {isCollapsed ? (
-            <ChevronRight size={16} />
-          ) : (
-            <ChevronLeft size={16} />
-          )}
+          {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>
       </header>
 
       {/* User Profile */}
       <div className="sidebar__user">
         <div className="sidebar__avatar">
-          <img 
-            src={getUserAvatar()} 
+          <img
+            src={getUserAvatar()}
             alt={getUserName()}
             className="sidebar__avatar-img"
           />
@@ -231,7 +227,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Main Navigation */}
-      <nav className="sidebar__nav" aria-label={t("sidebar.primary_navigation")}>
+      <nav
+        className="sidebar__nav"
+        aria-label={t("sidebar.primary_navigation")}
+      >
         <ul className="sidebar__menu">
           {getMenuItems().map((item) => {
             const Icon = item.icon;
@@ -256,7 +255,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Secondary Navigation */}
-      <nav className="sidebar__secondary" aria-label={t("sidebar.secondary_navigation")}>
+      <nav
+        className="sidebar__secondary"
+        aria-label={t("sidebar.secondary_navigation")}
+      >
         <ul className="sidebar__menu">
           {getBottomMenuItems().map((item) => {
             const Icon = item.icon;
