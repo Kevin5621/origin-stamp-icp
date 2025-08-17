@@ -1,16 +1,12 @@
 /* =============================================================================
-   CREATE SESSION PAGE COMPONENTS - CLEAN DESIGN
+   CREATE SESSION PAGE COMPONENTS - CONSISTENT WITH DASHBOARD
    ============================================================================= */
 
 .create-session {
-  padding: var(--spacing-xl);
-  padding-top: calc(var(--spacing-xl) + 90px);
-  max-width: 100%;
-  margin: 0;
-  min-height: 100vh;
   background: var(--color-surface);
-  color: var(--color-primary-text);
-  position: relative;
+  min-height: 100vh;
+  padding: var(--space-6);
+  color: var(--color-text-primary);
 }
 
 /* Create Session Layout Wrapper */
@@ -19,27 +15,24 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: var(--space-8);
 }
 
-/* Header Section */
+/* Header Section - Dashboard Style */
 .create-session__header {
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    rgba(var(--color-accent-rgb), 0.02) 100%
-  );
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
   display: flex;
   align-items: center;
-  gap: var(--spacing-xl);
-  position: relative;
-  overflow: hidden;
-  margin-bottom: var(--spacing-xl);
-  box-shadow: 0 10px 30px rgba(var(--color-accent-rgb), 0.08);
-  transition: all var(--transition-normal);
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-border-hover);
+  }
 }
 
 .create-session__header::before {
@@ -49,44 +42,29 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--color-accent) 0%,
-    var(--color-accent-secondary) 100%
-  );
-  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-}
-
-.create-session__header:hover {
-  border-color: rgba(var(--color-accent-rgb), 0.1);
-  box-shadow: 0 15px 40px rgba(var(--color-accent-rgb), 0.12);
+  background: var(--color-accent);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .btn-back {
-  background: linear-gradient(
-    135deg,
-    rgba(var(--color-accent-rgb), 0.08),
-    rgba(var(--color-accent-rgb), 0.04)
-  );
-  color: var(--color-accent);
-  border: 1px solid rgba(var(--color-accent-rgb), 0.2);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--space-2);
   text-decoration: none;
 }
 
 .btn-back:hover {
-  background: var(--color-accent);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(var(--color-accent-rgb), 0.2);
+  border-color: var(--color-border-hover);
+  color: var(--color-accent);
 }
 
 .btn-back:hover svg {
@@ -102,34 +80,33 @@
 }
 
 .create-session__title h1 {
-  font-size: var(--font-size-3xl);
+  font-size: var(--text-3xl);
   font-weight: var(--font-weight-bold);
-  margin: 0 0 var(--spacing-sm) 0;
-  line-height: var(--line-height-tight);
-  color: var(--color-primary-text);
+  margin: 0 0 var(--space-2) 0;
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
+  letter-spacing: var(--tracking-tight);
 }
 
 .create-session__title p {
-  font-size: var(--font-size-lg);
+  font-size: var(--text-lg);
   margin: 0;
   color: var(--color-text-secondary);
-  line-height: var(--line-height-normal);
+  line-height: var(--leading-normal);
   max-width: 600px;
 }
 
-/* Main Content */
+/* Main Content - Dashboard Style */
 .create-session__content {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-xl);
-  box-shadow: 0 10px 30px rgba(var(--color-accent-rgb), 0.08);
-  transition: all var(--transition-normal);
-}
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: border-color 0.2s ease;
 
-.create-session__content:hover {
-  border-color: rgba(var(--color-accent-rgb), 0.1);
-  box-shadow: 0 15px 40px rgba(var(--color-accent-rgb), 0.12);
+  &:hover {
+    border-color: var(--color-border-hover);
+  }
 }
 
 .create-session__form {
@@ -138,20 +115,20 @@
 }
 
 .form-group {
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--space-6);
 }
 
 .form-group label {
   display: block;
-  margin-bottom: var(--spacing-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-text);
-  font-size: var(--font-size-md);
+  margin-bottom: var(--space-2);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-size: var(--text-sm);
 }
 
 .form-group label .required {
   color: var(--color-error);
-  margin-left: var(--spacing-xs);
+  margin-left: var(--space-1);
 }
 
 .form-input,
