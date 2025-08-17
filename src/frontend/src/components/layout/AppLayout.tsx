@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Sidebar } from "./Sidebar";
+import { AppTopHeader } from "../common/FloatingHeader";
 
 interface AppLayoutProps {
   children: React.ReactNode;
   variant?: "default" | "dashboard" | "marketplace";
   showSidebar?: boolean;
+  showHeader?: boolean;
   onSectionChange?: (section: string) => void;
 }
 
@@ -12,6 +14,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
   variant = "default",
   showSidebar = true,
+  showHeader = true,
   onSectionChange = () => {},
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -60,6 +63,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         />
       )}
 
+      {showHeader && <AppTopHeader />}
       <main className="layout-main-content">{children}</main>
     </div>
   );

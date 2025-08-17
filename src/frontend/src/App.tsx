@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { Loader, ErrorDisplay, FloatingHeader, AppLayout } from "./components";
+import { Loader, ErrorDisplay, AppLayout } from "./components";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -228,8 +228,6 @@ function App() {
           <AppErrorBoundary>
             {/* Global authentication redirect handler */}
             <AuthRedirect />
-
-            <FloatingHeader className="app-floating-header" />
 
             <MainContentWrapper />
 

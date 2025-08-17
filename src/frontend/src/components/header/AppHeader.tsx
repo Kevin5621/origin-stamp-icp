@@ -4,7 +4,12 @@ interface AppHeaderProps {
   readonly title: string;
   readonly subtitle?: string;
   readonly children?: React.ReactNode;
-  readonly variant?: "default" | "centered" | "left-aligned" | "with-background" | "with-border";
+  readonly variant?:
+    | "default"
+    | "centered"
+    | "left-aligned"
+    | "with-background"
+    | "with-border";
   readonly size?: "small" | "default" | "large";
 }
 
