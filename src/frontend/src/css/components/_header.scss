@@ -72,16 +72,11 @@
   position: relative;
   z-index: 100;
   padding: var(--space-4) var(--space-6);
-  background: var(--color-white);
-  border-bottom: 1px solid var(--color-gray-200);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   transition: all 0.2s ease;
   margin: 0;
   flex-shrink: 0;
-
-  [data-theme="dark"] & {
-    background: var(--color-gray-900);
-    border-bottom-color: var(--color-gray-700);
-  }
 }
 
 /* =============================================================================
@@ -539,34 +534,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-white);
-    border: 1px solid var(--color-gray-200);
-    color: var(--color-gray-700);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
     transition: all 0.2s ease;
     flex-shrink: 0;
     box-shadow: none;
 
-    [data-theme="dark"] & {
-      background: var(--color-gray-800);
-      border-color: var(--color-gray-600);
-      color: var(--color-gray-300);
-    }
-
     &:hover {
-      background: var(--color-gray-50);
-      border-color: var(--color-gray-300);
-      color: var(--color-gray-900);
+      background: var(--color-hover-overlay);
+      border-color: var(--color-border-hover);
+      color: var(--color-text-primary);
       transform: none;
-
-      [data-theme="dark"] & {
-        background: var(--color-gray-700);
-        border-color: var(--color-gray-500);
-        color: var(--color-white);
-      }
     }
 
     &:focus-visible {
-      outline: 2px solid var(--color-primary);
+      outline: 2px solid var(--color-focus);
       outline-offset: 2px;
     }
 
