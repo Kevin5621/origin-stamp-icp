@@ -21,6 +21,28 @@
   --color-text-tertiary: #a0aec0;
   --color-surface-hover: #f0f2f5;
 
+  /* Design System Colors - 60-30-10 Rule */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Primary Brand Color (30%) */
+  --color-primary-light: #f6ad55;
+  --color-primary-dark: #dd6b20;
+
+  /* Accent Color (10%) */
+  --color-accent-light: #63b3ed;
+  --color-accent-dark: #3182ce;
+
   /* RGB Values for Surface Colors */
   --color-surface-rgb: 240, 240, 235;
   --color-secondary-bg-rgb: 232, 237, 242;
@@ -111,9 +133,19 @@
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
 
+  /* Design System Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
   --letter-spacing-tight: -0.02em;
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.05em;
+
+  /* Design System Letter Spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
 
   /* Font Sizes */
   --font-size-xs: 0.75rem; /* 12px */
@@ -124,6 +156,18 @@
   --font-size-2xl: 1.5rem; /* 24px */
   --font-size-3xl: 1.875rem; /* 30px */
   --font-size-4xl: 2.25rem; /* 36px */
+
+  /* Design System Font Sizes */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+  --text-5xl: 3rem; /* 48px */
+  --text-6xl: 3.75rem; /* 60px */
 
   /* =============================================================================
      SPACING SYSTEM
@@ -137,6 +181,21 @@
   --spacing-2xl: 3rem; /* 48px */
   --spacing-3xl: 4rem; /* 64px */
   --spacing-4xl: 6rem; /* 96px */
+
+  /* Design System Spacing */
+  --space-0: 0;
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+  --space-20: 5rem; /* 80px */
+  --space-24: 6rem; /* 96px */
 
   /* Viewport-based spacing */
   --spacing-vw-sm: 2vw;
@@ -168,6 +227,23 @@
   --border-radius-2xl: 2rem; /* 32px */
   --border-radius-3xl: 3rem; /* 48px */
   --border-radius-full: 9999px;
+
+  /* Design System Border Radius */
+  --radius-none: 0;
+  --radius-sm: 0.125rem; /* 2px */
+  --radius-md: 0.25rem; /* 4px */
+  --radius-lg: 0.5rem; /* 8px */
+  --radius-xl: 0.75rem; /* 12px */
+  --radius-2xl: 1rem; /* 16px */
+  --radius-full: 9999px;
+
+  /* Design System Icon Sizes */
+  --icon-xs: 12px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 32px;
+  --icon-2xl: 48px;
 
   /* =============================================================================
      SHADOWS - DUAL-TONE ARTISTIC

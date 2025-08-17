@@ -1,10 +1,9 @@
-// src/frontend/src/components/dashboard/index.ts
 export { default as Dashboard } from "./Dashboard";
-
-// Types
-export interface DashboardStats {
-  completedProjects: number;
-  certificatesIssued: number;
-  activeSessions: number;
-  totalValue: number;
-}
+export { default as DashboardCard } from "./DashboardCard";
+export { default as DashboardStats } from "./DashboardStats";
+export { default as DashboardChart } from "./DashboardChart";
+export { default as DashboardTable } from "./DashboardTable";
+export {
+  default as DashboardLoader,
+  DashboardLoader as DashboardLoaderNamed,
+} from "./DashboardLoader";

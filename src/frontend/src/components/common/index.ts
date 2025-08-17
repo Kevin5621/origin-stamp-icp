@@ -11,7 +11,7 @@ export { NotificationButton } from "./NotificationButton";
 export { Toast } from "./Toast";
 export { default as ToastContainer } from "./ToastContainer";
 export { ArtworkCard } from "./ArtworkCard";
-export { default as DashboardLoader } from "./DashboardLoader";
+
 export {
   default as LazyDashboardPage,
   createLazyDashboardPage,

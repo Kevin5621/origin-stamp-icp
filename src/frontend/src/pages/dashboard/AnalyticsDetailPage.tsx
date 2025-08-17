@@ -20,7 +20,7 @@ import {
 import { KaryaService } from "../../services/artService";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { usePreloadData } from "../../hooks/usePreloadData";
-import { DashboardLoader } from "../../components/common/DashboardLoader";
+import DashboardLoader from "../../components/dashboard/DashboardLoader";
 import { Button } from "../../components/common/Button";
 import { Card } from "../../components/common/Card";
 
