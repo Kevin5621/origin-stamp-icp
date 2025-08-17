@@ -14,3 +14,5 @@ export * from "./login/SignInButton";
 export * from "./profile";
 export * from "./layout/Sidebar";
 export * from "./layout/AppLayout";
+export * from "./dashboard";
+export * from "./marketplace";
