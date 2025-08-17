@@ -29,22 +29,24 @@
 .layout-main-content {
   flex: 1;
   background: var(--color-surface);
-  min-height: 100vh;
+  min-height: 0;
   transition: margin-left 0.3s ease;
-  padding: var(--spacing-xl) 0; /* Top padding only, no horizontal padding */
+  padding: var(--spacing-xl) 0; /* Normal padding karena sudah ada padding di wrapper */
   overflow-y: auto;
   position: relative;
+  z-index: 1;
+  width: 100%;
 
   /* Better container width for content */
   max-width: 100%;
   margin: 0 auto;
 
   @media (max-width: 1024px) {
-    padding: var(--spacing-lg) 0; /* Top padding only on tablets */
+    padding: var(--spacing-lg) 0; /* Normal padding karena sudah ada padding di wrapper */
   }
 
   @media (max-width: 768px) {
-    padding: var(--spacing-md) 0; /* Top padding only on mobile */
+    padding: var(--spacing-md) 0; /* Normal padding karena sudah ada padding di wrapper */
     margin-left: 0;
   }
 }
