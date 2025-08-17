@@ -1,102 +1,118 @@
 /* =============================================================================
-   COMPONENTS: HEADER STYLES
-   ============================================================================= */
-
-/* =============================================================================
-   SEMANTIC HEADER
+   COMPONENTS: HEADER STYLES - FLAT DESIGN
    ============================================================================= */
 
 .app-header {
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: var(--space-8);
   text-align: center;
   position: sticky;
   top: 0;
-  z-index: var(--z-index-fixed);
-  background-color: var(--color-surface);
-  padding: var(--spacing-lg) 0;
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(8px);
-  transition: var(--transition-normal);
+  z-index: 1000;
+  background: var(--color-white);
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--color-gray-200);
+  transition: all 0.2s ease;
+
+  [data-theme="dark"] & {
+    background: var(--color-gray-900);
+    border-bottom-color: var(--color-gray-700);
+  }
 }
 
 .header-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--space-4);
+}
+
+.header-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
 }
 
 .brand-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: var(--text-4xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  background: linear-gradient(
-    135deg,
-    var(--color-text-primary) 0%,
-    var(--color-text-secondary) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-black);
+  letter-spacing: var(--tracking-tight);
   margin: 0;
   font-family: var(--font-family-primary);
+
+  [data-theme="dark"] & {
+    color: var(--color-white);
+  }
 }
 
 .brand-subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+  color: var(--color-gray-600);
   max-width: 36rem;
   margin: 0;
-  line-height: var(--line-height-relaxed);
+  line-height: var(--leading-relaxed);
   font-family: var(--font-family-primary);
+
+  [data-theme="dark"] & {
+    color: var(--color-gray-400);
+  }
 }
 
 /* =============================================================================
-   FLOATING HEADER COMPONENT
+   APP TOP HEADER - NORMAL HEADER (NOT FLOATING)
+   ============================================================================= */
+
+.app-top-header {
+  position: relative;
+  z-index: 100;
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-200);
+  transition: all 0.2s ease;
+  margin: 0;
+  flex-shrink: 0;
+
+  [data-theme="dark"] & {
+    background: var(--color-gray-900);
+    border-bottom-color: var(--color-gray-700);
+  }
+}
+
+/* =============================================================================
+   FLOATING HEADER COMPONENT - FLAT DESIGN (DEPRECATED)
    ============================================================================= */
 
 .floating-header {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: var(--z-index-fixed);
-  padding: var(--spacing-lg);
+  z-index: 1000;
+  padding: var(--space-6);
   pointer-events: none;
   transform: translateY(0);
   opacity: 1;
-  transition: none; /* Menghapus animasi hide/show */
+  transition: all 0.2s ease;
 }
 
-.floating-header-content {
+.app-top-header-content {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  border-radius: var(--border-radius-xl);
-  padding: var(--spacing-md);
-  pointer-events: auto;
-  min-height: 3.5rem;
-  position: relative;
-  isolation: isolate;
-  flex-wrap: nowrap;
-
-  /* Hover effect untuk memberikan feedback visual */
-  &:hover {
-    transform: translateY(-1px);
-    background-color: rgba(var(--color-surface-rgb), 0.2);
-  }
-
-  /* Active state untuk memberikan feedback saat diklik */
-  &:active {
-    transform: translateY(0);
-  }
+  gap: var(--space-3);
+  min-height: 48px;
+  transition: all 0.2s ease;
 
   .theme-toggle,
   .language-toggle {
     position: relative;
     z-index: 1;
     flex-shrink: 0;
-    transition: transform 0.3s ease;
+    transition: all 0.2s ease;
   }
 
   .profile-container {
@@ -106,250 +122,179 @@
   }
 }
 
-/* =============================================================================
-   CONDITIONAL HEADER LAYOUTS
-   ============================================================================= */
+.floating-header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  pointer-events: auto;
+  min-height: 56px;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  box-shadow: none;
+  transition: all 0.2s ease;
 
+  [data-theme="dark"] & {
+    background: var(--color-gray-900);
+    border-color: var(--color-gray-700);
+  }
+
+  &:hover {
+    border-color: var(--color-gray-300);
+
+    [data-theme="dark"] & {
+      border-color: var(--color-gray-600);
+    }
+  }
+
+  .theme-toggle,
+  .language-toggle {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .profile-container {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.app-top-header__authenticated,
+.app-top-header__unauthenticated,
 .floating-header__authenticated,
 .floating-header__unauthenticated {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: var(--spacing-md);
+  gap: var(--space-4);
 }
 
+.app-top-header__left,
 .floating-header__left {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--space-3);
   flex-shrink: 0;
 }
 
-.floating-header__unauthenticated {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) 0;
-}
-
+.app-top-header__right,
 .floating-header__right {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--space-3);
   flex-shrink: 0;
 }
 
 /* =============================================================================
-   HEADER BUTTON CONSISTENCY
+   HEADER BUTTONS - FLAT DESIGN
    ============================================================================= */
 
 .floating-header .sign-in-btn {
-  min-width: 80px !important;
-  height: 40px !important;
-  font-size: 0.875rem !important;
-  padding: var(--spacing-xs) var(--spacing-md) !important;
-  border-radius: var(--border-radius-md) !important;
-  font-weight: var(--font-weight-semibold) !important;
-  transition: all 0.2s ease !important;
-  background-color: var(--color-primary-text) !important;
-  color: var(--color-surface) !important;
-  border: none !important;
-  box-shadow: var(--shadow-neumorphic-sm) !important;
+  min-width: 80px;
+  height: 40px;
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: 1px solid var(--color-primary);
+  box-shadow: none;
 
   &:hover {
-    background-color: var(--color-primary-text) !important;
-    color: var(--color-surface) !important;
-    transform: scale(1.05) !important;
-    box-shadow: var(--shadow-neumorphic-md) !important;
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    transform: none;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary-text) !important;
-    outline-offset: 2px !important;
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 
-/* Override button styling untuk header dengan spesifisitas yang lebih tinggi */
 .floating-header .theme-toggle,
 .floating-header .language-toggle {
-  /* Memastikan ukuran button tetap konsisten */
-  min-width: 40px !important;
-  min-height: 40px !important;
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background-color: var(--color-surface) !important;
-  border: 1px solid var(--color-border) !important;
-  color: var(--color-on-surface) !important;
-  transition: all 0.2s ease !important;
-  flex-shrink: 0 !important;
-  box-shadow: var(--shadow-neumorphic-sm) !important;
+  min-width: 40px;
+  min-height: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  color: var(--color-gray-700);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: none;
+
+  [data-theme="dark"] & {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-300);
+  }
 
   &:hover {
-    background-color: var(--color-hover-overlay) !important;
-    transform: scale(1.05) !important;
+    background: var(--color-gray-50);
+    border-color: var(--color-gray-300);
+    color: var(--color-gray-900);
+    transform: none;
+
+    [data-theme="dark"] & {
+      background: var(--color-gray-700);
+      border-color: var(--color-gray-500);
+      color: var(--color-white);
+    }
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary-text) !important;
-    outline-offset: 2px !important;
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 
-  /* Mempertahankan ukuran icon yang sudah ada */
   svg {
-    width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
-    height: 0.875rem !important;
-    transition: var(--theme-transition) !important;
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    transition: all 0.2s ease;
   }
 
-  /* Khusus untuk language toggle dengan flag SVG */
-  .language-toggle svg {
-    width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
-    height: 1.05rem !important;
-    border-radius: var(--border-radius-full) !important;
-  }
-
-  /* Khusus untuk language toggle dengan flag image */
   img {
-    width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
-    height: 1.05rem !important;
-    border-radius: var(--border-radius-full) !important;
-    object-fit: cover !important;
-  }
-}
-
-.floating-header__authenticated {
-  .floating-header__left {
-    min-width: 0;
-  }
-
-  .floating-header__right {
-    min-width: 0;
-  }
-}
-
-.floating-header__unauthenticated {
-  .floating-header__left {
-    min-width: 0;
-  }
-
-  .floating-header__right {
-    min-width: 0;
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    border-radius: var(--radius-full);
+    object-fit: cover;
   }
 }
 
 /* =============================================================================
-   APP-SPECIFIC FLOATING HEADER
+   STICKY HEADERS - FLAT DESIGN
    ============================================================================= */
 
-.app-floating-header {
-  .floating-header-content {
-    /* Transparan background dengan blur effect */
-    background-color: rgba(var(--color-surface-rgb), 0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(var(--color-border-rgb, 209, 213, 219), 0.2);
-    box-shadow: var(--shadow-md);
-
-    &:hover {
-      background-color: rgba(var(--color-surface-rgb), 0.15);
-      border-color: rgba(var(--color-border-rgb, 209, 213, 219), 0.3);
-      box-shadow: var(--shadow-lg);
-    }
-  }
-}
-
-/* Dark theme adjustments */
-[data-theme="dark"] .app-floating-header .floating-header-content {
-  background-color: rgba(var(--color-surface-rgb), 0.1);
-  border-color: rgba(var(--color-border-rgb, 55, 65, 81), 0.2);
-  backdrop-filter: blur(8px);
-
-  &:hover {
-    background-color: rgba(var(--color-surface-rgb), 0.15);
-    border-color: rgba(var(--color-border-rgb, 55, 65, 81), 0.3);
-  }
-}
-
-/* =============================================================================
-   STICKY HEADER DARK THEME
-   ============================================================================= */
-
-[data-theme="dark"] .app-header {
-  background-color: rgba(var(--color-surface-rgb), 0.95);
-  border-bottom-color: var(--color-border);
-  backdrop-filter: blur(12px);
-}
-
-/* =============================================================================
-   STICKY HEADER VARIANTS
-   ============================================================================= */
-
-/* Sticky header untuk halaman dashboard */
-.dashboard__bento-header {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-sticky);
-  background-color: var(--color-surface);
-  padding: var(--spacing-lg) 0;
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(8px);
-  margin-bottom: var(--spacing-xl);
-  transition: var(--transition-normal);
-}
-
-/* Sticky header untuk halaman certificates */
-.certificates-header {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-sticky);
-  background-color: var(--color-surface);
-  padding: var(--spacing-lg) 0;
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(8px);
-  margin-bottom: var(--spacing-xl);
-  transition: var(--transition-normal);
-}
-
-/* Sticky header untuk halaman analytics */
-.analytics__header {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-sticky);
-  background-color: var(--color-surface);
-  padding: var(--spacing-lg) 0;
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(8px);
-  margin-bottom: var(--spacing-xl);
-  transition: var(--transition-normal);
-}
-
-/* Sticky header untuk halaman settings */
+.dashboard__bento-header,
+.certificates-header,
+.analytics__header,
 .dashboard__header {
   position: sticky;
   top: 0;
-  z-index: var(--z-index-sticky);
-  background-color: var(--color-surface);
-  padding: var(--spacing-lg) 0;
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(8px);
-  margin-bottom: var(--spacing-xl);
-  transition: var(--transition-normal);
-}
+  z-index: 1000;
+  background: var(--color-white);
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--color-gray-200);
+  margin-bottom: var(--space-8);
+  transition: all 0.2s ease;
 
-/* Dark theme untuk sticky headers */
-[data-theme="dark"] .dashboard__bento-header,
-[data-theme="dark"] .certificates-header,
-[data-theme="dark"] .analytics__header,
-[data-theme="dark"] .dashboard__header {
-  background-color: rgba(var(--color-surface-rgb), 0.95);
-  border-bottom-color: var(--color-border);
-  backdrop-filter: blur(12px);
+  [data-theme="dark"] & {
+    background: var(--color-gray-900);
+    border-bottom-color: var(--color-gray-700);
+  }
 }
 
 /* =============================================================================
@@ -362,22 +307,39 @@
 
 .header--left-aligned {
   text-align: left;
+
+  .header-content {
+    align-items: flex-start;
+  }
 }
 
 .header--right-aligned {
   text-align: right;
+
+  .header-content {
+    align-items: flex-end;
+  }
 }
 
 .header--with-background {
-  background-color: var(--color-surface);
-  padding: var(--spacing-xl);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-neumorphic-sm);
+  background: var(--color-gray-50);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gray-200);
+
+  [data-theme="dark"] & {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-600);
+  }
 }
 
 .header--with-border {
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-gray-200);
+  padding-bottom: var(--space-6);
+
+  [data-theme="dark"] & {
+    border-bottom-color: var(--color-gray-700);
+  }
 }
 
 /* =============================================================================
@@ -386,138 +348,21 @@
 
 .header--small {
   .brand-title {
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-size: var(--text-2xl);
   }
 
   .brand-subtitle {
-    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-size: var(--text-base);
   }
 }
 
 .header--large {
   .brand-title {
-    font-size: clamp(3rem, 6vw, 5rem);
+    font-size: var(--text-5xl);
   }
 
   .brand-subtitle {
-    font-size: clamp(1.125rem, 3vw, 1.5rem);
-  }
-}
-
-/* =============================================================================
-   RESPONSIVE HEADER DESIGN
-   ============================================================================= */
-
-@media (max-width: 768px) {
-  .app-header,
-  .dashboard__bento-header,
-  .certificates-header,
-  .analytics__header,
-  .dashboard__header {
-    padding: var(--spacing-md) 0;
-  }
-
-  .floating-header {
-    padding: var(--spacing-md);
-  }
-
-  .floating-header-content {
-    padding: var(--spacing-sm);
-    min-height: 3rem;
-  }
-
-  .floating-header__authenticated,
-  .floating-header__unauthenticated {
-    gap: var(--spacing-sm);
-  }
-
-  .floating-header__left,
-  .floating-header__right {
-    gap: var(--spacing-xs);
-  }
-
-  /* Mempertahankan ukuran icon di tablet */
-  .floating-header .theme-toggle,
-  .floating-header .language-toggle {
-    width: 40px !important;
-    height: 40px !important;
-
-    svg {
-      width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
-      height: 0.875rem !important;
-    }
-
-    .language-toggle svg {
-      width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
-      height: 1.05rem !important;
-    }
-
-    img {
-      width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
-      height: 1.05rem !important;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .floating-header {
-    padding: var(--spacing-sm);
-  }
-
-  .floating-header-content {
-    padding: var(--spacing-xs);
-    min-height: 2.5rem;
-  }
-
-  .floating-header__authenticated,
-  .floating-header__unauthenticated {
-    gap: var(--spacing-xs);
-  }
-
-  /* Mempertahankan ukuran icon di mobile dengan sedikit penyesuaian */
-  .floating-header .theme-toggle,
-  .floating-header .language-toggle {
-    width: 36px !important;
-    height: 36px !important;
-
-    svg {
-      width: 0.7875rem !important; /* 1.125rem * 0.7 = 0.7875rem */
-      height: 0.7875rem !important;
-    }
-
-    .language-toggle svg {
-      width: 0.9625rem !important; /* 1.375rem * 0.7 = 0.9625rem */
-      height: 0.9625rem !important;
-    }
-
-    img {
-      width: 0.9625rem !important; /* 1.375rem * 0.7 = 0.9625rem */
-      height: 0.9625rem !important;
-    }
-  }
-}
-
-/* =============================================================================
-   HEADER WITH NAVIGATION
-   ============================================================================= */
-
-.header-with-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-
-  .header-content {
-    flex: 1;
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .header-nav {
-    display: flex;
-    gap: var(--spacing-md);
-    align-items: center;
+    font-size: var(--text-xl);
   }
 }
 
@@ -525,33 +370,35 @@
    MAIN CONTENT SPACING
    ============================================================================= */
 
-/* Ensure main content doesn't overlap with floating header */
 .main-content {
-  padding-top: 6rem; /* Memberikan ruang untuk floating header */
+  padding: 0;
+  margin: 0;
   position: relative;
   z-index: 1;
-  margin-top: 0;
 }
 
-/* Landing page specific - hapus padding untuk overlay header */
+.layout-main-content {
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  min-height: 100vh;
+}
+
 .landing-layout {
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
 
-/* Main content khusus untuk landing page - tanpa padding */
 .main-content--landing {
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
 
-/* Main content untuk halaman dengan overlay header (landing dan login) */
 .main-content--overlay {
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
 
-/* Dashboard specific - tidak perlu padding-top karena sudah ada layout sendiri */
 .dashboard-section {
   padding-top: 0;
 }
@@ -561,28 +408,59 @@
    ============================================================================= */
 
 @media (max-width: 1024px) {
-  .floating-header {
-    padding: var(--spacing-lg);
+  .app-top-header {
+    padding: var(--space-4) var(--space-6);
   }
 
-  .main-content {
-    padding-top: 5.5rem;
+  .floating-header {
+    padding: var(--space-6);
   }
 }
 
 @media (max-width: 768px) {
+  .app-header,
+  .dashboard__bento-header,
+  .certificates-header,
+  .analytics__header,
+  .dashboard__header {
+    padding: var(--space-4) 0;
+  }
+
+  .app-top-header {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .app-top-header-content {
+    min-height: 44px;
+  }
+
+  .app-top-header__authenticated,
+  .app-top-header__unauthenticated {
+    gap: var(--space-3);
+  }
+
+  .app-top-header__left,
+  .app-top-header__right {
+    gap: var(--space-2);
+  }
+
   .floating-header {
-    padding: var(--spacing-md);
+    padding: var(--space-4);
   }
 
   .floating-header-content {
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm);
-    min-height: 3rem;
+    padding: var(--space-3);
+    min-height: 48px;
   }
 
-  .main-content {
-    padding-top: 5rem;
+  .floating-header__authenticated,
+  .floating-header__unauthenticated {
+    gap: var(--space-3);
+  }
+
+  .floating-header__left,
+  .floating-header__right {
+    gap: var(--space-2);
   }
 
   .header-with-nav {
@@ -594,27 +472,19 @@
       text-align: center;
     }
   }
-}
 
-@media (max-width: 640px) {
-  .app-header,
-  .dashboard__bento-header,
-  .certificates-header,
-  .analytics__header,
-  .dashboard__header {
-    padding: var(--spacing-md) 0;
-  }
+  /* Responsive untuk header dengan layout horizontal */
+  .app-header:has(.header-right) {
+    .header-content {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--space-4);
+    }
 
-  .floating-header {
-    padding: var(--spacing-md);
-  }
-
-  .floating-header-content {
-    gap: var(--spacing-sm);
-  }
-
-  .main-content {
-    padding-top: 4.5rem;
+    .header-right {
+      justify-content: center;
+    }
   }
 }
 
@@ -624,89 +494,175 @@
   .certificates-header,
   .analytics__header,
   .dashboard__header {
-    padding: var(--spacing-sm) 0;
+    padding: var(--space-3) 0;
   }
 
+  .app-top-header {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .app-top-header-content {
+    min-height: 40px;
+  }
+
+  .app-top-header__authenticated,
+  .app-top-header__unauthenticated {
+    gap: var(--space-2);
+  }
+
+    .app-top-header .theme-toggle,
+  .app-top-header .language-toggle {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+
+    svg {
+      width: var(--icon-xs);
+      height: var(--icon-xs);
+    }
+
+    img {
+      width: var(--icon-xs);
+      height: var(--icon-xs);
+    }
+  }
+
+/* Button styles untuk app-top-header */
+.app-top-header .theme-toggle,
+.app-top-header .language-toggle {
+  min-width: 40px;
+  min-height: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  color: var(--color-gray-700);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: none;
+
+  [data-theme="dark"] & {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-300);
+  }
+
+  &:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-gray-300);
+    color: var(--color-gray-900);
+    transform: none;
+
+    [data-theme="dark"] & {
+      background: var(--color-gray-700);
+      border-color: var(--color-gray-500);
+      color: var(--color-white);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    transition: all 0.2s ease;
+  }
+
+  img {
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    border-radius: var(--radius-full);
+    object-fit: cover;
+  }
+}
+
   .floating-header {
-    padding: var(--spacing-sm);
+    padding: var(--space-3);
   }
 
   .floating-header-content {
-    padding: var(--spacing-sm);
-    gap: var(--spacing-xs);
-    min-height: 2.5rem;
-    border-radius: var(--border-radius-lg);
+    padding: var(--space-3);
+    gap: var(--space-2);
+    min-height: 44px;
+    border-radius: var(--radius-md);
   }
 
-  .main-content {
-    padding-top: 4rem;
+  .floating-header__authenticated,
+  .floating-header__unauthenticated {
+    gap: var(--space-2);
+  }
+
+  .floating-header .theme-toggle,
+  .floating-header .language-toggle {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+
+    svg {
+      width: var(--icon-xs);
+      height: var(--icon-xs);
+    }
+
+    img {
+      width: var(--icon-xs);
+      height: var(--icon-xs);
+    }
   }
 }
+
+
 
 /* =============================================================================
-   HEADER ICON OVERRIDE - Mencegah icon mengecil
+   HEADER WITH NAVIGATION
    ============================================================================= */
 
-/* Override untuk theme toggle icon */
-.floating-header .theme-toggle svg {
-  width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
-  height: 0.875rem !important;
-  min-width: 0.875rem !important;
-  min-height: 0.875rem !important;
-  transition: var(--theme-transition) !important;
-}
+.header-with-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
 
-/* Override untuk language toggle icon */
-.floating-header .language-toggle svg {
-  width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
-  height: 1.05rem !important;
-  min-width: 1.05rem !important;
-  min-height: 1.05rem !important;
-  border-radius: var(--border-radius-full) !important;
-}
-
-/* Override untuk language toggle image */
-.floating-header .language-toggle img {
-  width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
-  height: 1.05rem !important;
-  min-width: 1.05rem !important;
-  min-height: 1.05rem !important;
-  border-radius: var(--border-radius-full) !important;
-  object-fit: cover !important;
-}
-
-/* =============================================================================
-   RESPONSIVE HEADER ICONS
-   ============================================================================= */
-
-@media (max-width: 768px) {
-  .floating-header .theme-toggle svg {
-    width: 0.875rem !important; /* 1.25rem * 0.7 = 0.875rem */
-    height: 0.875rem !important;
-    min-width: 0.875rem !important;
-    min-height: 0.875rem !important;
+  .header-content {
+    flex: 1;
+    align-items: flex-start;
+    text-align: left;
   }
 
-  .floating-header .language-toggle svg {
-    width: 1.05rem !important; /* 1.5rem * 0.7 = 1.05rem */
-    height: 1.05rem !important;
-    min-width: 1.05rem !important;
-    min-height: 1.05rem !important;
+  .header-nav {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
   }
 }
 
-@media (max-width: 480px) {
-  .floating-header .theme-toggle svg {
-    width: 0.7875rem !important; /* 1.125rem * 0.7 = 0.7875rem */
-    height: 0.7875rem !important;
-    min-width: 0.7875rem !important;
-    min-height: 0.7875rem !important;
+/* Header dengan layout horizontal */
+.app-header:has(.header-right) {
+  .header-content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
   }
+}
 
-  .floating-header .language-toggle svg {
-    width: 0.9625rem !important; /* 1.375rem * 0.7 = 0.9625rem */
-    height: 0.9625rem !important;
-    min-width: 0.9625rem !important;
-    min-height: 0.9625rem !important;
+@media (prefers-reduced-motion: reduce) {
+  .app-header,
+  .floating-header,
+  .floating-header-content,
+  .dashboard__bento-header,
+  .certificates-header,
+  .analytics__header,
+  .dashboard__header {
+    transition: none;
   }
 }
