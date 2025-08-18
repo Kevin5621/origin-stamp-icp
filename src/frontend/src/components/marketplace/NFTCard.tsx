@@ -34,15 +34,15 @@ export const NFTCard: React.FC<NFTCardProps> = ({
   // Calculate remaining time
   const now = new Date();
   const timeLeft = nft.endTime.getTime() - now.getTime();
-  
+
   // Format time left as hours:minutes:seconds
   const formatTimeLeft = () => {
     if (timeLeft <= 0) return t("auction_ended");
-    
+
     const hours = Math.floor(timeLeft / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-    
+
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
@@ -69,36 +69,31 @@ export const NFTCard: React.FC<NFTCardProps> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="nft-card__image-container">
-        <img 
-          src={nft.image} 
-          alt={nft.title} 
-          className="nft-card__image" 
-        />
-        
+        <img src={nft.image} alt={nft.title} className="nft-card__image" />
+
         {/* Overlay with place bid button on hover */}
-        <div className={`nft-card__overlay ${isHovered ? 'nft-card__overlay--visible' : ''}`}>
-          <button 
-            className="nft-card__bid-button" 
-            onClick={handleBidClick}
-          >
+        <div
+          className={`nft-card__overlay ${isHovered ? "nft-card__overlay--visible" : ""}`}
+        >
+          <button className="nft-card__bid-button" onClick={handleBidClick}>
             {t("place_bid")}
           </button>
         </div>
-        
+
         {/* Like button */}
         <button
-          className={`nft-card__like-button ${liked ? 'nft-card__like-button--active' : ''}`}
+          className={`nft-card__like-button ${liked ? "nft-card__like-button--active" : ""}`}
           onClick={handleLikeClick}
           aria-label={liked ? t("unlike") : t("like")}
         >
-          <svg 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
             fill={liked ? "currentColor" : "none"}
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
             strokeLinejoin="round"
           >
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -109,26 +104,26 @@ export const NFTCard: React.FC<NFTCardProps> = ({
 
       <div className="nft-card__content">
         <div className="nft-card__creator">
-          <img 
-            src={nft.creatorAvatar} 
-            alt={nft.creatorName} 
-            className="nft-card__creator-avatar" 
+          <img
+            src={nft.creatorAvatar}
+            alt={nft.creatorName}
+            className="nft-card__creator-avatar"
           />
           <span className="nft-card__creator-name">{nft.creatorName}</span>
         </div>
-        
+
         <h3 className="nft-card__title">{nft.title}</h3>
-        
+
         <div className="nft-card__details">
           <div className="nft-card__time">
-            <svg 
-              width="16" 
-              height="16" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
               strokeLinejoin="round"
             >
               <circle cx="12" cy="12" r="10" />
@@ -136,7 +131,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({
             </svg>
             <span>{formatTimeLeft()}</span>
           </div>
-          
+
           <div className="nft-card__price">
             <span className="nft-card__price-label">{t("highest_bid")}</span>
             <span className="nft-card__price-value">
