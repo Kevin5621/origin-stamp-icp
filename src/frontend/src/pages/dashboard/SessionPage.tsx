@@ -10,7 +10,11 @@ import {
   CheckCircle,
   Plus,
   FolderOpen,
+  Loader,
 } from "lucide-react";
+import PhysicalArtService from "../../services/physicalArtService";
+import { useToastContext } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 // Types for session management
 interface SessionData {
@@ -30,50 +34,59 @@ interface SessionData {
 const SessionPage: React.FC = () => {
   const { t } = useTranslation("session");
   const navigate = useNavigate();
+  const { addToast } = useToastContext();
+  const { user, isAuthenticated } = useAuth();
   const [sessions, setSessions] = useState<SessionData[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Load active sessions (dummy data) - langsung load tanpa loading state
+  // Load active sessions from backend
   useEffect(() => {
-    // Mock data - bisa diubah untuk testing empty state
-    // Set ke [] untuk testing empty state
-    const mockSessions: SessionData[] = [
-      {
-        id: "1",
-        title: t("session.mock_data.landscape_painting_study_title"),
-        description: t(
-          "session.mock_data.landscape_painting_study_description",
-        ),
-        artType: "physical",
-        createdAt: new Date(2024, 7, 1),
-        updatedAt: new Date(2024, 7, 2),
-        status: "active",
-        photoCount: 12,
-      },
-      {
-        id: "2",
-        title: t("session.mock_data.digital_portrait_series_title"),
-        description: t("session.mock_data.digital_portrait_series_description"),
-        artType: "digital",
-        createdAt: new Date(2024, 7, 3),
-        updatedAt: new Date(2024, 7, 3),
-        status: "active",
-        photoCount: 8,
-      },
-      {
-        id: "3",
-        title: t("session.mock_data.sculpture_progress_title"),
-        description: t("session.mock_data.sculpture_progress_description"),
-        artType: "physical",
-        createdAt: new Date(2024, 6, 28),
-        updatedAt: new Date(2024, 7, 1),
-        status: "completed",
-        photoCount: 25,
-      },
-    ];
+    const loadSessions = async () => {
+      try {
+        setLoading(true);
 
-    // Untuk testing empty state, ganti dengan: setSessions([]);
-    setSessions(mockSessions);
-  }, [t]);
+        // Check if user is authenticated
+        if (!isAuthenticated || !user) {
+          addToast("error", t("please_login_first"));
+          navigate("/login");
+          return;
+        }
+
+        // Get username from auth context
+        const username = user.username;
+
+        // Load sessions using PhysicalArtService
+        const userSessions = await PhysicalArtService.getUserSessions(username);
+
+        // Transform backend data to frontend format
+        const transformedSessions: SessionData[] = userSessions.map(
+          (session) => ({
+            id: session.session_id,
+            title: session.art_title,
+            description: session.description,
+            artType: "physical",
+            createdAt: new Date(Number(session.created_at)),
+            updatedAt: new Date(Number(session.updated_at)),
+            status:
+              session.status === "draft"
+                ? "active"
+                : (session.status as "active" | "completed"),
+            photoCount: session.uploaded_photos.length,
+          }),
+        );
+
+        setSessions(transformedSessions);
+      } catch (error) {
+        console.error("Failed to load sessions:", error);
+        addToast("error", t("failed_to_load_sessions"));
+        setSessions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSessions();
+  }, [addToast, t]);
 
   const handleContinueSession = (sessionId: string) => {
     navigate(`/sessions/${sessionId}`);
@@ -141,7 +154,12 @@ const SessionPage: React.FC = () => {
               <h2>{t("session.your_sessions")}</h2>
             </div>
 
-            {sessions.length === 0 ? (
+            {loading ? (
+              <div className="session__loading">
+                <Loader size={24} className="animate-spin" />
+                <p>{t("loading_sessions")}</p>
+              </div>
+            ) : sessions.length === 0 ? (
               <div className="session__empty-state">
                 <div className="session__empty-icon">
                   <FolderOpen size={30} />
@@ -168,7 +186,12 @@ const SessionPage: React.FC = () => {
             ) : (
               <div className="session__sessions-grid">
                 {sessions.map((session) => (
-                  <div key={session.id} className="session__session-card">
+                  <div
+                    key={session.id}
+                    className="session__session-card"
+                    onClick={() => handleContinueSession(session.id)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <div className="session__session-header">
                       <div className="session__session-type">
                         {session.artType === "physical" ? (

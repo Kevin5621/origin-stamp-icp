@@ -2,7 +2,10 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Camera, Palette } from "lucide-react";
+import { ArrowLeft, Plus, Camera, Palette, Loader } from "lucide-react";
+import PhysicalArtService from "../../services/physicalArtService";
+import { useToastContext } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 /**
  * Create Session Page - Halaman untuk membuat sesi baru
@@ -10,12 +13,15 @@ import { ArrowLeft, Plus, Camera, Palette } from "lucide-react";
 const CreateSessionPage: React.FC = () => {
   const { t } = useTranslation("session");
   const navigate = useNavigate();
+  const { addToast } = useToastContext();
+  const { user, isAuthenticated } = useAuth();
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionDescription, setSessionDescription] = useState("");
   const [artType, setArtType] = useState<"physical" | "digital">("physical");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isCreating, setIsCreating] = useState(false);
 
-  const handleCreateSession = useCallback(() => {
+  const handleCreateSession = useCallback(async () => {
     // Reset errors
     setErrors({});
 
@@ -31,12 +37,39 @@ const CreateSessionPage: React.FC = () => {
       return;
     }
 
-    // Generate a mock session ID
-    const sessionId = `session-${Date.now()}`;
+    setIsCreating(true);
 
-    // Redirect ke halaman recording session
-    navigate(`/sessions/${sessionId}`);
-  }, [sessionTitle, t, navigate]);
+    try {
+      // Check if user is authenticated
+      if (!isAuthenticated || !user) {
+        addToast("error", t("please_login_first"));
+        navigate("/login");
+        return;
+      }
+
+      // Get username from auth context
+      const username = user.username;
+
+      // Create session using PhysicalArtService
+      const sessionId = await PhysicalArtService.createSession(
+        username,
+        sessionTitle,
+        sessionDescription,
+      );
+
+      addToast("success", t("session_created_successfully"));
+
+      // Navigate to session recording page
+      navigate(`/sessions/${sessionId}`);
+    } catch (error) {
+      console.error("Failed to create session:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : t("session_creation_failed");
+      addToast("error", errorMessage);
+    } finally {
+      setIsCreating(false);
+    }
+  }, [sessionTitle, sessionDescription, t, navigate, addToast]);
 
   return (
     <div className="create-session">
@@ -133,12 +166,26 @@ const CreateSessionPage: React.FC = () => {
               <button
                 className="btn-cancel"
                 onClick={() => navigate("/session")}
+                disabled={isCreating}
               >
                 {t("cancel")}
               </button>
-              <button className="btn-create" onClick={handleCreateSession}>
-                <Plus size={16} />
-                {t("create_session_button")}
+              <button
+                className="btn-create"
+                onClick={handleCreateSession}
+                disabled={isCreating}
+              >
+                {isCreating ? (
+                  <>
+                    <Loader size={16} className="animate-spin" />
+                    {t("creating_session")}
+                  </>
+                ) : (
+                  <>
+                    <Plus size={16} />
+                    {t("create_session_button")}
+                  </>
+                )}
               </button>
             </div>
           </div>

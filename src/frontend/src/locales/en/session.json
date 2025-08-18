@@ -82,6 +82,17 @@
   "failed_to_create_session": "Failed to create session. Please try again.",
   "cancel": "Cancel",
   "create_session_button": "+ Create Session",
+  "creating_session": "Creating Session...",
+  "session_created_successfully": "Session created successfully!",
+  "session_creation_failed": "Failed to create session. Please try again.",
+  "loading_sessions": "Loading sessions...",
+  "failed_to_load_sessions": "Failed to load sessions. Please try again.",
+  "please_login_first": "Please login first to access this feature.",
+  "starting_certificate_generation": "Starting certificate generation...",
+  "certificate_generated_successfully": "Certificate generated successfully!",
+  "certificate_generation_failed": "Failed to generate certificate. Please try again.",
+  "loading_certificates": "Loading certificates...",
+  "failed_to_load_certificates": "Failed to load certificates. Please try again.",
   "please_create_session_first": "Please create a session first before uploading photos.",
   "invalid_files": "Invalid files",
   "drag_and_drop_or_click": "Drag and drop photos here, or click to browse",
@@ -334,14 +345,14 @@
     "file_size_mb": "MB",
     "file_size_gb": "GB",
     "mock_data": {
-      "landscape_painting_study_title": "Landscape Painting Study",
-      "landscape_painting_study_description": "Watercolor painting of mountain landscape with step-by-step documentation",
-      "initial_sketch_description": "Initial pencil sketch of mountain composition",
-      "base_colors_description": "Applied base watercolor washes for sky and mountains",
-      "digital_portrait_series_title": "Digital Portrait Series",
-      "digital_portrait_series_description": "Character design exploration using Photoshop with automated logging",
-      "sculpture_progress_title": "Sculpture Progress",
-      "sculpture_progress_description": "Clay sculpture documentation from initial sketches to final form"
+      "landscape_painting_study_title": "",
+      "landscape_painting_study_description": "",
+      "initial_sketch_description": "",
+      "base_colors_description": "",
+      "digital_portrait_series_title": "",
+      "digital_portrait_series_description": "",
+      "sculpture_progress_title": "",
+      "sculpture_progress_description": ""
     }
   }
 }

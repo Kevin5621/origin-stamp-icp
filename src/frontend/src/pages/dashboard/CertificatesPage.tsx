@@ -11,67 +11,64 @@ import {
   Clock,
   CheckCircle,
   Copy,
+  Loader,
 } from "lucide-react";
+import CertificateService, {
+  CertificateData,
+} from "../../services/certificateService";
+import { useAuth } from "../../contexts/AuthContext";
+import { useToastContext } from "../../contexts/ToastContext";
 
 const CertificatesPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { addToast } = useToastContext();
+  const { user, isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedCertificate, setSelectedCertificate] = useState<string | null>(
     null,
   );
+  const [certificates, setCertificates] = useState<CertificateData[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Debug: Log when component mounts
+  // Load certificates from backend
   useEffect(() => {
-    console.log("CertificatesPage mounted");
-    console.log("Current location:", window.location.pathname);
-  }, []);
+    const loadCertificates = async () => {
+      try {
+        setLoading(true);
 
-  // Mock data untuk sertifikat
-  const certificates = [
-    {
-      id: "CERT-001",
-      title: "Digital Artwork - Abstract Composition",
-      artist: "John Doe",
-      issueDate: "2024-01-15",
-      status: "verified",
-      type: "digital",
-      duration: "2h 30m",
-      actions: 156,
-      certificateUrl: "https://originstamp.io/cert/CERT-001",
-    },
-    {
-      id: "CERT-002",
-      title: "Physical Painting - Landscape",
-      artist: "Jane Smith",
-      issueDate: "2024-01-10",
-      status: "verified",
-      type: "physical",
-      duration: "4h 15m",
-      actions: 89,
-      certificateUrl: "https://originstamp.io/cert/CERT-002",
-    },
-    {
-      id: "CERT-003",
-      title: "Code Project - Web Application",
-      artist: "Mike Johnson",
-      issueDate: "2024-01-08",
-      status: "verified",
-      type: "digital",
-      duration: "8h 45m",
-      actions: 234,
-      certificateUrl: "https://originstamp.io/cert/CERT-003",
-    },
-  ];
+        // Check if user is authenticated
+        if (!isAuthenticated || !user) {
+          addToast("error", t("please_login_first"));
+          navigate("/login");
+          return;
+        }
+
+        // Load certificates using CertificateService
+        const userCertificates = await CertificateService.getUserCertificates(
+          user.username,
+        );
+        setCertificates(userCertificates);
+      } catch (error) {
+        console.error("Failed to load certificates:", error);
+        addToast("error", t("failed_to_load_certificates"));
+        setCertificates([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCertificates();
+  }, [user, isAuthenticated, addToast, t, navigate]);
 
   const filteredCertificates = certificates.filter((cert) => {
     const matchesSearch =
-      cert.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cert.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cert.id.toLowerCase().includes(searchTerm.toLowerCase());
+      cert.art_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cert.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cert.certificate_id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter =
-      filterStatus === "all" || cert.status === filterStatus;
+      filterStatus === "all" || cert.certificate_status === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
@@ -150,7 +147,10 @@ const CertificatesPage: React.FC = () => {
             </div>
             <div className="stat-item">
               <span className="stat-value">
-                {certificates.filter((c) => c.status === "verified").length}
+                {
+                  certificates.filter((c) => c.certificate_status === "active")
+                    .length
+                }
               </span>
               <span className="stat-label">{t("verified_certificates")}</span>
             </div>
@@ -195,31 +195,43 @@ const CertificatesPage: React.FC = () => {
 
         {/* Certificates List */}
         <main className="certificates-main">
-          {filteredCertificates.length > 0 ? (
+          {loading ? (
+            <div className="certificates-loading">
+              <Loader size={24} className="animate-spin" />
+              <p>{t("loading_certificates")}</p>
+            </div>
+          ) : filteredCertificates.length > 0 ? (
             <div className="certificates-grid">
               {filteredCertificates.map((cert) => (
-                <div key={cert.id} className="certificate-card">
+                <div key={cert.certificate_id} className="certificate-card">
                   <div className="certificate-header">
                     <div className="certificate-icon">
                       <FileText size={24} strokeWidth={2} />
                     </div>
                     <div className="certificate-info">
-                      <h3 className="certificate-title">{cert.title}</h3>
-                      <p className="certificate-artist">by {cert.artist}</p>
+                      <h3 className="certificate-title">{cert.art_title}</h3>
+                      <p className="certificate-artist">by {cert.username}</p>
                       <div className="certificate-meta">
-                        <span className="certificate-id">{cert.id}</span>
+                        <span className="certificate-id">
+                          {cert.certificate_id}
+                        </span>
                         <span className="certificate-type">
-                          {getTypeIcon(cert.type)} {cert.type}
+                          {getTypeIcon(cert.certificate_type)}{" "}
+                          {cert.certificate_type}
                         </span>
                       </div>
                     </div>
                     <div className="certificate-status">
                       <div
                         className="status-badge"
-                        style={{ backgroundColor: getStatusColor(cert.status) }}
+                        style={{
+                          backgroundColor: getStatusColor(
+                            cert.certificate_status,
+                          ),
+                        }}
                       >
                         <CheckCircle size={16} strokeWidth={2} />
-                        <span>{cert.status}</span>
+                        <span>{cert.certificate_status}</span>
                       </div>
                     </div>
                   </div>
@@ -228,21 +240,21 @@ const CertificatesPage: React.FC = () => {
                     <div className="detail-item">
                       <Calendar size={16} strokeWidth={2} />
                       <span>
-                        Issued: {new Date(cert.issueDate).toLocaleDateString()}
+                        Issued: {cert.issue_date.toLocaleDateString()}
                       </span>
                     </div>
                     <div className="detail-item">
                       <Clock size={16} strokeWidth={2} />
-                      <span>Duration: {cert.duration}</span>
+                      <span>Duration: {cert.metadata.creation_duration}</span>
                     </div>
                     <div className="detail-item">
-                      <span>Actions: {cert.actions}</span>
+                      <span>Actions: {cert.metadata.total_actions}</span>
                     </div>
                   </div>
 
                   <div className="certificate-actions">
                     <button
-                      onClick={() => handleViewCertificate(cert.id)}
+                      onClick={() => handleViewCertificate(cert.certificate_id)}
                       className="btn btn--secondary"
                       title="View Certificate"
                     >
@@ -250,7 +262,9 @@ const CertificatesPage: React.FC = () => {
                       View
                     </button>
                     <button
-                      onClick={() => handleDownloadCertificate(cert.id)}
+                      onClick={() =>
+                        handleDownloadCertificate(cert.certificate_id)
+                      }
                       className="btn btn--secondary"
                       title="Download Certificate"
                     >
@@ -259,7 +273,7 @@ const CertificatesPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() =>
-                        handleShareCertificate(cert.certificateUrl)
+                        handleShareCertificate(cert.verification_url)
                       }
                       className="btn btn--secondary"
                       title="Share Certificate"
@@ -268,7 +282,7 @@ const CertificatesPage: React.FC = () => {
                       Share
                     </button>
                     <button
-                      onClick={() => handleCopyLink(cert.certificateUrl)}
+                      onClick={() => handleCopyLink(cert.verification_url)}
                       className="btn btn--secondary"
                       title="Copy Link"
                     >

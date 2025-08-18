@@ -15,6 +15,9 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useToastContext } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
+import PhysicalArtService from "../../services/physicalArtService";
+import CertificateService from "../../services/certificateService";
 
 // Types for photo logs
 interface PhotoLog {
@@ -47,6 +50,7 @@ const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
   const { addToast } = useToastContext();
+  const { user, isAuthenticated } = useAuth();
   const { t } = useTranslation("session");
 
   const [session, setSession] = useState<SessionData | null>(null);
@@ -76,45 +80,62 @@ const SessionRecordPage: React.FC = () => {
     }
   }, [selectedFiles]);
 
-  // Load session data (dummy data)
+  // Load session data from backend
   useEffect(() => {
-    if (sessionId) {
-      const mockSession: SessionData = {
-        id: sessionId,
-        title: t("session.mock_data.landscape_painting_study_title"),
-        description: t(
-          "session.mock_data.landscape_painting_study_description",
-        ),
-        artType: "physical",
-        status: "active",
-        createdAt: new Date(2024, 7, 1),
-        currentStep: 1,
-        photos: [
-          {
-            id: "1",
-            filename: "initial-sketch.jpg",
-            timestamp: new Date(2024, 7, 1, 10, 30),
-            description: t("session.mock_data.initial_sketch_description"),
-            fileSize: 2.5 * 1024 * 1024,
-            url: "/api/placeholder/400/300",
-            step: 1,
-            s3Key: "sessions/1/photos/initial-sketch.jpg",
-          },
-          {
-            id: "2",
-            filename: "base-colors.jpg",
-            timestamp: new Date(2024, 7, 1, 11, 15),
-            description: t("session.mock_data.base_colors_description"),
-            fileSize: 3.1 * 1024 * 1024,
-            url: "/api/placeholder/400/300",
-            step: 2,
-            s3Key: "sessions/1/photos/base-colors.jpg",
-          },
-        ],
-      };
-      setSession(mockSession);
-    }
-  }, [sessionId, t]);
+    const loadSession = async () => {
+      if (sessionId) {
+        try {
+          // Check if user is authenticated
+          if (!isAuthenticated || !user) {
+            addToast("error", t("please_login_first"));
+            navigate("/login");
+            return;
+          }
+
+          // Load session details using PhysicalArtService
+          const sessionDetails =
+            await PhysicalArtService.getSessionDetails(sessionId);
+
+          if (!sessionDetails) {
+            addToast("error", t("session.session_not_found"));
+            navigate("/session");
+            return;
+          }
+
+          // Transform backend data to frontend format
+          const transformedSession: SessionData = {
+            id: sessionDetails.session_id,
+            title: sessionDetails.art_title,
+            description: sessionDetails.description,
+            artType: "physical",
+            status: sessionDetails.status as "active" | "completed",
+            createdAt: new Date(Number(sessionDetails.created_at)),
+            currentStep: sessionDetails.uploaded_photos.length + 1,
+            photos: sessionDetails.uploaded_photos.map((photoUrl, index) => ({
+              id: `photo-${index}`,
+              filename: `photo-${index + 1}.jpg`,
+              timestamp: new Date(
+                Number(sessionDetails.created_at) + index * 60000,
+              ), // Mock timestamp
+              description: `Step ${index + 1}`,
+              fileSize: 0,
+              url: photoUrl,
+              step: index + 1,
+              s3Key: photoUrl,
+            })),
+          };
+
+          setSession(transformedSession);
+        } catch (error) {
+          console.error("Failed to load session:", error);
+          addToast("error", t("session.session_not_found"));
+          navigate("/session");
+        }
+      }
+    };
+
+    loadSession();
+  }, [sessionId, user, isAuthenticated, addToast, t, navigate]);
 
   const handleFileSelect = (files: FileList) => {
     // Reset progress states when new files are selected
@@ -287,7 +308,7 @@ const SessionRecordPage: React.FC = () => {
     const newPhotos: PhotoLog[] = [];
 
     try {
-      // Simple upload simulation
+      // Real upload using PhysicalArtService
       for (let i = 0; i < filesArray.length; i++) {
         // Check for cancellation before processing file
         if (cancelRef.current) {
@@ -298,24 +319,18 @@ const SessionRecordPage: React.FC = () => {
 
         const file = filesArray[i];
 
-        // Simulate file upload with progress
-        for (let progress = 0; progress <= 100; progress += 10) {
-          // Check for cancellation at each progress step
-          if (cancelRef.current) {
-            console.log("Upload cancelled during progress at", progress, "%");
-            addToast("warning", t("session.upload_cancelled_by_user_message"));
-            return; // Exit immediately and discard all files
-          }
+        // Update progress
+        setUploadProgress((i * 100) / filesArray.length);
+        setUploadedFiles(i);
 
-          setUploadProgress((i * 100 + progress) / filesArray.length);
-          await new Promise((resolve) => setTimeout(resolve, 50));
-        }
+        // Upload file using PhysicalArtService
+        const uploadResult = await PhysicalArtService.uploadPhoto(
+          session.id,
+          file,
+        );
 
-        // Final check before adding file to array
-        if (cancelRef.current) {
-          console.log("Upload cancelled before adding file to array");
-          addToast("warning", t("session.upload_cancelled_by_user_message"));
-          return; // Exit immediately and discard all files
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.message);
         }
 
         // Add file to photos array only if not cancelled
@@ -328,9 +343,11 @@ const SessionRecordPage: React.FC = () => {
             stepDescription ||
             `${t("session.step")} ${session.currentStep + i + 1}`,
           fileSize: file.size,
-          url: URL.createObjectURL(file),
+          url: uploadResult.file_url || URL.createObjectURL(file),
           step: session.currentStep + i + 1,
-          s3Key: `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
+          s3Key:
+            uploadResult.file_id ||
+            `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
         });
 
         setUploadedFiles(i + 1);
@@ -398,13 +415,33 @@ const SessionRecordPage: React.FC = () => {
   };
 
   const handleCompleteSessionAndGenerateNFT = async () => {
-    if (!session) return;
+    if (!session || !user) return;
 
     setIsGeneratingNFT(true);
-    addToast("info", t("session.starting_nft_generation_process"));
+    addToast("info", t("session.starting_certificate_generation"));
 
-    // Simulate NFT generation process
-    setTimeout(() => {
+    try {
+      // Calculate creation duration (in minutes)
+      const creationDuration = Math.floor(
+        (Date.now() - session.createdAt.getTime()) / (1000 * 60),
+      );
+
+      // Generate certificate
+      const certificate = await CertificateService.generateCertificate({
+        session_id: session.id,
+        username: user.username,
+        art_title: session.title,
+        description: session.description,
+        photo_count: session.photos.length,
+        creation_duration: creationDuration,
+        file_format: "JPEG/PNG",
+        creation_tools: ["Digital Camera", "IC-Vibe Platform"],
+      });
+
+      // Update session status to completed
+      await PhysicalArtService.updateSessionStatus(session.id, "completed");
+
+      // Update local session state
       setSession((prev) =>
         prev
           ? {
@@ -414,12 +451,17 @@ const SessionRecordPage: React.FC = () => {
             }
           : null,
       );
+
       setIsGeneratingNFT(false);
-      addToast("success", t("session.nft_generated_success_redirecting"));
+      addToast("success", t("session.certificate_generated_successfully"));
 
       // Navigate to certificate page
-      navigate(`/certificate/${session.id}`);
-    }, 3000);
+      navigate(`/certificate/${certificate.certificate_id}`);
+    } catch (error) {
+      console.error("Failed to generate certificate:", error);
+      setIsGeneratingNFT(false);
+      addToast("error", t("session.certificate_generation_failed"));
+    }
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -447,7 +489,7 @@ const SessionRecordPage: React.FC = () => {
       <div className="session-record">
         <div className="session-record__loading">
           <div className="loading-spinner" />
-          <p>{t("session.loading_session")}</p>
+          <p>{t("loading_session")}</p>
         </div>
       </div>
     );
@@ -459,8 +501,8 @@ const SessionRecordPage: React.FC = () => {
         {/* Modern Header */}
         <div className="session-record__header">
           <div className="session-record__title">
-            <h1>{t("session.mock_data.landscape_painting_study_title")}</h1>
-            <p>{t("session.mock_data.landscape_painting_study_description")}</p>
+            <h1>{session.title || t("session.untitled_session")}</h1>
+            <p>{session.description || t("session.no_description")}</p>
           </div>
           <div className="session-record__controls">
             <button className="btn-back" onClick={() => navigate("/session")}>
