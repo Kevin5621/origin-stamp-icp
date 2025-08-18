@@ -13,3 +13,7 @@ export { default as CollectionHeader } from "./CollectionHeader";
 export { default as FilterSidebar } from "./FilterSidebar";
 export { default as NFTGrid } from "./NFTGrid";
 export { default as CollectionView } from "./CollectionView";
+export { default as Activity } from "./Activity";
+export { default as ActivityFilter } from "./activity/ActivityFilter";
+export { default as ActivityList } from "./activity/ActivityList";
+export { default as ActivityItemComponent } from "./activity/ActivityItem";
