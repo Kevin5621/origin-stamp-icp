@@ -505,7 +505,7 @@ const SessionRecordPage: React.FC = () => {
             <p>{session.description || t("session.no_description")}</p>
           </div>
           <button className="back-button" onClick={() => navigate("/session")}>
-            <ArrowLeft size={20} />
+            <ArrowLeft size={16} />
             {t("session.back_to_sessions")}
           </button>
         </div>
@@ -549,7 +549,7 @@ const SessionRecordPage: React.FC = () => {
                 />
 
                 <div className="upload-content">
-                  <Camera size={22} />
+                  <Camera size={16} />
                   <h3>{t("session.drop_photos_here_or_click_to_browse")}</h3>
                   <p>{t("session.support_multiple_photos_up_to_10mb_each")}</p>
 
@@ -587,7 +587,7 @@ const SessionRecordPage: React.FC = () => {
                         key={file.name + file.lastModified}
                         className="file-item"
                       >
-                        <Image size={20} />
+                        <Image size={14} />
                         <span className="file-name">{file.name}</span>
                         <span className="file-size">
                           {formatFileSize(file.size)}
@@ -675,7 +675,7 @@ const SessionRecordPage: React.FC = () => {
                       onClick={handleUploadToS3}
                       disabled={false}
                     >
-                      <Plus size={16} />
+                      <Plus size={14} />
                       {isUploading
                         ? t("session.uploading_to_s3")
                         : t("session.upload_to_s3")}
@@ -703,7 +703,7 @@ const SessionRecordPage: React.FC = () => {
 
             {session.photos.length === 0 ? (
               <div className="log-empty">
-                <FileText size={33} />
+                <FileText size={16} />
                 <h3>{t("session.no_photos_uploaded_yet")}</h3>
                 <p>
                   {t(
@@ -728,13 +728,13 @@ const SessionRecordPage: React.FC = () => {
                             className="btn-icon"
                             onClick={() => window.open(photo.url, "_blank")}
                           >
-                            <Download size={16} />
+                            <Download size={12} />
                           </button>
                           <button
                             className="btn-icon btn-icon--danger"
                             onClick={() => handleDeletePhoto(photo.id)}
                           >
-                            <Trash2 size={16} />
+                            <Trash2 size={12} />
                           </button>
                         </div>
                       </div>
@@ -743,7 +743,7 @@ const SessionRecordPage: React.FC = () => {
                         <div className="photo-header">
                           <h4>{photo.description}</h4>
                           <div className="photo-meta">
-                            <Clock size={14} />
+                            <Clock size={10} />
                             <span>{formatTime(photo.timestamp)}</span>
                           </div>
                         </div>
@@ -773,7 +773,7 @@ const SessionRecordPage: React.FC = () => {
         {/* Modern Footer Actions */}
         <div className="session-record__footer">
           <button className="btn-save" onClick={() => navigate("/session")}>
-            <Save size={16} />
+            <Save size={14} />
             {t("session.save_progress")}
           </button>
 
@@ -782,7 +782,7 @@ const SessionRecordPage: React.FC = () => {
             onClick={handleCompleteSessionAndGenerateNFT}
             disabled={isGeneratingNFT || session.photos.length === 0}
           >
-            <Sparkles size={16} />
+            <Sparkles size={14} />
             {isGeneratingNFT
               ? t("session.generating_nft")
               : t("session.complete_and_generate_nft")}

@@ -162,12 +162,14 @@
   --radius-full: 9999px;
 
   /* Design System Icon Sizes */
-  --icon-xs: 12px;
-  --icon-sm: 16px;
-  --icon-md: 20px;
-  --icon-lg: 24px;
-  --icon-xl: 32px;
-  --icon-2xl: 48px;
+  --icon-xs: 10px; /* Meta info, timestamps */
+  --icon-sm: 12px; /* Button icons, overlays */
+  --icon-md: 14px; /* File items, buttons */
+  --icon-lg: 16px; /* Navigation, upload areas */
+  --icon-xl: 20px; /* Section headers */
+  --icon-2xl: 24px; /* Large feature icons */
+  --icon-3xl: 32px; /* Hero icons */
+  --icon-4xl: 48px; /* Extra large icons */
 
   /* Touch Target Minimum */
   --touch-target-min: 44px;
