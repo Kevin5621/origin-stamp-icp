@@ -9,3 +9,7 @@ export { default as MarketplaceMain } from "./MarketplaceMain";
 export { default as FeaturedNFT } from "./FeaturedNFT";
 export { default as NFTCard } from "./NFTCard";
 export { default as HomeMarketplace } from "./HomeMarketplace";
+export { default as CollectionHeader } from "./CollectionHeader";
+export { default as FilterSidebar } from "./FilterSidebar";
+export { default as NFTGrid } from "./NFTGrid";
+export { default as CollectionView } from "./CollectionView";

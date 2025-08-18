@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AppLayout } from "../../components/layout/AppLayout";
-import { MarketplaceHeader } from "../../components/marketplace/MarketplaceHeader";
-import { SearchBar } from "../../components/marketplace/SearchBar";
-import { MarketplaceSidebar } from "../../components/marketplace/MarketplaceSidebar";
-import { CollectionGrid } from "../../components/marketplace/CollectionGrid";
-import { Pagination } from "../../components/common/Pagination";
+import { CollectionView } from "../../components";
 
 interface Collection {
   id: string;
@@ -111,46 +107,7 @@ export const CollectionsPage: React.FC = () => {
 
   return (
     <AppLayout variant="marketplace">
-      <div className="marketplace-main">
-        <MarketplaceHeader />
-
-        <div className="marketplace-main__content">
-          <div className="marketplace-main__search">
-            <SearchBar onSearch={setSearchQuery} />
-          </div>
-
-          <div className="marketplace-main__layout">
-            <MarketplaceSidebar
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              onPriceChange={setPriceRange}
-            />
-
-            <div className="marketplace-main__collections">
-              <div className="marketplace-main__results">
-                <p className="marketplace-main__count">
-                  {t("results_count", { count: filteredCollections.length })}
-                </p>
-              </div>
-              <CollectionGrid
-                collections={paginatedCollections}
-                onCollectionClick={handleCollectionClick}
-              />
-
-              {totalPages > 1 && (
-                <div className="marketplace-main__pagination">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      <CollectionView />
     </AppLayout>
   );
 };

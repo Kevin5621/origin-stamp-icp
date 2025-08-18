@@ -12,12 +12,20 @@ export interface NFTItem {
   endTime: Date;
   likes: number;
   isLiked?: boolean;
+  status?: 'buy' | 'auction';
+  owner?: {
+    name: string;
+    avatar: string;
+  };
+  isNew?: boolean;
+  hasOffers?: boolean;
 }
 
 interface NFTCardProps {
   nft: NFTItem;
   onPlaceBid?: (nft: NFTItem) => void;
   onLike?: (nft: NFTItem, liked: boolean) => void;
+  onClick?: (nft: NFTItem) => void;
   className?: string;
 }
 
@@ -25,6 +33,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({
   nft,
   onPlaceBid,
   onLike,
+  onClick,
   className = "",
 }) => {
   const { t } = useTranslation("marketplace");
@@ -62,11 +71,18 @@ export const NFTCard: React.FC<NFTCardProps> = ({
     }
   };
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick(nft);
+    }
+  };
+
   return (
     <div
       className={`nft-card ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
     >
       <div className="nft-card__image-container">
         <img src={nft.image} alt={nft.title} className="nft-card__image" />
@@ -113,6 +129,35 @@ export const NFTCard: React.FC<NFTCardProps> = ({
         </div>
 
         <h3 className="nft-card__title">{nft.title}</h3>
+        
+        {nft.owner && (
+          <div className="nft-card__owner">
+            <span className="nft-card__owner-label">{t("owned_by")}</span>
+            <div className="nft-card__owner-info">
+              <img
+                src={nft.owner.avatar}
+                alt={nft.owner.name}
+                className="nft-card__owner-avatar"
+              />
+              <span className="nft-card__owner-name">{nft.owner.name}</span>
+            </div>
+          </div>
+        )}
+        
+        <div className="nft-card__badges">
+          {nft.status === 'buy' && (
+            <span className="nft-card__badge nft-card__badge--buy">{t("buy_now")}</span>
+          )}
+          {nft.status === 'auction' && (
+            <span className="nft-card__badge nft-card__badge--auction">{t("on_auction")}</span>
+          )}
+          {nft.isNew && (
+            <span className="nft-card__badge nft-card__badge--new">{t("new")}</span>
+          )}
+          {nft.hasOffers && (
+            <span className="nft-card__badge nft-card__badge--offers">{t("has_offers")}</span>
+          )}
+        </div>
 
         <div className="nft-card__details">
           <div className="nft-card__time">
@@ -133,7 +178,9 @@ export const NFTCard: React.FC<NFTCardProps> = ({
           </div>
 
           <div className="nft-card__price">
-            <span className="nft-card__price-label">{t("highest_bid")}</span>
+            <span className="nft-card__price-label">
+              {nft.status === 'auction' ? t("highest_bid") : t("price")}
+            </span>
             <span className="nft-card__price-value">
               {nft.price} {nft.currency}
             </span>
