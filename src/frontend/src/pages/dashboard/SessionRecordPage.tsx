@@ -66,6 +66,7 @@ const SessionRecordPage: React.FC = () => {
   const [shouldCancelUpload, setShouldCancelUpload] = useState<boolean>(false);
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
   const cancelRef = useRef<boolean>(false);
+  const timelineRef = useRef<HTMLDivElement>(null);
 
   // Reset progress states when selectedFiles changes
   useEffect(() => {
@@ -162,6 +163,14 @@ const SessionRecordPage: React.FC = () => {
 
     loadSession();
   }, [sessionId, navigate, addToast, t]);
+
+  // Auto-scroll to latest progress - INSTANT
+  useEffect(() => {
+    if (session && session.photos.length > 0 && timelineRef.current) {
+      // Instant scroll to the end
+      timelineRef.current.scrollLeft = timelineRef.current.scrollWidth;
+    }
+  }, [session?.photos.length]);
 
   // Save session data to localStorage whenever it changes
   useEffect(() => {
@@ -315,7 +324,7 @@ const SessionRecordPage: React.FC = () => {
     const confirmed = window.confirm(
       t("session.blockchain_upload_confirmation", {
         count: selectedFiles.length,
-      })
+      }),
     );
 
     if (!confirmed) {
@@ -584,7 +593,7 @@ const SessionRecordPage: React.FC = () => {
                   <Camera size={16} />
                   <h3>{t("session.drop_photos_here_or_click_to_browse")}</h3>
                   <p>{t("session.support_multiple_photos_up_to_10mb_each")}</p>
-                  
+
                   <div className="blockchain-warning">
                     <div className="warning-icon">⚠️</div>
                     <p className="warning-text">
@@ -673,7 +682,6 @@ const SessionRecordPage: React.FC = () => {
                         console.log("Cancel button clicked");
 
                         if (isUploading || uploadInProgress) {
-                          // Cancel ongoing upload immediately
                           console.log("Cancelling upload...");
                           console.log(
                             "Current state - isUploading:",
@@ -684,12 +692,10 @@ const SessionRecordPage: React.FC = () => {
                           setShouldCancelUpload(true);
                           setIsCancelling(true);
                           cancelRef.current = true;
-                          // Reset progress immediately for visual feedback
                           setUploadProgress(0);
                           setUploadedFiles(0);
                           addToast("warning", t("upload_cancelled"));
                         } else {
-                          // Clear selection
                           setSelectedFiles(null);
                           setStepDescription("");
                           setUploadProgress(0);
@@ -725,7 +731,7 @@ const SessionRecordPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Photo Log */}
+          {/* Photo Log Section */}
           <div className="session-record__log">
             <div className="log-header">
               <h2>{t("session.photo_log")}</h2>
@@ -751,54 +757,54 @@ const SessionRecordPage: React.FC = () => {
                 </p>
               </div>
             ) : (
-              <div className="log-timeline">
-                {session.photos.map((photo) => (
-                  <div key={photo.id} className="log-item">
-                    <div className="log-step">
+              <div className="timeline-container" ref={timelineRef}>
+                <div className="timeline-steps">
+                  {session.photos.map((photo, index) => (
+                    <div key={photo.id} className="timeline-step">
                       <div className="step-number">{photo.step}</div>
-                      <div className="step-line" />
-                    </div>
-
-                    <div className="log-content">
-                      <div className="photo-preview">
-                        <img src={photo.url} alt={photo.description} />
-                        <div className="photo-overlay">
-                          <button
-                            className="photo-action-btn photo-action-btn--download"
-                            onClick={() => window.open(photo.url, "_blank")}
-                            title={t("session.download_photo")}
-                          >
-                            <Download size={12} />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="photo-details">
-                        <div className="photo-header">
+                      <div className="step-content">
+                        <div className="step-header">
                           <h4>{photo.description}</h4>
-                          <div className="photo-meta">
+                          <div className="step-meta">
                             <Clock size={10} />
                             <span>{formatTime(photo.timestamp)}</span>
                           </div>
                         </div>
 
-                        <div className="photo-info">
-                          <span>{photo.filename || "Unknown file"}</span>
-                          <span>•</span>
-                          <span>{formatFileSize(photo.fileSize)}</span>
-                          {photo.s3Key && (
-                            <>
-                              <span>•</span>
-                              <span className="s3-key">
-                                {t("session.s3_key")}: {photo.s3Key}
-                              </span>
-                            </>
-                          )}
+                        <div className="step-photos">
+                          <div className="main-photo">
+                            <img src={photo.url} alt={photo.description} />
+                            <div className="photo-overlay">
+                              <button
+                                className="photo-action-btn photo-action-btn--download"
+                                onClick={() => window.open(photo.url, "_blank")}
+                                title={t("session.download_photo")}
+                              >
+                                <Download size={12} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="step-details">
+                          <div className="step-info">
+                            <span>{photo.filename || "Unknown file"}</span>
+                            <span>•</span>
+                            <span>{formatFileSize(photo.fileSize)}</span>
+                            {photo.s3Key && (
+                              <>
+                                <span>•</span>
+                                <span className="s3-key">
+                                  {t("session.s3_key")}: {photo.s3Key}
+                                </span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>
