@@ -15,6 +15,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useToastContext } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
+import PhysicalArtService from "../../services/physicalArtService";
 
 // Types for photo logs
 interface PhotoLog {
@@ -47,6 +49,7 @@ const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
   const { addToast } = useToastContext();
+  const { user, isAuthenticated } = useAuth();
   const { t } = useTranslation("session");
 
   const [session, setSession] = useState<SessionData | null>(null);
@@ -81,28 +84,54 @@ const SessionRecordPage: React.FC = () => {
     const loadSession = async () => {
       if (sessionId) {
         try {
-          // TODO: Implement real session loading from backend
-          // For now, create empty session structure
-          const emptySession: SessionData = {
-            id: sessionId,
-            title: "",
-            description: "",
-            artType: "physical",
-            status: "active",
-            createdAt: new Date(),
-            currentStep: 1,
-            photos: [],
+          // Check if user is authenticated
+          if (!isAuthenticated || !user) {
+            addToast("error", t("please_login_first"));
+            navigate("/login");
+            return;
+          }
+
+          // Load session details using PhysicalArtService
+          const sessionDetails = await PhysicalArtService.getSessionDetails(sessionId);
+          
+          if (!sessionDetails) {
+            addToast("error", t("session.session_not_found"));
+            navigate("/session");
+            return;
+          }
+
+          // Transform backend data to frontend format
+          const transformedSession: SessionData = {
+            id: sessionDetails.session_id,
+            title: sessionDetails.art_title,
+            description: sessionDetails.description,
+            artType: "physical", // TODO: Add art type to backend
+            status: sessionDetails.status as "active" | "completed",
+            createdAt: new Date(Number(sessionDetails.created_at)),
+            currentStep: sessionDetails.uploaded_photos.length + 1,
+            photos: sessionDetails.uploaded_photos.map((photoUrl, index) => ({
+              id: `photo-${index}`,
+              filename: `photo-${index + 1}.jpg`,
+              timestamp: new Date(Number(sessionDetails.created_at) + index * 60000), // Mock timestamp
+              description: `Step ${index + 1}`,
+              fileSize: 0, // TODO: Get file size from S3
+              url: photoUrl,
+              step: index + 1,
+              s3Key: photoUrl,
+            })),
           };
-          setSession(emptySession);
+          
+          setSession(transformedSession);
         } catch (error) {
           console.error("Failed to load session:", error);
           addToast("error", t("session.session_not_found"));
+          navigate("/session");
         }
       }
     };
 
     loadSession();
-  }, [sessionId, t]);
+  }, [sessionId, user, isAuthenticated, addToast, t, navigate]);
 
   const handleFileSelect = (files: FileList) => {
     // Reset progress states when new files are selected
@@ -275,7 +304,7 @@ const SessionRecordPage: React.FC = () => {
     const newPhotos: PhotoLog[] = [];
 
     try {
-      // Simple upload simulation
+      // Real upload using PhysicalArtService
       for (let i = 0; i < filesArray.length; i++) {
         // Check for cancellation before processing file
         if (cancelRef.current) {
@@ -286,24 +315,15 @@ const SessionRecordPage: React.FC = () => {
 
         const file = filesArray[i];
 
-        // Simulate file upload with progress
-        for (let progress = 0; progress <= 100; progress += 10) {
-          // Check for cancellation at each progress step
-          if (cancelRef.current) {
-            console.log("Upload cancelled during progress at", progress, "%");
-            addToast("warning", t("session.upload_cancelled_by_user_message"));
-            return; // Exit immediately and discard all files
-          }
+        // Update progress
+        setUploadProgress((i * 100) / filesArray.length);
+        setUploadedFiles(i);
 
-          setUploadProgress((i * 100 + progress) / filesArray.length);
-          await new Promise((resolve) => setTimeout(resolve, 50));
-        }
+        // Upload file using PhysicalArtService
+        const uploadResult = await PhysicalArtService.uploadPhoto(session.id, file);
 
-        // Final check before adding file to array
-        if (cancelRef.current) {
-          console.log("Upload cancelled before adding file to array");
-          addToast("warning", t("session.upload_cancelled_by_user_message"));
-          return; // Exit immediately and discard all files
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.message);
         }
 
         // Add file to photos array only if not cancelled
@@ -316,9 +336,9 @@ const SessionRecordPage: React.FC = () => {
             stepDescription ||
             `${t("session.step")} ${session.currentStep + i + 1}`,
           fileSize: file.size,
-          url: URL.createObjectURL(file),
+          url: uploadResult.file_url || URL.createObjectURL(file),
           step: session.currentStep + i + 1,
-          s3Key: `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
+          s3Key: uploadResult.file_id || `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
         });
 
         setUploadedFiles(i + 1);

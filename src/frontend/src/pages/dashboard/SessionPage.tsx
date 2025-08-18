@@ -10,7 +10,11 @@ import {
   CheckCircle,
   Plus,
   FolderOpen,
+  Loader,
 } from "lucide-react";
+import PhysicalArtService from "../../services/physicalArtService";
+import { useToastContext } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 // Types for session management
 interface SessionData {
@@ -30,23 +34,54 @@ interface SessionData {
 const SessionPage: React.FC = () => {
   const { t } = useTranslation("session");
   const navigate = useNavigate();
+  const { addToast } = useToastContext();
+  const { user, isAuthenticated } = useAuth();
   const [sessions, setSessions] = useState<SessionData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Load active sessions from backend
   useEffect(() => {
     const loadSessions = async () => {
       try {
-        // TODO: Implement real session loading from backend
-        // For now, set empty array to remove placeholder data
-        setSessions([]);
+        setLoading(true);
+        
+        // Check if user is authenticated
+        if (!isAuthenticated || !user) {
+          addToast("error", t("please_login_first"));
+          navigate("/login");
+          return;
+        }
+        
+        // Get username from auth context
+        const username = user.username;
+        
+        // Load sessions using PhysicalArtService
+        const userSessions = await PhysicalArtService.getUserSessions(username);
+        
+        // Transform backend data to frontend format
+        const transformedSessions: SessionData[] = userSessions.map(session => ({
+          id: session.session_id,
+          title: session.art_title,
+          description: session.description,
+          artType: "physical", // TODO: Add art type to backend
+          createdAt: new Date(Number(session.created_at)),
+          updatedAt: new Date(Number(session.updated_at)),
+          status: session.status as "active" | "completed",
+          photoCount: session.uploaded_photos.length,
+        }));
+        
+        setSessions(transformedSessions);
       } catch (error) {
         console.error("Failed to load sessions:", error);
+        addToast("error", t("failed_to_load_sessions"));
         setSessions([]);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadSessions();
-  }, []);
+  }, [addToast, t]);
 
   const handleContinueSession = (sessionId: string) => {
     navigate(`/sessions/${sessionId}`);
@@ -114,7 +149,12 @@ const SessionPage: React.FC = () => {
               <h2>{t("session.your_sessions")}</h2>
             </div>
 
-            {sessions.length === 0 ? (
+            {loading ? (
+              <div className="session__loading">
+                <Loader size={24} className="animate-spin" />
+                <p>{t("loading_sessions")}</p>
+              </div>
+            ) : sessions.length === 0 ? (
               <div className="session__empty-state">
                 <div className="session__empty-icon">
                   <FolderOpen size={30} />
