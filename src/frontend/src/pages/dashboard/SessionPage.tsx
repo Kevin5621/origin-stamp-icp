@@ -161,7 +161,7 @@ const SessionPage: React.FC = () => {
             />
           ) : (
             <div className="session__image-placeholder">
-              <Camera size={24} />
+              <Camera size={16} />
               <span>{t("session.no_photos")}</span>
             </div>
           )}

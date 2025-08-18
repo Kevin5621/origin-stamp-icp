@@ -2,17 +2,20 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  Camera,
-  Upload,
-  Image,
-  Clock,
-  FileText,
-  Save,
   ArrowLeft,
-  Trash2,
+  Camera,
+  Clock,
   Download,
+  FileText,
+  Image,
   Plus,
+  Save,
   Sparkles,
+  Upload,
+  X,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
 } from "lucide-react";
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -65,7 +68,16 @@ const SessionRecordPage: React.FC = () => {
   const [totalFiles, setTotalFiles] = useState<number>(0);
   const [shouldCancelUpload, setShouldCancelUpload] = useState<boolean>(false);
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoLog | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [transformOrigin, setTransformOrigin] = useState("center center");
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const cancelRef = useRef<boolean>(false);
+  const timelineRef = useRef<HTMLDivElement>(null);
 
   // Reset progress states when selectedFiles changes
   useEffect(() => {
@@ -83,27 +95,27 @@ const SessionRecordPage: React.FC = () => {
   // Load session data from backend
   useEffect(() => {
     const loadSession = async () => {
-      if (sessionId) {
-        try {
-          // Check if user is authenticated
-          if (!isAuthenticated || !user) {
-            addToast("error", t("please_login_first"));
-            navigate("/login");
-            return;
-          }
+      if (!sessionId) return;
 
-          // Load session details using PhysicalArtService
-          const sessionDetails =
-            await PhysicalArtService.getSessionDetails(sessionId);
+      try {
+        // Try to load from localStorage first for faster loading
+        const cachedSession = localStorage.getItem(`session_${sessionId}`);
+        if (cachedSession) {
+          const parsedSession = JSON.parse(cachedSession);
+          // Convert timestamp strings back to Date objects
+          parsedSession.photos = parsedSession.photos.map((photo: any) => ({
+            ...photo,
+            timestamp: photo.timestamp ? new Date(photo.timestamp) : new Date(),
+          }));
+          setSession(parsedSession);
+        }
 
-          if (!sessionDetails) {
-            addToast("error", t("session.session_not_found"));
-            navigate("/session");
-            return;
-          }
-
+        // Always fetch fresh data from backend
+        const sessionDetails =
+          await PhysicalArtService.getSessionDetails(sessionId);
+        if (sessionDetails) {
           // Transform backend data to frontend format
-          const transformedSession: SessionData = {
+          const sessionWithPhotos: SessionData = {
             id: sessionDetails.session_id,
             title: sessionDetails.art_title,
             description: sessionDetails.description,
@@ -116,26 +128,67 @@ const SessionRecordPage: React.FC = () => {
               filename: `photo-${index + 1}.jpg`,
               timestamp: new Date(
                 Number(sessionDetails.created_at) + index * 60000,
-              ), // Mock timestamp
+              ),
               description: `Step ${index + 1}`,
-              fileSize: 0,
+              fileSize: 0, // Will be updated from cache if available
               url: photoUrl,
               step: index + 1,
               s3Key: photoUrl,
             })),
           };
 
-          setSession(transformedSession);
-        } catch (error) {
-          console.error("Failed to load session:", error);
+          // Merge with cached data to preserve fileSize and other details
+          if (cachedSession) {
+            const cachedData = JSON.parse(cachedSession);
+            sessionWithPhotos.photos = sessionWithPhotos.photos.map(
+              (photo, index) => {
+                const cachedPhoto = cachedData.photos[index];
+                return {
+                  ...photo,
+                  fileSize: cachedPhoto?.fileSize || 0,
+                  timestamp: cachedPhoto?.timestamp
+                    ? new Date(cachedPhoto.timestamp)
+                    : photo.timestamp,
+                };
+              },
+            );
+          }
+
+          setSession(sessionWithPhotos);
+
+          // Cache the session data
+          localStorage.setItem(
+            `session_${sessionId}`,
+            JSON.stringify(sessionWithPhotos),
+          );
+        } else {
           addToast("error", t("session.session_not_found"));
           navigate("/session");
         }
+      } catch (error) {
+        console.error("Failed to load session:", error);
+        addToast("error", t("session.failed_to_load_session"));
+        navigate("/session");
       }
     };
 
     loadSession();
-  }, [sessionId, user, isAuthenticated, addToast, t, navigate]);
+  }, [sessionId, navigate, addToast, t]);
+
+  // Auto-scroll to latest progress - INSTANT
+  useEffect(() => {
+    if (session && session.photos.length > 0 && timelineRef.current) {
+      // Instant scroll to the end
+      timelineRef.current.scrollLeft = timelineRef.current.scrollWidth;
+    }
+  }, [session?.photos.length]);
+
+  // Save session data to localStorage whenever it changes
+  useEffect(() => {
+    if (session && sessionId) {
+      localStorage.setItem(`session_${sessionId}`, JSON.stringify(session));
+    }
+  }, [session, sessionId]);
 
   const handleFileSelect = (files: FileList) => {
     // Reset progress states when new files are selected
@@ -278,6 +331,18 @@ const SessionRecordPage: React.FC = () => {
   const handleUploadToS3 = async () => {
     if (!selectedFiles || !session) return;
 
+    // Show confirmation dialog for blockchain permanence
+    const confirmed = window.confirm(
+      t("session.blockchain_upload_confirmation", {
+        count: selectedFiles.length,
+      }),
+    );
+
+    if (!confirmed) {
+      addToast("info", t("session.upload_cancelled_by_user"));
+      return;
+    }
+
     // Prevent multiple uploads
     if (isUploading || uploadInProgress) {
       console.log("Upload already in progress, ignoring new request");
@@ -395,25 +460,6 @@ const SessionRecordPage: React.FC = () => {
     }
   };
 
-  const handleDeletePhoto = (photoId: string) => {
-    if (session) {
-      const photoToDelete = session.photos.find((p) => p.id === photoId);
-      setSession({
-        ...session,
-        photos: session.photos.filter((p) => p.id !== photoId),
-      });
-
-      if (photoToDelete) {
-        addToast(
-          "success",
-          t("session.photo_deleted_success", {
-            filename: photoToDelete.filename,
-          }),
-        );
-      }
-    }
-  };
-
   const handleCompleteSessionAndGenerateNFT = async () => {
     if (!session || !user) return;
 
@@ -464,8 +510,8 @@ const SessionRecordPage: React.FC = () => {
     }
   };
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
+  const formatFileSize = (bytes: number | undefined): string => {
+    if (!bytes || bytes === 0) return "0 Bytes";
     const k = 1024;
     const sizes = [
       t("session.file_size_bytes"),
@@ -477,11 +523,81 @@ const SessionRecordPage: React.FC = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const formatTime = (date: Date): string => {
-    return date.toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatTime = (date: Date | undefined): string => {
+    if (!date) return "Unknown";
+    try {
+      return date.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (error) {
+      console.warn("Error formatting date:", error);
+      return "Unknown";
+    }
+  };
+
+  const handleDownloadPhoto = (photo: PhotoLog) => {
+    window.open(photo.url, "_blank");
+  };
+
+  const handleOpenPhotoModal = (photo: PhotoLog) => {
+    setSelectedPhoto(photo);
+    setIsModalOpen(true);
+  };
+
+  const handleClosePhotoModal = () => {
+    setSelectedPhoto(null);
+    setIsModalOpen(false);
+    setIsZoomed(false);
+    setZoomLevel(1);
+    setTransformOrigin("center center");
+    setIsDragging(false);
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => Math.min(prev + 0.5, 3));
+    setIsZoomed(true);
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => Math.max(prev - 0.5, 0.5));
+    if (zoomLevel <= 1) {
+      setIsZoomed(false);
+    }
+  };
+
+  const handleResetZoom = () => {
+    setZoomLevel(1);
+    setIsZoomed(false);
+    setTransformOrigin("center center");
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (zoomLevel > 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - dragOffset.x,
+        y: e.clientY - dragOffset.y,
+      });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (isDragging && zoomLevel > 1) {
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      setDragOffset({ x: newX, y: newY });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
   };
 
   if (!session) {
@@ -505,7 +621,7 @@ const SessionRecordPage: React.FC = () => {
             <p>{session.description || t("session.no_description")}</p>
           </div>
           <button className="back-button" onClick={() => navigate("/session")}>
-            <ArrowLeft size={20} />
+            <ArrowLeft size={16} />
             {t("session.back_to_sessions")}
           </button>
         </div>
@@ -549,9 +665,16 @@ const SessionRecordPage: React.FC = () => {
                 />
 
                 <div className="upload-content">
-                  <Camera size={22} />
+                  <Camera size={16} />
                   <h3>{t("session.drop_photos_here_or_click_to_browse")}</h3>
                   <p>{t("session.support_multiple_photos_up_to_10mb_each")}</p>
+
+                  <div className="blockchain-warning">
+                    <div className="warning-icon">⚠️</div>
+                    <p className="warning-text">
+                      {t("session.blockchain_permanence_warning")}
+                    </p>
+                  </div>
 
                   <label htmlFor="photo-upload" className="btn btn--primary">
                     <Upload size={16} />
@@ -587,7 +710,7 @@ const SessionRecordPage: React.FC = () => {
                         key={file.name + file.lastModified}
                         className="file-item"
                       >
-                        <Image size={20} />
+                        <Image size={14} />
                         <span className="file-name">{file.name}</span>
                         <span className="file-size">
                           {formatFileSize(file.size)}
@@ -634,7 +757,6 @@ const SessionRecordPage: React.FC = () => {
                         console.log("Cancel button clicked");
 
                         if (isUploading || uploadInProgress) {
-                          // Cancel ongoing upload immediately
                           console.log("Cancelling upload...");
                           console.log(
                             "Current state - isUploading:",
@@ -645,12 +767,10 @@ const SessionRecordPage: React.FC = () => {
                           setShouldCancelUpload(true);
                           setIsCancelling(true);
                           cancelRef.current = true;
-                          // Reset progress immediately for visual feedback
                           setUploadProgress(0);
                           setUploadedFiles(0);
                           addToast("warning", t("upload_cancelled"));
                         } else {
-                          // Clear selection
                           setSelectedFiles(null);
                           setStepDescription("");
                           setUploadProgress(0);
@@ -675,7 +795,7 @@ const SessionRecordPage: React.FC = () => {
                       onClick={handleUploadToS3}
                       disabled={false}
                     >
-                      <Plus size={16} />
+                      <Plus size={14} />
                       {isUploading
                         ? t("session.uploading_to_s3")
                         : t("session.upload_to_s3")}
@@ -686,7 +806,7 @@ const SessionRecordPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Photo Log */}
+          {/* Photo Log Section */}
           <div className="session-record__log">
             <div className="log-header">
               <h2>{t("session.photo_log")}</h2>
@@ -703,7 +823,7 @@ const SessionRecordPage: React.FC = () => {
 
             {session.photos.length === 0 ? (
               <div className="log-empty">
-                <FileText size={33} />
+                <FileText size={16} />
                 <h3>{t("session.no_photos_uploaded_yet")}</h3>
                 <p>
                   {t(
@@ -712,59 +832,72 @@ const SessionRecordPage: React.FC = () => {
                 </p>
               </div>
             ) : (
-              <div className="log-timeline">
-                {session.photos.map((photo) => (
-                  <div key={photo.id} className="log-item">
-                    <div className="log-step">
+              <div className="timeline-container" ref={timelineRef}>
+                <div className="timeline-steps">
+                  {session.photos.map((photo, index) => (
+                    <div key={photo.id} className="timeline-step">
                       <div className="step-number">{photo.step}</div>
-                      <div className="step-line" />
-                    </div>
-
-                    <div className="log-content">
-                      <div className="photo-preview">
-                        <img src={photo.url} alt={photo.description} />
-                        <div className="photo-overlay">
-                          <button
-                            className="btn-icon"
-                            onClick={() => window.open(photo.url, "_blank")}
-                          >
-                            <Download size={16} />
-                          </button>
-                          <button
-                            className="btn-icon btn-icon--danger"
-                            onClick={() => handleDeletePhoto(photo.id)}
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="photo-details">
-                        <div className="photo-header">
+                      <div
+                        className="step-content"
+                        onClick={() => handleOpenPhotoModal(photo)}
+                      >
+                        <div className="step-header">
                           <h4>{photo.description}</h4>
-                          <div className="photo-meta">
-                            <Clock size={14} />
+                          <div className="step-meta">
+                            <Clock size={10} />
                             <span>{formatTime(photo.timestamp)}</span>
                           </div>
                         </div>
 
-                        <div className="photo-info">
-                          <span>{photo.filename}</span>
-                          <span>•</span>
-                          <span>{formatFileSize(photo.fileSize)}</span>
-                          {photo.s3Key && (
-                            <>
-                              <span>•</span>
-                              <span className="s3-key">
-                                {t("session.s3_key")}: {photo.s3Key}
-                              </span>
-                            </>
-                          )}
+                        <div className="step-photos">
+                          <div className="main-photo">
+                            <img
+                              src={photo.url}
+                              alt={photo.description}
+                              className={zoomLevel > 1 ? "zoomed" : ""}
+                              style={{
+                                transform: `scale(${zoomLevel}) translate(${dragOffset.x}px, ${dragOffset.y}px)`,
+                                transition: isDragging
+                                  ? "none"
+                                  : "transform 0.3s ease",
+                                cursor: isDragging
+                                  ? "grabbing"
+                                  : zoomLevel > 1
+                                    ? "grab"
+                                    : "zoom-in",
+                                transformOrigin: transformOrigin,
+                              }}
+                              onMouseDown={handleMouseDown}
+                              onMouseMove={handleMouseMove}
+                              onMouseUp={handleMouseUp}
+                              onMouseLeave={handleMouseLeave}
+                            />
+                            <div className="photo-overlay">
+                              <button
+                                className="photo-action-btn photo-action-btn--download"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDownloadPhoto(photo);
+                                }}
+                                title={t("session.download_photo")}
+                              >
+                                <Download size={12} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="step-details">
+                          <div className="step-info">
+                            <span>{photo.filename || "Unknown file"}</span>
+                            <span>•</span>
+                            <span>{formatFileSize(photo.fileSize)}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -773,7 +906,7 @@ const SessionRecordPage: React.FC = () => {
         {/* Modern Footer Actions */}
         <div className="session-record__footer">
           <button className="btn-save" onClick={() => navigate("/session")}>
-            <Save size={16} />
+            <Save size={14} />
             {t("session.save_progress")}
           </button>
 
@@ -782,13 +915,117 @@ const SessionRecordPage: React.FC = () => {
             onClick={handleCompleteSessionAndGenerateNFT}
             disabled={isGeneratingNFT || session.photos.length === 0}
           >
-            <Sparkles size={16} />
+            <Sparkles size={14} />
             {isGeneratingNFT
               ? t("session.generating_nft")
               : t("session.complete_and_generate_nft")}
           </button>
         </div>
       </div>
+
+      {/* Photo Detail Modal */}
+      {isModalOpen && selectedPhoto && (
+        <div className="photo-modal-overlay" onClick={handleClosePhotoModal}>
+          <div
+            className="photo-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>Step {selectedPhoto.step}</h2>
+              <button
+                className="modal-close-btn"
+                onClick={handleClosePhotoModal}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="photo-display">
+                <div className="photo-container">
+                  <img
+                    src={selectedPhoto.url}
+                    alt={selectedPhoto.description}
+                    className={zoomLevel > 1 ? "zoomed" : ""}
+                    style={{
+                      transform: `scale(${zoomLevel}) translate(${dragOffset.x}px, ${dragOffset.y}px)`,
+                      transition: isDragging ? "none" : "transform 0.3s ease",
+                      cursor: isDragging
+                        ? "grabbing"
+                        : zoomLevel > 1
+                          ? "grab"
+                          : "zoom-in",
+                      transformOrigin: transformOrigin,
+                    }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseLeave}
+                  />
+                </div>
+                <div className="zoom-controls">
+                  <button
+                    className="zoom-btn zoom-btn--out"
+                    onClick={handleZoomOut}
+                    disabled={zoomLevel <= 0.5}
+                    title={t("session.zoom_out")}
+                  >
+                    <ZoomOut size={16} />
+                  </button>
+                  <button
+                    className="zoom-btn zoom-btn--reset"
+                    onClick={handleResetZoom}
+                    disabled={zoomLevel === 1}
+                    title={t("session.reset_zoom")}
+                  >
+                    <RotateCcw size={16} />
+                  </button>
+                  <button
+                    className="zoom-btn zoom-btn--in"
+                    onClick={handleZoomIn}
+                    disabled={zoomLevel >= 3}
+                    title={t("session.zoom_in")}
+                  >
+                    <ZoomIn size={16} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="photo-details">
+                <div className="detail-section">
+                  <h3>{selectedPhoto.description}</h3>
+                  <div className="detail-meta">
+                    <div className="meta-item">
+                      <Clock size={14} />
+                      <span>{formatTime(selectedPhoto.timestamp)}</span>
+                    </div>
+                    <div className="meta-item">
+                      <FileText size={14} />
+                      <span>{selectedPhoto.filename || "Unknown file"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn btn--secondary"
+                onClick={handleClosePhotoModal}
+              >
+                {t("session.close")}
+              </button>
+              <button
+                className="btn btn--primary"
+                onClick={() => handleDownloadPhoto(selectedPhoto)}
+              >
+                <Download size={14} />
+                {t("session.download_photo")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

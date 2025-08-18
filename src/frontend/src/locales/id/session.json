@@ -337,8 +337,12 @@
     "updating_session_with_photos": "Memperbarui sesi dengan {{count}} foto baru",
     "session_not_updated_cancelled": "Sesi tidak diperbarui - dibatalkan atau tidak ada foto",
     "upload_error": "Error upload: {{error}}",
-    "photo_deleted_success": "Foto \"{{filename}}\" berhasil dihapus",
+    "photo_deleted_success": "Foto berhasil dihapus: {{filename}}",
+    "failed_to_delete_photo": "Gagal menghapus foto",
+    "blockchain_permanence_warning": "Peringatan: Foto yang diupload akan tersimpan permanen di blockchain dan tidak dapat dihapus. Pastikan foto yang dipilih sudah benar.",
+    "blockchain_upload_confirmation": "Anda akan mengupload {{count}} foto ke blockchain. Foto ini akan tersimpan permanen dan tidak dapat dihapus. Lanjutkan?",
     "starting_nft_generation_process": "Memulai proses generate NFT...",
+    "close": "Tutup",
     "nft_generated_success_redirecting": "NFT berhasil di-generate! Redirecting ke certificate...",
     "file_size_bytes": "Bytes",
     "file_size_kb": "KB",
@@ -358,6 +362,10 @@
       "digital_portrait_series_description": "",
       "sculpture_progress_title": "",
       "sculpture_progress_description": ""
-    }
+    },
+    "download_photo": "Download Foto",
+    "zoom_in": "Perbesar",
+    "zoom_out": "Perkecil",
+    "reset_zoom": "Reset Zoom"
   }
 }
