@@ -117,7 +117,9 @@
     padding: var(--space-4);
     display: flex;
     gap: var(--space-3);
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
 
     &:hover {
       border-color: var(--color-info-light);
@@ -170,12 +172,12 @@
     gap: 2px;
     padding: 2px 6px;
     border-radius: var(--radius-full);
-    
+
     &--positive {
       color: var(--color-success);
       background-color: var(--color-success-light);
     }
-    
+
     &--negative {
       color: var(--color-error);
       background-color: var(--color-error-light);
@@ -193,7 +195,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-6);
-    
+
     @media (max-width: 992px) {
       grid-template-columns: 1fr;
     }
@@ -301,19 +303,19 @@
     border-radius: 50%;
     font-size: var(--text-xs);
     font-weight: var(--font-weight-bold);
-    
+
     &--1 {
-      background: linear-gradient(135deg, #FFD700, #FFA500);
+      background: linear-gradient(135deg, #ffd700, #ffa500);
       color: var(--color-gray-900);
     }
-    
+
     &--2 {
-      background: linear-gradient(135deg, #E0E0E0, #C0C0C0);
+      background: linear-gradient(135deg, #e0e0e0, #c0c0c0);
       color: var(--color-gray-900);
     }
-    
+
     &--3 {
-      background: linear-gradient(135deg, #CD7F32, #A0522D);
+      background: linear-gradient(135deg, #cd7f32, #a0522d);
       color: var(--color-white);
     }
   }
@@ -350,12 +352,12 @@
     padding: 1px 4px;
     border-radius: var(--radius-sm);
     display: inline-block;
-    
+
     &--positive {
       background-color: var(--color-success-light);
       color: var(--color-success);
     }
-    
+
     &--negative {
       background-color: var(--color-error-light);
       color: var(--color-error);

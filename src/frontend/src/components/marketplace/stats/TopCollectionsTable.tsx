@@ -20,12 +20,24 @@ export const TopCollectionsTable: React.FC<TopCollectionsTableProps> = ({
         <table className="stats-table__table">
           <thead>
             <tr>
-              <th className="stats-table__header">{t("rankings.table.rank")}</th>
-              <th className="stats-table__header">{t("rankings.table.collection")}</th>
-              <th className="stats-table__header">{t("rankings.table.volume")}</th>
-              <th className="stats-table__header">{t("rankings.table.floor_price")}</th>
-              <th className="stats-table__header">{t("rankings.table.owners")}</th>
-              <th className="stats-table__header">{t("rankings.table.items")}</th>
+              <th className="stats-table__header">
+                {t("rankings.table.rank")}
+              </th>
+              <th className="stats-table__header">
+                {t("rankings.table.collection")}
+              </th>
+              <th className="stats-table__header">
+                {t("rankings.table.volume")}
+              </th>
+              <th className="stats-table__header">
+                {t("rankings.table.floor_price")}
+              </th>
+              <th className="stats-table__header">
+                {t("rankings.table.owners")}
+              </th>
+              <th className="stats-table__header">
+                {t("rankings.table.items")}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -33,7 +45,9 @@ export const TopCollectionsTable: React.FC<TopCollectionsTableProps> = ({
               <tr key={collection.id} className="stats-table__row">
                 <td className="stats-table__cell stats-table__rank">
                   {collection.rank <= 3 ? (
-                    <div className={`stats-table__rank-badge stats-table__rank-badge--${collection.rank}`}>
+                    <div
+                      className={`stats-table__rank-badge stats-table__rank-badge--${collection.rank}`}
+                    >
                       #{collection.rank}
                     </div>
                   ) : (
@@ -47,7 +61,9 @@ export const TopCollectionsTable: React.FC<TopCollectionsTableProps> = ({
                       alt={collection.name}
                       className="stats-table__collection-image"
                     />
-                    <span className="stats-table__collection-name">{collection.name}</span>
+                    <span className="stats-table__collection-name">
+                      {collection.name}
+                    </span>
                   </div>
                 </td>
                 <td className="stats-table__cell stats-table__volume">
@@ -65,9 +81,15 @@ export const TopCollectionsTable: React.FC<TopCollectionsTableProps> = ({
                     </span>
                   </div>
                 </td>
-                <td className="stats-table__cell">{collection.floorPrice.toFixed(2)} ETH</td>
-                <td className="stats-table__cell">{collection.owners.toLocaleString()}</td>
-                <td className="stats-table__cell">{collection.items.toLocaleString()}</td>
+                <td className="stats-table__cell">
+                  {collection.floorPrice.toFixed(2)} ETH
+                </td>
+                <td className="stats-table__cell">
+                  {collection.owners.toLocaleString()}
+                </td>
+                <td className="stats-table__cell">
+                  {collection.items.toLocaleString()}
+                </td>
               </tr>
             ))}
           </tbody>

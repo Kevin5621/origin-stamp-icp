@@ -25,7 +25,7 @@ export const StatsView: React.FC<StatsViewProps> = ({
 }) => {
   const { t } = useTranslation("marketplace");
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Data states
   const [metrics, setMetrics] = useState(generateSummaryMetrics("7d"));
   const [volumeData, setVolumeData] = useState(generateVolumeData("7d"));
@@ -35,7 +35,7 @@ export const StatsView: React.FC<StatsViewProps> = ({
   useEffect(() => {
     // Simulate API loading
     setIsLoading(true);
-    
+
     setTimeout(() => {
       const typedTimeRange = timeRange as TimeRangeType;
       setMetrics(generateSummaryMetrics(typedTimeRange));

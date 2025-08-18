@@ -35,27 +35,31 @@ export const StatsChart: React.FC<StatsChartProps> = ({
     <div className={`stats-charts ${className}`}>
       <div className="stats-charts__container">
         <div className="stats-charts__item">
-          <h3 className="stats-charts__title">
-            {t("stats.volume_over_time")}
-          </h3>
+          <h3 className="stats-charts__title">{t("stats.volume_over_time")}</h3>
           <div className="stats-charts__content">
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={volumeData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stats-charts__grid" />
-                <XAxis 
-                  dataKey="date" 
+              <LineChart
+                data={volumeData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  className="stats-charts__grid"
+                />
+                <XAxis
+                  dataKey="date"
                   className="stats-charts__axis"
                   tickMargin={10}
                 />
-                <YAxis 
+                <YAxis
                   className="stats-charts__axis"
                   tickFormatter={formatVolume}
                   tickMargin={10}
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={formatVolume}
                   labelFormatter={(label) => `Date: ${label}`}
-                  contentStyle={{ 
+                  contentStyle={{
                     borderRadius: "8px",
                     padding: "10px",
                   }}
@@ -79,21 +83,24 @@ export const StatsChart: React.FC<StatsChartProps> = ({
           <h3 className="stats-charts__title">{t("stats.sales_per_day")}</h3>
           <div className="stats-charts__content">
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={salesData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stats-charts__grid" />
-                <XAxis 
-                  dataKey="date" 
+              <AreaChart
+                data={salesData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  className="stats-charts__grid"
+                />
+                <XAxis
+                  dataKey="date"
                   className="stats-charts__axis"
                   tickMargin={10}
                 />
-                <YAxis 
-                  className="stats-charts__axis"
-                  tickMargin={10}
-                />
-                <Tooltip 
-                  formatter={(value: number) => [`${value} sales`, 'Sales']}
+                <YAxis className="stats-charts__axis" tickMargin={10} />
+                <Tooltip
+                  formatter={(value: number) => [`${value} sales`, "Sales"]}
                   labelFormatter={(label) => `Date: ${label}`}
-                  contentStyle={{ 
+                  contentStyle={{
                     borderRadius: "8px",
                     padding: "10px",
                   }}
