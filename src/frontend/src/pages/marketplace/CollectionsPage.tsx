@@ -60,13 +60,8 @@ export const CollectionsPage: React.FC = () => {
   };
 
   const loadCategories = async () => {
-    const mockCategories: Category[] = [
-      { id: "abstract", name: t("categories.abstract"), count: 15 },
-      { id: "digital", name: t("categories.digital"), count: 23 },
-      { id: "traditional", name: t("categories.traditional"), count: 8 },
-      { id: "sculpture", name: t("categories.sculpture"), count: 12 },
-    ];
-    setCategories(mockCategories);
+    // TODO: Load real categories from backend
+    setCategories([]);
   };
 
   const filterCollections = () => {

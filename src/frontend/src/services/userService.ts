@@ -1,5 +1,5 @@
 import type { User, NFT, Collection } from "../types/marketplace";
-// TODO: Remove mock data imports when implementing real backend
+// TODO: Remove data store imports when implementing real backend
 
 /**
  * User Service - Handles user-related operations for marketplace

@@ -85,96 +85,10 @@ const KaryaDetailPage: React.FC = () => {
     "overview" | "timeline" | "metadata" | "performance" | "revisions"
   >("overview");
 
-  // Generate mock detail data
-  const generateMockDetailData = (karya: KaryaWithLogs): KaryaDetailData => {
-    return {
-      views: Math.floor(Math.random() * 10000) + 100,
-      likes: Math.floor(Math.random() * 500) + 10,
-      shares: Math.floor(Math.random() * 100) + 5,
-      comments: Math.floor(Math.random() * 50) + 2,
-      rating: Math.round((Math.random() * 2 + 3) * 10) / 10, // 3.0 - 5.0
-      tags: [
-        "digital art",
-        "illustration",
-        "modern",
-        "creative",
-        "professional",
-      ],
-      collaborators: ["Design Team", "Creative Director"],
-      version: "1.2.0",
-      file_hash: `0x${Math.random().toString(16).substring(2, 66)}`,
-      thumbnail_url: "/api/thumbnails/" + karya.karya_id,
-      preview_url: "/api/preview/" + karya.karya_id,
-      download_url: "/api/download/" + karya.karya_id,
-      license: "Creative Commons BY-NC-SA 4.0",
-      category: "Digital Art",
-      difficulty: ["beginner", "intermediate", "advanced", "expert"][
-        Math.floor(Math.random() * 4)
-      ] as any,
-      estimated_time: `${Math.floor(Math.random() * 20) + 5} hours`,
-      materials: [
-        "Digital Canvas",
-        "Stylus",
-        "Graphics Tablet",
-        "Creative Software",
-      ],
-      techniques: [
-        "Digital Painting",
-        "Layer Blending",
-        "Color Theory",
-        "Composition",
-      ],
-      inspiration:
-        "Inspired by modern minimalist design and contemporary art movements",
-      notes:
-        "This piece represents the culmination of months of creative exploration and technical refinement",
-      revision_history: [
-        {
-          version: "1.2.0",
-          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-          changes: "Final color adjustments and composition refinements",
-          author: "Original Artist",
-        },
-        {
-          version: "1.1.0",
-          date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-          changes: "Added background elements and improved lighting",
-          author: "Original Artist",
-        },
-        {
-          version: "1.0.0",
-          date: karya.waktu_mulai,
-          changes: "Initial creation and basic composition",
-          author: "Original Artist",
-        },
-      ],
-      performance_metrics: [
-        {
-          metric: "Creation Speed",
-          value: 85,
-          unit: "words/min",
-          trend: "up",
-        },
-        {
-          metric: "Quality Score",
-          value: 92,
-          unit: "%",
-          trend: "up",
-        },
-        {
-          metric: "Efficiency",
-          value: 78,
-          unit: "%",
-          trend: "stable",
-        },
-        {
-          metric: "Innovation",
-          value: 88,
-          unit: "points",
-          trend: "up",
-        },
-      ],
-    };
+  // TODO: Generate real detail data from backend
+  const generateDetailData = (karya: KaryaWithLogs): KaryaDetailData | null => {
+    // TODO: Implement real detail data generation from backend
+    return null;
   };
 
   useEffect(() => {
@@ -186,7 +100,7 @@ const KaryaDetailPage: React.FC = () => {
         const karyaData = await KaryaService.getKaryaById(karyaId);
         if (karyaData) {
           setKarya(karyaData);
-          const detail = generateMockDetailData(karyaData);
+          const detail = generateDetailData(karyaData);
           setDetailData(detail);
         }
       } catch (error) {

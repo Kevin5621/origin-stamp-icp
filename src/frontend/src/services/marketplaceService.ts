@@ -6,7 +6,7 @@ import type {
   SearchResult,
   CreateNFTData,
 } from "../types/marketplace";
-// TODO: Remove mock data imports when implementing real backend
+// TODO: Remove data store imports when implementing real backend
 
 /**
  * Marketplace Service - Handles all marketplace operations
