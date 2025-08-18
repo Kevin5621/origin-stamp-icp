@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Compass,
+  LayoutDashboard,
   Settings,
   Home,
   BarChart3,
   Award,
-  Wallet,
-  Plus,
   User,
-  Folder,
   ChevronLeft,
   ChevronRight,
   Grid,
   List,
   Anchor,
+  Compass,
+  Palette,
+  FileText,
+  Activity,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -37,9 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
 
-  // Internal state for collapse if not controlled externally
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
-
   const isCollapsed = externalIsCollapsed ?? internalIsCollapsed;
 
   const handleToggleCollapse = () => {
@@ -67,14 +66,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           path: "/marketplace-collections",
         },
         {
-          id: "create",
-          icon: Plus,
-          label: tMarketplace("sidebar.create"),
-          path: "/marketplace/create",
-        },
-        {
           id: "activity",
-          icon: List,
+          icon: Activity,
           label: tMarketplace("sidebar.activity"),
           path: "/marketplace/activity",
         },
@@ -93,17 +86,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ];
     }
 
-    // Dashboard menu items
     return [
       {
         id: "dashboard",
-        icon: Home,
+        icon: LayoutDashboard,
         label: t("sidebar.dashboard"),
         path: "/dashboard",
       },
       {
         id: "session",
-        icon: User,
+        icon: Palette,
         label: t("sidebar.session"),
         path: "/session",
       },
@@ -119,18 +111,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         label: t("sidebar.analytics"),
         path: "/analytics",
       },
-      {
-        id: "portfolio",
-        icon: Folder,
-        label: t("sidebar.portfolio"),
-        path: "/portfolio",
-      },
-      {
-        id: "settings",
-        icon: Settings,
-        label: t("sidebar.settings"),
-        path: "/settings",
-      },
     ];
   };
 
@@ -139,21 +119,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       return [
         {
           id: "dashboard",
-          icon: Home,
+          icon: LayoutDashboard,
           label: t("sidebar.dashboard"),
           path: "/dashboard",
-        },
-        {
-          id: "certificates",
-          icon: Award,
-          label: t("sidebar.certificates"),
-          path: "/certificates",
-        },
-        {
-          id: "analytics",
-          icon: BarChart3,
-          label: t("sidebar.analytics"),
-          path: "/analytics",
         },
         {
           id: "settings",
@@ -171,7 +139,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         label: t("sidebar.marketplace"),
         path: "/marketplace",
       },
-      { id: "home", icon: Home, label: t("sidebar.home"), path: "/" },
+      {
+        id: "settings",
+        icon: Settings,
+        label: t("sidebar.settings"),
+        path: "/settings",
+      },
     ];
   };
 
@@ -179,11 +152,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return (
       location.pathname === path || location.pathname.startsWith(path + "/")
     );
-  };
-
-  const getUserBalance = () => {
-    // Mock balance - in real app this would come from wallet
-    return "0.00 ICP";
   };
 
   const getUserName = () => {
@@ -204,130 +172,111 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return variant === "marketplace" ? "Marketplace" : "OriginStamp";
   };
 
-  const getLogoIcon = () => {
-    return variant === "marketplace" ? "IC" : "OS";
-  };
-
   const getLogoPath = () => {
     return variant === "marketplace" ? "/marketplace" : "/";
   };
 
   return (
     <nav
-      className={`app-sidebar ${isCollapsed ? "app-sidebar--collapsed" : ""} app-sidebar--${variant}`}
+      className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""} sidebar--${variant}`}
+      aria-label={t("sidebar.main_navigation")}
     >
-      <div className="sidebar-container">
-        {/* Professional Header Section */}
-        <div className="sidebar-header">
-          {/* Logo */}
-          <div className="sidebar-logo">
-            <Link to={getLogoPath()} className="logo-link">
-              {!isCollapsed && (
-                <span className="logo-text">{getLogoText()}</span>
-              )}
-            </Link>
-          </div>
+      <header className="sidebar__header">
+        <Link
+          to={getLogoPath()}
+          className="sidebar__logo"
+          aria-label={getLogoText()}
+        >
+          {!isCollapsed && (
+            <span className="sidebar__logo-text">{getLogoText()}</span>
+          )}
+          {isCollapsed && (
+            <span className="sidebar__logo-icon" aria-hidden="true">
+              {variant === "marketplace" ? "M" : "O"}
+            </span>
+          )}
+        </Link>
 
-          {/* Collapse Toggle Button */}
-          <button
-            className="sidebar-collapse-toggle"
-            onClick={handleToggleCollapse}
-            title={isCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
-          >
-            {isCollapsed ? (
-              <ChevronRight size={16} />
-            ) : (
-              <ChevronLeft size={16} />
-            )}
-          </button>
+        <button
+          className="sidebar__toggle"
+          onClick={handleToggleCollapse}
+          aria-label={isCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
+          aria-expanded={!isCollapsed}
+        >
+          {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+      </header>
+
+      <div className="sidebar__user">
+        <div className="sidebar__avatar">
+          <img
+            src={getUserAvatar()}
+            alt={getUserName()}
+            className="sidebar__avatar-img"
+          />
         </div>
-
-        {/* User Profile Section */}
         {!isCollapsed && (
-          <div className="sidebar-user">
-            <div className="user-avatar">
-              <img src={getUserAvatar()} alt="User" />
-            </div>
-            <div className="user-info">
-              <div className="user-name">{getUserName()}</div>
-              <div className="user-balance">{getUserBalance()}</div>
+          <div className="sidebar__user-info">
+            <div className="sidebar__user-name">{getUserName()}</div>
+            <div className="sidebar__user-status">
+              {isAuthenticated ? t("sidebar.online") : t("sidebar.offline")}
             </div>
           </div>
         )}
+      </div>
 
-        {/* Collapsed User Avatar */}
-        {isCollapsed && (
-          <div className="sidebar-user-collapsed">
-            <div className="user-avatar">
-              <img src={getUserAvatar()} alt="User" />
-            </div>
-          </div>
-        )}
-
-        {/* Main Menu Items */}
-        <ul className="sidebar-menu">
+      <nav
+        className="sidebar__nav"
+        aria-label={t("sidebar.primary_navigation")}
+      >
+        <ul className="sidebar__menu">
           {getMenuItems().map((item) => {
             const Icon = item.icon;
             const isItemActive = isActive(item.path);
             return (
-              <li key={item.id}>
+              <li key={item.id} className="sidebar__menu-item">
                 <Link
                   to={item.path}
-                  className={`menu-item ${isItemActive ? "active" : ""}`}
+                  className={`sidebar__link ${isItemActive ? "sidebar__link--active" : ""}`}
                   onClick={() => onSectionChange(item.id)}
-                  title={item.label}
+                  aria-current={isItemActive ? "page" : undefined}
                 >
-                  <Icon size={20} />
+                  <Icon size={20} className="sidebar__icon" />
                   {!isCollapsed && (
-                    <span className="menu-label">{item.label}</span>
+                    <span className="sidebar__label">{item.label}</span>
                   )}
                 </Link>
               </li>
             );
           })}
         </ul>
+      </nav>
 
-        {/* Quick Actions */}
-        {!isCollapsed && (
-          <div className="sidebar-quick-actions">
-            <h3 className="section-title">{t("quick_actions")}</h3>
-            <div className="quick-actions-grid">
-              <button className="quick-action-btn">
-                <Plus size={16} />
-                <span>{t("create_nft")}</span>
-              </button>
-              <button className="quick-action-btn">
-                <Wallet size={16} />
-                <span>{t("connect_wallet")}</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Bottom Menu Items */}
-        <div className="sidebar-bottom">
-          <ul className="sidebar-menu">
-            {getBottomMenuItems().map((item) => {
-              const Icon = item.icon;
-              const isItemActive = isActive(item.path);
-              return (
-                <li key={item.id}>
-                  <Link
-                    to={item.path}
-                    className={`menu-item ${isItemActive ? "active" : ""}`}
-                    title={item.label}
-                  >
-                    <Icon size={20} />
-                    {!isCollapsed && (
-                      <span className="menu-label">{item.label}</span>
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      <nav
+        className="sidebar__secondary"
+        aria-label={t("sidebar.secondary_navigation")}
+      >
+        <ul className="sidebar__menu">
+          {getBottomMenuItems().map((item) => {
+            const Icon = item.icon;
+            const isItemActive = isActive(item.path);
+            return (
+              <li key={item.id} className="sidebar__menu-item">
+                <Link
+                  to={item.path}
+                  className={`sidebar__link ${isItemActive ? "sidebar__link--active" : ""}`}
+                  aria-current={isItemActive ? "page" : undefined}
+                >
+                  <Icon size={20} className="sidebar__icon" />
+                  {!isCollapsed && (
+                    <span className="sidebar__label">{item.label}</span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </nav>
   );
 };

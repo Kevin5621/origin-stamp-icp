@@ -7,8 +7,8 @@
     rgba(var(--color-accent-secondary-rgb), 0.02) 70%,
     var(--color-surface) 100%
   ) !important;
-  border: 1px solid rgba(var(--color-secondary-rgb), 0.1) !important;
-  border-radius: var(--border-radius-xl) !important;
+  border: 2px solid rgba(var(--color-secondary-rgb), 0.1) !important;
+  border-radius: var(--radius-2xl) !important;
   box-shadow:
     0 4px 20px rgba(var(--color-secondary-rgb), 0.08),
     0 2px 8px rgba(var(--color-accent-secondary-rgb), 0.04),
@@ -84,7 +84,7 @@
       rgba(var(--color-secondary-rgb), 0.08) 0%,
       rgba(var(--color-accent-secondary-rgb), 0.04) 100%
     );
-    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     display: flex;
     align-items: center;
     justify-content: center;

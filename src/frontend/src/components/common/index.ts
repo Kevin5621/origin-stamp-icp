@@ -4,6 +4,7 @@ export { Card } from "./Card";
 export { default as TradingViewChart } from "./TradingViewChart";
 export { default as ErrorBoundary } from "./ErrorBoundary";
 export { FloatingHeader } from "./FloatingHeader";
+export { default as LandingHeader } from "./LandingHeader";
 export { InputField } from "./InputField";
 export { Loader } from "./Loader";
 export { Modal } from "./Modal";
@@ -11,7 +12,7 @@ export { NotificationButton } from "./NotificationButton";
 export { Toast } from "./Toast";
 export { default as ToastContainer } from "./ToastContainer";
 export { ArtworkCard } from "./ArtworkCard";
-export { default as DashboardLoader } from "./DashboardLoader";
+
 export {
   default as LazyDashboardPage,
   createLazyDashboardPage,
