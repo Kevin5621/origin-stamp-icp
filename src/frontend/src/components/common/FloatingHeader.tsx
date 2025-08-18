@@ -1,6 +1,5 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { NotificationButton } from "./NotificationButton";
 import { LanguageToggle } from "../ui/LanguageToggle";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { Login } from "../login/Login";
@@ -21,7 +20,7 @@ export const AppTopHeader: React.FC<AppTopHeaderProps> = ({
         {isAuthenticated ? (
           <div className="app-top-header__authenticated">
             <div className="app-top-header__left">
-              <NotificationButton />
+              {/* Logo atau brand bisa ditambahkan di sini */}
             </div>
             <div className="app-top-header__right">
               <LanguageToggle />

@@ -84,16 +84,6 @@
   /* Keep original text color */
 }
 
-/* Notification hover fixes */
-.notification-panel__item {
-  &:hover {
-    .notification-panel__item-title,
-    .notification-panel__item-message {
-      /* Keep original text color */
-    }
-  }
-}
-
 /* Modal and overlay hover fixes - removed forced color changes */
 /* Individual components should handle their own hover states */
 
@@ -118,7 +108,6 @@
 }
 
 /* Badge hover fixes - prevent text color changes */
-.transformable-notification__badge,
 .project-type-badge,
 .how-it-works-hero-badge,
 .completion-badge,
