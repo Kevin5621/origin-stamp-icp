@@ -8,10 +8,10 @@ import {
 } from "../types/karya";
 
 // TODO: Load real karya data from backend
-const mockKaryaData: KaryaWithLogs[] = [];
+const karyaData: KaryaWithLogs[] = [];
 
 // TODO: Load real log data from backend
-const mockLogData: LogProses[] = [];
+const logData: LogProses[] = [];
 
 export class KaryaService {
   // Mendapatkan semua karya user

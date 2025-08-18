@@ -37,7 +37,7 @@ const SessionPage: React.FC = () => {
     const loadSessions = async () => {
       try {
         // TODO: Implement real session loading from backend
-        // For now, set empty array to remove mock data
+        // For now, set empty array to remove placeholder data
         setSessions([]);
       } catch (error) {
         console.error("Failed to load sessions:", error);

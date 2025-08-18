@@ -447,8 +447,8 @@ const SessionRecordPage: React.FC = () => {
         {/* Modern Header */}
         <div className="session-record__header">
           <div className="session-record__title">
-            <h1>{t("session.mock_data.landscape_painting_study_title")}</h1>
-            <p>{t("session.mock_data.landscape_painting_study_description")}</p>
+            <h1>{session.title || t("session.untitled_session")}</h1>
+            <p>{session.description || t("session.no_description")}</p>
           </div>
           <div className="session-record__controls">
             <button className="btn-back" onClick={() => navigate("/session")}>
