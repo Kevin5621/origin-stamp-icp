@@ -12,7 +12,7 @@ export interface NFTItem {
   endTime: Date;
   likes: number;
   isLiked?: boolean;
-  status?: 'buy' | 'auction';
+  status?: "buy" | "auction";
   owner?: {
     name: string;
     avatar: string;
@@ -129,7 +129,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({
         </div>
 
         <h3 className="nft-card__title">{nft.title}</h3>
-        
+
         {nft.owner && (
           <div className="nft-card__owner">
             <span className="nft-card__owner-label">{t("owned_by")}</span>
@@ -143,19 +143,27 @@ export const NFTCard: React.FC<NFTCardProps> = ({
             </div>
           </div>
         )}
-        
+
         <div className="nft-card__badges">
-          {nft.status === 'buy' && (
-            <span className="nft-card__badge nft-card__badge--buy">{t("buy_now")}</span>
+          {nft.status === "buy" && (
+            <span className="nft-card__badge nft-card__badge--buy">
+              {t("buy_now")}
+            </span>
           )}
-          {nft.status === 'auction' && (
-            <span className="nft-card__badge nft-card__badge--auction">{t("on_auction")}</span>
+          {nft.status === "auction" && (
+            <span className="nft-card__badge nft-card__badge--auction">
+              {t("on_auction")}
+            </span>
           )}
           {nft.isNew && (
-            <span className="nft-card__badge nft-card__badge--new">{t("new")}</span>
+            <span className="nft-card__badge nft-card__badge--new">
+              {t("new")}
+            </span>
           )}
           {nft.hasOffers && (
-            <span className="nft-card__badge nft-card__badge--offers">{t("has_offers")}</span>
+            <span className="nft-card__badge nft-card__badge--offers">
+              {t("has_offers")}
+            </span>
           )}
         </div>
 
@@ -179,7 +187,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({
 
           <div className="nft-card__price">
             <span className="nft-card__price-label">
-              {nft.status === 'auction' ? t("highest_bid") : t("price")}
+              {nft.status === "auction" ? t("highest_bid") : t("price")}
             </span>
             <span className="nft-card__price-value">
               {nft.price} {nft.currency}

@@ -46,8 +46,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
     onFilterChange(updatedFilters);
   };
 
-  const handlePriceChange = (field: 'min' | 'max', value: string) => {
-    const numValue = value === "" ? (field === 'min' ? 0 : null) : parseFloat(value);
+  const handlePriceChange = (field: "min" | "max", value: string) => {
+    const numValue =
+      value === "" ? (field === "min" ? 0 : null) : parseFloat(value);
     const updatedFilters = {
       ...localFilters,
       priceRange: {
@@ -77,7 +78,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   const handleReset = () => {
     const resetFilters: FilterOptions = {
       categories: filters.categories,
-      selectedCategory: 'all',
+      selectedCategory: "all",
       priceRange: {
         min: 0,
         max: null,
@@ -94,13 +95,17 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
 
   return (
-    <div className={`filter-sidebar ${className} ${isExpanded ? 'filter-sidebar--expanded' : ''}`}>
+    <div
+      className={`filter-sidebar ${className} ${isExpanded ? "filter-sidebar--expanded" : ""}`}
+    >
       <div className="filter-sidebar__header">
         <h2 className="filter-sidebar__title">{t("filters")}</h2>
         <button className="filter-sidebar__toggle" onClick={handleToggle}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path
-              d={isExpanded ? "M6 18L18 6M6 6l12 12" : "M3 12h18M3 6h18M3 18h18"}
+              d={
+                isExpanded ? "M6 18L18 6M6 6l12 12" : "M3 12h18M3 6h18M3 18h18"
+              }
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
@@ -109,7 +114,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           </svg>
         </button>
       </div>
-      
+
       {isExpanded && (
         <div className="filter-sidebar__content">
           <div className="filter-sidebar__section">
@@ -117,18 +122,22 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <div className="filter-sidebar__category-list">
               <div
                 className={`filter-sidebar__category ${
-                  localFilters.selectedCategory === 'all' ? 'filter-sidebar__category--selected' : ''
+                  localFilters.selectedCategory === "all"
+                    ? "filter-sidebar__category--selected"
+                    : ""
                 }`}
-                onClick={() => handleCategoryChange('all')}
+                onClick={() => handleCategoryChange("all")}
               >
                 {t("all_categories")}
               </div>
-              
+
               {localFilters.categories.map((category) => (
                 <div
                   key={category}
                   className={`filter-sidebar__category ${
-                    localFilters.selectedCategory === category ? 'filter-sidebar__category--selected' : ''
+                    localFilters.selectedCategory === category
+                      ? "filter-sidebar__category--selected"
+                      : ""
                   }`}
                   onClick={() => handleCategoryChange(category)}
                 >
@@ -137,37 +146,47 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               ))}
             </div>
           </div>
-          
+
           <div className="filter-sidebar__section">
-            <h3 className="filter-sidebar__section-title">{t("price_range")}</h3>
+            <h3 className="filter-sidebar__section-title">
+              {t("price_range")}
+            </h3>
             <div className="filter-sidebar__price-inputs">
               <div className="filter-sidebar__price-input-group">
-                <label className="filter-sidebar__price-label">{t("min_price")}</label>
+                <label className="filter-sidebar__price-label">
+                  {t("min_price")}
+                </label>
                 <input
                   type="number"
                   min="0"
                   step="0.01"
                   value={localFilters.priceRange.min}
-                  onChange={(e) => handlePriceChange('min', e.target.value)}
+                  onChange={(e) => handlePriceChange("min", e.target.value)}
                   className="filter-sidebar__price-input"
                   placeholder="0"
                 />
               </div>
-              
+
               <div className="filter-sidebar__price-input-group">
-                <label className="filter-sidebar__price-label">{t("max_price")}</label>
+                <label className="filter-sidebar__price-label">
+                  {t("max_price")}
+                </label>
                 <input
                   type="number"
                   min="0"
                   step="0.01"
-                  value={localFilters.priceRange.max === null ? '' : localFilters.priceRange.max}
-                  onChange={(e) => handlePriceChange('max', e.target.value)}
+                  value={
+                    localFilters.priceRange.max === null
+                      ? ""
+                      : localFilters.priceRange.max
+                  }
+                  onChange={(e) => handlePriceChange("max", e.target.value)}
                   className="filter-sidebar__price-input"
                   placeholder={t("no_limit")}
                 />
               </div>
             </div>
-            
+
             <div className="filter-sidebar__price-actions">
               <button
                 className="filter-sidebar__price-apply"
@@ -177,7 +196,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </button>
             </div>
           </div>
-          
+
           <div className="filter-sidebar__section">
             <h3 className="filter-sidebar__section-title">{t("status")}</h3>
             <div className="filter-sidebar__status-list">
@@ -186,55 +205,67 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   type="checkbox"
                   id="status-buy-now"
                   checked={localFilters.status.buyNow}
-                  onChange={() => handleStatusChange('buyNow')}
+                  onChange={() => handleStatusChange("buyNow")}
                   className="filter-sidebar__status-checkbox"
                 />
-                <label htmlFor="status-buy-now" className="filter-sidebar__status-label">
+                <label
+                  htmlFor="status-buy-now"
+                  className="filter-sidebar__status-label"
+                >
                   {t("buy_now")}
                 </label>
               </div>
-              
+
               <div className="filter-sidebar__status-item">
                 <input
                   type="checkbox"
                   id="status-on-auction"
                   checked={localFilters.status.onAuction}
-                  onChange={() => handleStatusChange('onAuction')}
+                  onChange={() => handleStatusChange("onAuction")}
                   className="filter-sidebar__status-checkbox"
                 />
-                <label htmlFor="status-on-auction" className="filter-sidebar__status-label">
+                <label
+                  htmlFor="status-on-auction"
+                  className="filter-sidebar__status-label"
+                >
                   {t("on_auction")}
                 </label>
               </div>
-              
+
               <div className="filter-sidebar__status-item">
                 <input
                   type="checkbox"
                   id="status-new"
                   checked={localFilters.status.new}
-                  onChange={() => handleStatusChange('new')}
+                  onChange={() => handleStatusChange("new")}
                   className="filter-sidebar__status-checkbox"
                 />
-                <label htmlFor="status-new" className="filter-sidebar__status-label">
+                <label
+                  htmlFor="status-new"
+                  className="filter-sidebar__status-label"
+                >
                   {t("new")}
                 </label>
               </div>
-              
+
               <div className="filter-sidebar__status-item">
                 <input
                   type="checkbox"
                   id="status-has-offers"
                   checked={localFilters.status.hasOffers}
-                  onChange={() => handleStatusChange('hasOffers')}
+                  onChange={() => handleStatusChange("hasOffers")}
                   className="filter-sidebar__status-checkbox"
                 />
-                <label htmlFor="status-has-offers" className="filter-sidebar__status-label">
+                <label
+                  htmlFor="status-has-offers"
+                  className="filter-sidebar__status-label"
+                >
                   {t("has_offers")}
                 </label>
               </div>
             </div>
           </div>
-          
+
           <div className="filter-sidebar__footer">
             <button
               className="filter-sidebar__reset-button"
