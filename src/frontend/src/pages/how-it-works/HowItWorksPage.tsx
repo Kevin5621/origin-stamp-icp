@@ -181,7 +181,6 @@ const HowItWorksPage: React.FC = () => {
             <div className="how-it-works-timeline-item">
               <div className="how-it-works-timeline-marker">
                 <div className="how-it-works-timeline-number">1</div>
-                <div className="how-it-works-timeline-line"></div>
               </div>
 
               <div className="how-it-works-timeline-content">
@@ -277,7 +276,6 @@ const HowItWorksPage: React.FC = () => {
             <div className="how-it-works-timeline-item">
               <div className="how-it-works-timeline-marker">
                 <div className="how-it-works-timeline-number">2</div>
-                <div className="how-it-works-timeline-line"></div>
               </div>
 
               <div className="how-it-works-timeline-content">
