@@ -17,13 +17,13 @@ describe("Activity", () => {
             <Activity />
           </I18nextProvider>
         </BrowserRouter>
-      </StrictMode>
+      </StrictMode>,
     );
 
     // Assert
     expect(screen.getByText("Activity")).toBeInTheDocument();
     expect(
-      screen.getByText("Track recent marketplace actions and transactions.")
+      screen.getByText("Track recent marketplace actions and transactions."),
     ).toBeInTheDocument();
     expect(screen.getByText("All Activity")).toBeInTheDocument();
     expect(screen.getByText("Listings")).toBeInTheDocument();
@@ -43,18 +43,20 @@ describe("Activity", () => {
             <Activity />
           </I18nextProvider>
         </BrowserRouter>
-      </StrictMode>
+      </StrictMode>,
     );
 
     // Execute
     const salesFilterButton = screen.getByText("Sales");
     await user.click(salesFilterButton);
-    
+
     // Wait for the content to update
     await vi.waitFor(() => {
       // Assert - This would check for specific sale items, but in our mock setup
       // we need to add more detailed assertions based on the actual implementation
-      expect(salesFilterButton).toHaveClass("activity-filter__type-btn--active");
+      expect(salesFilterButton).toHaveClass(
+        "activity-filter__type-btn--active",
+      );
     });
   });
 
@@ -68,13 +70,13 @@ describe("Activity", () => {
             <Activity />
           </I18nextProvider>
         </BrowserRouter>
-      </StrictMode>
+      </StrictMode>,
     );
 
     // Execute
     const dateRangeButton = screen.getByText("Date Range");
     await user.click(dateRangeButton);
-    
+
     // Assert
     expect(screen.getByText("Start Date")).toBeInTheDocument();
     expect(screen.getByText("End Date")).toBeInTheDocument();

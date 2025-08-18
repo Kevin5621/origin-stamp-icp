@@ -13,7 +13,7 @@
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: var(--space-6);
-    
+
     @media (max-width: 768px) {
       flex-direction: column;
       gap: var(--space-4);
@@ -41,7 +41,7 @@
   &__search {
     width: 100%;
     max-width: 360px;
-    
+
     @media (max-width: 768px) {
       max-width: 100%;
     }
@@ -68,7 +68,9 @@
     background-color: var(--color-input-bg);
     color: var(--color-text-primary);
     font-size: var(--text-sm);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
 
     &:focus {
       outline: none;
@@ -90,7 +92,7 @@
   margin-bottom: var(--space-6);
   padding-bottom: var(--space-4);
   border-bottom: 1px solid var(--color-border);
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
@@ -174,7 +176,7 @@
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    
+
     @media (max-width: 480px) {
       width: 100%;
       right: auto;
@@ -300,7 +302,7 @@
     font-weight: var(--font-weight-medium);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    
+
     @media (max-width: 768px) {
       display: none; /* Hide headers on mobile */
     }
@@ -315,7 +317,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    
+
     @media (max-width: 768px) {
       border-radius: var(--radius-lg);
     }
@@ -388,10 +390,10 @@
   padding: var(--space-4);
   border-bottom: 1px solid var(--color-border);
   transition: background-color 0.2s ease;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 60px 1fr;
-    grid-template-areas: 
+    grid-template-areas:
       "image title"
       "image type"
       "users users"
@@ -413,7 +415,7 @@
     height: 60px;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    
+
     @media (max-width: 768px) {
       grid-area: image;
       width: 60px;
@@ -432,7 +434,7 @@
     flex-direction: column;
     justify-content: center;
     gap: var(--space-1);
-    
+
     @media (max-width: 768px) {
       grid-area: title;
     }
@@ -448,7 +450,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    
+
     @media (max-width: 768px) {
       grid-area: type;
     }
@@ -472,7 +474,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    
+
     @media (max-width: 768px) {
       grid-area: users;
       margin-top: var(--space-2);
@@ -508,7 +510,7 @@
     gap: var(--space-1);
     font-family: var(--font-family-numbers);
     color: var(--color-success);
-    
+
     @media (max-width: 768px) {
       grid-area: price;
       margin-top: var(--space-2);
@@ -526,7 +528,7 @@
   &__time {
     display: flex;
     align-items: center;
-    
+
     @media (max-width: 768px) {
       grid-area: time;
       justify-content: flex-end;
