@@ -22,6 +22,11 @@
   font-family: var(--font-family-primary);
   letter-spacing: var(--tracking-wide);
 
+  svg {
+    transition: color var(--transition-normal);
+    flex-shrink: 0;
+  }
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -33,11 +38,20 @@
     color: var(--color-surface);
     border-color: var(--color-primary-text);
 
+    svg {
+      color: var(--color-surface) !important;
+      transition: color var(--transition-normal);
+    }
+
     &:hover {
       background: var(--color-primary-light);
       border-color: var(--color-primary-light);
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(var(--color-primary-rgb), 0.3);
+
+      svg {
+        color: var(--color-surface) !important;
+      }
     }
 
     &:active {
@@ -56,10 +70,18 @@
     color: var(--color-text-primary);
     border-color: var(--color-border);
 
+    svg {
+      color: var(--color-text-primary);
+    }
+
     &:hover {
       background: rgba(var(--color-primary-rgb), 0.05);
       border-color: var(--color-primary-text);
       color: var(--color-primary-text);
+
+      svg {
+        color: var(--color-primary-text);
+      }
     }
 
     &:focus-visible {
@@ -73,9 +95,18 @@
     color: var(--color-primary-text);
     border-color: var(--color-primary-text);
 
+    svg {
+      color: var(--color-primary-text);
+    }
+
     &:hover {
       background: var(--color-primary-text);
       color: var(--color-surface);
+
+      svg {
+        color: var(--color-surface);
+      }
+
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(var(--color-primary-rgb), 0.3);
     }
@@ -96,9 +127,17 @@
     color: var(--color-text-secondary);
     border-color: transparent;
 
+    svg {
+      color: var(--color-text-secondary);
+    }
+
     &:hover {
       background: rgba(var(--color-secondary-rgb), 0.08);
       color: var(--color-secondary);
+
+      svg {
+        color: var(--color-secondary);
+      }
     }
   }
 
@@ -106,6 +145,10 @@
     background: var(--color-success);
     color: var(--color-white);
     border-color: var(--color-success);
+
+    svg {
+      color: var(--color-white);
+    }
 
     &:hover {
       background: #2f855a;
@@ -120,6 +163,10 @@
     color: var(--color-white);
     border-color: var(--color-error);
 
+    svg {
+      color: var(--color-white);
+    }
+
     &:hover {
       background: #c53030;
       border-color: #c53030;
@@ -133,6 +180,10 @@
     color: var(--color-white);
     border-color: var(--color-warning);
 
+    svg {
+      color: var(--color-white);
+    }
+
     &:hover {
       background: #c05621;
       border-color: #c05621;
@@ -145,6 +196,10 @@
     background: var(--color-info);
     color: var(--color-white);
     border-color: var(--color-info);
+
+    svg {
+      color: var(--color-white);
+    }
 
     &:hover {
       background: #2b6cb0;
@@ -257,6 +312,39 @@
   height: 1.05rem;
   border-radius: var(--radius-full);
   object-fit: cover;
+}
+
+/* =============================================================================
+   BUTTON ICON COLOR OVERRIDES - HIGH SPECIFICITY
+   ============================================================================= */
+
+/* Override any global icon styles for buttons */
+.btn svg {
+  color: inherit !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+/* Specific overrides for primary buttons */
+.btn.btn--primary svg,
+.btn--primary svg {
+  color: var(--color-surface) !important;
+  fill: var(--color-surface) !important;
+  stroke: var(--color-surface) !important;
+}
+
+.btn.btn--primary:hover svg,
+.btn--primary:hover svg {
+  color: var(--color-surface) !important;
+  fill: var(--color-surface) !important;
+  stroke: var(--color-surface) !important;
+}
+
+.btn.btn--primary:active svg,
+.btn--primary:active svg {
+  color: var(--color-surface) !important;
+  fill: var(--color-surface) !important;
+  stroke: var(--color-surface) !important;
 }
 
 @media (max-width: 768px) {

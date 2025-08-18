@@ -166,10 +166,12 @@
       padding: var(--space-8);
       text-align: center;
       background: rgba(var(--color-secondary-rgb), 0.01);
-      min-height: 160px;
+      min-height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
+      transition: var(--transition-normal);
 
       &--active {
         border-color: var(--color-secondary);
@@ -189,45 +191,92 @@
         height: 100%;
         opacity: 0;
         cursor: pointer;
+        z-index: 1;
       }
 
       .upload-content {
         pointer-events: none;
-        max-width: 280px;
+        max-width: 320px;
+        z-index: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-4);
+        width: 100%;
 
         svg {
           color: var(--color-secondary);
-          margin-bottom: var(--space-4);
-          width: 16px;
-          height: 16px;
+          width: 48px;
+          height: 48px;
           flex-shrink: 0;
+          margin: 0;
+          display: block;
         }
 
         h3 {
-          font-size: var(--text-base);
-          font-weight: var(--font-weight-medium);
-          margin: 0 0 var(--space-2) 0;
+          font-size: var(--text-lg);
+          font-weight: var(--font-weight-semibold);
+          margin: 0;
           color: var(--color-text-primary);
+          line-height: 1.4;
+          text-align: center;
         }
 
         p {
           color: var(--color-text-secondary);
-          margin: 0 0 var(--space-4) 0;
+          margin: 0;
           font-size: var(--text-sm);
+          line-height: 1.5;
+          max-width: 280px;
+          text-align: center;
         }
 
         .btn {
           pointer-events: auto;
-          background: var(--color-secondary);
-          color: white;
-          border: none;
+          background: var(--color-primary-text);
+          color: var(--color-surface);
+          border: 2px solid var(--color-primary-text);
           border-radius: var(--radius-md);
           padding: var(--space-3) var(--space-6);
           font-weight: var(--font-weight-medium);
           font-size: var(--text-sm);
+          transition: var(--transition-normal);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: var(--space-2);
+          text-decoration: none;
+          cursor: pointer;
+          margin: 0;
+
+          svg {
+            color: var(--color-surface) !important;
+            fill: var(--color-surface) !important;
+            stroke: var(--color-surface) !important;
+            margin: 0;
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            display: block;
+          }
 
           &:hover {
-            background: var(--color-accent);
+            background: var(--color-primary-light);
+            border-color: var(--color-primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(var(--color-primary-rgb), 0.3);
+
+            svg {
+              color: var(--color-surface) !important;
+              fill: var(--color-surface) !important;
+              stroke: var(--color-surface) !important;
+            }
+          }
+
+          &:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.25);
           }
         }
       }
@@ -530,13 +579,17 @@
               margin: 0;
 
               &::before {
-                content: '';
+                content: "";
                 position: absolute;
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+                background: radial-gradient(
+                  circle,
+                  rgba(255, 255, 255, 0.1) 0%,
+                  transparent 70%
+                );
                 opacity: 0;
                 transition: opacity 0.3s ease;
                 border-radius: 50%;
@@ -580,7 +633,9 @@
               &:focus-visible {
                 outline: 2px solid var(--color-accent);
                 outline-offset: 2px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 4px rgba(var(--color-accent-rgb), 0.1);
+                box-shadow:
+                  0 4px 12px rgba(0, 0, 0, 0.15),
+                  0 0 0 4px rgba(var(--color-accent-rgb), 0.1);
               }
 
               &--download {
@@ -853,13 +908,16 @@
       padding: var(--space-2);
 
       &__upload .upload-zone {
-        padding: var(--space-3);
-        min-height: 120px;
+        min-height: 160px;
+        padding: var(--space-4);
 
         .upload-content {
+          max-width: 240px;
+          gap: var(--space-2);
+
           svg {
-            width: 24px;
-            height: 24px;
+            width: 36px;
+            height: 36px;
           }
 
           h3 {
@@ -868,6 +926,17 @@
 
           p {
             font-size: var(--text-xs);
+            max-width: 200px;
+          }
+
+          .btn {
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--text-xs);
+
+            svg {
+              width: 10px;
+              height: 10px;
+            }
           }
         }
       }
@@ -896,7 +965,7 @@
                 flex-shrink: 0 !important;
               }
             }
-            
+
             gap: var(--space-3);
           }
         }
@@ -981,5 +1050,119 @@
     max-width: 10px !important;
     max-height: 10px !important;
     font-size: 10px !important;
+  }
+}
+
+/* =============================================================================
+   UPLOAD BUTTON ICON COLORS
+   ============================================================================= */
+
+.session-record .btn.btn--primary svg,
+.session-record .btn--primary svg {
+  color: var(--color-surface) !important;
+  fill: var(--color-surface) !important;
+  stroke: var(--color-surface) !important;
+}
+
+.session-record .btn.btn--primary:hover svg,
+.session-record .btn--primary:hover svg {
+  color: var(--color-surface) !important;
+  fill: var(--color-surface) !important;
+  stroke: var(--color-surface) !important;
+}
+
+.session-record .btn.btn--primary:active svg,
+.session-record .btn--primary:active svg {
+  color: var(--color-surface) !important;
+  fill: var(--color-surface) !important;
+  stroke: var(--color-surface) !important;
+}
+
+/* =============================================================================
+   UPLOAD BUTTON SPECIFIC STYLES
+   ============================================================================= */
+
+.session-record .upload-content .btn {
+  background: var(--color-primary-text) !important;
+  color: var(--color-surface) !important;
+  border: 2px solid var(--color-primary-text) !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-3) var(--space-6) !important;
+  font-weight: var(--font-weight-medium) !important;
+  font-size: var(--text-sm) !important;
+  transition: var(--transition-normal) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--space-2) !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+
+  svg {
+    color: var(--color-surface) !important;
+    fill: var(--color-surface) !important;
+    stroke: var(--color-surface) !important;
+    margin-bottom: 0 !important;
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0 !important;
+  }
+
+  &:hover {
+    background: var(--color-primary-light) !important;
+    border-color: var(--color-primary-light) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(var(--color-primary-rgb), 0.3) !important;
+
+    svg {
+      color: var(--color-surface) !important;
+      fill: var(--color-surface) !important;
+      stroke: var(--color-surface) !important;
+    }
+  }
+
+  &:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.25) !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text) !important;
+    outline-offset: var(--space-1) !important;
+  }
+}
+
+/* =============================================================================
+   GLOBAL ICON OVERRIDES FOR SESSION RECORD
+   ============================================================================= */
+
+.session-record {
+  /* Override any global icon styles */
+  .btn svg {
+    color: inherit !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+
+  /* Ensure primary button icons are white */
+  .btn.btn--primary svg,
+  .btn--primary svg {
+    color: var(--color-surface) !important;
+    fill: var(--color-surface) !important;
+    stroke: var(--color-surface) !important;
+  }
+
+  .btn.btn--primary:hover svg,
+  .btn--primary:hover svg {
+    color: var(--color-surface) !important;
+    fill: var(--color-surface) !important;
+    stroke: var(--color-surface) !important;
+  }
+
+  .btn.btn--primary:active svg,
+  .btn--primary:active svg {
+    color: var(--color-surface) !important;
+    fill: var(--color-surface) !important;
+    stroke: var(--color-surface) !important;
   }
 }
