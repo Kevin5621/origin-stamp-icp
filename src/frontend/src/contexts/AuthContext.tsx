@@ -19,6 +19,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (username: string) => void;
   loginWithInternetIdentity: (principal: string) => void;
   loginWithGoogle: (userInfo: {
@@ -40,6 +41,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authClient, setAuthClient] = useState<AuthClient | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load user from localStorage first (immediate authentication check)
   useEffect(() => {
@@ -52,6 +54,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.removeItem("auth-user");
       }
     }
+    setIsLoading(false);
   }, []);
 
   // Initialize AuthClient
@@ -67,11 +70,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const identity = client.getIdentity();
           const principal = identity.getPrincipal().toString();
 
-          // Only auto-login if no user is already logged in or if the current user is ICP
+          // Only auto-login if no user is already logged in
           const savedUser = localStorage.getItem("auth-user");
-          const currentUser = savedUser ? JSON.parse(savedUser) : null;
-
-          if (!currentUser || currentUser.loginMethod === "icp") {
+          if (!savedUser) {
             const userData = {
               username: `User ${principal.slice(0, 8)}...`,
               loginTime: new Date().toLocaleString(),
@@ -139,6 +140,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
+    isLoading,
     login,
     loginWithInternetIdentity,
     loginWithGoogle,
