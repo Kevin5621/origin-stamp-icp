@@ -498,18 +498,16 @@ const SessionRecordPage: React.FC = () => {
   return (
     <div className="session-record">
       <div className="session-record__container">
-        {/* Modern Header */}
-        <div className="session-record__header">
-          <div className="session-record__title">
+        {/* Simplified Top Bar */}
+        <div className="session-record__top-bar">
+          <div className="session-title">
             <h1>{session.title || t("session.untitled_session")}</h1>
             <p>{session.description || t("session.no_description")}</p>
           </div>
-          <div className="session-record__controls">
-            <button className="btn-back" onClick={() => navigate("/session")}>
-              <ArrowLeft size={20} />
-              {t("session.back_to_sessions")}
-            </button>
-          </div>
+          <button className="back-button" onClick={() => navigate("/session")}>
+            <ArrowLeft size={20} />
+            {t("session.back_to_sessions")}
+          </button>
         </div>
 
         {/* Session Status */}
