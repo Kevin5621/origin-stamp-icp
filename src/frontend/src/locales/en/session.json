@@ -348,6 +348,7 @@
     "all": "All",
     "active": "Active",
     "completed": "Completed",
+    "no_photos": "No photos",
     "mock_data": {
       "landscape_painting_study_title": "",
       "landscape_painting_study_description": "",
