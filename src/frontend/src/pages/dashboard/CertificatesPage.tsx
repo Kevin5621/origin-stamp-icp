@@ -28,42 +28,8 @@ const CertificatesPage: React.FC = () => {
     console.log("Current location:", window.location.pathname);
   }, []);
 
-  // Mock data untuk sertifikat
-  const certificates = [
-    {
-      id: "CERT-001",
-      title: "Digital Artwork - Abstract Composition",
-      artist: "John Doe",
-      issueDate: "2024-01-15",
-      status: "verified",
-      type: "digital",
-      duration: "2h 30m",
-      actions: 156,
-      certificateUrl: "https://originstamp.io/cert/CERT-001",
-    },
-    {
-      id: "CERT-002",
-      title: "Physical Painting - Landscape",
-      artist: "Jane Smith",
-      issueDate: "2024-01-10",
-      status: "verified",
-      type: "physical",
-      duration: "4h 15m",
-      actions: 89,
-      certificateUrl: "https://originstamp.io/cert/CERT-002",
-    },
-    {
-      id: "CERT-003",
-      title: "Code Project - Web Application",
-      artist: "Mike Johnson",
-      issueDate: "2024-01-08",
-      status: "verified",
-      type: "digital",
-      duration: "8h 45m",
-      actions: 234,
-      certificateUrl: "https://originstamp.io/cert/CERT-003",
-    },
-  ];
+  // TODO: Load certificates from backend
+  const certificates: any[] = [];
 
   const filteredCertificates = certificates.filter((cert) => {
     const matchesSearch =

@@ -57,39 +57,13 @@ export const MarketplaceMain: React.FC<MarketplaceMainProps> = ({
   }, [collections, selectedCategory, priceRange, searchQuery]);
 
   const loadCollections = async () => {
-    const mockCollections: Collection[] = [
-      {
-        id: "1",
-        title: "Abstract Harmony",
-        description: "Modern abstract composition with vibrant colors",
-        image: "/api/placeholder/300/400",
-        price: 1500,
-        artist: "Sarah Chen",
-        category: "abstract",
-        likes: 42,
-      },
-      {
-        id: "2",
-        title: "Digital Dreams",
-        description: "Futuristic digital art piece",
-        image: "/api/placeholder/300/400",
-        price: 800,
-        artist: "Alex Rivera",
-        category: "digital",
-        likes: 28,
-      },
-    ];
-    setCollections(mockCollections);
+    // TODO: Load real collections from backend
+    setCollections([]);
   };
 
   const loadCategories = async () => {
-    const mockCategories: Category[] = [
-      { id: "abstract", name: t("categories.abstract"), count: 15 },
-      { id: "digital", name: t("categories.digital"), count: 23 },
-      { id: "traditional", name: t("categories.traditional"), count: 8 },
-      { id: "sculpture", name: t("categories.sculpture"), count: 12 },
-    ];
-    setCategories(mockCategories);
+    // TODO: Load real categories from backend
+    setCategories([]);
   };
 
   const filterCollections = () => {

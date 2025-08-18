@@ -334,14 +334,14 @@
     "file_size_mb": "MB",
     "file_size_gb": "GB",
     "mock_data": {
-      "landscape_painting_study_title": "Studi Lukisan Lanskap",
-      "landscape_painting_study_description": "Lukisan cat air lanskap gunung dengan dokumentasi bertahap",
-      "initial_sketch_description": "Sketsa pensil awal komposisi gunung",
-      "base_colors_description": "Menerapkan lapisan cat air dasar untuk langit dan gunung",
-      "digital_portrait_series_title": "Seri Potret Digital",
-      "digital_portrait_series_description": "Eksplorasi desain karakter menggunakan Photoshop dengan logging otomatis",
-      "sculpture_progress_title": "Progress Patung",
-      "sculpture_progress_description": "Dokumentasi patung tanah liat dari sketsa awal hingga bentuk akhir"
+      "landscape_painting_study_title": "",
+      "landscape_painting_study_description": "",
+      "initial_sketch_description": "",
+      "base_colors_description": "",
+      "digital_portrait_series_title": "",
+      "digital_portrait_series_description": "",
+      "sculpture_progress_title": "",
+      "sculpture_progress_description": ""
     }
   }
 }

@@ -31,11 +31,11 @@ const CreateSessionPage: React.FC = () => {
       return;
     }
 
-    // Generate a mock session ID
-    const sessionId = `session-${Date.now()}`;
-
-    // Redirect ke halaman recording session
-    navigate(`/sessions/${sessionId}`);
+    // TODO: Create real session using PhysicalArtService
+    // For now, show error message
+    alert(
+      "Session creation not implemented yet. Please implement backend integration.",
+    );
   }, [sessionTitle, t, navigate]);
 
   return (

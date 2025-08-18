@@ -55,69 +55,8 @@ export const CollectionsPage: React.FC = () => {
   }, [collections, selectedCategory, priceRange, searchQuery]);
 
   const loadCollections = async () => {
-    const mockCollections: Collection[] = [
-      {
-        id: "1",
-        title: "Abstract Harmony",
-        description: "Modern abstract composition with vibrant colors",
-        image: "/api/placeholder/300/400",
-        price: 1500,
-        artist: "Sarah Chen",
-        category: "abstract",
-        likes: 42,
-      },
-      {
-        id: "2",
-        title: "Digital Dreams",
-        description: "Futuristic digital art piece",
-        image: "/api/placeholder/300/400",
-        price: 800,
-        artist: "Alex Rivera",
-        category: "digital",
-        likes: 28,
-      },
-      {
-        id: "3",
-        title: "Traditional Beauty",
-        description: "Classical oil painting technique",
-        image: "/api/placeholder/300/400",
-        price: 2200,
-        artist: "Maria Santos",
-        category: "traditional",
-        likes: 35,
-      },
-      {
-        id: "4",
-        title: "Sculptural Form",
-        description: "3D digital sculpture",
-        image: "/api/placeholder/300/400",
-        price: 1200,
-        artist: "David Kim",
-        category: "sculpture",
-        likes: 19,
-      },
-      {
-        id: "5",
-        title: "Color Symphony",
-        description: "Vibrant color exploration",
-        image: "/api/placeholder/300/400",
-        price: 950,
-        artist: "Lisa Wang",
-        category: "abstract",
-        likes: 31,
-      },
-      {
-        id: "6",
-        title: "Future City",
-        description: "Cyberpunk urban landscape",
-        image: "/api/placeholder/300/400",
-        price: 1800,
-        artist: "Carlos Mendez",
-        category: "digital",
-        likes: 47,
-      },
-    ];
-    setCollections(mockCollections);
+    // TODO: Load real collections from backend
+    setCollections([]);
   };
 
   const loadCategories = async () => {

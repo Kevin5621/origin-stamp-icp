@@ -19,48 +19,14 @@ export interface DashboardData {
 // Dashboard service for minimalist dashboard
 export class dashboardService {
   static async getDashboardData(): Promise<DashboardData> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
+    // TODO: Implement real dashboard data from backend
     return {
-      totalSessions: 156,
-      totalCertificates: 89,
-      totalRevenue: 125000,
-      activeUsers: 234,
-      recentSessions: [
-        {
-          id: "1",
-          title: "Digital Art Session #1",
-          date: "2024-01-15",
-          status: "Completed",
-        },
-        {
-          id: "2",
-          title: "Sculpture Documentation",
-          date: "2024-01-14",
-          status: "In Progress",
-        },
-        {
-          id: "3",
-          title: "Painting Process",
-          date: "2024-01-13",
-          status: "Completed",
-        },
-        {
-          id: "4",
-          title: "Mixed Media Project",
-          date: "2024-01-12",
-          status: "Pending",
-        },
-      ],
-      revenueData: [
-        { month: "Jan", revenue: 15000 },
-        { month: "Feb", revenue: 18000 },
-        { month: "Mar", revenue: 22000 },
-        { month: "Apr", revenue: 19000 },
-        { month: "May", revenue: 25000 },
-        { month: "Jun", revenue: 28000 },
-      ],
+      totalSessions: 0,
+      totalCertificates: 0,
+      totalRevenue: 0,
+      activeUsers: 0,
+      recentSessions: [],
+      revenueData: [],
     };
   }
 }

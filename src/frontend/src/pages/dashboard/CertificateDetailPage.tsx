@@ -60,7 +60,7 @@ const CertificateDetailPage: React.FC = () => {
   const { karyaId } = useParams<{ karyaId: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { handleError, safeExecute } = useErrorHandler({
+  const { handleError } = useErrorHandler({
     context: "CertificateDetailPage",
   });
 
@@ -68,42 +68,11 @@ const CertificateDetailPage: React.FC = () => {
     "overview" | "verification" | "metadata" | "share"
   >("overview");
 
-  // Generate mock certificate data dengan useMemo untuk optimasi
-  const generateMockCertificate = useCallback(
-    (karya: KaryaWithLogs): CertificateData => {
-      const issueDate = karya.waktu_selesai || new Date();
-      const expiryDate = new Date(issueDate);
-      expiryDate.setFullYear(expiryDate.getFullYear() + 10); // 10 tahun masa berlaku
-
-      return {
-        certificate_id: `CERT-${karya.karya_id.toUpperCase()}-${Date.now().toString(36)}`,
-        issue_date: issueDate,
-        expiry_date: expiryDate,
-        verification_hash: `0x${Math.random().toString(16).substring(2, 66)}`,
-        blockchain_tx: `0x${Math.random().toString(16).substring(2, 66)}`,
-        qr_code_data: `https://originstamp.ic0.app/verify/${karya.karya_id}`,
-        verification_url: `https://originstamp.ic0.app/verify/${karya.karya_id}`,
-        certificate_type: "standard",
-        verification_score: Math.round(85 + Math.random() * 15),
-        authenticity_rating: Math.round(90 + Math.random() * 10),
-        provenance_score: Math.round(88 + Math.random() * 12),
-        community_trust: Math.round(82 + Math.random() * 18),
-        certificate_status: "active",
-        issuer: "OriginStamp Protocol",
-        blockchain: "Internet Computer",
-        token_standard: "ICP-721",
-        metadata: {
-          creation_duration: `${Math.floor((karya.waktu_selesai?.getTime() || Date.now()) - karya.waktu_mulai.getTime()) / (1000 * 60 * 60 * 24)} days`,
-          total_actions: karya.log_count || 0,
-          file_size: `${Math.round(Math.random() * 50 + 10)} MB`,
-          file_format: karya.format_file,
-          creation_tools: [
-            "Adobe Photoshop",
-            "Digital Canvas",
-            "Creative Suite",
-          ],
-        },
-      };
+  // TODO: Generate real certificate data from backend
+  const generateCertificate = useCallback(
+    (karya: KaryaWithLogs): CertificateData | null => {
+      // TODO: Implement real certificate generation from backend
+      return null;
     },
     [],
   );
@@ -127,7 +96,7 @@ const CertificateDetailPage: React.FC = () => {
     `certificate-${karyaId}`,
     async () => {
       if (!karya) return null;
-      return generateMockCertificate(karya);
+      return generateCertificate(karya);
     },
     { immediate: !!karyaId && !!karya, background: true },
   );
