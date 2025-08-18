@@ -83,27 +83,27 @@ const SessionRecordPage: React.FC = () => {
   // Load session data from backend
   useEffect(() => {
     const loadSession = async () => {
-      if (sessionId) {
-        try {
-          // Check if user is authenticated
-          if (!isAuthenticated || !user) {
-            addToast("error", t("please_login_first"));
-            navigate("/login");
-            return;
-          }
+      if (!sessionId) return;
 
-          // Load session details using PhysicalArtService
-          const sessionDetails =
-            await PhysicalArtService.getSessionDetails(sessionId);
+      try {
+        // Try to load from localStorage first for faster loading
+        const cachedSession = localStorage.getItem(`session_${sessionId}`);
+        if (cachedSession) {
+          const parsedSession = JSON.parse(cachedSession);
+          // Convert timestamp strings back to Date objects
+          parsedSession.photos = parsedSession.photos.map((photo: any) => ({
+            ...photo,
+            timestamp: photo.timestamp ? new Date(photo.timestamp) : new Date(),
+          }));
+          setSession(parsedSession);
+        }
 
-          if (!sessionDetails) {
-            addToast("error", t("session.session_not_found"));
-            navigate("/session");
-            return;
-          }
-
+        // Always fetch fresh data from backend
+        const sessionDetails =
+          await PhysicalArtService.getSessionDetails(sessionId);
+        if (sessionDetails) {
           // Transform backend data to frontend format
-          const transformedSession: SessionData = {
+          const sessionWithPhotos: SessionData = {
             id: sessionDetails.session_id,
             title: sessionDetails.art_title,
             description: sessionDetails.description,
@@ -116,26 +116,59 @@ const SessionRecordPage: React.FC = () => {
               filename: `photo-${index + 1}.jpg`,
               timestamp: new Date(
                 Number(sessionDetails.created_at) + index * 60000,
-              ), // Mock timestamp
+              ),
               description: `Step ${index + 1}`,
-              fileSize: 0,
+              fileSize: 0, // Will be updated from cache if available
               url: photoUrl,
               step: index + 1,
               s3Key: photoUrl,
             })),
           };
 
-          setSession(transformedSession);
-        } catch (error) {
-          console.error("Failed to load session:", error);
+          // Merge with cached data to preserve fileSize and other details
+          if (cachedSession) {
+            const cachedData = JSON.parse(cachedSession);
+            sessionWithPhotos.photos = sessionWithPhotos.photos.map(
+              (photo, index) => {
+                const cachedPhoto = cachedData.photos[index];
+                return {
+                  ...photo,
+                  fileSize: cachedPhoto?.fileSize || 0,
+                  timestamp: cachedPhoto?.timestamp
+                    ? new Date(cachedPhoto.timestamp)
+                    : photo.timestamp,
+                };
+              },
+            );
+          }
+
+          setSession(sessionWithPhotos);
+
+          // Cache the session data
+          localStorage.setItem(
+            `session_${sessionId}`,
+            JSON.stringify(sessionWithPhotos),
+          );
+        } else {
           addToast("error", t("session.session_not_found"));
           navigate("/session");
         }
+      } catch (error) {
+        console.error("Failed to load session:", error);
+        addToast("error", t("session.failed_to_load_session"));
+        navigate("/session");
       }
     };
 
     loadSession();
-  }, [sessionId, user, isAuthenticated, addToast, t, navigate]);
+  }, [sessionId, navigate, addToast, t]);
+
+  // Save session data to localStorage whenever it changes
+  useEffect(() => {
+    if (session && sessionId) {
+      localStorage.setItem(`session_${sessionId}`, JSON.stringify(session));
+    }
+  }, [session, sessionId]);
 
   const handleFileSelect = (files: FileList) => {
     // Reset progress states when new files are selected
@@ -278,6 +311,18 @@ const SessionRecordPage: React.FC = () => {
   const handleUploadToS3 = async () => {
     if (!selectedFiles || !session) return;
 
+    // Show confirmation dialog for blockchain permanence
+    const confirmed = window.confirm(
+      t("session.blockchain_upload_confirmation", {
+        count: selectedFiles.length,
+      })
+    );
+
+    if (!confirmed) {
+      addToast("info", t("session.upload_cancelled_by_user"));
+      return;
+    }
+
     // Prevent multiple uploads
     if (isUploading || uploadInProgress) {
       console.log("Upload already in progress, ignoring new request");
@@ -395,25 +440,6 @@ const SessionRecordPage: React.FC = () => {
     }
   };
 
-  const handleDeletePhoto = (photoId: string) => {
-    if (session) {
-      const photoToDelete = session.photos.find((p) => p.id === photoId);
-      setSession({
-        ...session,
-        photos: session.photos.filter((p) => p.id !== photoId),
-      });
-
-      if (photoToDelete) {
-        addToast(
-          "success",
-          t("session.photo_deleted_success", {
-            filename: photoToDelete.filename,
-          }),
-        );
-      }
-    }
-  };
-
   const handleCompleteSessionAndGenerateNFT = async () => {
     if (!session || !user) return;
 
@@ -464,8 +490,8 @@ const SessionRecordPage: React.FC = () => {
     }
   };
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
+  const formatFileSize = (bytes: number | undefined): string => {
+    if (!bytes || bytes === 0) return "0 Bytes";
     const k = 1024;
     const sizes = [
       t("session.file_size_bytes"),
@@ -477,11 +503,17 @@ const SessionRecordPage: React.FC = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const formatTime = (date: Date): string => {
-    return date.toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatTime = (date: Date | undefined): string => {
+    if (!date) return "Unknown";
+    try {
+      return date.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (error) {
+      console.warn("Error formatting date:", error);
+      return "Unknown";
+    }
   };
 
   if (!session) {
@@ -552,6 +584,13 @@ const SessionRecordPage: React.FC = () => {
                   <Camera size={16} />
                   <h3>{t("session.drop_photos_here_or_click_to_browse")}</h3>
                   <p>{t("session.support_multiple_photos_up_to_10mb_each")}</p>
+                  
+                  <div className="blockchain-warning">
+                    <div className="warning-icon">⚠️</div>
+                    <p className="warning-text">
+                      {t("session.blockchain_permanence_warning")}
+                    </p>
+                  </div>
 
                   <label htmlFor="photo-upload" className="btn btn--primary">
                     <Upload size={16} />
@@ -731,13 +770,6 @@ const SessionRecordPage: React.FC = () => {
                           >
                             <Download size={12} />
                           </button>
-                          <button
-                            className="photo-action-btn photo-action-btn--delete"
-                            onClick={() => handleDeletePhoto(photo.id)}
-                            title={t("session.delete_photo")}
-                          >
-                            <Trash2 size={12} />
-                          </button>
                         </div>
                       </div>
 
@@ -751,7 +783,7 @@ const SessionRecordPage: React.FC = () => {
                         </div>
 
                         <div className="photo-info">
-                          <span>{photo.filename}</span>
+                          <span>{photo.filename || "Unknown file"}</span>
                           <span>•</span>
                           <span>{formatFileSize(photo.fileSize)}</span>
                           {photo.s3Key && (
