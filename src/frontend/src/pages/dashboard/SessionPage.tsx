@@ -44,32 +44,34 @@ const SessionPage: React.FC = () => {
     const loadSessions = async () => {
       try {
         setLoading(true);
-        
+
         // Check if user is authenticated
         if (!isAuthenticated || !user) {
           addToast("error", t("please_login_first"));
           navigate("/login");
           return;
         }
-        
+
         // Get username from auth context
         const username = user.username;
-        
+
         // Load sessions using PhysicalArtService
         const userSessions = await PhysicalArtService.getUserSessions(username);
-        
+
         // Transform backend data to frontend format
-        const transformedSessions: SessionData[] = userSessions.map(session => ({
-          id: session.session_id,
-          title: session.art_title,
-          description: session.description,
-          artType: "physical", // TODO: Add art type to backend
-          createdAt: new Date(Number(session.created_at)),
-          updatedAt: new Date(Number(session.updated_at)),
-          status: session.status as "active" | "completed",
-          photoCount: session.uploaded_photos.length,
-        }));
-        
+        const transformedSessions: SessionData[] = userSessions.map(
+          (session) => ({
+            id: session.session_id,
+            title: session.art_title,
+            description: session.description,
+            artType: "physical",
+            createdAt: new Date(Number(session.created_at)),
+            updatedAt: new Date(Number(session.updated_at)),
+            status: session.status as "active" | "completed",
+            photoCount: session.uploaded_photos.length,
+          }),
+        );
+
         setSessions(transformedSessions);
       } catch (error) {
         console.error("Failed to load sessions:", error);
