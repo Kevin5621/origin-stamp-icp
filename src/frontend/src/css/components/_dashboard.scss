@@ -93,10 +93,14 @@
   }
 
   &__value {
+    font-family: var(--font-family-numbers);
     font-size: var(--text-3xl);
     font-weight: var(--font-weight-bold);
+    font-variant-numeric: var(--font-variant-numeric);
+    font-feature-settings: var(--font-feature-numeric);
     color: var(--color-text-primary);
     margin-bottom: var(--space-2);
+    letter-spacing: -0.02em;
   }
 
   &__label {

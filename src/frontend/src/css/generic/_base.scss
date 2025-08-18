@@ -10,6 +10,46 @@
   padding: 0;
 }
 
+/* Professional Number Styling */
+.numeric,
+.number,
+.stat-value,
+.stat-number,
+.price,
+.amount,
+.percentage,
+[class*="number"],
+[class*="stat"],
+[class*="metric"] {
+  font-family: var(--font-family-numbers);
+  font-variant-numeric: var(--font-variant-numeric);
+  font-feature-settings: var(--font-feature-numeric);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+}
+
+/* Specific number styling for different contexts */
+.error-number,
+.not-found-number,
+.error-fallback-number {
+  font-family: var(--font-family-numbers);
+  font-variant-numeric: var(--font-variant-numeric);
+  font-feature-settings: var(--font-feature-numeric);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: -0.05em;
+}
+
+/* Dashboard and analytics numbers */
+.analytics__metric-value,
+.dashboard__stat-value,
+.certificate__stat-value {
+  font-family: var(--font-family-numbers);
+  font-variant-numeric: var(--font-variant-numeric);
+  font-feature-settings: var(--font-feature-numeric);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.01em;
+}
+
 html {
   font-size: 16px;
   line-height: var(--leading-normal);

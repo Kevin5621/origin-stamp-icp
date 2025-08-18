@@ -76,9 +76,13 @@
 }
 
 .stat-value {
+  font-family: var(--font-family-numbers);
   font-size: var(--text-2xl);
   font-weight: var(--font-weight-bold);
+  font-variant-numeric: var(--font-variant-numeric);
+  font-feature-settings: var(--font-feature-numeric);
   color: var(--color-text-primary);
+  letter-spacing: -0.01em;
 }
 
 .stat-label {

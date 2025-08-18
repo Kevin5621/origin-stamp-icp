@@ -11,6 +11,7 @@ import {
   Plus,
   FolderOpen,
   Loader,
+  Search,
 } from "lucide-react";
 import PhysicalArtService from "../../services/physicalArtService";
 import { useToastContext } from "../../contexts/ToastContext";
@@ -34,6 +35,10 @@ const SessionPage: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   const [sessions, setSessions] = useState<SessionData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState<
+    "all" | "active" | "completed"
+  >("all");
 
   useEffect(() => {
     const loadSessions = async () => {
@@ -57,7 +62,10 @@ const SessionPage: React.FC = () => {
             artType: "physical",
             createdAt: new Date(Number(session.created_at)),
             updatedAt: new Date(Number(session.updated_at)),
-            status: session.status === "draft" ? "active" : (session.status as "active" | "completed"),
+            status:
+              session.status === "draft"
+                ? "active"
+                : (session.status as "active" | "completed"),
             photoCount: session.uploaded_photos.length,
           }),
         );
@@ -108,10 +116,24 @@ const SessionPage: React.FC = () => {
     );
   };
 
+  const filteredSessions = sessions.filter((session) => {
+    const matchesSearch =
+      session.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      session.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      activeFilter === "all" || session.status === activeFilter;
+    return matchesSearch && matchesFilter;
+  });
+
+  const activeSessions = sessions.filter((s) => s.status === "active").length;
+  const completedSessions = sessions.filter(
+    (s) => s.status === "completed",
+  ).length;
+
   const renderSessionCard = (session: SessionData) => {
     const isActive = session.status === "active";
     const isCompleted = session.status === "completed";
-    
+
     return (
       <div
         key={session.id}
@@ -127,49 +149,48 @@ const SessionPage: React.FC = () => {
         }}
       >
         <div className="session__session-header">
-          <div className="session__session-type">
+          <div className="session__session-icon">
             {session.artType === "physical" ? (
-              <Camera size={20} />
+              <Camera size={24} />
             ) : (
-              <Palette size={20} />
+              <Palette size={24} />
             )}
-            <span>
+          </div>
+          <div className="session__session-info">
+            <h3 className="session__session-title">{session.title}</h3>
+            <p className="session__session-type">
               {session.artType === "physical"
                 ? t("session.physical")
                 : t("session.digital")}
-            </span>
+            </p>
+            <div className="session__session-meta">
+              <span className="session__session-id">ID: {session.id}</span>
+            </div>
           </div>
-          {getStatusBadge(session.status)}
+          <div className="session__session-status">
+            {getStatusBadge(session.status)}
+          </div>
         </div>
 
-        <div className="session__session-content">
-          <h3 className="session__session-title">
-            {session.title}
-          </h3>
-          <p className="session__session-description">
-            {session.description}
-          </p>
-
-          <div className="session__session-meta">
-            <div className="session__meta-item">
-              <Clock size={14} />
-              <span>
-                {t("session.updated")} {formatDate(session.updatedAt)}
-              </span>
-            </div>
-            <div className="session__meta-item">
-              <Camera size={14} />
-              <span>
-                {session.photoCount} {t("session.photos")}
-              </span>
-            </div>
+        <div className="session__session-details">
+          <div className="session__detail-item">
+            <Clock size={16} />
+            <span>
+              {t("session.updated")} {formatDate(session.updatedAt)}
+            </span>
+          </div>
+          <div className="session__detail-item">
+            <Camera size={16} />
+            <span>
+              {session.photoCount} {t("session.photos")}
+            </span>
           </div>
         </div>
 
         <div className="session__session-actions">
           {isActive && (
             <button
-              className="btn-continue"
+              className="btn"
               onClick={(e) => {
                 e.stopPropagation();
                 handleContinueSession(session.id);
@@ -182,7 +203,7 @@ const SessionPage: React.FC = () => {
 
           {isCompleted && (
             <button
-              className="btn-view"
+              className="btn"
               onClick={(e) => {
                 e.stopPropagation();
                 handleViewCertificate(session.id);
@@ -200,15 +221,12 @@ const SessionPage: React.FC = () => {
   const renderEmptyState = () => (
     <div className="session__empty-state">
       <div className="session__empty-icon">
-        <FolderOpen size={30} />
+        <FolderOpen size={40} />
       </div>
       <h3>{t("session.no_active_sessions")}</h3>
       <p>{t("session.no_sessions_description")}</p>
       <div className="session__empty-actions">
-        <button
-          className="btn-primary"
-          onClick={handleCreateNewSession}
-        >
+        <button className="btn-primary" onClick={handleCreateNewSession}>
           <Plus size={16} />
           {t("session.create_first_session")}
         </button>
@@ -233,13 +251,13 @@ const SessionPage: React.FC = () => {
       );
     }
 
-    if (sessions.length === 0) {
+    if (filteredSessions.length === 0) {
       return renderEmptyState();
     }
 
     return (
       <div className="session__sessions-grid">
-        {sessions.map(renderSessionCard)}
+        {filteredSessions.map(renderSessionCard)}
       </div>
     );
   };
@@ -250,7 +268,7 @@ const SessionPage: React.FC = () => {
         <div className="session__welcome">
           <div className="session__welcome-content">
             <div className="session__welcome-icon">
-              <Camera size={22} />
+              <Camera size={24} />
             </div>
             <div className="session__welcome-text">
               <h1>{t("session.active_sessions")}</h1>
@@ -258,6 +276,20 @@ const SessionPage: React.FC = () => {
             </div>
           </div>
           <div className="session__welcome-actions">
+            <div className="session__stats">
+              <div className="session__stat-item">
+                <span className="session__stat-value">{activeSessions}</span>
+                <span className="session__stat-label">
+                  {t("session.active")}
+                </span>
+              </div>
+              <div className="session__stat-item">
+                <span className="session__stat-value">{completedSessions}</span>
+                <span className="session__stat-label">
+                  {t("session.completed")}
+                </span>
+              </div>
+            </div>
             <button
               className="btn-new-session"
               onClick={handleCreateNewSession}
@@ -265,6 +297,41 @@ const SessionPage: React.FC = () => {
               <Plus size={16} />
               {t("session.new_session")}
             </button>
+          </div>
+        </div>
+
+        <div className="session__search-filter">
+          <div className="session__search-container">
+            <Search className="session__search-icon" size={20} />
+            <input
+              type="text"
+              className="session__search-input"
+              placeholder={t("session.search_sessions")}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="session__filter-controls">
+            <div className="session__filter-tabs">
+              <button
+                className={`session__filter-tab ${activeFilter === "all" ? "active" : ""}`}
+                onClick={() => setActiveFilter("all")}
+              >
+                {t("session.all")}
+              </button>
+              <button
+                className={`session__filter-tab ${activeFilter === "active" ? "active" : ""}`}
+                onClick={() => setActiveFilter("active")}
+              >
+                {t("session.active")}
+              </button>
+              <button
+                className={`session__filter-tab ${activeFilter === "completed" ? "active" : ""}`}
+                onClick={() => setActiveFilter("completed")}
+              >
+                {t("session.completed")}
+              </button>
+            </div>
           </div>
         </div>
 
