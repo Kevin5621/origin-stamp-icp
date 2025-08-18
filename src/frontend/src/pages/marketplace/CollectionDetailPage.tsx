@@ -1,140 +1,142 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { AppLayout } from "../../components/layout/AppLayout";
 import { MarketplaceHeader } from "../../components/marketplace/MarketplaceHeader";
-import { CategoryFilter } from "../../components/marketplace/CategoryFilter";
-import { MarketplaceMainContent } from "../../components/marketplace/MarketplaceMainContent";
+import { CollectionGrid } from "../../components/marketplace/CollectionGrid";
+
+interface CollectionItem {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+  artist: string;
+  category: string;
+  likes: number;
+}
 
 export const CollectionDetailPage: React.FC = () => {
-  const { t } = useTranslation("marketplace");
   const { collectionId } = useParams<{ collectionId: string }>();
-  const [selectedView, setSelectedView] = useState<"grid" | "list">("grid");
 
-  // Mock data untuk collection
   const collection = {
     id: collectionId || "off-the-grid",
     name: "Off The Grid",
     creator: "Gunz",
     description:
       "A collection of futuristic digital art pieces exploring themes of technology and human connection.",
-    image:
-      "https://via.placeholder.com/800x400/1f2937/ffffff?text=Collection+Image",
-    bannerImage:
-      "https://via.placeholder.com/1200x300/1f2937/ffffff?text=Banner+Image",
-    floorPrice: "11.00",
+    image: "/api/placeholder/800/400",
+    bannerImage: "/api/placeholder/1200/300",
+    floorPrice: 11.0,
     currency: "GUN",
     items: 6821231,
     totalVolume: "1.6M",
-    listedPercentage: "< 0.1%",
     owners: 1250,
     verified: true,
   };
 
-  const handleSearch = (query: string) => {
-    console.log("Search query:", query);
-  };
+  const collectionItems: CollectionItem[] = Array.from(
+    { length: 12 },
+    (_, i) => ({
+      id: `${i + 1}`,
+      title: `Item #${i + 1}`,
+      description: `Digital artwork from ${collection.name} collection`,
+      image: `/api/placeholder/300/400`,
+      price: 0.5,
+      artist: collection.creator,
+      category: "digital",
+      likes: Math.floor(Math.random() * 100),
+    }),
+  );
 
-  const handleConnectWallet = () => {
-    console.log("Connect wallet clicked");
+  const handleCollectionClick = (item: CollectionItem) => {
+    console.log("Collection item clicked:", item);
   };
 
   return (
     <AppLayout variant="marketplace">
-      <div className="marketplace-page">
-        {/* Header */}
-        <MarketplaceHeader
-          onSearch={handleSearch}
-          onConnectWallet={handleConnectWallet}
-        />
+      <div className="marketplace-main">
+        <MarketplaceHeader />
 
-        {/* Main Content */}
-        <MarketplaceMainContent>
+        <div className="marketplace-main__content">
           {/* Collection Banner */}
-          <div className="collection-banner">
-            <div className="collection-banner__image">
+          <div className="collection-detail-banner">
+            <div className="collection-detail-banner__image">
               <img src={collection.bannerImage} alt={collection.name} />
             </div>
 
-            <div className="collection-banner__info">
-              <div className="collection-avatar">
+            <div className="collection-detail-banner__info">
+              <div className="collection-detail-avatar">
                 <img src={collection.image} alt={collection.name} />
               </div>
 
-              <div className="collection-details">
-                <h1 className="collection-name">
+              <div className="collection-detail-details">
+                <h1 className="collection-detail-name">
                   {collection.name}
                   {collection.verified && (
-                    <span className="verified-badge">✓</span>
+                    <span className="collection-detail-verified">✓</span>
                   )}
                 </h1>
-                <p className="collection-creator">by {collection.creator}</p>
-                <p className="collection-description">
+                <p className="collection-detail-creator">
+                  by {collection.creator}
+                </p>
+                <p className="collection-detail-description">
                   {collection.description}
                 </p>
               </div>
 
-              <div className="collection-stats">
-                <div className="stat-item">
-                  <span className="stat-value">
+              <div className="collection-detail-stats">
+                <div className="collection-detail-stat">
+                  <span className="collection-detail-stat-value">
                     {collection.floorPrice} {collection.currency}
                   </span>
-                  <span className="stat-label">{t("floorPrice")}</span>
+                  <span className="collection-detail-stat-label">
+                    Floor Price
+                  </span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-value">
+                <div className="collection-detail-stat">
+                  <span className="collection-detail-stat-value">
                     {collection.items.toLocaleString()}
                   </span>
-                  <span className="stat-label">{t("items")}</span>
+                  <span className="collection-detail-stat-label">Items</span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-value">
+                <div className="collection-detail-stat">
+                  <span className="collection-detail-stat-value">
                     {collection.totalVolume} {collection.currency}
                   </span>
-                  <span className="stat-label">{t("totalVolume")}</span>
+                  <span className="collection-detail-stat-label">
+                    Total Volume
+                  </span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-value">
+                <div className="collection-detail-stat">
+                  <span className="collection-detail-stat-value">
                     {collection.owners.toLocaleString()}
                   </span>
-                  <span className="stat-label">{t("owners")}</span>
+                  <span className="collection-detail-stat-label">Owners</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Category Filter */}
-          <CategoryFilter
-            selectedCategory="all"
-            onCategoryChange={() => {}}
-            selectedTimeframe="24h"
-            onTimeframeChange={() => {}}
-            selectedView={selectedView}
-            onViewChange={setSelectedView}
-          />
-
-          {/* Collection Items Grid */}
-          <div className="collection-items">
-            <div className="items-grid">
-              {/* Mock items */}
-              {Array.from({ length: 12 }, (_, i) => (
-                <div key={i} className="item-card">
-                  <div className="item-image">
-                    <img
-                      src={`https://via.placeholder.com/300x300/1f2937/ffffff?text=Item+${i + 1}`}
-                      alt={`Item ${i + 1}`}
-                    />
-                  </div>
-                  <div className="item-info">
-                    <h3 className="item-name">Item #{i + 1}</h3>
-                    <p className="item-price">0.5 {collection.currency}</p>
-                  </div>
-                </div>
-              ))}
+          {/* Collection Items */}
+          <div className="collection-detail-items">
+            <div className="collection-detail-items__header">
+              <h2 className="collection-detail-items__title">
+                Items in this collection
+              </h2>
+              <p className="collection-detail-items__count">
+                {collectionItems.length} items
+              </p>
             </div>
+
+            <CollectionGrid
+              collections={collectionItems}
+              onCollectionClick={handleCollectionClick}
+            />
           </div>
-        </MarketplaceMainContent>
+        </div>
       </div>
     </AppLayout>
   );
 };
+
+export default CollectionDetailPage;

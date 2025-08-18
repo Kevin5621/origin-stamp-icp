@@ -1,6 +1,6 @@
 {
   "welcome_message": "Kelola dan pantau semua proyek verifikasi Anda",
-  "loading_dashboard": "Memuat dasbor...",
+  "loading_dashboard": "Memuat Beranda...",
   "all_projects": "Semua Proyek",
   "active_projects": "Proyek Aktif",
   "completed_projects": "Proyek Selesai",
@@ -242,5 +242,21 @@
   "hero_stats_verified": "Terverifikasi",
   "hero_stats_active": "Aktif",
   "hero_create_button": "Buat Baru",
-  "recent_artworks_view_all": "Lihat Semua"
+  "recent_artworks_view_all": "Lihat Semua",
+
+  "dashboard": "Dashboard",
+  "overview": "Ringkasan",
+  "total_sessions": "Total Sesi",
+  "total_certificates": "Total Sertifikat",
+  "total_revenue": "Total Pendapatan",
+  "active_users": "Pengguna Aktif",
+  "revenue_chart": "Grafik Pendapatan",
+  "recent_sessions": "Sesi Terbaru",
+  "session_title": "Judul Sesi",
+  "date": "Tanggal",
+  "status": "Status",
+  "error_loading": "Gagal memuat data",
+  "no_data": "Tidak ada data",
+  "no_data_description": "Belum ada data yang tersedia untuk ditampilkan",
+  "loading": "Memuat..."
 }

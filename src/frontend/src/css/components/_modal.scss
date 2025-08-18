@@ -21,7 +21,7 @@
   align-items: center !important;
   justify-content: center !important;
   z-index: var(--z-index-modal-backdrop) !important;
-  padding: var(--spacing-md);
+  padding: var(--space-4);
   animation: modalFadeIn 0.2s ease-out;
   box-sizing: border-box;
   margin: 0 !important;
@@ -52,8 +52,8 @@
   background-color: var(--color-surface);
   color: var(--color-on-surface);
   border: 2px solid var(--color-primary-text);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-xl);
+  border-radius: var(--radius-xl);
+  padding: var(--space-12);
   position: relative;
   z-index: var(--z-index-modal);
   max-width: 90%;
@@ -91,7 +91,7 @@
 
 .modal-header {
   text-align: center;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--space-8);
   display: flex;
   align-items: center;
   justify-content: space-between;

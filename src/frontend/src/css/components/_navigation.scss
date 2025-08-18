@@ -8,7 +8,7 @@
 
 .app-navigation {
   position: fixed;
-  bottom: var(--spacing-xl);
+  bottom: var(--space-12);
   left: 50%;
   transform: translateX(-50%);
   z-index: var(--z-index-sticky);
@@ -18,9 +18,9 @@
   background-color: var(--color-surface);
   box-shadow: var(--shadow-neumorphic-md);
   display: flex;
-  gap: var(--spacing-md);
-  border-radius: var(--border-radius-xl);
-  padding: var(--spacing-md);
+  gap: var(--space-4);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-4);
   transition: var(--theme-transition);
 }
 
@@ -28,21 +28,23 @@
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   border: none;
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  font-size: 0.875rem;
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-6);
+  font-size: var(--text-sm);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: var(--transition-normal);
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--space-2);
   box-shadow: var(--shadow-neumorphic-sm);
+  font-family: var(--font-family-primary);
+  letter-spacing: var(--tracking-wide);
 
   &:hover {
     background-color: var(--color-primary-text);
     color: var(--color-surface);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-neumorphic-lg);
   }
 
@@ -54,7 +56,7 @@
 
   &:focus-visible {
     outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
+    outline-offset: var(--space-1);
   }
 }
 
