@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
-  Camera,
-  Palette,
   Play,
   FileText,
   Clock,
@@ -12,6 +10,7 @@ import {
   FolderOpen,
   Loader,
   Search,
+  Camera,
 } from "lucide-react";
 import PhysicalArtService from "../../services/physicalArtService";
 import { useToastContext } from "../../contexts/ToastContext";
@@ -26,6 +25,7 @@ interface SessionData {
   updatedAt: Date;
   status: "active" | "completed";
   photoCount: number;
+  lastPhotoUrl?: string;
 }
 
 const SessionPage: React.FC = () => {
@@ -67,6 +67,10 @@ const SessionPage: React.FC = () => {
                 ? "active"
                 : (session.status as "active" | "completed"),
             photoCount: session.uploaded_photos.length,
+            lastPhotoUrl:
+              session.uploaded_photos.length > 0
+                ? session.uploaded_photos[session.uploaded_photos.length - 1]
+                : undefined,
           }),
         );
 
@@ -148,71 +152,77 @@ const SessionPage: React.FC = () => {
           }
         }}
       >
-        <div className="session__session-header">
-          <div className="session__session-icon">
-            {session.artType === "physical" ? (
+        <div className="session__session-image">
+          {session.lastPhotoUrl ? (
+            <img
+              src={session.lastPhotoUrl}
+              alt={session.title}
+              className="session__image"
+            />
+          ) : (
+            <div className="session__image-placeholder">
               <Camera size={24} />
-            ) : (
-              <Palette size={24} />
-            )}
+              <span>{t("session.no_photos")}</span>
+            </div>
+          )}
+          <div className="session__session-status">
+            {getStatusBadge(session.status)}
           </div>
-          <div className="session__session-info">
+        </div>
+
+        <div className="session__session-content">
+          <div className="session__session-header">
             <h3 className="session__session-title">{session.title}</h3>
             <p className="session__session-type">
               {session.artType === "physical"
                 ? t("session.physical")
                 : t("session.digital")}
             </p>
-            <div className="session__session-meta">
-              <span className="session__session-id">ID: {session.id}</span>
+            <span className="session__session-id">ID: {session.id}</span>
+          </div>
+
+          <div className="session__session-details">
+            <div className="session__detail-item">
+              <Clock size={16} />
+              <span>
+                {t("session.updated")} {formatDate(session.updatedAt)}
+              </span>
+            </div>
+            <div className="session__detail-item">
+              <Camera size={16} />
+              <span>
+                {session.photoCount} {t("session.photos")}
+              </span>
             </div>
           </div>
-          <div className="session__session-status">
-            {getStatusBadge(session.status)}
-          </div>
-        </div>
 
-        <div className="session__session-details">
-          <div className="session__detail-item">
-            <Clock size={16} />
-            <span>
-              {t("session.updated")} {formatDate(session.updatedAt)}
-            </span>
-          </div>
-          <div className="session__detail-item">
-            <Camera size={16} />
-            <span>
-              {session.photoCount} {t("session.photos")}
-            </span>
-          </div>
-        </div>
+          <div className="session__session-actions">
+            {isActive && (
+              <button
+                className="btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleContinueSession(session.id);
+                }}
+              >
+                <Play size={16} />
+                {t("session.continue_session")}
+              </button>
+            )}
 
-        <div className="session__session-actions">
-          {isActive && (
-            <button
-              className="btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleContinueSession(session.id);
-              }}
-            >
-              <Play size={16} />
-              {t("session.continue_session")}
-            </button>
-          )}
-
-          {isCompleted && (
-            <button
-              className="btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewCertificate(session.id);
-              }}
-            >
-              <CheckCircle size={16} />
-              {t("session.view_certificate")}
-            </button>
-          )}
+            {isCompleted && (
+              <button
+                className="btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewCertificate(session.id);
+                }}
+              >
+                <CheckCircle size={16} />
+                {t("session.view_certificate")}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -267,9 +277,6 @@ const SessionPage: React.FC = () => {
       <div className="session-layout">
         <div className="session__welcome">
           <div className="session__welcome-content">
-            <div className="session__welcome-icon">
-              <Camera size={24} />
-            </div>
             <div className="session__welcome-text">
               <h1>{t("session.active_sessions")}</h1>
               <p>{t("session.continue_sessions_description")}</p>
