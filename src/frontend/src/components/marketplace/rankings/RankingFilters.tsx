@@ -17,7 +17,7 @@ const RankingFilters: React.FC<RankingFiltersProps> = ({
   blockchain,
   onTimePeriodChange,
   onCategoryChange,
-  onBlockchainChange
+  onBlockchainChange,
 }) => {
   const { t } = useTranslation("marketplace");
 
@@ -25,17 +25,26 @@ const RankingFilters: React.FC<RankingFiltersProps> = ({
     { value: "24h", label: t("rankings.time_period.24h", "24h") },
     { value: "7d", label: t("rankings.time_period.7d", "7d") },
     { value: "30d", label: t("rankings.time_period.30d", "30d") },
-    { value: "all", label: t("rankings.time_period.all", "All Time") }
+    { value: "all", label: t("rankings.time_period.all", "All Time") },
   ];
 
   const categoryOptions = [
     { value: "all", label: t("rankings.category.all", "All Categories") },
     { value: "Art", label: t("rankings.category.art", "Art") },
-    { value: "Collectibles", label: t("rankings.category.collectibles", "Collectibles") },
+    {
+      value: "Collectibles",
+      label: t("rankings.category.collectibles", "Collectibles"),
+    },
     { value: "Music", label: t("rankings.category.music", "Music") },
     { value: "Games", label: t("rankings.category.games", "Games") },
-    { value: "Photography", label: t("rankings.category.photography", "Photography") },
-    { value: "Virtual Worlds", label: t("rankings.category.virtual_worlds", "Virtual Worlds") }
+    {
+      value: "Photography",
+      label: t("rankings.category.photography", "Photography"),
+    },
+    {
+      value: "Virtual Worlds",
+      label: t("rankings.category.virtual_worlds", "Virtual Worlds"),
+    },
   ];
 
   const blockchainOptions = [
@@ -44,7 +53,7 @@ const RankingFilters: React.FC<RankingFiltersProps> = ({
     { value: "Solana", label: t("rankings.blockchain.solana", "Solana") },
     { value: "ICP", label: t("rankings.blockchain.icp", "Internet Computer") },
     { value: "Polygon", label: t("rankings.blockchain.polygon", "Polygon") },
-    { value: "Binance", label: t("rankings.blockchain.binance", "Binance") }
+    { value: "Binance", label: t("rankings.blockchain.binance", "Binance") },
   ];
 
   return (
@@ -55,7 +64,9 @@ const RankingFilters: React.FC<RankingFiltersProps> = ({
             <li key={option.value}>
               <button
                 className={`ranking-filters__time-button ${
-                  timePeriod === option.value ? "ranking-filters__time-button--active" : ""
+                  timePeriod === option.value
+                    ? "ranking-filters__time-button--active"
+                    : ""
                 }`}
                 onClick={() => onTimePeriodChange(option.value)}
               >

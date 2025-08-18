@@ -20,7 +20,12 @@ export interface RankingCollection {
 }
 
 export type TimePeriod = "24h" | "7d" | "30d" | "all";
-export type SortOption = "volume" | "floorPrice" | "owners" | "items" | "percentChange";
+export type SortOption =
+  | "volume"
+  | "floorPrice"
+  | "owners"
+  | "items"
+  | "percentChange";
 export type SortDirection = "asc" | "desc";
 
 interface RankingsProps {
@@ -30,10 +35,12 @@ interface RankingsProps {
 export const Rankings: React.FC<RankingsProps> = ({ className = "" }) => {
   const { t } = useTranslation("marketplace");
   const [collections, setCollections] = useState<RankingCollection[]>([]);
-  const [filteredCollections, setFilteredCollections] = useState<RankingCollection[]>([]);
+  const [filteredCollections, setFilteredCollections] = useState<
+    RankingCollection[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Filter states
   const [timePeriod, setTimePeriod] = useState<TimePeriod>("24h");
   const [category, setCategory] = useState<string>("all");
@@ -48,7 +55,15 @@ export const Rankings: React.FC<RankingsProps> = ({ className = "" }) => {
 
   useEffect(() => {
     applyFilters();
-  }, [collections, searchQuery, timePeriod, category, blockchain, sortBy, sortDirection]);
+  }, [
+    collections,
+    searchQuery,
+    timePeriod,
+    category,
+    blockchain,
+    sortBy,
+    sortDirection,
+  ]);
 
   const loadRankingsData = async () => {
     try {
@@ -67,15 +82,23 @@ export const Rankings: React.FC<RankingsProps> = ({ className = "" }) => {
   };
 
   const generateDummyCollections = (count: number): RankingCollection[] => {
-    const categories = ["Art", "Collectibles", "Music", "Games", "Photography", "Virtual Worlds"];
+    const categories = [
+      "Art",
+      "Collectibles",
+      "Music",
+      "Games",
+      "Photography",
+      "Virtual Worlds",
+    ];
     const blockchains = ["Ethereum", "Solana", "ICP", "Polygon", "Binance"];
     const collections: RankingCollection[] = [];
 
     for (let i = 0; i < count; i++) {
-      const percentChange = Math.random() > 0.5 
-        ? Number((Math.random() * 100).toFixed(2)) 
-        : Number((Math.random() * -50).toFixed(2));
-      
+      const percentChange =
+        Math.random() > 0.5
+          ? Number((Math.random() * 100).toFixed(2))
+          : Number((Math.random() * -50).toFixed(2));
+
       collections.push({
         id: `collection-${i}`,
         rank: i + 1,
@@ -88,7 +111,7 @@ export const Rankings: React.FC<RankingsProps> = ({ className = "" }) => {
         items: Math.floor(Math.random() * 10000) + 500,
         percentChange,
         category: categories[Math.floor(Math.random() * categories.length)],
-        blockchain: blockchains[Math.floor(Math.random() * blockchains.length)]
+        blockchain: blockchains[Math.floor(Math.random() * blockchains.length)],
       });
     }
 
@@ -102,26 +125,31 @@ export const Rankings: React.FC<RankingsProps> = ({ className = "" }) => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        collection => collection.name.toLowerCase().includes(query) || 
-                     collection.creator.toLowerCase().includes(query)
+        (collection) =>
+          collection.name.toLowerCase().includes(query) ||
+          collection.creator.toLowerCase().includes(query),
       );
     }
 
     // Apply category filter
     if (category !== "all") {
-      filtered = filtered.filter(collection => collection.category === category);
+      filtered = filtered.filter(
+        (collection) => collection.category === category,
+      );
     }
 
     // Apply blockchain filter
     if (blockchain !== "all") {
-      filtered = filtered.filter(collection => collection.blockchain === blockchain);
+      filtered = filtered.filter(
+        (collection) => collection.blockchain === blockchain,
+      );
     }
 
     // Apply sorting
     filtered.sort((a, b) => {
       const aValue = a[sortBy];
       const bValue = b[sortBy];
-      
+
       if (sortDirection === "asc") {
         return aValue > bValue ? 1 : -1;
       } else {
@@ -171,7 +199,10 @@ export const Rankings: React.FC<RankingsProps> = ({ className = "" }) => {
       <div className="rankings__header">
         <h1 className="rankings__title">{t("rankings.title", "Rankings")}</h1>
         <p className="rankings__subtitle">
-          {t("rankings.subtitle", "Discover top NFT collections by volume, floor price, and more.")}
+          {t(
+            "rankings.subtitle",
+            "Discover top NFT collections by volume, floor price, and more.",
+          )}
         </p>
       </div>
 
@@ -194,7 +225,7 @@ export const Rankings: React.FC<RankingsProps> = ({ className = "" }) => {
         onBlockchainChange={handleBlockchainChange}
       />
 
-      <RankingTable 
+      <RankingTable
         collections={filteredCollections}
         sortBy={sortBy}
         sortDirection={sortDirection}

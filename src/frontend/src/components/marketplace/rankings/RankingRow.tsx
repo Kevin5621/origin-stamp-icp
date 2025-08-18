@@ -22,15 +22,25 @@ const RankingRow: React.FC<RankingRowProps> = ({ collection }) => {
           </div>
         </div>
       </td>
-      <td className="ranking-row__volume">{collection.volume.toFixed(2)} ETH</td>
-      <td className="ranking-row__floor">{collection.floorPrice.toFixed(2)} ETH</td>
-      <td className="ranking-row__owners">{collection.owners.toLocaleString()}</td>
-      <td className="ranking-row__items">{collection.items.toLocaleString()}</td>
-      <td className={`ranking-row__change ${
-        collection.percentChange >= 0 
-          ? "ranking-row__change--positive" 
-          : "ranking-row__change--negative"
-      }`}>
+      <td className="ranking-row__volume">
+        {collection.volume.toFixed(2)} ETH
+      </td>
+      <td className="ranking-row__floor">
+        {collection.floorPrice.toFixed(2)} ETH
+      </td>
+      <td className="ranking-row__owners">
+        {collection.owners.toLocaleString()}
+      </td>
+      <td className="ranking-row__items">
+        {collection.items.toLocaleString()}
+      </td>
+      <td
+        className={`ranking-row__change ${
+          collection.percentChange >= 0
+            ? "ranking-row__change--positive"
+            : "ranking-row__change--negative"
+        }`}
+      >
         {collection.percentChange >= 0 ? "+" : ""}
         {collection.percentChange.toFixed(2)}%
       </td>
