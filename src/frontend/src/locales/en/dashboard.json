@@ -21,7 +21,7 @@
   "analytics_description": "View statistics and reports",
   "new_project_created": "New project created successfully",
   "project_opened": "Project opened successfully",
-  "close_toast": "Close notification",
+
   "search_projects_placeholder": "Search projects...",
   "sort_newest": "Newest",
   "sort_oldest": "Oldest",

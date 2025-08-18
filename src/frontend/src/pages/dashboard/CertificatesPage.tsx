@@ -32,20 +32,17 @@ const CertificatesPage: React.FC = () => {
   const [certificates, setCertificates] = useState<CertificateData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Load certificates from backend
   useEffect(() => {
     const loadCertificates = async () => {
       try {
         setLoading(true);
 
-        // Check if user is authenticated
         if (!isAuthenticated || !user) {
           addToast("error", t("please_login_first"));
           navigate("/login");
           return;
         }
 
-        // Load certificates using CertificateService
         const userCertificates = await CertificateService.getUserCertificates(
           user.username,
         );
@@ -85,7 +82,6 @@ const CertificatesPage: React.FC = () => {
   };
 
   const handleDownloadCertificate = (certId: string) => {
-    // Mock download functionality
     alert(`Downloading certificate ${certId}...`);
   };
 
@@ -125,15 +121,11 @@ const CertificatesPage: React.FC = () => {
   };
 
   return (
-    <section
-      className="certificates-section"
-      aria-labelledby="certificates-title"
-    >
+    <section className="certificates-section">
       <div className="certificates-layout">
-        {/* Header */}
         <header className="certificates-header">
           <div className="header-content">
-            <h1 id="certificates-title" className="certificates-title">
+            <h1 className="certificates-title">
               {t("view_certificates_title")}
             </h1>
             <p className="certificates-subtitle">
@@ -157,7 +149,6 @@ const CertificatesPage: React.FC = () => {
           </div>
         </header>
 
-        {/* Search and Filter */}
         <div className="search-filter-section">
           <div className="search-container">
             <Search className="search-icon" size={20} strokeWidth={2} />
@@ -193,7 +184,6 @@ const CertificatesPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Certificates List */}
         <main className="certificates-main">
           {loading ? (
             <div className="certificates-loading">
@@ -255,7 +245,7 @@ const CertificatesPage: React.FC = () => {
                   <div className="certificate-actions">
                     <button
                       onClick={() => handleViewCertificate(cert.certificate_id)}
-                      className="btn btn--secondary"
+                      className="btn"
                       title="View Certificate"
                     >
                       <Eye size={16} strokeWidth={2} />
@@ -265,7 +255,7 @@ const CertificatesPage: React.FC = () => {
                       onClick={() =>
                         handleDownloadCertificate(cert.certificate_id)
                       }
-                      className="btn btn--secondary"
+                      className="btn"
                       title="Download Certificate"
                     >
                       <Download size={16} strokeWidth={2} />
@@ -275,7 +265,7 @@ const CertificatesPage: React.FC = () => {
                       onClick={() =>
                         handleShareCertificate(cert.verification_url)
                       }
-                      className="btn btn--secondary"
+                      className="btn"
                       title="Share Certificate"
                     >
                       <Share2 size={16} strokeWidth={2} />
@@ -283,7 +273,7 @@ const CertificatesPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() => handleCopyLink(cert.verification_url)}
-                      className="btn btn--secondary"
+                      className="btn"
                       title="Copy Link"
                     >
                       <Copy size={16} strokeWidth={2} />
@@ -316,7 +306,6 @@ const CertificatesPage: React.FC = () => {
           )}
         </main>
 
-        {/* Certificate Preview Modal */}
         {selectedCertificate && (
           <div className="certificate-modal">
             <div
