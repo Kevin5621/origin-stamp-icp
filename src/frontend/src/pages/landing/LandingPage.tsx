@@ -9,6 +9,7 @@ import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
 import { useCursorSpotlight } from "../../hooks/useCursorSpotlight";
 import { useLenis } from "../../hooks/useLenis";
+import { UserPlus, Activity, CheckCircle } from "lucide-react";
 
 const LandingPage: React.FC = () => {
   const { t } = useTranslation();
@@ -246,7 +247,9 @@ const LandingPage: React.FC = () => {
           <div className="landing-steps">
             <div className="landing-step">
               <div className="landing-step-content">
-                <div className="landing-step-number">1</div>
+                <div className="landing-step-icon">
+                  <UserPlus size={24} />
+                </div>
                 <h3 className="landing-step-title">{t("step_1_title")}</h3>
                 <p className="landing-step-description">
                   {t("step_1_description")}
@@ -255,7 +258,9 @@ const LandingPage: React.FC = () => {
             </div>
             <div className="landing-step">
               <div className="landing-step-content">
-                <div className="landing-step-number">2</div>
+                <div className="landing-step-icon">
+                  <Activity size={24} />
+                </div>
                 <h3 className="landing-step-title">{t("step_2_title")}</h3>
                 <p className="landing-step-description">
                   {t("step_2_description")}
@@ -264,7 +269,9 @@ const LandingPage: React.FC = () => {
             </div>
             <div className="landing-step">
               <div className="landing-step-content">
-                <div className="landing-step-number">3</div>
+                <div className="landing-step-icon">
+                  <CheckCircle size={24} />
+                </div>
                 <h3 className="landing-step-title">{t("step_3_title")}</h3>
                 <p className="landing-step-description">
                   {t("step_3_description")}
