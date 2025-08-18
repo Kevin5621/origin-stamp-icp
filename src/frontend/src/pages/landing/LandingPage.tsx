@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import ThreeModelViewer from "../../components/ThreeModelViewer";
+import { LandingHeader } from "../../components/common/LandingHeader";
 import { TypingEffect } from "../../utils";
 import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
@@ -129,6 +130,9 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="landing-layout">
+      {/* Landing Header */}
+      <LandingHeader />
+
       <div className="landing-3d-background">
         {show3DModel && (
           <ThreeModelViewer
