@@ -1,9 +1,5 @@
 /* =============================================================================
-   COMPONENTS: BUTTON STYLES
-   ============================================================================= */
-
-/* =============================================================================
-   BASE BUTTON COMPONENT
+   COMPONENTS: BUTTON STYLES - CONSISTENT WITH DASHBOARD
    ============================================================================= */
 
 .btn {
@@ -32,7 +28,6 @@
     pointer-events: none;
   }
 
-  // Primary button - using theme secondary color for calm appearance
   &--primary {
     background: var(--color-primary-text);
     color: var(--color-surface);
@@ -56,7 +51,6 @@
     }
   }
 
-  // Secondary button - minimal appearance
   &--secondary {
     background: transparent;
     color: var(--color-text-primary);
@@ -74,7 +68,6 @@
     }
   }
 
-  // Outline button
   &--outline {
     background: transparent;
     color: var(--color-primary-text);
@@ -98,7 +91,6 @@
     }
   }
 
-  // Ghost button - very minimal
   &--ghost {
     background: transparent;
     color: var(--color-text-secondary);
@@ -110,10 +102,9 @@
     }
   }
 
-  // Success button
   &--success {
     background: var(--color-success);
-    color: white;
+    color: var(--color-white);
     border-color: var(--color-success);
 
     &:hover {
@@ -124,10 +115,9 @@
     }
   }
 
-  // Error button
   &--error {
     background: var(--color-error);
-    color: white;
+    color: var(--color-white);
     border-color: var(--color-error);
 
     &:hover {
@@ -138,10 +128,9 @@
     }
   }
 
-  // Warning button
   &--warning {
     background: var(--color-warning);
-    color: white;
+    color: var(--color-white);
     border-color: var(--color-warning);
 
     &:hover {
@@ -152,10 +141,9 @@
     }
   }
 
-  // Info button
   &--info {
     background: var(--color-info);
-    color: white;
+    color: var(--color-white);
     border-color: var(--color-info);
 
     &:hover {
@@ -166,34 +154,29 @@
     }
   }
 
-  // Size variants
   &--sm {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
     min-height: 32px;
   }
 
   &--lg {
-    padding: var(--spacing-md) var(--spacing-lg);
-    font-size: var(--font-size-md);
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--text-base);
     min-height: 48px;
   }
 }
 
-/* =============================================================================
-   BUTTON WITH ICONS
-   ============================================================================= */
-
 .btn-with-icon {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--space-2);
 
   .btn-icon {
-    width: 0.875rem;
-    height: 0.875rem;
-    min-width: 0.875rem;
-    min-height: 0.875rem;
+    width: var(--text-sm);
+    height: var(--text-sm);
+    min-width: var(--text-sm);
+    min-height: var(--text-sm);
     flex-shrink: 0;
     transition: transform var(--transition-normal);
 
@@ -211,10 +194,6 @@
   }
 }
 
-/* =============================================================================
-   BUTTON GROUPS
-   ============================================================================= */
-
 .btn-group {
   display: flex;
   gap: 0;
@@ -225,13 +204,13 @@
     border-right-width: 1px;
 
     &:first-child {
-      border-top-left-radius: var(--border-radius-md);
-      border-bottom-left-radius: var(--border-radius-md);
+      border-top-left-radius: var(--radius-md);
+      border-bottom-left-radius: var(--radius-md);
     }
 
     &:last-child {
-      border-top-right-radius: var(--border-radius-md);
-      border-bottom-right-radius: var(--border-radius-md);
+      border-top-right-radius: var(--radius-md);
+      border-bottom-right-radius: var(--radius-md);
       border-right-width: 1px;
     }
 
@@ -241,26 +220,61 @@
   }
 }
 
-/* =============================================================================
-   RESPONSIVE DESIGN
-   ============================================================================= */
+.theme-toggle,
+.language-toggle,
+.btn-login-circular {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.theme-toggle:not(.floating-header .theme-toggle) svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: var(--transition-normal);
+}
+
+.language-toggle:not(.floating-header .language-toggle) svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
 
 @media (max-width: 768px) {
   .btn {
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
     min-height: 40px;
   }
 
-  .btn--small {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-xs);
+  .btn--sm {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
     min-height: 32px;
   }
 
-  .btn--large {
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: var(--font-size-md);
+  .btn--lg {
+    padding: var(--space-2) var(--space-6);
+    font-size: var(--text-base);
     min-height: 48px;
   }
 
@@ -274,14 +288,14 @@
 
 @media (max-width: 480px) {
   .btn {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
     min-height: 36px;
   }
 
-  .btn--large {
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
+  .btn--lg {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
     min-height: 44px;
   }
 
@@ -291,48 +305,4 @@
     width: 2.25rem;
     height: 2.25rem;
   }
-}
-
-/* =============================================================================
-   CIRCULAR BUTTON COMPONENTS
-   ============================================================================= */
-
-.theme-toggle,
-.language-toggle,
-.btn-login-circular {
-  background-color: var(--color-surface);
-  color: var(--color-on-surface);
-  box-shadow: var(--shadow-sm);
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  cursor: pointer;
-  transition: var(--theme-transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: var(--shadow-md);
-  }
-
-  &:active {
-    box-shadow: var(--shadow-sm);
-  }
-}
-
-/* Styling untuk theme toggle dan language toggle di luar header */
-.theme-toggle:not(.floating-header .theme-toggle) svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  transition: var(--theme-transition);
-}
-
-.language-toggle:not(.floating-header .language-toggle) svg {
-  width: 1.05rem;
-  height: 1.05rem;
-  border-radius: var(--border-radius-full);
-  object-fit: cover;
 }
