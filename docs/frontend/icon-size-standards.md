@@ -94,6 +94,7 @@ Dokumen ini menjelaskan standar ukuran icon yang konsisten di seluruh aplikasi I
 - File item icons: 14px
 
 #### Photo Overlays
+
 - Download icon: 12px
 - Delete icon: 12px
 - Button size: 32px (desktop), 28px (mobile)
@@ -136,9 +137,11 @@ Dokumen ini menjelaskan standar ukuran icon yang konsisten di seluruh aplikasi I
 ## Photo Action Buttons Design
 
 ### Elegant Circular Buttons
+
 Photo action buttons menggunakan desain yang elegant dengan:
 
 #### Visual Design
+
 - **Shape**: Perfect circle dengan border-radius: 50%
 - **Size**: 32px desktop, 28px mobile
 - **Background**: Clean white surface dengan subtle shadow
@@ -147,6 +150,7 @@ Photo action buttons menggunakan desain yang elegant dengan:
 - **Spacing**: 16px gap between buttons (desktop), 12px (mobile)
 
 #### Button Types
+
 ```scss
 .photo-action-btn--download {
   &:hover {
@@ -162,18 +166,21 @@ Photo action buttons menggunakan desain yang elegant dengan:
 ```
 
 #### Animation Features
+
 - **Overlay**: Backdrop blur + fade in/out
 - **Buttons**: Staggered entrance animation
 - **Hover**: Scale + glow effect + icon color change
 - **Active**: Quick scale down feedback
 
 #### Accessibility Features
+
 - **Focus States**: Clear outline dengan color-coded feedback
 - **Touch Targets**: Minimum 40px untuk easy interaction
 - **Keyboard Navigation**: Full keyboard support
 - **Screen Readers**: Title attributes untuk context
 
 #### Implementation Example
+
 ```typescript
 <div className="photo-overlay">
   <button
@@ -200,3 +207,97 @@ Photo action buttons menggunakan desain yang elegant dengan:
 3. **Accessibility**: Pastikan touch targets minimal 44px
 4. **Responsive**: Test di berbagai device sizes
 5. **Documentation**: Update dokumentasi saat ada perubahan
+
+#### Button Icons
+
+- Primary button: White icon on dark background
+- Secondary button: Dark icon, changes to primary color on hover
+- Outline button: Primary color icon, changes to white on hover
+- Ghost button: Secondary color icon
+- Status buttons: White icon (success, error, warning, info)
+
+## Button Icon Colors
+
+### Color Guidelines
+
+Button icons mengikuti warna text button untuk konsistensi visual:
+
+#### Primary Buttons
+
+```scss
+.btn--primary {
+  background: var(--color-primary-text);
+  color: var(--color-surface);
+
+  svg {
+    color: var(--color-surface); // White icon
+  }
+}
+```
+
+#### Secondary Buttons
+
+```scss
+.btn--secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+
+  svg {
+    color: var(--color-text-primary); // Dark icon
+  }
+
+  &:hover {
+    color: var(--color-primary-text);
+
+    svg {
+      color: var(--color-primary-text); // Primary color on hover
+    }
+  }
+}
+```
+
+#### Outline Buttons
+
+```scss
+.btn--outline {
+  background: transparent;
+  color: var(--color-primary-text);
+
+  svg {
+    color: var(--color-primary-text); // Primary color icon
+  }
+
+  &:hover {
+    background: var(--color-primary-text);
+    color: var(--color-surface);
+
+    svg {
+      color: var(--color-surface); // White icon on hover
+    }
+  }
+}
+```
+
+#### Status Buttons
+
+```scss
+.btn--success,
+.btn--error,
+.btn--warning,
+.btn--info {
+  color: var(--color-white);
+
+  svg {
+    color: var(--color-white); // White icon
+  }
+}
+```
+
+### Implementation Best Practices
+
+1. **Consistency**: Icon selalu mengikuti warna text button
+2. **Hover States**: Icon berubah warna sesuai dengan text pada hover
+3. **Accessibility**: Kontras yang cukup antara icon dan background
+4. **Transitions**: Smooth color transitions untuk semua states
+
+## Troubleshooting
