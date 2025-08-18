@@ -1,11 +1,11 @@
 import React from "react";
 import { AppLayout } from "../../components/layout/AppLayout";
-import { MarketplaceMain } from "../../components/marketplace/MarketplaceMain";
+import { HomeMarketplace } from "../../components/marketplace";
 
 export const MarketplaceHomePage: React.FC = () => {
   return (
     <AppLayout variant="marketplace">
-      <MarketplaceMain />
+      <HomeMarketplace />
     </AppLayout>
   );
 };

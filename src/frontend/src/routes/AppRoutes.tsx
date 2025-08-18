@@ -173,7 +173,7 @@ export const AppRoutes: React.FC = () => {
 
         {/* Marketplace Routes */}
         <Route path="/marketplace" element={<MarketplaceHomePage />} />
-        <Route path="/marketplace/collections" element={<CollectionsPage />} />
+        <Route path="/marketplace-collections" element={<CollectionsPage />} />
         <Route
           path="/marketplace/collection/:collectionId"
           element={<CollectionDetailPage />}

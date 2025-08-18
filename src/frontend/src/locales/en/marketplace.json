@@ -17,5 +17,19 @@
     "traditional": "Traditional",
     "sculpture": "Sculpture"
   },
-  "price_format": "${{price}}"
+  "price_format": "${{price}}",
+  "top_collections": "Top Collections",
+  "discover_unique_digital_assets": "Discover unique digital assets created by talented artists",
+  "place_bid": "Place a Bid",
+  "highest_bid": "Highest Bid",
+  "current_bid": "Current Bid",
+  "instant_price": "Instant Price",
+  "auction_ends_in": "Auction Ends In",
+  "auction_ended": "Auction Ended",
+  "like": "Like",
+  "unlike": "Unlike",
+  "loading_marketplace": "Loading marketplace items...",
+  "date": "Date",
+  "category": "Category",
+  "blockchain": "Blockchain"
 }

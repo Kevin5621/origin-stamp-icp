@@ -6,3 +6,6 @@ export { default as SearchBar } from "./SearchBar";
 export { default as PriceFilter } from "./PriceFilter";
 export { default as MarketplaceSidebar } from "./MarketplaceSidebar";
 export { default as MarketplaceMain } from "./MarketplaceMain";
+export { default as FeaturedNFT } from "./FeaturedNFT";
+export { default as NFTCard } from "./NFTCard";
+export { default as HomeMarketplace } from "./HomeMarketplace";

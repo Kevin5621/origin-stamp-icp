@@ -17,5 +17,19 @@
     "traditional": "Tradisional",
     "sculpture": "Patung"
   },
-  "price_format": "Rp {{price}}"
+  "price_format": "Rp {{price}}",
+  "top_collections": "Koleksi Unggulan",
+  "discover_unique_digital_assets": "Temukan aset digital unik yang dibuat oleh seniman berbakat",
+  "place_bid": "Tawar",
+  "highest_bid": "Penawaran Tertinggi",
+  "current_bid": "Penawaran Saat Ini",
+  "instant_price": "Harga Langsung",
+  "auction_ends_in": "Lelang Berakhir Dalam",
+  "auction_ended": "Lelang Telah Berakhir",
+  "like": "Suka",
+  "unlike": "Batal Suka",
+  "loading_marketplace": "Memuat item marketplace...",
+  "date": "Tanggal",
+  "category": "Kategori",
+  "blockchain": "Blockchain"
 }
