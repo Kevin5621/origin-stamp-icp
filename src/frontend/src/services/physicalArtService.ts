@@ -542,7 +542,7 @@ export class PhysicalArtService {
   private static async getS3ConfigFromBackend(): Promise<any | null> {
     try {
       const result = await backend.get_s3_config();
-      return result.length > 0 && result[0] ? result[0] : null;
+      return result || null;
     } catch (error) {
       console.error("Failed to get S3 config:", error);
       return null;

@@ -67,7 +67,10 @@ const SessionPage: React.FC = () => {
             artType: "physical",
             createdAt: new Date(Number(session.created_at)),
             updatedAt: new Date(Number(session.updated_at)),
-            status: session.status as "active" | "completed",
+            status:
+              session.status === "draft"
+                ? "active"
+                : (session.status as "active" | "completed"),
             photoCount: session.uploaded_photos.length,
           }),
         );
@@ -183,7 +186,12 @@ const SessionPage: React.FC = () => {
             ) : (
               <div className="session__sessions-grid">
                 {sessions.map((session) => (
-                  <div key={session.id} className="session__session-card">
+                  <div
+                    key={session.id}
+                    className="session__session-card"
+                    onClick={() => handleContinueSession(session.id)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <div className="session__session-header">
                       <div className="session__session-type">
                         {session.artType === "physical" ? (
