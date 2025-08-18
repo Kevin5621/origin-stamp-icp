@@ -344,6 +344,10 @@
     "file_size_kb": "KB",
     "file_size_mb": "MB",
     "file_size_gb": "GB",
+    "search_sessions": "Search sessions...",
+    "all": "All",
+    "active": "Active",
+    "completed": "Completed",
     "mock_data": {
       "landscape_painting_study_title": "",
       "landscape_painting_study_description": "",

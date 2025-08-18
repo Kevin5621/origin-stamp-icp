@@ -74,6 +74,8 @@
 
   --font-family-primary: "Raleway", sans-serif;
   --font-family-mono: "Fira Code", monospace;
+  --font-family-numbers:
+    "Inter", "SF Pro Display", "Segoe UI", system-ui, sans-serif;
 
   --font-weight-light: 300;
   --font-weight-normal: 400;
@@ -81,6 +83,10 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
+
+  /* Font Features for Professional Numbers */
+  --font-feature-numeric: "tnum" 1, "onum" 1, "lnum" 1;
+  --font-variant-numeric: tabular-nums;
 
   /* Design System Line Heights */
   --leading-tight: 1.25;
