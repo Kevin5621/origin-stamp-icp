@@ -334,14 +334,14 @@
     "file_size_mb": "MB",
     "file_size_gb": "GB",
     "mock_data": {
-      "landscape_painting_study_title": "Landscape Painting Study",
-      "landscape_painting_study_description": "Watercolor painting of mountain landscape with step-by-step documentation",
-      "initial_sketch_description": "Initial pencil sketch of mountain composition",
-      "base_colors_description": "Applied base watercolor washes for sky and mountains",
-      "digital_portrait_series_title": "Digital Portrait Series",
-      "digital_portrait_series_description": "Character design exploration using Photoshop with automated logging",
-      "sculpture_progress_title": "Sculpture Progress",
-      "sculpture_progress_description": "Clay sculpture documentation from initial sketches to final form"
+      "landscape_painting_study_title": "",
+      "landscape_painting_study_description": "",
+      "initial_sketch_description": "",
+      "base_colors_description": "",
+      "digital_portrait_series_title": "",
+      "digital_portrait_series_description": "",
+      "sculpture_progress_title": "",
+      "sculpture_progress_description": ""
     }
   }
 }

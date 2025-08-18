@@ -32,48 +32,21 @@ const SessionPage: React.FC = () => {
   const navigate = useNavigate();
   const [sessions, setSessions] = useState<SessionData[]>([]);
 
-  // Load active sessions (dummy data) - langsung load tanpa loading state
+  // Load active sessions from backend
   useEffect(() => {
-    // Mock data - bisa diubah untuk testing empty state
-    // Set ke [] untuk testing empty state
-    const mockSessions: SessionData[] = [
-      {
-        id: "1",
-        title: t("session.mock_data.landscape_painting_study_title"),
-        description: t(
-          "session.mock_data.landscape_painting_study_description",
-        ),
-        artType: "physical",
-        createdAt: new Date(2024, 7, 1),
-        updatedAt: new Date(2024, 7, 2),
-        status: "active",
-        photoCount: 12,
-      },
-      {
-        id: "2",
-        title: t("session.mock_data.digital_portrait_series_title"),
-        description: t("session.mock_data.digital_portrait_series_description"),
-        artType: "digital",
-        createdAt: new Date(2024, 7, 3),
-        updatedAt: new Date(2024, 7, 3),
-        status: "active",
-        photoCount: 8,
-      },
-      {
-        id: "3",
-        title: t("session.mock_data.sculpture_progress_title"),
-        description: t("session.mock_data.sculpture_progress_description"),
-        artType: "physical",
-        createdAt: new Date(2024, 6, 28),
-        updatedAt: new Date(2024, 7, 1),
-        status: "completed",
-        photoCount: 25,
-      },
-    ];
+    const loadSessions = async () => {
+      try {
+        // TODO: Implement real session loading from backend
+        // For now, set empty array to remove mock data
+        setSessions([]);
+      } catch (error) {
+        console.error("Failed to load sessions:", error);
+        setSessions([]);
+      }
+    };
 
-    // Untuk testing empty state, ganti dengan: setSessions([]);
-    setSessions(mockSessions);
-  }, [t]);
+    loadSessions();
+  }, []);
 
   const handleContinueSession = (sessionId: string) => {
     navigate(`/sessions/${sessionId}`);

@@ -76,44 +76,32 @@ const SessionRecordPage: React.FC = () => {
     }
   }, [selectedFiles]);
 
-  // Load session data (dummy data)
+  // Load session data from backend
   useEffect(() => {
-    if (sessionId) {
-      const mockSession: SessionData = {
-        id: sessionId,
-        title: t("session.mock_data.landscape_painting_study_title"),
-        description: t(
-          "session.mock_data.landscape_painting_study_description",
-        ),
-        artType: "physical",
-        status: "active",
-        createdAt: new Date(2024, 7, 1),
-        currentStep: 1,
-        photos: [
-          {
-            id: "1",
-            filename: "initial-sketch.jpg",
-            timestamp: new Date(2024, 7, 1, 10, 30),
-            description: t("session.mock_data.initial_sketch_description"),
-            fileSize: 2.5 * 1024 * 1024,
-            url: "/api/placeholder/400/300",
-            step: 1,
-            s3Key: "sessions/1/photos/initial-sketch.jpg",
-          },
-          {
-            id: "2",
-            filename: "base-colors.jpg",
-            timestamp: new Date(2024, 7, 1, 11, 15),
-            description: t("session.mock_data.base_colors_description"),
-            fileSize: 3.1 * 1024 * 1024,
-            url: "/api/placeholder/400/300",
-            step: 2,
-            s3Key: "sessions/1/photos/base-colors.jpg",
-          },
-        ],
-      };
-      setSession(mockSession);
-    }
+    const loadSession = async () => {
+      if (sessionId) {
+        try {
+          // TODO: Implement real session loading from backend
+          // For now, create empty session structure
+          const emptySession: SessionData = {
+            id: sessionId,
+            title: "",
+            description: "",
+            artType: "physical",
+            status: "active",
+            createdAt: new Date(),
+            currentStep: 1,
+            photos: [],
+          };
+          setSession(emptySession);
+        } catch (error) {
+          console.error("Failed to load session:", error);
+          addToast("error", t("session.session_not_found"));
+        }
+      }
+    };
+
+    loadSession();
   }, [sessionId, t]);
 
   const handleFileSelect = (files: FileList) => {
