@@ -31,5 +31,44 @@
   "loading_marketplace": "Loading marketplace items...",
   "date": "Date",
   "category": "Category",
-  "blockchain": "Blockchain"
+  "blockchain": "Blockchain",
+  
+  "rankings": {
+    "title": "Rankings",
+    "subtitle": "Discover top NFT collections by volume, floor price, and more.",
+    "search_placeholder": "Search collections",
+    "no_results": "No collections found",
+    "time_period": {
+      "24h": "24h",
+      "7d": "7d",
+      "30d": "30d",
+      "all": "All Time"
+    },
+    "category": {
+      "all": "All Categories",
+      "art": "Art",
+      "collectibles": "Collectibles",
+      "music": "Music",
+      "games": "Games",
+      "photography": "Photography",
+      "virtual_worlds": "Virtual Worlds"
+    },
+    "blockchain": {
+      "all": "All Blockchains",
+      "ethereum": "Ethereum",
+      "solana": "Solana",
+      "icp": "Internet Computer",
+      "polygon": "Polygon",
+      "binance": "Binance"
+    },
+    "table": {
+      "rank": "#",
+      "collection": "Collection",
+      "volume": "Volume (ETH)",
+      "floor_price": "Floor Price (ETH)",
+      "owners": "Owners",
+      "items": "Items",
+      "percent_change": "% Change"
+    }
+  }
 }

@@ -75,7 +75,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           id: "rankings",
           icon: Anchor,
           label: tMarketplace("sidebar.rankings"),
-          path: "/marketplace/rankings",
+          path: "/marketplace-rankings",
         },
         {
           id: "stats",
