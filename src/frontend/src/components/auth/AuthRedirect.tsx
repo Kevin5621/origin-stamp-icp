@@ -4,25 +4,27 @@ import { useAuth } from "../../contexts/AuthContext";
 
 /**
  * AuthRedirect - Component to handle automatic redirects for authenticated users
- * Ensures authenticated users are immediately redirected to dashboard when visiting public pages
+ * Only redirects authenticated users from login page to dashboard
  */
 const AuthRedirect: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // If user is authenticated and on public pages, redirect to dashboard
-    const publicPages = ["/", "/login", "/how-it-works"];
+    // Don't redirect while loading
+    if (isLoading) {
+      return;
+    }
 
-    if (isAuthenticated && publicPages.includes(location.pathname)) {
+    // Only redirect if user is authenticated and on login page
+    if (isAuthenticated && location.pathname === "/login") {
       console.log(
-        "User authenticated, redirecting to dashboard from:",
-        location.pathname,
+        "User authenticated, redirecting to dashboard from login page",
       );
       navigate("/dashboard", { replace: true });
     }
-  }, [isAuthenticated, location.pathname, navigate]);
+  }, [isAuthenticated, isLoading, location.pathname, navigate]);
 
   return null; // This component doesn't render anything
 };
