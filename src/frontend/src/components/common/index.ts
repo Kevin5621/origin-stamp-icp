@@ -4,6 +4,7 @@ export { Card } from "./Card";
 export { default as TradingViewChart } from "./TradingViewChart";
 export { default as ErrorBoundary } from "./ErrorBoundary";
 export { FloatingHeader } from "./FloatingHeader";
+export { default as LandingHeader } from "./LandingHeader";
 export { InputField } from "./InputField";
 export { Loader } from "./Loader";
 export { Modal } from "./Modal";
