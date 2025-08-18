@@ -114,6 +114,22 @@ export class PhysicalArtService {
 
       console.log(`[S3Upload] Generated file key: ${fileKey}`);
 
+      // Validate S3 configuration
+      if (
+        !s3Config.region ||
+        !s3Config.bucket_name ||
+        !s3Config.access_key_id ||
+        !s3Config.secret_access_key
+      ) {
+        console.error("[S3Upload] Invalid S3 configuration:", {
+          region: s3Config.region,
+          bucket: s3Config.bucket_name,
+          hasAccessKey: !!s3Config.access_key_id,
+          hasSecretKey: !!s3Config.secret_access_key,
+        });
+        throw new Error("Invalid S3 configuration: missing required fields");
+      }
+
       // Create S3 client with proper endpoint configuration
       const clientConfig: any = {
         region: s3Config.region,
@@ -542,7 +558,18 @@ export class PhysicalArtService {
   private static async getS3ConfigFromBackend(): Promise<any | null> {
     try {
       const result = await backend.get_s3_config();
-      return result || null;
+      console.log("[S3Config] Raw result from backend:", result);
+
+      if (!result) {
+        console.log("[S3Config] No S3 configuration found");
+        return null;
+      }
+
+      // Handle the optional structure from backend
+      const config = result.length > 0 ? result[0] : result;
+      console.log("[S3Config] Parsed config:", config);
+
+      return config;
     } catch (error) {
       console.error("Failed to get S3 config:", error);
       return null;

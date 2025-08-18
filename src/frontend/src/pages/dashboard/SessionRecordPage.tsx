@@ -489,7 +489,7 @@ const SessionRecordPage: React.FC = () => {
       <div className="session-record">
         <div className="session-record__loading">
           <div className="loading-spinner" />
-          <p>{t("session.loading_session")}</p>
+          <p>{t("loading_session")}</p>
         </div>
       </div>
     );
