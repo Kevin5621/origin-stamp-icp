@@ -18,3 +18,4 @@ export { default as ActivityFilter } from "./activity/ActivityFilter";
 export { default as ActivityList } from "./activity/ActivityList";
 export { default as ActivityItemComponent } from "./activity/ActivityItem";
 export { Rankings } from "./rankings";
+export { StatsView } from "./stats";

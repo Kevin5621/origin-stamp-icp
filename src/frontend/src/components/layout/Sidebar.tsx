@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           id: "stats",
           icon: BarChart3,
           label: tMarketplace("sidebar.stats"),
-          path: "/marketplace/stats",
+          path: "/marketplace-stats",
         },
       ];
     }

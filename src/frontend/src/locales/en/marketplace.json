@@ -70,5 +70,21 @@
       "items": "Items",
       "percent_change": "% Change"
     }
+  },
+  "stats": {
+    "title": "Statistics",
+    "subtitle": "Marketplace analytics and performance insights.",
+    "select_time_range": "Time Range",
+    "total_volume": "Total Volume",
+    "nfts_sold": "NFTs Sold",
+    "active_users": "Active Users",
+    "total_collections": "Total Collections",
+    "floor_price_avg": "Floor Price (avg)",
+    "sales_change": "Sales Change",
+    "volume_over_time": "Trading Volume Over Time",
+    "sales_per_day": "Number of Sales Per Day",
+    "top_collections": "Top Collections",
+    "volume": "Volume",
+    "sales": "Sales"
   }
 }
