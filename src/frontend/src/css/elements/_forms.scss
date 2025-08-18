@@ -24,8 +24,10 @@ textarea {
 button {
   cursor: pointer;
   font-weight: var(--font-weight-medium);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-base);
+  letter-spacing: var(--tracking-wide);
 
   &:disabled {
     cursor: not-allowed;
@@ -34,7 +36,7 @@ button {
 
   &:focus-visible {
     outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
+    outline-offset: var(--space-1);
   }
 }
 
@@ -43,25 +45,31 @@ button {
    ============================================================================= */
 
 input {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
+  font-size: var(--text-base);
+  font-family: var(--font-family-primary);
+  transition: var(--transition-normal);
 
   &::placeholder {
     color: var(--color-text-tertiary);
+    font-size: var(--text-base);
   }
 
   &:focus {
     border-color: var(--color-primary-text);
     box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+    outline: none;
   }
 
   &:disabled {
-    background: var(--color-surface-disabled);
+    background: var(--color-gray-100);
     color: var(--color-text-tertiary);
     cursor: not-allowed;
+    border-color: var(--color-gray-300);
   }
 }
 
@@ -70,27 +78,34 @@ input {
    ============================================================================= */
 
 textarea {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   resize: vertical;
-  min-height: 100px;
+  min-height: 120px;
+  font-size: var(--text-base);
+  font-family: var(--font-family-primary);
+  transition: var(--transition-normal);
+  line-height: var(--leading-relaxed);
 
   &::placeholder {
     color: var(--color-text-tertiary);
+    font-size: var(--text-base);
   }
 
   &:focus {
     border-color: var(--color-primary-text);
     box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+    outline: none;
   }
 
   &:disabled {
-    background: var(--color-surface-disabled);
+    background: var(--color-gray-100);
     color: var(--color-text-tertiary);
     cursor: not-allowed;
+    border-color: var(--color-gray-300);
   }
 }
 

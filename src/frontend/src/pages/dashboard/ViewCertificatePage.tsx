@@ -35,46 +35,24 @@ const ViewCertificatePage: React.FC = () => {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load certificate data (mock data)
+  // Load certificate data from backend
   useEffect(() => {
-    if (certificateId) {
-      // Simulate API call delay
-      setTimeout(() => {
-        const mockCertificate: CertificateData = {
-          id: certificateId,
-          title: t("certificate_title"),
-          subtitle: t("certificate_preview_description"),
-          level: "ADVANCED",
-          issuedTo: "Ananda Kevin Refaldo Sariputra",
-          issuedDate: new Date(2024, 7, 12),
-          expiresDate: new Date(2027, 7, 12),
-          issuedBy: "IC-Vibe Creative Platform",
-          platform: "IC-Vibe",
-          acceptedDate: new Date(2024, 7, 13),
-          lastUpdated: new Date(2024, 7, 13),
-          description:
-            "This certificate demonstrates mastery in documenting creative processes using digital tools and platforms. The recipient has successfully completed a comprehensive creative session with step-by-step documentation, progress tracking, and final artwork completion.",
-          earningCriteria: [
-            "Complete a full creative session from concept to final artwork",
-            "Document each step of the creative process with photos",
-            "Upload and organize progress photos to S3 storage",
-            "Generate NFT certificate upon completion",
-            "Maintain detailed session logs and descriptions",
-          ],
-          tags: [
-            "creative",
-            "digital art",
-            "documentation",
-            "NFT",
-            "blockchain",
-          ],
-          badgeUrl: "/api/placeholder/200/200",
-          status: "verified",
-        };
-        setCertificate(mockCertificate);
-        setIsLoading(false);
-      }, 800);
-    }
+    const loadCertificate = async () => {
+      if (certificateId) {
+        try {
+          // TODO: Implement real certificate loading from backend
+          // For now, set loading to false and certificate to null
+          setIsLoading(false);
+          setCertificate(null);
+        } catch (error) {
+          console.error("Failed to load certificate:", error);
+          setIsLoading(false);
+          setCertificate(null);
+        }
+      }
+    };
+
+    loadCertificate();
   }, [certificateId]);
 
   const formatDate = (date: Date) => {

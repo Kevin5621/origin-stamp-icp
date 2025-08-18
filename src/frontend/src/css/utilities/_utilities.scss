@@ -94,42 +94,124 @@
    SPACING UTILITIES
    ============================================================================= */
 
+/* Margin utilities */
 .m-0 {
   margin: 0 !important;
 }
-.m-xs {
-  margin: var(--spacing-xs) !important;
+.m-1 {
+  margin: var(--space-1) !important;
 }
-.m-sm {
-  margin: var(--spacing-sm) !important;
+.m-2 {
+  margin: var(--space-2) !important;
 }
-.m-md {
-  margin: var(--spacing-md) !important;
+.m-3 {
+  margin: var(--space-3) !important;
 }
-.m-lg {
-  margin: var(--spacing-lg) !important;
+.m-4 {
+  margin: var(--space-4) !important;
 }
-.m-xl {
-  margin: var(--spacing-xl) !important;
+.m-5 {
+  margin: var(--space-5) !important;
+}
+.m-6 {
+  margin: var(--space-6) !important;
+}
+.m-8 {
+  margin: var(--space-8) !important;
+}
+.m-10 {
+  margin: var(--space-10) !important;
+}
+.m-12 {
+  margin: var(--space-12) !important;
+}
+.m-16 {
+  margin: var(--space-16) !important;
+}
+.m-20 {
+  margin: var(--space-20) !important;
+}
+.m-24 {
+  margin: var(--space-24) !important;
 }
 
+/* Padding utilities */
 .p-0 {
   padding: 0 !important;
 }
-.p-xs {
-  padding: var(--spacing-xs) !important;
+.p-1 {
+  padding: var(--space-1) !important;
 }
-.p-sm {
-  padding: var(--spacing-sm) !important;
+.p-2 {
+  padding: var(--space-2) !important;
 }
-.p-md {
-  padding: var(--spacing-md) !important;
+.p-3 {
+  padding: var(--space-3) !important;
 }
-.p-lg {
-  padding: var(--spacing-lg) !important;
+.p-4 {
+  padding: var(--space-4) !important;
 }
-.p-xl {
-  padding: var(--spacing-xl) !important;
+.p-5 {
+  padding: var(--space-5) !important;
+}
+.p-6 {
+  padding: var(--space-6) !important;
+}
+.p-8 {
+  padding: var(--space-8) !important;
+}
+.p-10 {
+  padding: var(--space-10) !important;
+}
+.p-12 {
+  padding: var(--space-12) !important;
+}
+.p-16 {
+  padding: var(--space-16) !important;
+}
+.p-20 {
+  padding: var(--space-20) !important;
+}
+.p-24 {
+  padding: var(--space-24) !important;
+}
+
+/* Gap utilities */
+.gap-1 {
+  gap: var(--space-1) !important;
+}
+.gap-2 {
+  gap: var(--space-2) !important;
+}
+.gap-3 {
+  gap: var(--space-3) !important;
+}
+.gap-4 {
+  gap: var(--space-4) !important;
+}
+.gap-5 {
+  gap: var(--space-5) !important;
+}
+.gap-6 {
+  gap: var(--space-6) !important;
+}
+.gap-8 {
+  gap: var(--space-8) !important;
+}
+.gap-10 {
+  gap: var(--space-10) !important;
+}
+.gap-12 {
+  gap: var(--space-12) !important;
+}
+.gap-16 {
+  gap: var(--space-16) !important;
+}
+.gap-20 {
+  gap: var(--space-20) !important;
+}
+.gap-24 {
+  gap: var(--space-24) !important;
 }
 
 /* =============================================================================
@@ -162,4 +244,58 @@
 
 .border-radius-full {
   border-radius: var(--border-radius-full) !important;
+}
+
+/* =============================================================================
+   UTILITIES: HELPER CLASSES
+   ============================================================================= */
+
+/* Professional Number Utilities */
+.numeric-display {
+  font-family: var(--font-family-numbers);
+  font-variant-numeric: var(--font-variant-numeric);
+  font-feature-settings: var(--font-feature-numeric);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+}
+
+.numeric-display--bold {
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.01em;
+}
+
+.numeric-display--large {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.03em;
+}
+
+.numeric-display--xl {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: -0.05em;
+}
+
+.numeric-display--mono {
+  font-family: var(--font-family-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Tabular Numbers for Data Display */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Old Style Numbers for Display */
+.oldstyle-nums {
+  font-variant-numeric: oldstyle-nums;
+  font-feature-settings: "onum" 1;
+}
+
+/* Lining Numbers for UI */
+.lining-nums {
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
 }

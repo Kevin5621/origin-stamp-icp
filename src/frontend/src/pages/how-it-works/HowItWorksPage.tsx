@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import ThreeModelViewer from "../../components/ThreeModelViewer";
+import { LandingHeader } from "../../components/common/LandingHeader";
 import { useGLTF } from "@react-three/drei";
 import { useTheme } from "../../hooks/useTheme";
 import { useCursorSpotlight } from "../../hooks/useCursorSpotlight";
@@ -22,13 +23,6 @@ const HowItWorksPage: React.FC = () => {
 
   // Initialize cursor spotlight effect
   useCursorSpotlight();
-
-  // Immediate redirect to dashboard if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/dashboard", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
 
   // Preload 3D model saat komponen mount
   useEffect(() => {
@@ -72,12 +66,11 @@ const HowItWorksPage: React.FC = () => {
     }
   };
 
-  const handleBackToLanding = () => {
-    navigate("/");
-  };
-
   return (
     <div className="how-it-works-layout">
+      {/* Landing Header */}
+      <LandingHeader />
+
       {/* 3D Model Background - Fixed Position */}
       <div className="landing-3d-background">
         {show3DModel && (
@@ -90,30 +83,6 @@ const HowItWorksPage: React.FC = () => {
           />
         )}
       </div>
-
-      {/* Back Navigation */}
-      <nav className="how-it-works-back-nav">
-        <div className="how-it-works-back-container">
-          <button
-            type="button"
-            className="how-it-works-back-btn"
-            onClick={handleBackToLanding}
-            aria-label={t("back_to_home")}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            <span>{t("home")}</span>
-          </button>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section
@@ -205,7 +174,6 @@ const HowItWorksPage: React.FC = () => {
             <div className="how-it-works-timeline-item">
               <div className="how-it-works-timeline-marker">
                 <div className="how-it-works-timeline-number">1</div>
-                <div className="how-it-works-timeline-line"></div>
               </div>
 
               <div className="how-it-works-timeline-content">
@@ -301,7 +269,6 @@ const HowItWorksPage: React.FC = () => {
             <div className="how-it-works-timeline-item">
               <div className="how-it-works-timeline-marker">
                 <div className="how-it-works-timeline-number">2</div>
-                <div className="how-it-works-timeline-line"></div>
               </div>
 
               <div className="how-it-works-timeline-content">

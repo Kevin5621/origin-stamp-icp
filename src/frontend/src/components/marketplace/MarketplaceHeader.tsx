@@ -1,105 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Search, Menu, X, ShoppingBag, Plus } from "lucide-react";
 
 interface MarketplaceHeaderProps {
-  onSearch: (query: string) => void;
-  onConnectWallet: () => void;
+  className?: string;
 }
 
 export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
-  onSearch,
-  onConnectWallet,
+  className = "",
 }) => {
   const { t } = useTranslation("marketplace");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSearch(searchQuery);
-  };
 
   return (
-    <header className="marketplace-floating-header">
-      <div className="marketplace-floating-header-content">
-        {/* Left Side - Logo dan Navigation */}
-        <div className="marketplace-header__left">
-          {/* Logo */}
-          <div className="marketplace-header__logo">
-            <ShoppingBag size={24} />
-            <span className="logo-text">MARKETPLACE</span>
-          </div>
-
-          {/* Navigation */}
-          <nav className="marketplace-header__nav">
-            <ul className="nav-list">
-              <li>
-                <a href="#explore">{t("nav.explore")}</a>
-              </li>
-              <li>
-                <a href="#create">{t("nav.create")}</a>
-              </li>
-              <li>
-                <a href="#collections">{t("nav.collections")}</a>
-              </li>
-            </ul>
-          </nav>
+    <header className={`marketplace-header ${className}`}>
+      <div className="marketplace-header__container">
+        <div className="marketplace-header__content">
+          <h1 className="marketplace-header__title">{t("title")}</h1>
+          <p className="marketplace-header__subtitle">{t("subtitle")}</p>
         </div>
-
-        {/* Center - Search Bar */}
-        <form className="marketplace-header__search" onSubmit={handleSearch}>
-          <div className="search-input-wrapper">
-            <Search className="search-icon" size={18} />
-            <input
-              type="text"
-              placeholder={t("search.placeholder")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
-            <span className="search-shortcut">/</span>
-          </div>
-        </form>
-
-        {/* Right Side - Actions */}
-        <div className="marketplace-header__right">
-          <button className="create-btn">
-            <Plus size={18} />
-            <span>Create</span>
-          </button>
-
-          <button className="connect-wallet-btn" onClick={onConnectWallet}>
-            <span>Connect Wallet</span>
-          </button>
-
-          <button
-            className="mobile-menu-btn"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        <div className="marketplace-header__actions">
+          <button className="marketplace-header__search-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {t("search")}
           </button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="marketplace-mobile-menu">
-          <nav className="mobile-nav">
-            <ul>
-              <li>
-                <a href="#explore">{t("nav.explore")}</a>
-              </li>
-              <li>
-                <a href="#create">{t("nav.create")}</a>
-              </li>
-              <li>
-                <a href="#collections">{t("nav.collections")}</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      )}
     </header>
   );
 };
+
+export default MarketplaceHeader;

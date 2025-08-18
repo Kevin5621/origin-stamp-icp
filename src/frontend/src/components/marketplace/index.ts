@@ -1,15 +1,21 @@
-export { MarketplaceHeader } from "./MarketplaceHeader";
-export { CategoryFilter } from "./CategoryFilter";
-export { HeroBanner } from "./HeroBanner";
-export { FeaturedCollections } from "./FeaturedCollections";
-export { CollectionList } from "./CollectionList";
-export { CollectionFilterBar } from "./CollectionFilterBar";
-export { CollectionGrid } from "./CollectionGrid";
-export { CollectionCard } from "./CollectionCard";
-
-export * from "../../css/components/marketplace/Navbar.module.scss";
-export * from "./Navbar";
-
-// New modular components
-export { MarketplaceMainContent } from "./MarketplaceMainContent";
-export { MarketplacePriceList } from "./MarketplacePriceList";
+export { default as MarketplaceHeader } from "./MarketplaceHeader";
+export { default as CategoryFilter } from "./CategoryFilter";
+export { default as CollectionCard } from "./CollectionCard";
+export { default as CollectionGrid } from "./CollectionGrid";
+export { default as SearchBar } from "./SearchBar";
+export { default as PriceFilter } from "./PriceFilter";
+export { default as MarketplaceSidebar } from "./MarketplaceSidebar";
+export { default as MarketplaceMain } from "./MarketplaceMain";
+export { default as FeaturedNFT } from "./FeaturedNFT";
+export { default as NFTCard } from "./NFTCard";
+export { default as HomeMarketplace } from "./HomeMarketplace";
+export { default as CollectionHeader } from "./CollectionHeader";
+export { default as FilterSidebar } from "./FilterSidebar";
+export { default as NFTGrid } from "./NFTGrid";
+export { default as CollectionView } from "./CollectionView";
+export { default as Activity } from "./Activity";
+export { default as ActivityFilter } from "./activity/ActivityFilter";
+export { default as ActivityList } from "./activity/ActivityList";
+export { default as ActivityItemComponent } from "./activity/ActivityItem";
+export { Rankings } from "./rankings";
+export { StatsView } from "./stats";

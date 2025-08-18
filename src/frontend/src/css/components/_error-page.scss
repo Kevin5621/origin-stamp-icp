@@ -27,14 +27,14 @@
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  padding: var(--spacing-xl);
+  padding: var(--space-12);
 }
 
 .error-page__content {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: var(--spacing-3xl);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-24);
   text-align: center;
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
@@ -58,7 +58,7 @@
    ============================================================================= */
 
 .error-page__number {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--space-8);
 }
 
 .error-number {
@@ -93,7 +93,7 @@
 
 .error-page__icon {
   text-align: center;
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--space-12);
   display: flex;
   justify-content: center;
   align-items: center;

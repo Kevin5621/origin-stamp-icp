@@ -21,7 +21,7 @@
   "analytics_description": "View statistics and reports",
   "new_project_created": "New project created successfully",
   "project_opened": "Project opened successfully",
-  "close_toast": "Close notification",
+
   "search_projects_placeholder": "Search projects...",
   "sort_newest": "Newest",
   "sort_oldest": "Oldest",
@@ -233,5 +233,21 @@
   "hero_stats_verified": "Verified",
   "hero_stats_active": "Active",
   "hero_create_button": "Create New",
-  "recent_artworks_view_all": "View All"
+  "recent_artworks_view_all": "View All",
+
+  "dashboard": "Dashboard",
+  "overview": "Overview",
+  "total_sessions": "Total Sessions",
+  "total_certificates": "Total Certificates",
+  "total_revenue": "Total Revenue",
+  "active_users": "Active Users",
+  "revenue_chart": "Revenue Chart",
+  "recent_sessions": "Recent Sessions",
+  "session_title": "Session Title",
+  "date": "Date",
+  "status": "Status",
+  "error_loading": "Failed to load data",
+  "no_data": "No data available",
+  "no_data_description": "There is no data available to display",
+  "loading": "Loading..."
 }

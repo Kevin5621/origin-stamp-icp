@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, ComponentType } from "react";
-import { DashboardLoader } from "./DashboardLoader";
+import DashboardLoader from "../dashboard/DashboardLoader";
 
 interface LazyDashboardPageProps {
   component: ComponentType<any>;

@@ -1,764 +1,351 @@
 /* =============================================================================
-   COMPONENTS: FLOATING MINIMALIST SIDEBAR
+   COMPONENTS: MINIMALIST SIDEBAR - FLAT DESIGN
+   Following 60-30-10 Color Rule & Professional UI/UX Best Practices
    ============================================================================= */
 
 .sidebar {
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
   position: fixed;
   top: 0;
   left: 0;
   width: 280px;
   height: 100vh;
-  background: var(--color-surface);
-  border-right: 1px solid var(--color-border);
-  overflow-y: auto;
-  z-index: var(--z-index-fixed);
-  transition: transform 0.3s ease;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  font-family: var(--font-family-primary);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.2s ease;
 }
 
-.app-sidebar {
-  width: 280px;
-  background: rgba(var(--color-surface-rgb), 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(var(--color-border-rgb), 0.25);
-  border-radius: var(--border-radius-2xl);
-  position: fixed;
-  top: 1.5rem;
-  left: 1.5rem;
-  height: calc(100vh - 3rem);
-  overflow-y: auto;
-  overflow-x: visible;
-  z-index: var(--z-index-fixed);
-  padding: 1.5rem 0;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  box-sizing: border-box;
-  min-width: 280px;
+.sidebar--collapsed {
+  width: 72px;
 
-  /* Enhanced floating shadow with better light theme contrast */
-  box-shadow:
-    0 0 0 1px rgba(var(--color-border-rgb), 0.15),
-    0 0 0 2px rgba(var(--color-border-rgb), 0.08),
-    0 8px 24px rgba(var(--color-primary-rgb), 0.08),
-    0 4px 16px rgba(var(--color-secondary-rgb), 0.06);
-
-  /* Additional outline for better light theme visibility */
-  &::before {
-    content: "";
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    right: -1px;
-    bottom: -1px;
-    border: 1px solid rgba(var(--color-border-rgb), 0.12);
-    border-radius: var(--border-radius-2xl);
-    pointer-events: none;
-    z-index: -1;
+  .sidebar__logo-text,
+  .sidebar__user-info,
+  .sidebar__label {
+    display: none;
   }
 
-  /* Hidden Scrollbar but Maintain Scroll Functionality */
-  &::-webkit-scrollbar {
-    width: 0; /* Hide scrollbar for Chrome, Safari and Opera */
-  }
-
-  /* Hide scrollbar for Firefox */
-  scrollbar-width: none;
-
-  /* Hide scrollbar for IE and Edge */
-  -ms-overflow-style: none;
-
-  /* =============================================================================
-     COLLAPSED STATE
-     ============================================================================= */
-
-  &.app-sidebar--collapsed {
-    width: 68px;
-    min-width: 68px;
-    padding: 1.5rem 0.5rem;
-
-    .sidebar-container {
-      align-items: center;
-    }
-
-    .sidebar-header {
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 0;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-
-    .sidebar-logo {
-      .logo-text {
-        font-size: 0.875rem;
-        text-align: center;
-        line-height: 1.2;
-        max-width: 60px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-
-    .sidebar-collapse-toggle {
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
-      position: relative;
-      margin: 0 auto;
-
-      svg {
-        width: 20px !important;
-        height: 20px !important;
-      }
-    }
-
-    .sidebar-menu .menu-item {
-      justify-content: center;
-      padding: 1rem 0.75rem;
-      border-radius: 16px;
-      margin-bottom: 0.75rem;
-
-      .menu-label {
-        display: none;
-      }
-
-      svg {
-        margin-right: 0;
-        width: 20px !important; /* Ubah dari 24px ke 20px untuk konsistensi */
-        height: 20px !important;
-        min-width: 20px !important;
-        min-height: 20px !important;
-        max-width: 20px !important;
-        max-height: 20px !important;
-      }
-    }
-
-    .sidebar-quick-actions {
-      display: none;
-    }
-
-    .sidebar-bottom .menu-item {
-      justify-content: center;
-      padding: 0.875rem 0.75rem;
-
-      .menu-label {
-        display: none;
-      }
-
-      svg {
-        margin-right: 0;
-        width: 18px !important; /* Ubah dari 22px ke 18px untuk konsistensi */
-        height: 18px !important;
-        min-width: 18px !important;
-        min-height: 18px !important;
-        max-width: 18px !important;
-        max-height: 18px !important;
-      }
-    }
-  }
-
-  /* =============================================================================
-     CONTAINER
-     ============================================================================= */
-
-  .sidebar-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
-  }
-
-  /* =============================================================================
-     HEADER SECTION
-     ============================================================================= */
-
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem 1.25rem 2rem 1.25rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    min-height: 64px;
-  }
-
-  .sidebar-logo {
-    display: flex;
-    align-items: center;
-
-    .logo-link {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-
-      &:hover {
-        .logo-text {
-          background: linear-gradient(
-            135deg,
-            var(--color-accent) 0%,
-            var(--color-primary-text) 100%
-          );
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          transform: scale(1.02);
-        }
-      }
-    }
-
-    .logo-text {
-      font-weight: 800;
-      font-size: 1.875rem;
-      color: var(--color-primary-text);
-      letter-spacing: -0.015em;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      background: linear-gradient(
-        135deg,
-        var(--color-primary-text) 0%,
-        var(--color-accent) 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-  }
-
-  /* =============================================================================
-     COLLAPSE TOGGLE
-     ============================================================================= */
-
-  .sidebar-collapse-toggle {
-    width: 38px;
-    height: 38px;
-    border-radius: 14px;
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+  .sidebar__link {
     justify-content: center;
-    transition: all 0.3s ease;
-    position: relative;
-    box-shadow:
-      0 2px 8px rgba(var(--color-primary-rgb), 0.05),
-      0 1px 4px rgba(var(--color-secondary-rgb), 0.03);
-
-    svg {
-      width: 20px !important;
-      height: 20px !important;
-      transition: all 0.3s ease;
-    }
-
-    &:hover {
-      background: rgba(var(--color-accent-rgb), 0.05);
-      color: var(--color-accent);
-      border-color: var(--color-accent);
-      box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
-
-      svg {
-        color: var(--color-accent);
-      }
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
+    padding: var(--space-3);
   }
 
-  /* =============================================================================
-     USER PROFILE SECTION
-     ============================================================================= */
+  .sidebar__avatar {
+    margin: 0 auto;
+  }
+}
 
-  .sidebar-user {
-    display: flex;
-    align-items: center;
-    gap: 1.125rem;
-    padding: 1.5rem;
-    margin: 0 1.25rem 2rem 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 18px;
-    transition: all 0.3s ease;
-    position: relative;
+.sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
 
-    &:hover {
-      border-color: var(--color-accent);
-      box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
-    }
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color-text-primary);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tight);
 
-    .user-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      overflow: hidden;
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      transition: all 0.3s ease;
+  &:hover {
+    color: var(--color-accent);
+  }
+}
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: inherit;
-      }
+.sidebar__logo-icon {
+  display: none;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  align-items: center;
+  justify-content: center;
+}
 
-      &:hover {
-        border-color: var(--color-accent);
-        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
-      }
-    }
+.sidebar__toggle {
+  background: none;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition: var(--transition-normal);
 
-    .user-info {
-      flex: 1;
-      min-width: 0;
-
-      .user-name {
-        font-weight: 600;
-        font-size: 0.925rem;
-        color: var(--color-primary-text);
-        margin-bottom: 0.25rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        line-height: 1.2;
-      }
-
-      .user-balance {
-        font-size: 0.8rem;
-        color: var(--color-text-secondary);
-        font-weight: 500;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        opacity: 0.8;
-      }
-    }
+  [data-theme="dark"] & {
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-400);
   }
 
-  .sidebar-user-collapsed {
-    display: flex;
-    justify-content: center;
-    margin: 0 1.25rem 2rem 1.25rem;
+  &:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-gray-300);
+    color: var(--color-gray-700);
 
-    .user-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      overflow: hidden;
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      transition: all 0.3s ease;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: inherit;
-      }
-
-      &:hover {
-        border-color: var(--color-accent);
-        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
-      }
-    }
-  }
-
-  /* =============================================================================
-     MAIN MENU
-     ============================================================================= */
-
-  .sidebar-menu {
-    list-style: none;
-    margin: 0 1.25rem;
-    padding: 0;
-    flex: 1;
-
-    li {
-      margin-bottom: 0.375rem;
-    }
-
-    .menu-item {
-      display: flex;
-      align-items: center;
-      padding: 1rem 1.125rem;
-      border-radius: 16px;
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      border: 1px solid transparent;
-      justify-content: flex-start;
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      box-sizing: border-box;
-      background: transparent;
-      font-weight: 500;
-
-      svg {
-        width: 18px !important;
-        height: 18px !important;
-        min-width: 18px !important;
-        min-height: 18px !important;
-        max-width: 18px !important;
-        max-height: 18px !important;
-        margin-right: 1rem;
-        color: var(--color-text-secondary);
-        transition: all 0.3s ease;
-        flex-shrink: 0;
-      }
-
-      .menu-label {
-        font-size: 0.925rem;
-        font-weight: 500;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        transition: all 0.3s ease;
-      }
-
-      &:hover {
-        color: var(--color-accent);
-        background: rgba(var(--color-accent-rgb), 0.05);
-        border-color: var(--color-accent);
-        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
-
-        svg {
-          color: var(--color-accent);
-        }
-
-        .menu-label {
-          color: var(--color-accent);
-          font-weight: 600;
-        }
-      }
-
-      &.active {
-        color: white;
-        background: var(--color-accent);
-        border-color: var(--color-accent);
-        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.2);
-
-        svg {
-          color: white;
-        }
-
-        .menu-label {
-          color: white;
-          font-weight: 600;
-        }
-
-        &:hover {
-          background: var(--color-accent);
-          box-shadow: 0 6px 16px rgba(var(--color-accent-rgb), 0.25);
-        }
-      }
-    }
-  }
-
-  /* =============================================================================
-     QUICK ACTIONS
-     ============================================================================= */
-
-  .sidebar-quick-actions {
-    padding: 1.5rem 0;
-    margin: 1.5rem 1.25rem;
-    border-top: 1px solid var(--color-border);
-    position: relative;
-
-    .section-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 1rem;
-      padding: 0 1.25rem;
-    }
-
-    .quick-actions-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.875rem;
-      padding: 0 1.25rem;
-    }
-
-    .quick-action-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem 0.75rem;
-      border: 1px solid var(--color-border);
-      border-radius: 14px;
-      background: var(--color-surface);
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      position: relative;
-
-      svg {
-        width: 16px !important; /* Ubah dari 14px ke 16px untuk ukuran yang lebih proporsional */
-        height: 16px !important;
-        min-width: 16px !important;
-        min-height: 16px !important;
-        max-width: 16px !important;
-        max-height: 16px !important;
-        margin-bottom: 0.5rem;
-        color: var(--color-text-secondary);
-        transition: all 0.3s ease;
-      }
-
-      span {
-        font-size: 0.8rem;
-        font-weight: 500;
-        text-align: center;
-        line-height: 1.2;
-        transition: all 0.3s ease;
-      }
-
-      &:hover {
-        border-color: var(--color-accent);
-        background: rgba(var(--color-accent-rgb), 0.05);
-        color: var(--color-accent);
-        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
-
-        svg {
-          color: var(--color-accent);
-        }
-
-        span {
-          color: var(--color-accent);
-          font-weight: 600;
-        }
-      }
-    }
-  }
-
-  /* =============================================================================
-     BOTTOM SECTION
-     ============================================================================= */
-
-  .sidebar-bottom {
-    margin: 1.5rem 1.25rem 0 1.25rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-border);
-    position: relative;
-
-    .menu-item {
-      font-size: 0.875rem;
-      padding: 0.875rem 1rem;
-      border-radius: 14px;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      color: var(--color-text-secondary);
-      margin-bottom: 0.75rem;
-
-      &:hover {
-        background: rgba(var(--color-accent-rgb), 0.05);
-        color: var(--color-accent);
-        border-color: var(--color-accent);
-        box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.1);
-
-        svg {
-          transform: scale(1.05);
-        }
-      }
-
-      svg {
-        width: 18px !important; /* Ubah dari 15.4px ke 18px untuk ukuran yang lebih proporsional */
-        height: 18px !important;
-        min-width: 18px !important;
-        min-height: 18px !important;
-        max-width: 18px !important;
-        max-height: 18px !important;
-        margin-right: 0.875rem;
-        flex-shrink: 0;
-        transition: all 0.3s ease;
-        color: currentColor;
-      }
-
-      span {
-        color: currentColor;
-        font-weight: 500;
-      }
+    [data-theme="dark"] & {
+      background: var(--color-gray-800);
+      border-color: var(--color-gray-500);
+      color: var(--color-gray-300);
     }
   }
 }
 
-/* =============================================================================
-   LAYOUT ADJUSTMENTS
-   ============================================================================= */
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-gray-100);
+
+  [data-theme="dark"] & {
+    border-bottom-color: var(--color-gray-700);
+  }
+}
+
+.sidebar__avatar {
+  width: var(--icon-xl);
+  height: var(--icon-xl);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--color-gray-200);
+  flex-shrink: 0;
+
+  [data-theme="dark"] & {
+    border-color: var(--color-gray-600);
+  }
+}
+
+.sidebar__avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sidebar__user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar__user-name {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--leading-tight);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__user-status {
+  font-size: var(--text-xs);
+  color: var(--color-text-primary);
+  line-height: var(--leading-tight);
+}
+
+.sidebar__nav {
+  flex: 1;
+  padding: var(--space-4) 0;
+}
+
+.sidebar__secondary {
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.sidebar__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sidebar__menu-item {
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  min-height: 44px;
+
+  &:hover {
+    background: var(--color-hover-overlay);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  &--active {
+    background: var(--color-accent);
+    color: var(--color-white);
+    border-color: var(--color-accent);
+
+    .sidebar__icon {
+      color: var(--color-white);
+    }
+
+    &:hover {
+      background: var(--color-accent-dark);
+      border-color: var(--color-accent-dark);
+    }
+  }
+}
+
+.sidebar__icon {
+  width: var(--icon-md);
+  height: var(--icon-md);
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+}
+
+.sidebar__label {
+  flex: 1;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .layout-with-sidebar {
+  display: flex;
+  flex-direction: column;
   margin-left: 280px;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.2s ease;
+  min-height: 100vh;
+  position: relative;
 
-  &.layout-with-sidebar--collapsed {
-    margin-left: 68px;
+  &--collapsed {
+    margin-left: 72px;
   }
 }
 
-.layout-main-content {
-  padding: 2rem;
-  transition: all 0.3s ease;
-  overflow-x: visible;
-  box-sizing: border-box;
-  width: calc(100vw - 280px);
-  max-width: calc(100vw - 280px);
-
-  .layout-with-sidebar--collapsed & {
-    width: calc(100vw - 68px);
-    max-width: calc(100vw - 68px);
-  }
+.layout-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: 80px; /* Padding untuk header fixed */
 }
-
-/* =============================================================================
-   RESPONSIVE DESIGN
-   ============================================================================= */
 
 @media (max-width: 1024px) {
-  .app-sidebar {
+  .sidebar {
     width: 260px;
+  }
 
-    &.app-sidebar--collapsed {
-      width: 64px;
-    }
+  .sidebar--collapsed {
+    width: 64px;
   }
 
   .layout-with-sidebar {
     margin-left: 260px;
 
-    &.layout-with-sidebar--collapsed {
+    &--collapsed {
       margin-left: 64px;
     }
   }
 
-  .layout-main-content {
-    width: calc(100vw - 260px);
-    max-width: calc(100vw - 260px);
-
-    .layout-with-sidebar--collapsed & {
-      width: calc(100vw - 64px);
-      max-width: calc(100vw - 64px);
-    }
+  .layout-content-wrapper {
+    padding-top: 75px; /* Padding untuk header fixed di tablet */
   }
 }
 
 @media (max-width: 768px) {
-  .app-sidebar {
-    position: fixed;
-    left: -280px;
-    top: 0;
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
     width: 280px;
-    transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    z-index: var(--z-index-fixed);
 
-    &.sidebar-open {
-      left: 0;
-    }
-
-    &.app-sidebar--collapsed {
-      width: 68px;
-      left: -68px;
-
-      &.sidebar-open {
-        left: 0;
-      }
+    &--open {
+      transform: translateX(0);
     }
   }
 
   .layout-with-sidebar {
     margin-left: 0;
+    display: flex;
+    flex-direction: column;
 
-    &.layout-with-sidebar--collapsed {
+    &--collapsed {
       margin-left: 0;
     }
   }
 
-  .layout-main-content {
+  .layout-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-top: 70px; /* Padding untuk header fixed di mobile */
+  }
+
+  .sidebar::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 100%;
     width: 100vw;
-    max-width: 100vw;
-    padding: 1rem;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .sidebar--open::before {
+    opacity: 1;
   }
 }
 
 @media (max-width: 480px) {
-  .app-sidebar {
+  .sidebar {
     width: 100%;
-    left: -100%;
-
-    &.app-sidebar--collapsed {
-      width: 100%;
-      left: -100%;
-    }
+    max-width: 320px;
   }
 
-  .layout-main-content {
-    padding: 0.75rem;
+  .layout-content-wrapper {
+    padding-top: 60px; /* Padding untuk header fixed di mobile kecil */
   }
 }
 
-/* =============================================================================
-   BALANCED ICON SIZES - AESTHETIC & FUNCTIONAL
-   ============================================================================= */
-
-/* Target semua SVG di sidebar dengan ukuran yang estetis */
-nav.app-sidebar svg {
-  width: 20px !important; /* Ubah dari 16.8px ke 20px */
-  height: 20px !important;
-  min-width: 20px !important;
-  min-height: 20px !important;
-  max-width: 20px !important;
-  max-height: 20px !important;
-}
-
-/* Khusus untuk collapse button - sedikit lebih kecil */
-nav.app-sidebar .sidebar-collapse-toggle svg {
-  width: 16px !important; /* Ubah dari 20px ke 16px untuk konsistensi */
-  height: 16px !important;
-  min-width: 16px !important;
-  min-height: 16px !important;
-  max-width: 16px !important;
-  max-height: 16px !important;
-}
-
-/* Khusus untuk user avatar - tidak diubah */
-nav.app-sidebar .user-avatar svg,
-nav.app-sidebar .user-avatar img {
-  width: auto !important;
-  height: auto !important;
-}
-
-/* =============================================================================
-   SMOOTH ANIMATIONS
-   ============================================================================= */
-
-@keyframes slideInFromLeft {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    transform: translateY(10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar__link,
+  .sidebar__toggle,
+  .layout-with-sidebar {
+    transition: none;
   }
 }
