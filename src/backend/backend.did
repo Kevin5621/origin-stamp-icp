@@ -1,4 +1,34 @@
 type Account = record { owner : principal; subaccount : opt blob };
+type Certificate = record {
+  authenticity_rating : nat32;
+  username : text;
+  verification_score : nat32;
+  session_id : text;
+  verification_url : text;
+  metadata : CertificateMetadata;
+  art_title : text;
+  description : text;
+  blockchain_tx : text;
+  community_trust : nat32;
+  issuer : text;
+  blockchain : text;
+  expiry_date : nat64;
+  token_standard : text;
+  verification_hash : text;
+  issue_date : nat64;
+  qr_code_data : text;
+  certificate_type : text;
+  certificate_id : text;
+  provenance_score : nat32;
+  certificate_status : text;
+};
+type CertificateMetadata = record {
+  file_format : text;
+  creation_duration : text;
+  file_size : text;
+  creation_tools : vec text;
+  total_actions : nat32;
+};
 type CollectionMetadata = record {
   name : text;
   description : opt text;
@@ -6,11 +36,22 @@ type CollectionMetadata = record {
   image : opt text;
   total_supply : nat64;
 };
+type CreateCertificateRequest = record {
+  username : text;
+  session_id : text;
+  photo_count : nat32;
+  file_format : text;
+  art_title : text;
+  creation_duration : nat32;
+  description : text;
+  creation_tools : vec text;
+};
 type LoginResult = record {
   username : opt text;
   message : text;
   success : bool;
 };
+type NFTGenerationResult = record { nft_id : text; token_uri : text };
 type PhysicalArtSession = record {
   status : text;
   updated_at : nat64;
@@ -22,9 +63,12 @@ type PhysicalArtSession = record {
   created_at : nat64;
 };
 type Result = variant { Ok : text; Err : text };
-type Result_1 = variant { Ok; Err : text };
-type Result_2 = variant { Ok : nat64; Err : text };
-type Result_3 = variant { Ok : bool; Err : text };
+type Result_1 = variant { Ok : Certificate; Err : text };
+type Result_2 = variant { Ok : NFTGenerationResult; Err : text };
+type Result_3 = variant { Ok; Err : text };
+type Result_4 = variant { Ok : nat64; Err : text };
+type Result_5 = variant { Ok : bool; Err : text };
+type Result_6 = variant { Ok : VerificationResult; Err : text };
 type S3Config = record {
   region : text;
   endpoint : opt text;
@@ -52,22 +96,31 @@ type TransferRequest = record {
   memo : opt blob;
   created_at_time : opt nat64;
 };
-type TransferResponse = record { result : Result_1; token_id : nat64 };
+type TransferResponse = record { result : Result_3; token_id : nat64 };
 type UploadFileData = record {
   content_type : text;
   file_size : nat64;
   filename : text;
 };
+type VerificationResult = record {
+  valid : bool;
+  score : nat32;
+  details : text;
+};
 service : {
   configure_s3 : (S3Config) -> (bool);
   create_physical_art_session : (text, text, text) -> (Result);
+  generate_certificate : (CreateCertificateRequest) -> (Result_1);
+  generate_nft_for_certificate : (text) -> (Result_2);
   generate_upload_url : (text, UploadFileData) -> (Result);
   get_all_users : () -> (vec text) query;
+  get_certificate_by_id : (text) -> (opt Certificate) query;
   get_s3_config : () -> (opt S3Config) query;
   get_s3_config_status : () -> (bool) query;
   get_session_details : (text) -> (opt PhysicalArtSession) query;
   get_session_nfts : (text) -> (vec Token) query;
   get_token_details : (nat64) -> (opt Token) query;
+  get_user_certificates : (text) -> (vec Certificate) query;
   get_user_count : () -> (nat64) query;
   get_user_info : (text) -> (opt record { text; nat64 }) query;
   get_user_nfts : (principal) -> (vec Token) query;
@@ -85,14 +138,15 @@ service : {
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
   login : (text, text) -> (LoginResult);
   mint_nft_from_session : (text, Account, vec record { text; text }) -> (
-      Result_2,
+      Result_4,
     );
   register_user : (text, text) -> (LoginResult);
-  remove_photo_from_session : (text, text) -> (Result_3);
+  remove_photo_from_session : (text, text) -> (Result_5);
   set_s3_config : (S3Config) -> (bool);
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
-      Result_3,
+      Result_5,
     );
-  update_session_status : (text, text) -> (Result_3);
-  upload_photo_to_session : (text, text) -> (Result_3);
+  update_session_status : (text, text) -> (Result_5);
+  upload_photo_to_session : (text, text) -> (Result_5);
+  verify_certificate : (text) -> (Result_6);
 }

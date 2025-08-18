@@ -17,6 +17,7 @@ import {
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
 import PhysicalArtService from "../../services/physicalArtService";
+import CertificateService from "../../services/certificateService";
 
 // Types for photo logs
 interface PhotoLog {
@@ -92,8 +93,9 @@ const SessionRecordPage: React.FC = () => {
           }
 
           // Load session details using PhysicalArtService
-          const sessionDetails = await PhysicalArtService.getSessionDetails(sessionId);
-          
+          const sessionDetails =
+            await PhysicalArtService.getSessionDetails(sessionId);
+
           if (!sessionDetails) {
             addToast("error", t("session.session_not_found"));
             navigate("/session");
@@ -105,22 +107,24 @@ const SessionRecordPage: React.FC = () => {
             id: sessionDetails.session_id,
             title: sessionDetails.art_title,
             description: sessionDetails.description,
-            artType: "physical", // TODO: Add art type to backend
+            artType: "physical",
             status: sessionDetails.status as "active" | "completed",
             createdAt: new Date(Number(sessionDetails.created_at)),
             currentStep: sessionDetails.uploaded_photos.length + 1,
             photos: sessionDetails.uploaded_photos.map((photoUrl, index) => ({
               id: `photo-${index}`,
               filename: `photo-${index + 1}.jpg`,
-              timestamp: new Date(Number(sessionDetails.created_at) + index * 60000), // Mock timestamp
+              timestamp: new Date(
+                Number(sessionDetails.created_at) + index * 60000,
+              ), // Mock timestamp
               description: `Step ${index + 1}`,
-              fileSize: 0, // TODO: Get file size from S3
+              fileSize: 0,
               url: photoUrl,
               step: index + 1,
               s3Key: photoUrl,
             })),
           };
-          
+
           setSession(transformedSession);
         } catch (error) {
           console.error("Failed to load session:", error);
@@ -320,7 +324,10 @@ const SessionRecordPage: React.FC = () => {
         setUploadedFiles(i);
 
         // Upload file using PhysicalArtService
-        const uploadResult = await PhysicalArtService.uploadPhoto(session.id, file);
+        const uploadResult = await PhysicalArtService.uploadPhoto(
+          session.id,
+          file,
+        );
 
         if (!uploadResult.success) {
           throw new Error(uploadResult.message);
@@ -338,7 +345,9 @@ const SessionRecordPage: React.FC = () => {
           fileSize: file.size,
           url: uploadResult.file_url || URL.createObjectURL(file),
           step: session.currentStep + i + 1,
-          s3Key: uploadResult.file_id || `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
+          s3Key:
+            uploadResult.file_id ||
+            `sessions/${session.id}/photos/${Date.now()}-${i}-${file.name}`,
         });
 
         setUploadedFiles(i + 1);
@@ -406,13 +415,33 @@ const SessionRecordPage: React.FC = () => {
   };
 
   const handleCompleteSessionAndGenerateNFT = async () => {
-    if (!session) return;
+    if (!session || !user) return;
 
     setIsGeneratingNFT(true);
-    addToast("info", t("session.starting_nft_generation_process"));
+    addToast("info", t("session.starting_certificate_generation"));
 
-    // Simulate NFT generation process
-    setTimeout(() => {
+    try {
+      // Calculate creation duration (in minutes)
+      const creationDuration = Math.floor(
+        (Date.now() - session.createdAt.getTime()) / (1000 * 60),
+      );
+
+      // Generate certificate
+      const certificate = await CertificateService.generateCertificate({
+        session_id: session.id,
+        username: user.username,
+        art_title: session.title,
+        description: session.description,
+        photo_count: session.photos.length,
+        creation_duration: creationDuration,
+        file_format: "JPEG/PNG",
+        creation_tools: ["Digital Camera", "IC-Vibe Platform"],
+      });
+
+      // Update session status to completed
+      await PhysicalArtService.updateSessionStatus(session.id, "completed");
+
+      // Update local session state
       setSession((prev) =>
         prev
           ? {
@@ -422,12 +451,17 @@ const SessionRecordPage: React.FC = () => {
             }
           : null,
       );
+
       setIsGeneratingNFT(false);
-      addToast("success", t("session.nft_generated_success_redirecting"));
+      addToast("success", t("session.certificate_generated_successfully"));
 
       // Navigate to certificate page
-      navigate(`/certificate/${session.id}`);
-    }, 3000);
+      navigate(`/certificate/${certificate.certificate_id}`);
+    } catch (error) {
+      console.error("Failed to generate certificate:", error);
+      setIsGeneratingNFT(false);
+      addToast("error", t("session.certificate_generation_failed"));
+    }
   };
 
   const formatFileSize = (bytes: number): string => {
