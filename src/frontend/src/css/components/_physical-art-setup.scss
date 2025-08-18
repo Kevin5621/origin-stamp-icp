@@ -203,6 +203,9 @@
 .upload-area svg {
   margin-bottom: var(--spacing-md);
   color: var(--color-text-primary);
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0;
 }
 
 .upload-area h4 {
