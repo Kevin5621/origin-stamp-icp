@@ -23,11 +23,7 @@
   "confirm_new_password": "Konfirmasi Kata Sandi Baru",
   "confirm_new_password_placeholder": "Konfirmasi kata sandi baru",
   "save_password": "Simpan Kata Sandi",
-  "notification_settings": "Pengaturan Notifikasi",
-  "email_notifications": "Notifikasi Email",
-  "email_notifications_description": "Terima notifikasi melalui email",
-  "push_notifications": "Notifikasi Push",
-  "push_notifications_description": "Terima notifikasi push di browser",
+
   "project_updates": "Pembaruan Proyek",
   "project_updates_description": "Notifikasi tentang pembaruan proyek",
   "security_alerts": "Peringatan Keamanan",

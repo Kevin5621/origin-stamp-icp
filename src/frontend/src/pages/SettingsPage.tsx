@@ -7,9 +7,7 @@ import {
   Shield,
   Key,
   Globe,
-  Bell,
   Palette,
-  Smartphone,
   Eye,
   EyeOff,
   Save,
@@ -36,12 +34,7 @@ const SettingsPage: React.FC = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPasswords, setShowPasswords] = useState(false);
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: false,
-    projectUpdates: true,
-    securityAlerts: true,
-  });
+
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
   const [language, setLanguage] = useState("id");
 
@@ -229,128 +222,6 @@ const SettingsPage: React.FC = () => {
               </div>
             </div>
           )}
-
-          {/* Notification Settings - Medium Card */}
-          <div className="settings-bento-card settings-bento-card--medium">
-            <div className="bento-card-header">
-              <div className="bento-card-icon">
-                <Bell size={16} strokeWidth={2} />
-              </div>
-              <h3 className="bento-card-title">{t("notification_settings")}</h3>
-            </div>
-
-            <div className="bento-card-content">
-              <div className="notification-options">
-                <div className="notification-option">
-                  <div className="notification-info">
-                    <Bell size={20} strokeWidth={2} />
-                    <div>
-                      <h4 className="notification-title">
-                        {t("email_notifications")}
-                      </h4>
-                      <p className="notification-description">
-                        {t("email_notifications_description")}
-                      </p>
-                    </div>
-                  </div>
-                  <label className="toggle-switch">
-                    <input
-                      type="checkbox"
-                      checked={notifications.email}
-                      onChange={(e) =>
-                        setNotifications({
-                          ...notifications,
-                          email: e.target.checked,
-                        })
-                      }
-                    />
-                    <span className="toggle-slider"></span>
-                  </label>
-                </div>
-
-                <div className="notification-option">
-                  <div className="notification-info">
-                    <Smartphone size={20} strokeWidth={2} />
-                    <div>
-                      <h4 className="notification-title">
-                        {t("push_notifications")}
-                      </h4>
-                      <p className="notification-description">
-                        {t("push_notifications_description")}
-                      </p>
-                    </div>
-                  </div>
-                  <label className="toggle-switch">
-                    <input
-                      type="checkbox"
-                      checked={notifications.push}
-                      onChange={(e) =>
-                        setNotifications({
-                          ...notifications,
-                          push: e.target.checked,
-                        })
-                      }
-                    />
-                    <span className="toggle-slider"></span>
-                  </label>
-                </div>
-
-                <div className="notification-option">
-                  <div className="notification-info">
-                    <Key size={20} strokeWidth={2} />
-                    <div>
-                      <h4 className="notification-title">
-                        {t("project_updates")}
-                      </h4>
-                      <p className="notification-description">
-                        {t("project_updates_description")}
-                      </p>
-                    </div>
-                  </div>
-                  <label className="toggle-switch">
-                    <input
-                      type="checkbox"
-                      checked={notifications.projectUpdates}
-                      onChange={(e) =>
-                        setNotifications({
-                          ...notifications,
-                          projectUpdates: e.target.checked,
-                        })
-                      }
-                    />
-                    <span className="toggle-slider"></span>
-                  </label>
-                </div>
-
-                <div className="notification-option">
-                  <div className="notification-info">
-                    <Shield size={20} strokeWidth={2} />
-                    <div>
-                      <h4 className="notification-title">
-                        {t("security_alerts")}
-                      </h4>
-                      <p className="notification-description">
-                        {t("security_alerts_description")}
-                      </p>
-                    </div>
-                  </div>
-                  <label className="toggle-switch">
-                    <input
-                      type="checkbox"
-                      checked={notifications.securityAlerts}
-                      onChange={(e) =>
-                        setNotifications({
-                          ...notifications,
-                          securityAlerts: e.target.checked,
-                        })
-                      }
-                    />
-                    <span className="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Appearance Settings - Small Card */}
           <div className="settings-bento-card settings-bento-card--small">

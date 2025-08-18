@@ -24,12 +24,6 @@ const LandingPage: React.FC = () => {
   useCursorSpotlight();
   const lenis = useLenis(); // Mengaktifkan smooth scroll dengan Lenis
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/dashboard", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
-
   // Preload model segera saat komponen mount
   useEffect(() => {
     const preloadModel = async () => {
