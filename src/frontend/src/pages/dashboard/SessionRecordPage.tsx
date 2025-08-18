@@ -2,17 +2,20 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  Camera,
-  Upload,
-  Image,
-  Clock,
-  FileText,
-  Save,
   ArrowLeft,
-  Trash2,
+  Camera,
+  Clock,
   Download,
+  FileText,
+  Image,
   Plus,
+  Save,
   Sparkles,
+  Upload,
+  X,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
 } from "lucide-react";
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -65,6 +68,14 @@ const SessionRecordPage: React.FC = () => {
   const [totalFiles, setTotalFiles] = useState<number>(0);
   const [shouldCancelUpload, setShouldCancelUpload] = useState<boolean>(false);
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoLog | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [transformOrigin, setTransformOrigin] = useState("center center");
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const cancelRef = useRef<boolean>(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
@@ -525,6 +536,70 @@ const SessionRecordPage: React.FC = () => {
     }
   };
 
+  const handleDownloadPhoto = (photo: PhotoLog) => {
+    window.open(photo.url, "_blank");
+  };
+
+  const handleOpenPhotoModal = (photo: PhotoLog) => {
+    setSelectedPhoto(photo);
+    setIsModalOpen(true);
+  };
+
+  const handleClosePhotoModal = () => {
+    setSelectedPhoto(null);
+    setIsModalOpen(false);
+    setIsZoomed(false);
+    setZoomLevel(1);
+    setTransformOrigin("center center");
+    setIsDragging(false);
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => Math.min(prev + 0.5, 3));
+    setIsZoomed(true);
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => Math.max(prev - 0.5, 0.5));
+    if (zoomLevel <= 1) {
+      setIsZoomed(false);
+    }
+  };
+
+  const handleResetZoom = () => {
+    setZoomLevel(1);
+    setIsZoomed(false);
+    setTransformOrigin("center center");
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (zoomLevel > 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - dragOffset.x,
+        y: e.clientY - dragOffset.y,
+      });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (isDragging && zoomLevel > 1) {
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      setDragOffset({ x: newX, y: newY });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
   if (!session) {
     return (
       <div className="session-record">
@@ -762,7 +837,10 @@ const SessionRecordPage: React.FC = () => {
                   {session.photos.map((photo, index) => (
                     <div key={photo.id} className="timeline-step">
                       <div className="step-number">{photo.step}</div>
-                      <div className="step-content">
+                      <div
+                        className="step-content"
+                        onClick={() => handleOpenPhotoModal(photo)}
+                      >
                         <div className="step-header">
                           <h4>{photo.description}</h4>
                           <div className="step-meta">
@@ -773,11 +851,34 @@ const SessionRecordPage: React.FC = () => {
 
                         <div className="step-photos">
                           <div className="main-photo">
-                            <img src={photo.url} alt={photo.description} />
+                            <img
+                              src={photo.url}
+                              alt={photo.description}
+                              className={zoomLevel > 1 ? "zoomed" : ""}
+                              style={{
+                                transform: `scale(${zoomLevel}) translate(${dragOffset.x}px, ${dragOffset.y}px)`,
+                                transition: isDragging
+                                  ? "none"
+                                  : "transform 0.3s ease",
+                                cursor: isDragging
+                                  ? "grabbing"
+                                  : zoomLevel > 1
+                                    ? "grab"
+                                    : "zoom-in",
+                                transformOrigin: transformOrigin,
+                              }}
+                              onMouseDown={handleMouseDown}
+                              onMouseMove={handleMouseMove}
+                              onMouseUp={handleMouseUp}
+                              onMouseLeave={handleMouseLeave}
+                            />
                             <div className="photo-overlay">
                               <button
                                 className="photo-action-btn photo-action-btn--download"
-                                onClick={() => window.open(photo.url, "_blank")}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDownloadPhoto(photo);
+                                }}
                                 title={t("session.download_photo")}
                               >
                                 <Download size={12} />
@@ -791,14 +892,6 @@ const SessionRecordPage: React.FC = () => {
                             <span>{photo.filename || "Unknown file"}</span>
                             <span>•</span>
                             <span>{formatFileSize(photo.fileSize)}</span>
-                            {photo.s3Key && (
-                              <>
-                                <span>•</span>
-                                <span className="s3-key">
-                                  {t("session.s3_key")}: {photo.s3Key}
-                                </span>
-                              </>
-                            )}
                           </div>
                         </div>
                       </div>
@@ -829,6 +922,110 @@ const SessionRecordPage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Photo Detail Modal */}
+      {isModalOpen && selectedPhoto && (
+        <div className="photo-modal-overlay" onClick={handleClosePhotoModal}>
+          <div
+            className="photo-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>Step {selectedPhoto.step}</h2>
+              <button
+                className="modal-close-btn"
+                onClick={handleClosePhotoModal}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="photo-display">
+                <div className="photo-container">
+                  <img
+                    src={selectedPhoto.url}
+                    alt={selectedPhoto.description}
+                    className={zoomLevel > 1 ? "zoomed" : ""}
+                    style={{
+                      transform: `scale(${zoomLevel}) translate(${dragOffset.x}px, ${dragOffset.y}px)`,
+                      transition: isDragging ? "none" : "transform 0.3s ease",
+                      cursor: isDragging
+                        ? "grabbing"
+                        : zoomLevel > 1
+                          ? "grab"
+                          : "zoom-in",
+                      transformOrigin: transformOrigin,
+                    }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseLeave}
+                  />
+                </div>
+                <div className="zoom-controls">
+                  <button
+                    className="zoom-btn zoom-btn--out"
+                    onClick={handleZoomOut}
+                    disabled={zoomLevel <= 0.5}
+                    title={t("session.zoom_out")}
+                  >
+                    <ZoomOut size={16} />
+                  </button>
+                  <button
+                    className="zoom-btn zoom-btn--reset"
+                    onClick={handleResetZoom}
+                    disabled={zoomLevel === 1}
+                    title={t("session.reset_zoom")}
+                  >
+                    <RotateCcw size={16} />
+                  </button>
+                  <button
+                    className="zoom-btn zoom-btn--in"
+                    onClick={handleZoomIn}
+                    disabled={zoomLevel >= 3}
+                    title={t("session.zoom_in")}
+                  >
+                    <ZoomIn size={16} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="photo-details">
+                <div className="detail-section">
+                  <h3>{selectedPhoto.description}</h3>
+                  <div className="detail-meta">
+                    <div className="meta-item">
+                      <Clock size={14} />
+                      <span>{formatTime(selectedPhoto.timestamp)}</span>
+                    </div>
+                    <div className="meta-item">
+                      <FileText size={14} />
+                      <span>{selectedPhoto.filename || "Unknown file"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn btn--secondary"
+                onClick={handleClosePhotoModal}
+              >
+                {t("session.close")}
+              </button>
+              <button
+                className="btn btn--primary"
+                onClick={() => handleDownloadPhoto(selectedPhoto)}
+              >
+                <Download size={14} />
+                {t("session.download_photo")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
