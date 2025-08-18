@@ -282,6 +282,12 @@
   color: var(--color-text-secondary);
   gap: var(--space-2);
 
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0;
+  }
+
   span {
     font-size: var(--text-sm);
     color: var(--color-text-secondary);

@@ -273,7 +273,7 @@ const PhysicalArtSetup: React.FC<PhysicalArtSetupProps> = ({
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
             >
-              <Camera size={33} strokeWidth={1} />
+              <Camera size={16} strokeWidth={1} />
               <h4>{t("upload_process_photos")}</h4>
               <p>{t("drag_and_drop_or_click")}</p>
               <p className="upload-info">
