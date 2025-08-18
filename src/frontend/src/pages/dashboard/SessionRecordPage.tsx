@@ -725,14 +725,16 @@ const SessionRecordPage: React.FC = () => {
                         <img src={photo.url} alt={photo.description} />
                         <div className="photo-overlay">
                           <button
-                            className="btn-icon"
+                            className="photo-action-btn photo-action-btn--download"
                             onClick={() => window.open(photo.url, "_blank")}
+                            title={t("session.download_photo")}
                           >
                             <Download size={12} />
                           </button>
                           <button
-                            className="btn-icon btn-icon--danger"
+                            className="photo-action-btn photo-action-btn--delete"
                             onClick={() => handleDeletePhoto(photo.id)}
+                            title={t("session.delete_photo")}
                           >
                             <Trash2 size={12} />
                           </button>

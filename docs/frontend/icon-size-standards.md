@@ -94,10 +94,12 @@ Dokumen ini menjelaskan standar ukuran icon yang konsisten di seluruh aplikasi I
 - File item icons: 14px
 
 #### Photo Overlays
-
 - Download icon: 12px
 - Delete icon: 12px
-- Button size: 28px
+- Button size: 32px (desktop), 28px (mobile)
+- Shape: Circular with elegant hover effects
+- Animation: Smooth scale and fade transitions
+- Spacing: 16px gap between buttons (desktop), 12px (mobile)
 
 #### Navigation
 
@@ -130,6 +132,66 @@ Dokumen ini menjelaskan standar ukuran icon yang konsisten di seluruh aplikasi I
 - Gunakan CSS variables untuk konsistensi
 - Implementasikan CSS classes yang standar
 - Test di berbagai screen sizes
+
+## Photo Action Buttons Design
+
+### Elegant Circular Buttons
+Photo action buttons menggunakan desain yang elegant dengan:
+
+#### Visual Design
+- **Shape**: Perfect circle dengan border-radius: 50%
+- **Size**: 32px desktop, 28px mobile
+- **Background**: Clean white surface dengan subtle shadow
+- **Animation**: Smooth cubic-bezier transitions
+- **Hover Effects**: Scale transform + color change + enhanced shadow
+- **Spacing**: 16px gap between buttons (desktop), 12px (mobile)
+
+#### Button Types
+```scss
+.photo-action-btn--download {
+  &:hover {
+    background: var(--color-accent);
+  }
+}
+
+.photo-action-btn--delete {
+  &:hover {
+    background: var(--color-error);
+  }
+}
+```
+
+#### Animation Features
+- **Overlay**: Backdrop blur + fade in/out
+- **Buttons**: Staggered entrance animation
+- **Hover**: Scale + glow effect + icon color change
+- **Active**: Quick scale down feedback
+
+#### Accessibility Features
+- **Focus States**: Clear outline dengan color-coded feedback
+- **Touch Targets**: Minimum 40px untuk easy interaction
+- **Keyboard Navigation**: Full keyboard support
+- **Screen Readers**: Title attributes untuk context
+
+#### Implementation Example
+```typescript
+<div className="photo-overlay">
+  <button
+    className="photo-action-btn photo-action-btn--download"
+    onClick={() => window.open(photo.url, "_blank")}
+    title={t("session.download_photo")}
+  >
+    <Download size={12} />
+  </button>
+  <button
+    className="photo-action-btn photo-action-btn--delete"
+    onClick={() => handleDeletePhoto(photo.id)}
+    title={t("session.delete_photo")}
+  >
+    <Trash2 size={12} />
+  </button>
+</div>
+```
 
 ## Best Practices
 

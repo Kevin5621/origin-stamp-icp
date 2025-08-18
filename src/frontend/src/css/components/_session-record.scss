@@ -497,44 +497,109 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--space-2);
+            gap: var(--space-4);
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(2px);
+            transform: scale(0.95);
+            flex-wrap: nowrap;
 
-            .btn-icon {
+            .photo-action-btn {
               display: flex;
               align-items: center;
               justify-content: center;
-              width: 28px;
-              height: 28px;
+              width: 32px;
+              height: 32px;
+              min-width: 32px;
+              min-height: 32px;
+              max-width: 32px;
+              max-height: 32px;
               background: var(--color-surface);
-              border: 1px solid var(--color-border);
-              border-radius: var(--radius-sm);
+              border: none;
+              border-radius: 50%;
               cursor: pointer;
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+              position: relative;
+              overflow: visible;
+              transform: translateY(10px);
+              opacity: 0;
+              flex-shrink: 0;
+              aspect-ratio: 1;
+              padding: 0;
+              margin: 0;
+
+              &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                border-radius: 50%;
+              }
 
               svg {
-                width: 12px;
-                height: 12px;
+                width: 12px !important;
+                height: 12px !important;
                 color: var(--color-text-primary);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                z-index: 1;
+                flex-shrink: 0 !important;
+                min-width: 12px !important;
+                min-height: 12px !important;
+                max-width: 12px !important;
+                max-height: 12px !important;
+                display: block !important;
+                box-sizing: border-box !important;
               }
 
               &:hover {
-                background: var(--color-accent);
-                border-color: var(--color-accent);
+                transform: translateY(0) scale(1.1);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+                &::before {
+                  opacity: 1;
+                }
 
                 svg {
-                  color: white;
+                  color: var(--color-white);
+                  transform: scale(1.1);
                 }
               }
 
-              &--danger {
+              &:active {
+                transform: translateY(0) scale(0.95);
+                transition: transform 0.1s ease;
+              }
+
+              &:focus-visible {
+                outline: 2px solid var(--color-accent);
+                outline-offset: 2px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 4px rgba(var(--color-accent-rgb), 0.1);
+              }
+
+              &--download {
+                &:hover {
+                  background: var(--color-accent);
+                }
+
+                &:focus-visible {
+                  outline-color: var(--color-accent);
+                }
+              }
+
+              &--delete {
                 &:hover {
                   background: var(--color-error);
-                  border-color: var(--color-error);
+                }
 
-                  svg {
-                    color: white;
-                  }
+                &:focus-visible {
+                  outline-color: var(--color-error);
                 }
               }
             }
@@ -542,6 +607,25 @@
 
           &:hover .photo-overlay {
             opacity: 1;
+            transform: scale(1);
+
+            .photo-action-btn {
+              transform: translateY(0);
+              opacity: 1;
+              transition-delay: 0.1s;
+
+              &:nth-child(2) {
+                transition-delay: 0.15s;
+              }
+
+              &:hover {
+                transform: translateY(0) scale(1.1);
+              }
+
+              &:active {
+                transform: translateY(0) scale(0.95);
+              }
+            }
           }
         }
 
@@ -792,6 +876,29 @@
         .photo-preview {
           width: 100%;
           height: 120px;
+
+          .photo-overlay {
+            .photo-action-btn {
+              width: 28px;
+              height: 28px;
+              min-width: 28px;
+              min-height: 28px;
+              max-width: 28px;
+              max-height: 28px;
+
+              svg {
+                width: 10px !important;
+                height: 10px !important;
+                min-width: 10px !important;
+                min-height: 10px !important;
+                max-width: 10px !important;
+                max-height: 10px !important;
+                flex-shrink: 0 !important;
+              }
+            }
+            
+            gap: var(--space-3);
+          }
         }
       }
     }
@@ -803,56 +910,76 @@
    ============================================================================= */
 
 .session-record {
-  /* Ensure consistent icon sizes */
-  .upload-content svg,
-  .btn-icon svg,
-  .file-item svg,
-  .photo-meta svg,
-  .back-button svg,
-  .btn svg,
-  .log-empty svg {
-    width: inherit !important;
-    height: inherit !important;
-    min-width: inherit !important;
-    min-height: inherit !important;
-    max-width: inherit !important;
-    max-height: inherit !important;
-    flex-shrink: 0 !important;
-  }
-
   /* Specific icon sizes for different contexts */
   .upload-content svg {
     width: 16px !important;
     height: 16px !important;
+    flex-shrink: 0 !important;
   }
 
-  .btn-icon svg {
+  .photo-action-btn svg {
     width: 12px !important;
     height: 12px !important;
+    flex-shrink: 0 !important;
   }
 
   .file-item svg {
     width: 14px !important;
     height: 14px !important;
+    flex-shrink: 0 !important;
   }
 
   .photo-meta svg {
     width: 10px !important;
     height: 10px !important;
+    flex-shrink: 0 !important;
   }
 
   .back-button svg {
     width: 16px !important;
     height: 16px !important;
+    flex-shrink: 0 !important;
   }
 
   .btn svg {
     width: 14px !important;
     height: 14px !important;
+    flex-shrink: 0 !important;
   }
 
   .log-empty svg {
     width: 16px !important;
     height: 16px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* =============================================================================
+   PHOTO ACTION BUTTONS - OVERRIDE GLOBAL STYLES
+   ============================================================================= */
+
+.session-record .photo-action-btn svg {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  max-width: 12px !important;
+  max-height: 12px !important;
+  flex-shrink: 0 !important;
+  display: block !important;
+  box-sizing: border-box !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 768px) {
+  .session-record .photo-action-btn svg {
+    width: 10px !important;
+    height: 10px !important;
+    min-width: 10px !important;
+    min-height: 10px !important;
+    max-width: 10px !important;
+    max-height: 10px !important;
+    font-size: 10px !important;
   }
 }
