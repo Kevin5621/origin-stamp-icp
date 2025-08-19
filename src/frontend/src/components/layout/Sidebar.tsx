@@ -30,7 +30,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   variant = "dashboard",
 }) => {
   const { t } = useTranslation("common");
-  const { t: tMarketplace } = useTranslation("marketplace");
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
 
@@ -52,31 +51,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {
           id: "explore",
           icon: Compass,
-          label: tMarketplace("sidebar.explore"),
+          label: t("sidebar.explore"),
           path: "/marketplace",
         },
         {
           id: "collections",
           icon: Grid,
-          label: tMarketplace("sidebar.collections"),
+          label: t("sidebar.collections"),
           path: "/marketplace-collections",
         },
         {
           id: "activity",
           icon: Activity,
-          label: tMarketplace("sidebar.activity"),
+          label: t("sidebar.activity"),
           path: "/marketplace/activity",
         },
         {
           id: "rankings",
           icon: Anchor,
-          label: tMarketplace("sidebar.rankings"),
+          label: t("sidebar.rankings"),
           path: "/marketplace/rankings",
         },
         {
           id: "stats",
           icon: BarChart3,
-          label: tMarketplace("sidebar.stats"),
+          label: t("sidebar.stats"),
           path: "/marketplace/stats",
         },
       ];
