@@ -31,6 +31,17 @@ interface PerformanceMetric {
   trend: "up" | "down" | "stable";
 }
 
+interface AnalyticsData {
+  views: number;
+  engagement: number;
+  completion_rate: number;
+  avg_session_duration: number;
+  price_history: Array<{ value: number; date: string; volume?: number }>;
+  performance_metrics: PerformanceMetric[];
+  audience_demographics: any;
+  verification_score: number;
+}
+
 const AnalyticsDetailPage: React.FC = () => {
   const { karyaId } = useParams<{ karyaId: string }>();
   const navigate = useNavigate();
@@ -50,26 +61,27 @@ const AnalyticsDetailPage: React.FC = () => {
     { immediate: !!karyaId, background: true },
   );
 
-  const { data: analyticsData, loading: analyticsLoading } = usePreloadData(
-    `analytics-${karyaId}`,
-    async () => {
-      const analyticsData = await KaryaService.getKaryaAnalytics(karyaId!);
-      if (!analyticsData) return null;
+  const { data: analyticsData, loading: analyticsLoading } =
+    usePreloadData<AnalyticsData | null>(
+      `analytics-${karyaId}`,
+      async (): Promise<AnalyticsData | null> => {
+        const rawData = await KaryaService.getKaryaAnalytics(karyaId!);
+        if (!rawData) return null;
 
-      return {
-        views: analyticsData.views,
-        engagement: analyticsData.engagement,
-        completion_rate: analyticsData.completion_rate,
-        avg_session_duration: analyticsData.avg_session_duration,
-        price_history: analyticsData.price_history,
-        performance_metrics:
-          analyticsData.performance_metrics as PerformanceMetric[],
-        audience_demographics: analyticsData.audience_demographics,
-        verification_score: analyticsData.verification_score,
-      };
-    },
-    { immediate: !!karyaId && !!karya, background: true },
-  );
+        return {
+          views: rawData.views || 0,
+          engagement: rawData.engagement || 0,
+          completion_rate: rawData.completion_rate || 0,
+          avg_session_duration: rawData.avg_session_duration || 0,
+          price_history: rawData.price_history || [],
+          performance_metrics: (rawData.performance_metrics ||
+            []) as PerformanceMetric[],
+          audience_demographics: rawData.audience_demographics || {},
+          verification_score: rawData.verification_score || 0,
+        };
+      },
+      { immediate: !!karyaId && !!karya, background: true },
+    );
 
   const loading = karyaLoading || analyticsLoading;
 
@@ -445,7 +457,7 @@ const AnalyticsDetailPage: React.FC = () => {
                     <h4>{t("age_distribution")}</h4>
                     <div className="analytics-detail-page__audience-chart">
                       {analyticsData.audience_demographics.age_groups.map(
-                        (group, index) => (
+                        (group: any, index: number) => (
                           <div
                             key={`age-group-${index}-${group.age}`}
                             className="analytics-detail-page__audience-bar"
@@ -470,7 +482,7 @@ const AnalyticsDetailPage: React.FC = () => {
                     <h4>{t("top_locations")}</h4>
                     <div className="analytics-detail-page__audience-list">
                       {analyticsData.audience_demographics.locations.map(
-                        (location, index) => (
+                        (location: any, index: number) => (
                           <div
                             key={`location-${index}-${location.location}`}
                             className="analytics-detail-page__audience-item"

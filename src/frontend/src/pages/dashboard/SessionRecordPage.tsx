@@ -53,7 +53,7 @@ const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
   const { addToast } = useToastContext();
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const { t } = useTranslation("session");
 
   const [session, setSession] = useState<SessionData | null>(null);
@@ -70,7 +70,7 @@ const SessionRecordPage: React.FC = () => {
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoLog | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isZoomed, setIsZoomed] = useState(false);
+  const [_isZoomed, setIsZoomed] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [transformOrigin, setTransformOrigin] = useState("center center");
   const [isDragging, setIsDragging] = useState(false);
@@ -834,7 +834,7 @@ const SessionRecordPage: React.FC = () => {
             ) : (
               <div className="timeline-container" ref={timelineRef}>
                 <div className="timeline-steps">
-                  {session.photos.map((photo, index) => (
+                  {session.photos.map((photo) => (
                     <div key={photo.id} className="timeline-step">
                       <div className="step-number">{photo.step}</div>
                       <div

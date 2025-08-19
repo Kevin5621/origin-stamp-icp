@@ -1,5 +1,5 @@
 // src/frontend/src/pages/dashboard/CreateSessionPage.tsx
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Camera, Palette, Loader } from "lucide-react";

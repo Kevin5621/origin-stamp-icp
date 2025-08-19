@@ -5,7 +5,6 @@ import { useAuth } from "../contexts/AuthContext";
 import {
   User,
   Shield,
-  Key,
   Globe,
   Palette,
   Eye,

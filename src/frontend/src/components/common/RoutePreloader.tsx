@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useLazyLoad } from "../../hooks/useIntersectionObserver";
 
 interface RoutePreloaderProps {

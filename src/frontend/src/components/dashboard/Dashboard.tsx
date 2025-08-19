@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import DashboardCard from "./DashboardCard";
 import DashboardStats from "./DashboardStats";
 import DashboardChart from "./DashboardChart";
 import DashboardTable from "./DashboardTable";

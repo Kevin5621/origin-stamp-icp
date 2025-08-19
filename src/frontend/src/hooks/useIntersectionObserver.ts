@@ -76,7 +76,7 @@ export function useLazyLoad<T extends Element>(
 
 // Hook untuk infinite scroll
 export function useInfiniteScroll<T extends Element>(
-  onLoadMore: () => void,
+  onLoadMore: () => Promise<void> | void,
   options: UseIntersectionObserverOptions = {},
 ) {
   const { elementRef, isIntersecting } = useIntersectionObserver<T>(options);
@@ -85,9 +85,14 @@ export function useInfiniteScroll<T extends Element>(
   useEffect(() => {
     if (isIntersecting && !isLoading) {
       setIsLoading(true);
-      onLoadMore().finally(() => {
+      const result = onLoadMore();
+      if (result && typeof result.finally === "function") {
+        result.finally(() => {
+          setIsLoading(false);
+        });
+      } else {
         setIsLoading(false);
-      });
+      }
     }
   }, [isIntersecting, isLoading, onLoadMore]);
 

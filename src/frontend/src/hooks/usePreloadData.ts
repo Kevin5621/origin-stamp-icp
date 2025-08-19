@@ -180,7 +180,7 @@ export function usePreloadMultiple<T>(
 
       const results = await Promise.allSettled(promises);
 
-      const newResults = { ...results };
+      const newResults: Record<string, T | null> = {};
       const finalLoading = { ...loading };
       const finalErrors = { ...errors };
 

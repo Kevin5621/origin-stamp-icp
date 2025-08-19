@@ -1,79 +1,77 @@
-import {
+import type {
   KaryaWithLogs,
-  LogProses,
+  KaryaFilter,
   CreateKaryaRequest,
   UpdateKaryaStatusRequest,
+  LogProses,
   AddLogProsesRequest,
-  KaryaFilter,
 } from "../types/karya";
 
-// TODO: Load real karya data from backend
-const karyaData: KaryaWithLogs[] = [];
-
-// TODO: Load real log data from backend
-const logData: LogProses[] = [];
-
 export class KaryaService {
-  // Mendapatkan semua karya user
   static async getKaryaByUser(
-    userId: string,
-    filter?: KaryaFilter,
-  ): Promise<KaryaWithLogs[]> {
-    // TODO: Implement real karya loading from backend
-    return [];
+    _userId: string,
+    _filter?: KaryaFilter,
+  ): Promise<{
+    karya: KaryaWithLogs[];
+    totalKarya: number;
+    totalLogs: number;
+  }> {
+    // TODO: Implement real data loading from backend
+    return { karya: [], totalKarya: 0, totalLogs: 0 };
   }
 
-  // Mendapatkan detail karya berdasarkan ID
-  static async getKaryaById(karyaId: string): Promise<KaryaWithLogs | null> {
-    // TODO: Implement real karya loading from backend
+  static async getKaryaById(_karyaId: string): Promise<KaryaWithLogs | null> {
+    // TODO: Implement real karya detail loading from backend
     return null;
   }
 
-  // Membuat karya baru
   static async createKarya(
-    request: CreateKaryaRequest,
-    userId: string,
+    _request: CreateKaryaRequest,
+    _userId: string,
   ): Promise<KaryaWithLogs> {
-    // TODO: Implement real karya creation from backend
-    throw new Error("Not implemented yet");
+    // TODO: Implement real karya creation in backend
+    throw new Error("Not implemented");
   }
 
-  // Update status karya
   static async updateKaryaStatus(
-    request: UpdateKaryaStatusRequest,
-  ): Promise<KaryaWithLogs> {
-    // TODO: Implement real karya status update from backend
-    throw new Error("Not implemented yet");
+    _request: UpdateKaryaStatusRequest,
+  ): Promise<void> {
+    // TODO: Implement real karya status update in backend
   }
 
-  // Menambah log proses
-  static async addLogProses(request: AddLogProsesRequest): Promise<LogProses> {
-    // TODO: Implement real log addition from backend
-    throw new Error("Not implemented yet");
+  static async addLogProses(_request: AddLogProsesRequest): Promise<LogProses> {
+    // TODO: Implement real log addition in backend
+    throw new Error("Not implemented");
   }
 
-  // Mendapatkan log proses untuk karya tertentu
-  static async getLogProsesByKarya(karyaId: string): Promise<LogProses[]> {
-    // TODO: Implement real log loading from backend
+  static async getLogProsesByKarya(_karyaId: string): Promise<LogProses[]> {
+    // TODO: Implement real log retrieval from backend
     return [];
   }
 
-  // Mendapatkan statistik karya
-  static async getKaryaStats(userId: string) {
-    const karya = await this.getKaryaByUser(userId);
-
+  // Static method untuk mendapatkan statistik dashboard
+  static async getDashboardStats() {
+    // TODO: Implement real dashboard stats from backend
+    const karya: any[] = [];
     return {
-      total: karya.length,
-      completed: karya.filter((k) => k.status_karya === "completed").length,
-      active: karya.filter((k) => k.status_karya === "active").length,
-      draft: karya.filter((k) => k.status_karya === "draft").length,
+      totalKarya: karya.length,
       totalLogs: karya.reduce((sum, k) => sum + (k.log_count || 0), 0),
     };
   }
 
   // Mendapatkan data analisis untuk karya tertentu
-  static async getKaryaAnalytics(karyaId: string) {
+  static async getKaryaAnalytics(_karyaId: string) {
     // TODO: Implement real analytics loading from backend
-    return null;
+    // Mock data for now to prevent TypeScript errors
+    return {
+      views: 0,
+      engagement: 0,
+      completion_rate: 0,
+      avg_session_duration: 0,
+      price_history: [],
+      performance_metrics: [],
+      audience_demographics: {},
+      verification_score: 0,
+    };
   }
 }

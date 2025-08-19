@@ -15,7 +15,7 @@ export class MarketplaceService {
   /**
    * Get all NFTs with optional filtering
    */
-  static async getNFTs(filters: Partial<FilterOptions> = {}): Promise<NFT[]> {
+  static async getNFTs(_filters: Partial<FilterOptions> = {}): Promise<NFT[]> {
     // TODO: Implement real NFT loading from backend
     return [];
   }
@@ -23,7 +23,7 @@ export class MarketplaceService {
   /**
    * Get NFT by ID
    */
-  static async getNFTById(id: string): Promise<NFT | null> {
+  static async getNFTById(_id: string): Promise<NFT | null> {
     // TODO: Implement real NFT loading from backend
     return null;
   }
@@ -31,7 +31,7 @@ export class MarketplaceService {
   /**
    * Search NFTs, collections, and users
    */
-  static async searchNFTs(query: string): Promise<SearchResult> {
+  static async searchNFTs(_query: string): Promise<SearchResult> {
     // TODO: Implement real search from backend
     return {
       nfts: [],
@@ -46,7 +46,7 @@ export class MarketplaceService {
    * Buy NFT
    */
   static async buyNFT(
-    nftId: string,
+    _nftId: string,
     _buyerId: string,
   ): Promise<{ success: boolean; transactionId?: string; error?: string }> {
     // TODO: Implement real NFT purchase from backend
@@ -56,7 +56,7 @@ export class MarketplaceService {
   /**
    * Create new NFT
    */
-  static async createNFT(nftData: CreateNFTData): Promise<NFT> {
+  static async createNFT(_nftData: CreateNFTData): Promise<NFT> {
     // TODO: Implement real NFT creation from backend
     throw new Error("Not implemented yet");
   }
@@ -64,7 +64,7 @@ export class MarketplaceService {
   /**
    * Get user NFTs
    */
-  static async getUserNFTs(userId: string): Promise<NFT[]> {
+  static async getUserNFTs(_userId: string): Promise<NFT[]> {
     // TODO: Implement real user NFT loading from backend
     return [];
   }
@@ -80,7 +80,7 @@ export class MarketplaceService {
   /**
    * Get collection by ID
    */
-  static async getCollectionById(id: string): Promise<Collection | null> {
+  static async getCollectionById(_id: string): Promise<Collection | null> {
     // TODO: Implement real collection loading from backend
     return null;
   }
@@ -88,7 +88,7 @@ export class MarketplaceService {
   /**
    * Get user by username
    */
-  static async getUserByUsername(username: string): Promise<User | null> {
+  static async getUserByUsername(_username: string): Promise<User | null> {
     // TODO: Implement real user loading from backend
     return null;
   }
