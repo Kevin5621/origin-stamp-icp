@@ -14,7 +14,7 @@ interface DashboardChartProps {
 const DashboardChart: React.FC<DashboardChartProps> = ({
   title,
   data,
-  type,
+  type: _type, // TODO: Implement different chart types
 }) => {
   const [timeRange, setTimeRange] = useState("7d");
 

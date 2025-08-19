@@ -3,18 +3,14 @@ import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
   Settings,
-  Home,
   BarChart3,
   Award,
-  User,
   ChevronLeft,
   ChevronRight,
   Grid,
-  List,
   Anchor,
   Compass,
   Palette,
-  FileText,
   Activity,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -60,7 +60,7 @@ const CertificateDetailPage: React.FC = () => {
   const { karyaId } = useParams<{ karyaId: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { handleError } = useErrorHandler({
+  useErrorHandler({
     context: "CertificateDetailPage",
   });
 
@@ -70,7 +70,7 @@ const CertificateDetailPage: React.FC = () => {
 
   // TODO: Generate real certificate data from backend
   const generateCertificate = useCallback(
-    (karya: KaryaWithLogs): CertificateData | null => {
+    (_karya: KaryaWithLogs): CertificateData | null => {
       // TODO: Implement real certificate generation from backend
       return null;
     },
@@ -78,21 +78,13 @@ const CertificateDetailPage: React.FC = () => {
   );
 
   // Preload data dengan caching dan background fetch
-  const {
-    data: karya,
-    loading: karyaLoading,
-    error: karyaError,
-  } = usePreloadData(
+  const { data: karya, loading: karyaLoading } = usePreloadData(
     `karya-${karyaId}`,
     () => KaryaService.getKaryaById(karyaId!),
     { immediate: !!karyaId, background: true },
   );
 
-  const {
-    data: certificateData,
-    loading: certificateLoading,
-    error: certificateError,
-  } = usePreloadData(
+  const { data: certificateData, loading: certificateLoading } = usePreloadData(
     `certificate-${karyaId}`,
     async () => {
       if (!karya) return null;
@@ -102,7 +94,6 @@ const CertificateDetailPage: React.FC = () => {
   );
 
   const loading = karyaLoading || certificateLoading;
-  const error = karyaError || certificateError;
 
   const handleBack = () => {
     navigate(-1);

@@ -86,7 +86,9 @@ const KaryaDetailPage: React.FC = () => {
   >("overview");
 
   // TODO: Generate real detail data from backend
-  const generateDetailData = (karya: KaryaWithLogs): KaryaDetailData | null => {
+  const generateDetailData = (
+    _karya: KaryaWithLogs,
+  ): KaryaDetailData | null => {
     // TODO: Implement real detail data generation from backend
     return null;
   };

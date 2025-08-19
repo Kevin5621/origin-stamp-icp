@@ -8,7 +8,7 @@ export class UserService {
   /**
    * Get user profile by username
    */
-  static async getUserProfile(username: string): Promise<User | null> {
+  static async getUserProfile(_username: string): Promise<User | null> {
     // TODO: Implement real user profile loading from backend
     return null;
   }
@@ -67,7 +67,7 @@ export class UserService {
    */
   static async updateUserProfile(
     _username: string,
-    profileData: Partial<User>,
+    _profileData: Partial<User>,
   ): Promise<User> {
     // TODO: Implement real user profile update from backend
     throw new Error("Not implemented yet");
