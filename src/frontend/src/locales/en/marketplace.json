@@ -5,13 +5,17 @@
   "search_placeholder": "Search artwork, artists, or categories...",
   "filters": "Filters",
   "all_categories": "All Categories",
+  "categories": "Categories",
   "price_range": "Price Range",
   "min_price": "Min Price",
   "max_price": "Max Price",
   "apply": "Apply",
   "reset": "Reset",
   "results_count": "{{count}} results found",
-  "categories": {
+  "no_collections_title": "No collections found",
+  "no_collections_description": "There are no collections available at the moment. Check back later or explore the marketplace for individual artworks.",
+  "browse_marketplace": "Browse Marketplace",
+  "category_types": {
     "abstract": "Abstract",
     "digital": "Digital",
     "traditional": "Traditional",

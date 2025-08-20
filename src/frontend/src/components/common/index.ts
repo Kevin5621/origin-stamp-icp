@@ -8,6 +8,7 @@ export { default as LandingHeader } from "./LandingHeader";
 export { InputField } from "./InputField";
 export { Loader } from "./Loader";
 export { Modal } from "./Modal";
+export { EmptyState } from "./EmptyState";
 
 export { Toast } from "./Toast";
 export { default as ToastContainer } from "./ToastContainer";

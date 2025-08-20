@@ -56,12 +56,66 @@ export const CollectionsPage: React.FC = () => {
 
   const loadCollections = async () => {
     // TODO: Load real collections from backend
-    setCollections([]);
+    // For now, showing some dummy data for testing
+    setCollections([
+      {
+        id: "1",
+        title: "Digital Dreams Collection",
+        description:
+          "A stunning collection of digital artworks exploring the realm of dreams.",
+        image:
+          "https://via.placeholder.com/300x400/4A5568/ffffff?text=Digital+Dreams",
+        price: 150,
+        artist: "John Doe",
+        category: "digital",
+        likes: 42,
+      },
+      {
+        id: "2",
+        title: "Abstract Visions",
+        description:
+          "Bold abstract pieces that challenge perception and reality.",
+        image:
+          "https://via.placeholder.com/300x400/2D3748/ffffff?text=Abstract+Visions",
+        price: 280,
+        artist: "Jane Smith",
+        category: "abstract",
+        likes: 18,
+      },
+      {
+        id: "3",
+        title: "Traditional Masterpieces",
+        description:
+          "Classic traditional artworks with modern digital preservation.",
+        image:
+          "https://via.placeholder.com/300x400/8B5A3C/ffffff?text=Traditional",
+        price: 320,
+        artist: "Maria Santos",
+        category: "traditional",
+        likes: 67,
+      },
+      {
+        id: "4",
+        title: "Sculpture Gallery",
+        description: "3D digital sculptures bringing art into the metaverse.",
+        image:
+          "https://via.placeholder.com/300x400/2B6CB0/ffffff?text=Sculpture",
+        price: 450,
+        artist: "Alex Chen",
+        category: "sculpture",
+        likes: 93,
+      },
+    ]);
   };
 
   const loadCategories = async () => {
     // TODO: Load real categories from backend
-    setCategories([]);
+    setCategories([
+      { id: "digital", name: "Digital", count: 1 },
+      { id: "abstract", name: "Abstract", count: 1 },
+      { id: "traditional", name: "Traditional", count: 1 },
+      { id: "sculpture", name: "Sculpture", count: 1 },
+    ]);
   };
 
   const filterCollections = () => {

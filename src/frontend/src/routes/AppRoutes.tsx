@@ -23,6 +23,7 @@ import {
   MarketplaceHomePage,
   CollectionDetailPage,
   CollectionsPage,
+  MarketplaceCollectionsPage,
 } from "../pages/marketplace";
 
 // Component untuk menentukan layout berdasarkan halaman
@@ -174,6 +175,10 @@ export const AppRoutes: React.FC = () => {
         {/* Marketplace Routes */}
         <Route path="/marketplace" element={<MarketplaceHomePage />} />
         <Route path="/marketplace/collections" element={<CollectionsPage />} />
+        <Route
+          path="/marketplace-collections"
+          element={<MarketplaceCollectionsPage />}
+        />
         <Route
           path="/marketplace/collection/:collectionId"
           element={<CollectionDetailPage />}
