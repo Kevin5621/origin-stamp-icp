@@ -144,9 +144,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const isActive = (path: string) => {
-    return (
-      location.pathname === path || location.pathname.startsWith(path + "/")
-    );
+    // Exact match for the path
+    if (location.pathname === path) {
+      return true;
+    }
+
+    // For paths that should match sub-routes, but be more specific
+    // to avoid false positives
+    if (path === "/marketplace") {
+      // Only match exact /marketplace, not sub-routes like /marketplace/stats
+      return location.pathname === "/marketplace";
+    }
+
+    if (path === "/dashboard") {
+      // Only match exact /dashboard, not sub-routes
+      return location.pathname === "/dashboard";
+    }
+
+    // For other paths, use the original logic but with more specific matching
+    return location.pathname.startsWith(path + "/");
   };
 
   const getUserName = () => {
