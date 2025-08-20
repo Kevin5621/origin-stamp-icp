@@ -24,6 +24,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
   return (
     <div className={`category-filter ${className}`}>
+      <h3 className="category-filter__title">{t("categories")}</h3>
       <div className="category-filter__container">
         <button
           className={`category-filter__item ${

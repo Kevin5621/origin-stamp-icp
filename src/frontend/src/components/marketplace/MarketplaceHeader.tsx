@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 
 interface MarketplaceHeaderProps {
   className?: string;
@@ -9,6 +10,16 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
   className = "",
 }) => {
   const { t } = useTranslation("marketplace");
+  const location = useLocation();
+
+  const navItems = [
+    { path: "/marketplace", label: "All Items", key: "all_items" },
+    {
+      path: "/marketplace/collections",
+      label: "Collections",
+      key: "collections",
+    },
+  ];
 
   return (
     <header className={`marketplace-header ${className}`}>
@@ -17,20 +28,22 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
           <h1 className="marketplace-header__title">{t("title")}</h1>
           <p className="marketplace-header__subtitle">{t("subtitle")}</p>
         </div>
-        <div className="marketplace-header__actions">
-          <button className="marketplace-header__search-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            {t("search")}
-          </button>
-        </div>
+
+        <nav className="marketplace-header__nav">
+          {navItems.map((item) => (
+            <Link
+              key={item.key}
+              to={item.path}
+              className={`marketplace-header__nav-link ${
+                location.pathname === item.path
+                  ? "marketplace-header__nav-link--active"
+                  : ""
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </header>
   );

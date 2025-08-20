@@ -16,7 +16,6 @@
       ]
     },
     "frontend": {
-      "dependencies": ["backend"],
       "type": "assets",
       "source": ["src/frontend/dist/"]
     }

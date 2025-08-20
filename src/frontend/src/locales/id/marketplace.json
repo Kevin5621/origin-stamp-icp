@@ -5,13 +5,17 @@
   "search_placeholder": "Cari karya seni, seniman, atau kategori...",
   "filters": "Filter",
   "all_categories": "Semua Kategori",
+  "categories": "Kategori",
   "price_range": "Rentang Harga",
   "min_price": "Harga Minimum",
   "max_price": "Harga Maksimum",
   "apply": "Terapkan",
   "reset": "Reset",
   "results_count": "{{count}} hasil ditemukan",
-  "categories": {
+  "no_collections_title": "Tidak ada koleksi ditemukan",
+  "no_collections_description": "Tidak ada koleksi yang tersedia saat ini. Periksa kembali nanti atau jelajahi marketplace untuk karya seni individual.",
+  "browse_marketplace": "Jelajahi Marketplace",
+  "category_types": {
     "abstract": "Abstrak",
     "digital": "Digital",
     "traditional": "Tradisional",
