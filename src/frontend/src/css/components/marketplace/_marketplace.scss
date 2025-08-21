@@ -28,6 +28,42 @@
     min-height: 400px;
   }
 
+  &__tabs {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  &__tab {
+    padding: var(--space-3) var(--space-6);
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    border-radius: 0;
+
+    &:hover {
+      color: var(--color-text-primary);
+      background: var(--color-surface-subtle);
+    }
+
+    &--active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+      font-weight: var(--font-weight-semibold);
+
+      &:hover {
+        color: var(--color-primary);
+        background: transparent;
+      }
+    }
+  }
+
   &__results {
     margin-bottom: var(--space-6);
   }

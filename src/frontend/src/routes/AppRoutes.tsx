@@ -22,7 +22,6 @@ import { ErrorPage, NotFoundPage } from "../pages/error";
 import {
   MarketplaceHomePage,
   CollectionDetailPage,
-  CollectionsPage,
   MarketplaceCollectionsPage,
   ActivityPage,
   RankingsPage,
@@ -177,14 +176,13 @@ export const AppRoutes: React.FC = () => {
 
         {/* Marketplace Routes */}
         <Route path="/marketplace" element={<MarketplaceHomePage />} />
-        <Route path="/marketplace/collections" element={<CollectionsPage />} />
+        <Route
+          path="/marketplace/collections"
+          element={<MarketplaceCollectionsPage />}
+        />
         <Route path="/marketplace/activity" element={<ActivityPage />} />
         <Route path="/marketplace/rankings" element={<RankingsPage />} />
         <Route path="/marketplace/stats" element={<MarketplaceStatsPage />} />
-        <Route
-          path="/marketplace-collections"
-          element={<MarketplaceCollectionsPage />}
-        />
         <Route
           path="/marketplace/collection/:collectionId"
           element={<CollectionDetailPage />}

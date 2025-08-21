@@ -58,7 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           id: "collections",
           icon: Grid,
           label: t("sidebar.collections"),
-          path: "/marketplace-collections",
+          path: "/marketplace/collections",
         },
         {
           id: "activity",
