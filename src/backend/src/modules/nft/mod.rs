@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
+use sha2::{Digest, Sha256};
 use crate::types::{Account, Token, TokenMetadata, TransferRequest, TransferResponse, CollectionMetadata};
 use crate::modules::physical_art;
 
@@ -212,8 +213,7 @@ pub fn mint_nft_from_session(
     let _caller = ic_cdk::api::caller();
 
     // Get session details
-    let session =
-        PHYSICAL_ART_SESSIONS.with(|sessions| sessions.borrow().get(&session_id).cloned());
+    let session = physical_art::get_session_details(session_id.clone());
 
     let session = match session {
         Some(s) => s,

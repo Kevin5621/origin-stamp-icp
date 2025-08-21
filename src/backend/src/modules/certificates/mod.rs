@@ -12,9 +12,8 @@ thread_local! {
 // Certificate generation
 #[ic_cdk::update]
 pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certificate, String> {
-    // Validate session exists
-    let session =
-        PHYSICAL_ART_SESSIONS.with(|sessions| sessions.borrow().get(&request.session_id).cloned());
+    // Get session details
+    let session = physical_art::get_session_details(request.session_id.clone());
 
     if session.is_none() {
         return Err("Session not found".to_string());

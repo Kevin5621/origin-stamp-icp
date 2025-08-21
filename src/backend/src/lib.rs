@@ -8,6 +8,13 @@ pub mod modules;
 pub mod types;
 pub mod utils;
 
+// Re-export all types needed for Candid interface
+pub use types::{
+    Account, Certificate, CollectionMetadata, CreateCertificateRequest, LoginResult,
+    NFTGenerationResult, PhysicalArtSession, S3Config, Token, TokenMetadata, TransferRequest,
+    TransferResponse, UploadFileData, VerificationResult,
+};
+
 // Re-export all public functions from modules for easier access
 pub use modules::certificates::*;
 pub use modules::nft::*;

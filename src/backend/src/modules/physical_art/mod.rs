@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
-use crate::types::{PhysicalArtSession, UploadFileData};
+use crate::types::{PhysicalArtSession};
 use crate::utils::generate_random_id;
 
 thread_local! {
