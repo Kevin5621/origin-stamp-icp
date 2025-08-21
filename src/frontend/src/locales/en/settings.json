@@ -1,6 +1,7 @@
 {
   "settings": "Settings",
   "settings_description": "Manage your account and preferences",
+  "manage_account_preferences": "Manage your account settings and preferences",
   "back": "Back",
   "account_information": "Account Information",
   "username_password_login": "Username & Password Login",

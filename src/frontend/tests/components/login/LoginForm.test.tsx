@@ -42,7 +42,7 @@ describe("LoginForm Component", () => {
   it("calls onBack when back button is clicked", () => {
     renderLoginForm();
 
-    const backButton = screen.getByRole("button", { name: /kembali/i });
+    const backButton = screen.getByRole("button", { name: /back_to_options/i });
     fireEvent.click(backButton);
 
     expect(onBack).toHaveBeenCalled();

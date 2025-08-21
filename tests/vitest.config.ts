@@ -7,6 +7,6 @@ export default defineConfig({
     globalSetup: resolve(__dirname, "backend-test-setup.ts"),
     testTimeout: 60_000,
     hookTimeout: 60_000,
-    include: ["tests/src/**/*.test.ts"],
+    include: ["src/**/*.test.ts"],
   },
 });
