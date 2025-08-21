@@ -78,7 +78,6 @@
   "failed_to_create_session": "Gagal membuat sesi. Silakan coba lagi.",
   "cancel": "Batal",
   "create_session_button": "+ Buat Sesi",
-  "creating_session": "Membuat Sesi...",
   "session_created_successfully": "Sesi berhasil dibuat!",
   "session_creation_failed": "Gagal membuat sesi. Silakan coba lagi.",
   "loading_sessions": "Memuat sesi...",
@@ -366,6 +365,10 @@
     "download_photo": "Download Foto",
     "zoom_in": "Perbesar",
     "zoom_out": "Perkecil",
-    "reset_zoom": "Reset Zoom"
+    "reset_zoom": "Reset Zoom",
+    "confirm_upload": "Konfirmasi Upload",
+    "blockchain_upload_title": "Upload {{count}} Foto ke Blockchain",
+    "files_to_upload": "File yang akan diupload",
+    "upload_to_blockchain": "Upload ke Blockchain"
   }
 }
