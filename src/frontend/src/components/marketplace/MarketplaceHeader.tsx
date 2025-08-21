@@ -12,14 +12,14 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
   const { t } = useTranslation("marketplace");
   const location = useLocation();
 
-  const navItems = [
-    { path: "/marketplace", label: "All Items", key: "all_items" },
-    {
-      path: "/marketplace/collections",
-      label: "Collections",
-      key: "collections",
-    },
-  ];
+  // const navItems = [
+  //   { path: "/marketplace", label: "All Items", key: "all_items" },
+  //   {
+  //     path: "/marketplace/collections",
+  //     label: "Collections",
+  //     key: "collections",
+  //   },
+  // ];
 
   return (
     <header className={`marketplace-header ${className}`}>
@@ -29,7 +29,7 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
           <p className="marketplace-header__subtitle">{t("subtitle")}</p>
         </div>
 
-        <nav className="marketplace-header__nav">
+        {/* <nav className="marketplace-header__nav">
           {navItems.map((item) => (
             <Link
               key={item.key}
@@ -43,7 +43,7 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
               {item.label}
             </Link>
           ))}
-        </nav>
+        </nav> */}
       </div>
     </header>
   );
