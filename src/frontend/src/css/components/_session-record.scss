@@ -239,7 +239,7 @@
           max-width: 280px;
 
           .warning-icon {
-            font-size: var(--text-lg);
+            font-size: var(--text-md);
             flex-shrink: 0;
           }
 
@@ -2410,5 +2410,181 @@ body:has(.photo-modal-overlay) {
   .floating-header {
     filter: blur(4px);
     transition: filter 0.3s ease;
+  }
+}
+
+/* =============================================================================
+   UPLOAD CONFIRMATION MODAL STYLES
+   ============================================================================= */
+
+.confirmation-modal {
+  width: 520px;
+  max-width: 90vw;
+
+  .modal-body {
+    padding: var(--space-6);
+  }
+
+  .confirmation-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-6);
+
+    .warning-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      border-radius: 50%;
+      color: white;
+      margin-bottom: var(--space-2);
+
+      svg {
+        width: 24px !important;
+        height: 24px !important;
+        flex-shrink: 0;
+      }
+    }
+
+    .confirmation-text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+
+      h3 {
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-primary);
+        margin: 0;
+      }
+
+      .blockchain-warning-text {
+        font-size: var(--text-base);
+        color: var(--color-text-secondary);
+        line-height: 1.5;
+        margin: 0;
+      }
+    }
+
+    .file-list-preview {
+      width: 100%;
+      text-align: left;
+      background: var(--color-surface-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-top: var(--space-4);
+
+      h4 {
+        font-size: var(--text-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-primary);
+        margin: 0 0 var(--space-3) 0;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        max-height: 120px;
+        overflow-y: auto;
+      }
+
+      .file-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-size: var(--text-sm);
+        color: var(--color-text-secondary);
+        padding: var(--space-2);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border-subtle);
+        border-radius: var(--radius-sm);
+
+        .file-name {
+          flex: 1;
+          color: var(--color-text-primary);
+          font-weight: var(--font-weight-medium);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .file-size {
+          font-size: var(--text-xs);
+          color: var(--color-text-tertiary);
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: var(--space-6);
+    gap: var(--space-3);
+
+    .btn--warning {
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      color: white;
+      border: none;
+
+      &:hover {
+        background: linear-gradient(135deg, #e55a2b, #e08419);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: var(--space-4);
+
+    .confirmation-content {
+      .warning-icon {
+        width: 48px;
+        height: 48px;
+
+        svg {
+          width: 18px !important;
+          height: 18px !important;
+        }
+      }
+
+      .confirmation-text h3 {
+        font-size: var(--text-base);
+      }
+
+      .file-list-preview {
+        ul {
+          max-height: 80px;
+        }
+
+        .file-item {
+          padding: var(--space-1);
+
+          .file-name {
+            max-width: 140px;
+          }
+        }
+      }
+    }
+
+    .modal-footer {
+      flex-direction: column;
+
+      .btn {
+        width: 100%;
+      }
+    }
   }
 }

@@ -82,7 +82,6 @@
   "failed_to_create_session": "Failed to create session. Please try again.",
   "cancel": "Cancel",
   "create_session_button": "+ Create Session",
-  "creating_session": "Creating Session...",
   "session_created_successfully": "Session created successfully!",
   "session_creation_failed": "Failed to create session. Please try again.",
   "loading_sessions": "Loading sessions...",
@@ -366,6 +365,10 @@
       "digital_portrait_series_description": "",
       "sculpture_progress_title": "",
       "sculpture_progress_description": ""
-    }
+    },
+    "confirm_upload": "Confirm Upload",
+    "blockchain_upload_title": "Upload {{count}} Photos to Blockchain",
+    "files_to_upload": "Files to upload",
+    "upload_to_blockchain": "Upload to Blockchain"
   }
 }

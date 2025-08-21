@@ -76,6 +76,8 @@ const SessionRecordPage: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingFiles, setPendingFiles] = useState<FileList | null>(null);
   const cancelRef = useRef<boolean>(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
@@ -331,18 +333,6 @@ const SessionRecordPage: React.FC = () => {
   const handleUploadToS3 = async () => {
     if (!selectedFiles || !session) return;
 
-    // Show confirmation dialog for blockchain permanence
-    const confirmed = window.confirm(
-      t("session.blockchain_upload_confirmation", {
-        count: selectedFiles.length,
-      }),
-    );
-
-    if (!confirmed) {
-      addToast("info", t("session.upload_cancelled_by_user"));
-      return;
-    }
-
     // Prevent multiple uploads
     if (isUploading || uploadInProgress) {
       console.log("Upload already in progress, ignoring new request");
@@ -350,17 +340,29 @@ const SessionRecordPage: React.FC = () => {
       return;
     }
 
-    // Reset states and start upload
+    // Show custom confirmation modal for blockchain permanence
+    setPendingFiles(selectedFiles);
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmUpload = async () => {
+    if (!pendingFiles || !session) return;
+
+    // Close modal and reset pending files
+    setShowConfirmModal(false);
+    const filesToUpload = pendingFiles;
+    setPendingFiles(null);
+
     setUploadProgress(0);
     setUploadedFiles(0);
-    setTotalFiles(selectedFiles.length);
+    setTotalFiles(filesToUpload.length);
     setShouldCancelUpload(false);
     setIsCancelling(false);
     cancelRef.current = false;
     setIsUploading(true);
     setUploadInProgress(true);
 
-    const filesArray = Array.from(selectedFiles);
+    const filesArray = Array.from(filesToUpload);
 
     console.log("Starting upload process...");
     console.log("Files to upload:", filesArray.length);
@@ -458,6 +460,12 @@ const SessionRecordPage: React.FC = () => {
       cancelRef.current = false;
       setUploadProgress(0);
     }
+  };
+
+  const handleCancelUpload = () => {
+    setShowConfirmModal(false);
+    setPendingFiles(null);
+    addToast("info", t("session.upload_cancelled_by_user"));
   };
 
   const handleCompleteSessionAndGenerateNFT = async () => {
@@ -1021,6 +1029,74 @@ const SessionRecordPage: React.FC = () => {
               >
                 <Download size={14} />
                 {t("session.download_photo")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Confirmation Modal */}
+      {showConfirmModal && pendingFiles && (
+        <div className="photo-modal-overlay" onClick={handleCancelUpload}>
+          <div
+            className="photo-modal-content confirmation-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>{t("session.confirm_upload")}</h2>
+              <button className="modal-close-btn" onClick={handleCancelUpload}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="confirmation-content">
+                <div className="warning-icon">
+                  <Upload size={24} />
+                </div>
+                <div className="confirmation-text">
+                  <h3>
+                    {t("session.blockchain_upload_title", {
+                      count: pendingFiles.length,
+                    })}
+                  </h3>
+                  <p className="blockchain-warning-text">
+                    {t("session.blockchain_upload_confirmation", {
+                      count: pendingFiles.length,
+                    })}
+                  </p>
+                  <div className="file-list-preview">
+                    <h4>{t("session.files_to_upload")}:</h4>
+                    <ul>
+                      {Array.from(pendingFiles).map((file, index) => (
+                        <li key={index} className="file-item">
+                          <FileText size={14} />
+                          <span className="file-name">{file.name}</span>
+                          <span className="file-size">
+                            ({formatFileSize(file.size)})
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn btn--secondary"
+                onClick={handleCancelUpload}
+              >
+                <X size={14} />
+                {t("session.cancel")}
+              </button>
+              <button
+                className="btn btn--primary btn--warning"
+                onClick={handleConfirmUpload}
+              >
+                <Upload size={14} />
+                {t("session.upload_to_blockchain")}
               </button>
             </div>
           </div>
