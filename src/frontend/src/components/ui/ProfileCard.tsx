@@ -70,7 +70,8 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 <button
                   className="profile-card__logout-btn--floating"
                   onClick={handleLogout}
-                  aria-label="Keluar"
+                  aria-label="Tutup Profil"
+                  title="Tutup Profil"
                 >
                   <svg
                     width="16"
@@ -80,9 +81,9 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                     stroke="currentColor"
                     strokeWidth="2"
                   >
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                    <polyline points="16,17 21,12 16,7" />
-                    <line x1="21" y1="12" x2="9" y2="12" />
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <line x1="9" y1="12" x2="21" y2="12" />
+                    <polyline points="16,8 21,12 16,16" />
                   </svg>
                 </button>
               </div>
