@@ -1,0 +1,191 @@
+use std::cell::RefCell;
+use std::collections::HashMap;
+use sha2::{Digest, Sha256};
+use crate::types::{Certificate, CertificateMetadata, CreateCertificateRequest, VerificationResult, NFTGenerationResult};
+use crate::modules::physical_art;
+use crate::utils::generate_random_id;
+
+thread_local! {
+    static CERTIFICATES: RefCell<HashMap<String, Certificate>> = RefCell::new(HashMap::new());
+}
+
+// Certificate generation
+#[ic_cdk::update]
+pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certificate, String> {
+    // Validate session exists
+    let session =
+        PHYSICAL_ART_SESSIONS.with(|sessions| sessions.borrow().get(&request.session_id).cloned());
+
+    if session.is_none() {
+        return Err("Session not found".to_string());
+    }
+
+    let session = session.unwrap();
+
+    // Generate certificate ID
+    let certificate_id = format!(
+        "CERT-{}-{}",
+        request.session_id.to_uppercase(),
+        generate_random_id()
+    );
+
+    // Generate verification hash
+    let verification_data = format!(
+        "{}{}{}{}",
+        request.session_id,
+        request.username,
+        request.art_title,
+        ic_cdk::api::time()
+    );
+    let mut hasher = Sha256::new();
+    hasher.update(verification_data.as_bytes());
+    let verification_hash = format!("0x{:x}", hasher.finalize());
+
+    // Generate blockchain transaction hash
+    let tx_data = format!(
+        "{}{}{}",
+        certificate_id,
+        verification_hash,
+        ic_cdk::api::time()
+    );
+    let mut tx_hasher = Sha256::new();
+    tx_hasher.update(tx_data.as_bytes());
+    let blockchain_tx = format!("0x{:x}", tx_hasher.finalize());
+
+    // Calculate scores based on session data
+    let verification_score = 85 + (session.uploaded_photos.len() as u32 * 2).min(15);
+    let authenticity_rating = 90 + (session.uploaded_photos.len() as u32).min(10);
+    let provenance_score = 88 + (session.uploaded_photos.len() as u32).min(12);
+    let community_trust = 82 + (session.uploaded_photos.len() as u32).min(18);
+
+    let current_time = ic_cdk::api::time();
+    let expiry_date = current_time + (10 * 365 * 24 * 60 * 60 * 1_000_000_000); // 10 years
+
+    let certificate = Certificate {
+        certificate_id: certificate_id.clone(),
+        session_id: request.session_id,
+        username: request.username,
+        art_title: request.art_title,
+        description: request.description,
+        issue_date: current_time,
+        expiry_date,
+        verification_hash,
+        blockchain_tx,
+        qr_code_data: format!("https://ic-vibe.ic0.app/verify/{certificate_id}"),
+        verification_url: format!("https://ic-vibe.ic0.app/verify/{certificate_id}"),
+        certificate_type: "standard".to_string(),
+        verification_score,
+        authenticity_rating,
+        provenance_score,
+        community_trust,
+        certificate_status: "active".to_string(),
+        issuer: "IC-Vibe Creative Platform".to_string(),
+        blockchain: "Internet Computer".to_string(),
+        token_standard: "ICP-721".to_string(),
+        metadata: CertificateMetadata {
+            creation_duration: format!(
+                "{} hours {} minutes",
+                request.creation_duration / 60,
+                request.creation_duration % 60
+            ),
+            total_actions: request.photo_count,
+            file_size: format!("{} MB", 10 + (request.photo_count * 2)),
+            file_format: request.file_format,
+            creation_tools: request.creation_tools,
+        },
+    };
+
+    // Store certificate
+    CERTIFICATES.with(|certificates| {
+        certificates
+            .borrow_mut()
+            .insert(certificate_id.clone(), certificate.clone());
+    });
+
+    Ok(certificate)
+}
+
+// Get certificate by ID
+#[ic_cdk::query]
+pub fn get_certificate_by_id(certificate_id: String) -> Option<Certificate> {
+    CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned())
+}
+
+#[ic_cdk::query]
+pub fn get_user_certificates(username: String) -> Vec<Certificate> {
+    CERTIFICATES.with(|certificates| {
+        certificates
+            .borrow()
+            .values()
+            .filter(|cert| cert.username == username)
+            .cloned()
+            .collect()
+    })
+}
+
+// Verify certificate
+#[ic_cdk::update]
+pub fn verify_certificate(certificate_id: String) -> Result<VerificationResult, String> {
+    let certificate =
+        CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned());
+
+    if certificate.is_none() {
+        return Err("Certificate not found".to_string());
+    }
+
+    let certificate = certificate.unwrap();
+    let current_time = ic_cdk::api::time();
+
+    // Check if certificate is expired
+    if current_time > certificate.expiry_date {
+        return Ok(VerificationResult {
+            valid: false,
+            score: 0,
+            details: format!(
+                "{{\"error\": \"Certificate expired\", \"expiry_date\": {}, \"current_time\": {}}}",
+                certificate.expiry_date, current_time
+            ),
+        });
+    }
+
+    // Verify certificate is active
+    if certificate.certificate_status != "active" {
+        return Ok(VerificationResult {
+            valid: false,
+            score: 0,
+            details: format!(
+                "{{\"error\": \"Certificate is not active\", \"status\": \"{}\"}}",
+                certificate.certificate_status
+            ),
+        });
+    }
+
+    // Return verification result
+    Ok(VerificationResult {
+        valid: true,
+        score: certificate.verification_score,
+        details: format!("{{\"verified\": true, \"timestamp\": {}, \"blockchain\": \"{}\", \"certificate_id\": \"{}\", \"verification_hash\": \"{}\", \"blockchain_tx\": \"{}\"}}", 
+            current_time, certificate.blockchain, certificate.certificate_id, certificate.verification_hash, certificate.blockchain_tx),
+    })
+}
+
+// Generate NFT for certificate
+#[ic_cdk::update]
+pub fn generate_nft_for_certificate(certificate_id: String) -> Result<NFTGenerationResult, String> {
+    let certificate =
+        CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned());
+
+    if certificate.is_none() {
+        return Err("Certificate not found".to_string());
+    }
+
+    let _certificate = certificate.unwrap();
+
+    // Generate NFT ID
+    let nft_id = format!("NFT-{}-{}", certificate_id, generate_random_id());
+
+    // Create NFT metadata
+    let token_uri = format!("https://ic-vibe.ic0.app/nft/{certificate_id}");
+
+    Ok(NFTGenerationResult { nft_id, token_uri })
+}
