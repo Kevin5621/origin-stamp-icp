@@ -29,15 +29,19 @@ export class GoogleAuthService {
   }
 
   async initialize(): Promise<void> {
+    console.log("GoogleAuth: Initializing...");
     return new Promise((resolve) => {
       if (this.initialized) {
+        console.log("GoogleAuth: Already initialized");
         resolve();
         return;
       }
 
       if (!window.google) {
+        console.log("GoogleAuth: Waiting for Google library to load...");
         const checkGoogle = () => {
           if (window.google) {
+            console.log("GoogleAuth: Google library loaded, initializing...");
             this.initializeGoogleAuth();
             resolve();
           } else {
@@ -46,6 +50,9 @@ export class GoogleAuthService {
         };
         checkGoogle();
       } else {
+        console.log(
+          "GoogleAuth: Google library already available, initializing...",
+        );
         this.initializeGoogleAuth();
         resolve();
       }
@@ -53,44 +60,108 @@ export class GoogleAuthService {
   }
 
   private initializeGoogleAuth(): void {
-    window.google.accounts.id.initialize({
-      client_id: this.config.clientId,
-      callback: () => {}, // Will be overridden in each login call
-      auto_select: false,
-      cancel_on_tap_outside: true,
-    });
-    this.initialized = true;
+    console.log(
+      "GoogleAuth: Initializing Google accounts with clientId:",
+      this.config.clientId,
+    );
+    try {
+      window.google.accounts.id.initialize({
+        client_id: this.config.clientId,
+        callback: () => {}, // Will be overridden in each login call
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+      this.initialized = true;
+      console.log("GoogleAuth: Initialization successful");
+    } catch (error) {
+      console.error("GoogleAuth: Initialization failed:", error);
+    }
   }
 
   async signIn(): Promise<GoogleUser> {
     await this.initialize();
 
     return new Promise((resolve, reject) => {
-      window.google.accounts.id.initialize({
-        client_id: this.config.clientId,
-        callback: (credentialResponse: CredentialResponse) => {
-          try {
-            if (!credentialResponse.credential) {
-              reject(new Error("No credential received"));
-              return;
+      // Create a temporary div for the button
+      const tempDiv = document.createElement("div");
+      tempDiv.style.position = "fixed";
+      tempDiv.style.top = "-9999px";
+      tempDiv.style.left = "-9999px";
+      tempDiv.style.visibility = "hidden";
+      document.body.appendChild(tempDiv);
+
+      try {
+        window.google.accounts.id.initialize({
+          client_id: this.config.clientId,
+          callback: (credentialResponse: CredentialResponse) => {
+            try {
+              document.body.removeChild(tempDiv);
+
+              if (!credentialResponse.credential) {
+                reject(new Error("No credential received"));
+                return;
+              }
+
+              // Parse JWT token to get user info
+              const userInfo = this.parseJWTToken(
+                credentialResponse.credential,
+              );
+              resolve(userInfo);
+            } catch (error) {
+              reject(error);
             }
+          },
+          context: "signin",
+          ux_mode: "popup",
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
 
-            // Parse JWT token to get user info
-            const userInfo = this.parseJWTToken(credentialResponse.credential);
-            resolve(userInfo);
-          } catch (error) {
-            reject(error);
+        // Use renderButton instead of prompt for better reliability
+        window.google.accounts.id.renderButton(tempDiv, {
+          theme: "outline",
+          size: "large",
+          text: "signin_with",
+          shape: "rectangular",
+          width: 250,
+        });
+
+        // Programmatically click the button
+        setTimeout(() => {
+          const button = tempDiv.querySelector(
+            'div[role="button"]',
+          ) as HTMLElement;
+          if (button) {
+            button.click();
+          } else {
+            // Fallback to prompt if button rendering fails
+            window.google.accounts.id.prompt((notification) => {
+              if (
+                notification.isNotDisplayed() ||
+                notification.isSkippedMoment()
+              ) {
+                document.body.removeChild(tempDiv);
+                reject(
+                  new Error("Google Sign-In was cancelled or not displayed"),
+                );
+              }
+            });
           }
-        },
-        context: "signin",
-        ux_mode: "popup",
-      });
+        }, 100);
 
-      window.google.accounts.id.prompt((notification) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          reject(new Error("Google Sign-In was cancelled or not displayed"));
+        // Cleanup timeout
+        setTimeout(() => {
+          if (document.body.contains(tempDiv)) {
+            document.body.removeChild(tempDiv);
+            reject(new Error("Google Sign-In timeout"));
+          }
+        }, 30000);
+      } catch (error) {
+        if (document.body.contains(tempDiv)) {
+          document.body.removeChild(tempDiv);
         }
-      });
+        reject(error);
+      }
     });
   }
 
@@ -98,31 +169,86 @@ export class GoogleAuthService {
     await this.initialize();
 
     return new Promise((resolve, reject) => {
-      window.google.accounts.id.initialize({
-        client_id: this.config.clientId,
-        callback: (credentialResponse: CredentialResponse) => {
-          try {
-            if (!credentialResponse.credential) {
-              reject(new Error("No credential received"));
-              return;
+      // Create a temporary div for the button
+      const tempDiv = document.createElement("div");
+      tempDiv.style.position = "fixed";
+      tempDiv.style.top = "-9999px";
+      tempDiv.style.left = "-9999px";
+      tempDiv.style.visibility = "hidden";
+      document.body.appendChild(tempDiv);
+
+      try {
+        window.google.accounts.id.initialize({
+          client_id: this.config.clientId,
+          callback: (credentialResponse: CredentialResponse) => {
+            try {
+              document.body.removeChild(tempDiv);
+
+              if (!credentialResponse.credential) {
+                reject(new Error("No credential received"));
+                return;
+              }
+
+              // Parse JWT token to get user info
+              const userInfo = this.parseJWTToken(
+                credentialResponse.credential,
+              );
+              resolve(userInfo);
+            } catch (error) {
+              reject(error);
             }
+          },
+          context: "signup",
+          ux_mode: "popup",
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
 
-            // Parse JWT token to get user info
-            const userInfo = this.parseJWTToken(credentialResponse.credential);
-            resolve(userInfo);
-          } catch (error) {
-            reject(error);
+        // Use renderButton instead of prompt for better reliability
+        window.google.accounts.id.renderButton(tempDiv, {
+          theme: "outline",
+          size: "large",
+          text: "signup_with",
+          shape: "rectangular",
+          width: 250,
+        });
+
+        // Programmatically click the button
+        setTimeout(() => {
+          const button = tempDiv.querySelector(
+            'div[role="button"]',
+          ) as HTMLElement;
+          if (button) {
+            button.click();
+          } else {
+            // Fallback to prompt if button rendering fails
+            window.google.accounts.id.prompt((notification) => {
+              if (
+                notification.isNotDisplayed() ||
+                notification.isSkippedMoment()
+              ) {
+                document.body.removeChild(tempDiv);
+                reject(
+                  new Error("Google Sign-Up was cancelled or not displayed"),
+                );
+              }
+            });
           }
-        },
-        context: "signup",
-        ux_mode: "popup",
-      });
+        }, 100);
 
-      window.google.accounts.id.prompt((notification) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          reject(new Error("Google Sign-Up was cancelled or not displayed"));
+        // Cleanup timeout
+        setTimeout(() => {
+          if (document.body.contains(tempDiv)) {
+            document.body.removeChild(tempDiv);
+            reject(new Error("Google Sign-Up timeout"));
+          }
+        }, 30000);
+      } catch (error) {
+        if (document.body.contains(tempDiv)) {
+          document.body.removeChild(tempDiv);
         }
-      });
+        reject(error);
+      }
     });
   }
 
