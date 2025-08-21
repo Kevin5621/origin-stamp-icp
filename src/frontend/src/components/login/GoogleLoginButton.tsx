@@ -62,21 +62,38 @@ export function GoogleLoginButton({
         if (buttonRef.current) {
           buttonRef.current.innerHTML = "";
 
-          try {
-            window.google.accounts.id.renderButton(buttonRef.current, {
-              theme: theme,
-              size: size,
-              text: text,
-              shape: "rectangular",
-              width: buttonRef.current.offsetWidth || 250,
-            });
-          } catch (renderError) {
-            console.warn(
-              "Failed to render Google button, showing fallback:",
-              renderError,
-            );
-            setShowFallback(true);
-          }
+          // Create custom button instead of using Google's native button
+          const customButton = document.createElement("button");
+          customButton.style.cssText = `
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-3);
+            font-size: var(--text-sm);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+          `;
+
+          customButton.innerHTML = `
+            <img src="/assets/google-logo.svg" alt="" class="auth-btn-icon" aria-hidden="true" />
+            <span>Masuk dengan Google</span>
+          `;
+
+          customButton.onclick = () => {
+            if (!disabled) {
+              window.google.accounts.id.prompt();
+            }
+          };
+
+          buttonRef.current.appendChild(customButton);
         }
       } catch (error) {
         console.error("Failed to initialize Google button:", error);
@@ -170,26 +187,28 @@ export function GoogleLoginButton({
         style={{
           width: "100%",
           height: "100%",
-          border: "1px solid #dadce0",
-          borderRadius: "4px",
-          backgroundColor: "white",
-          color: "#3c4043",
+          border: "none",
+          borderRadius: "0",
+          backgroundColor: "transparent",
+          color: "inherit",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: "8px",
-          fontSize: "14px",
-          fontFamily: "'Google Sans', Roboto, Arial, sans-serif",
+          gap: "var(--space-3)",
+          fontSize: "var(--text-sm)",
+          fontWeight: "var(--font-weight-medium)",
           cursor: disabled ? "not-allowed" : "pointer",
           opacity: disabled ? 0.6 : 1,
+          padding: "0",
         }}
       >
         <img
           src="/assets/google-logo.svg"
           alt=""
-          style={{ width: "18px", height: "18px" }}
+          className="auth-btn-icon"
+          aria-hidden="true"
         />
-        <span>Sign in with Google</span>
+        <span>Masuk dengan Google</span>
       </button>
     );
   }
@@ -199,9 +218,8 @@ export function GoogleLoginButton({
       ref={buttonRef}
       className={`google-login-button ${disabled ? "disabled" : ""}`}
       style={{
-        minHeight:
-          size === "large" ? "44px" : size === "medium" ? "36px" : "28px",
         width: "100%",
+        height: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

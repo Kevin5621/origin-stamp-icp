@@ -391,7 +391,7 @@
   &--google {
     border-color: var(--color-border);
     color: var(--color-text-primary);
-    padding: 0 !important; // Remove padding for Google button container
+    padding: var(--space-4) var(--space-4); // Use same padding as other auth buttons
     overflow: hidden;
 
     &:hover {
