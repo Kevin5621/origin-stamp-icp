@@ -62,7 +62,7 @@ describe("Login Component", () => {
   it("renders the login button when not authenticated", () => {
     renderLoginComponent();
 
-    const loginButton = screen.getByRole("button", { name: /login_signup/i });
+    const loginButton = screen.getByRole("button", { name: /access_account/i });
     expect(loginButton).toBeInTheDocument();
   });
 
@@ -70,13 +70,13 @@ describe("Login Component", () => {
     renderLoginComponent();
 
     // Click login button
-    const loginButton = screen.getByRole("button", { name: /login_signup/i });
+    const loginButton = screen.getByRole("button", { name: /access_account/i });
     fireEvent.click(loginButton);
 
     // Check that modal is opened
     await waitFor(() => {
       expect(screen.getByRole("dialog")).toBeInTheDocument();
-      expect(screen.getByText(/choose_login_method/i)).toBeInTheDocument();
+      expect(screen.getByText(/choose_auth_method/i)).toBeInTheDocument();
     });
   });
 
@@ -84,7 +84,7 @@ describe("Login Component", () => {
     renderLoginComponent();
 
     // Open modal
-    const loginButton = screen.getByRole("button", { name: /login_signup/i });
+    const loginButton = screen.getByRole("button", { name: /access_account/i });
     fireEvent.click(loginButton);
 
     // Modal should be open
@@ -106,7 +106,7 @@ describe("Login Component", () => {
     renderLoginComponent();
 
     // Open modal
-    const loginButton = screen.getByRole("button", { name: /login_signup/i });
+    const loginButton = screen.getByRole("button", { name: /access_account/i });
     fireEvent.click(loginButton);
 
     // Click on username/password login
@@ -131,7 +131,7 @@ describe("Login Component", () => {
     renderLoginComponent();
 
     // Open modal
-    const loginButton = screen.getByRole("button", { name: /login_signup/i });
+    const loginButton = screen.getByRole("button", { name: /access_account/i });
     fireEvent.click(loginButton);
 
     // Click on Google login
@@ -146,22 +146,22 @@ describe("Login Component", () => {
     });
   });
 
-  it("calls Google sign up when 'sign up with Google' is clicked", async () => {
+  it("calls Google sign in when 'login with Google' is clicked", async () => {
     renderLoginComponent();
 
     // Open modal
-    const loginButton = screen.getByRole("button", { name: /login_signup/i });
+    const loginButton = screen.getByRole("button", { name: /access_account/i });
     fireEvent.click(loginButton);
 
-    // Click on Google signup
-    const googleSignupButton = screen.getByRole("button", {
-      name: /signup_with_google/i,
+    // Click on Google login
+    const googleLoginButton = screen.getByRole("button", {
+      name: /login_with_google/i,
     });
-    fireEvent.click(googleSignupButton);
+    fireEvent.click(googleLoginButton);
 
-    // Check if Google sign up was called
+    // Check if Google sign in was called
     await waitFor(() => {
-      expect(googleAuthService.signUp).toHaveBeenCalled();
+      expect(googleAuthService.signIn).toHaveBeenCalled();
     });
   });
 
@@ -169,7 +169,7 @@ describe("Login Component", () => {
     renderLoginComponent();
 
     // Open modal
-    const loginButton = screen.getByRole("button", { name: /login_signup/i });
+    const loginButton = screen.getByRole("button", { name: /access_account/i });
     fireEvent.click(loginButton);
 
     // Modal should be open

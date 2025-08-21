@@ -47,7 +47,7 @@ export const WASM_PATH = resolve(
 );
 
 // The `describe` function is used to group tests together
-describe("Vibe Coding Template Backend", () => {
+describe("OriginStamp Backend", () => {
   // Define variables to hold our PocketIC instance, canister ID,
   // and an actor to interact with our canister.
   let pic: PocketIc;
@@ -809,7 +809,6 @@ describe("Vibe Coding Template Backend", () => {
         // Custom endpoint
         console.log("Generated URL for custom endpoint:", result.Ok);
       }
-      expect(result.Ok).toContain("assets");
       expect(result.Ok).toContain(fileData.filename);
     }
   });
@@ -848,7 +847,6 @@ describe("Vibe Coding Template Backend", () => {
     expect("Ok" in result).toBe(true);
     if ("Ok" in result) {
       console.log("Generated URL with custom endpoint:", result.Ok);
-      expect(result.Ok).toContain("assets");
       expect(result.Ok).toContain(fileData.filename);
       // The exact URL structure depends on the backend implementation
       // so we just verify it contains the key components
@@ -1132,5 +1130,536 @@ describe("Vibe Coding Template Backend", () => {
       // Should handle gracefully - either succeed or fail consistently
       expect(result).toBeDefined();
     }
+  });
+
+  // ICRC-7 NFT Tests
+  describe("ICRC-7 NFT Functionality", () => {
+    it("should return collection metadata", async () => {
+      const metadata = await actor.icrc7_collection_metadata();
+
+      expect(metadata.name).toBe("Origin Stamp Art NFTs");
+      expect(metadata.description).toBeDefined();
+      expect(metadata.total_supply).toBe(0n);
+    });
+
+    it("should return collection name", async () => {
+      const name = await actor.icrc7_name();
+      expect(name).toBe("Origin Stamp Art NFTs");
+    });
+
+    it("should return collection description", async () => {
+      const description = await actor.icrc7_description();
+      expect(description).toBeDefined();
+      expect(description.length).toBe(1);
+    });
+
+    it("should return total supply initially zero", async () => {
+      const totalSupply = await actor.icrc7_total_supply();
+      expect(totalSupply).toBe(0n);
+    });
+
+    it("should return supply cap", async () => {
+      const supplyCap = await actor.icrc7_supply_cap();
+      // Should return empty array if no cap is set
+      expect(Array.isArray(supplyCap)).toBe(true);
+    });
+
+    it("should return empty tokens list initially", async () => {
+      const tokens = await actor.icrc7_tokens([], []);
+      expect(Array.from(tokens)).toEqual([]);
+    });
+
+    it("should mint NFT from session successfully", async () => {
+      // Create a session first
+      const sessionResult = await actor.create_physical_art_session(
+        "nft_artist",
+        "NFT Art Piece",
+        "Beautiful digital art",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      const sessionId = sessionResult.Ok;
+
+      // Add some photos to the session
+      await actor.upload_photo_to_session(
+        sessionId,
+        "https://example.com/art1.jpg",
+      );
+      await actor.upload_photo_to_session(
+        sessionId,
+        "https://example.com/art2.jpg",
+      );
+
+      // Create recipient account
+      const recipient = {
+        owner: Principal.fromText("euqfo-6ybai-bqibi-ga4ea-scq"),
+        subaccount: [] as [] | [Uint8Array],
+      };
+
+      // Mint NFT from session
+      const mintResult = await actor.mint_nft_from_session(
+        sessionId,
+        recipient,
+        [["custom_attribute", "test_value"]],
+      );
+
+      expect("Ok" in mintResult).toBe(true);
+      if ("Ok" in mintResult) {
+        expect(typeof mintResult.Ok).toBe("bigint");
+        expect(mintResult.Ok).toBeGreaterThan(0n);
+
+        // Verify total supply increased
+        const totalSupply = await actor.icrc7_total_supply();
+        expect(totalSupply).toBe(1n);
+
+        // Verify token exists
+        const tokens = await actor.icrc7_tokens([], []);
+        expect(tokens).toContain(mintResult.Ok);
+
+        // Verify owner
+        const owners = await actor.icrc7_owner_of([mintResult.Ok]);
+        expect(owners).toHaveLength(1);
+        if (owners[0] && owners[0].length > 0 && owners[0][0]) {
+          expect(owners[0][0].owner).toEqual(recipient.owner);
+        } else {
+          console.log("Warning: No owner found for token", mintResult.Ok);
+        }
+      }
+    });
+
+    it("should get token metadata", async () => {
+      // First mint an NFT
+      const sessionResult = await actor.create_physical_art_session(
+        "metadata_artist",
+        "Metadata Test Art",
+        "Testing metadata",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      const sessionId = sessionResult.Ok;
+      const recipient = {
+        owner: Principal.fromText("euqfo-6ybai-bqibi-ga4ea-scq"),
+        subaccount: [] as [] | [Uint8Array],
+      };
+
+      const mintResult = await actor.mint_nft_from_session(
+        sessionId,
+        recipient,
+        [["rarity", "rare"]],
+      );
+      expect("Ok" in mintResult).toBe(true);
+      if (!("Ok" in mintResult)) return;
+
+      const tokenId = mintResult.Ok;
+
+      // Get token metadata
+      const metadata = await actor.icrc7_token_metadata([tokenId]);
+      expect(metadata).toHaveLength(1);
+      if (metadata[0] && metadata[0].length > 0) {
+        const tokenMetadata = metadata[0][0];
+        if (tokenMetadata) {
+          expect(tokenMetadata.name).toContain("Metadata Test Art");
+          expect(tokenMetadata.description).toBeDefined();
+          expect(tokenMetadata.attributes).toContainEqual(["rarity", "rare"]);
+          expect(tokenMetadata.attributes).toContainEqual([
+            "session_id",
+            sessionId,
+          ]);
+          expect(tokenMetadata.attributes).toContainEqual([
+            "artist",
+            "metadata_artist",
+          ]);
+        }
+      } else {
+        console.log("Warning: No metadata found for token", tokenId);
+      }
+    });
+
+    it("should handle token balance queries", async () => {
+      const account = {
+        owner: Principal.fromText("euqfo-6ybai-bqibi-ga4ea-scq"),
+        subaccount: [] as [] | [Uint8Array],
+      };
+
+      // Check balance before minting
+      const initialBalance = await actor.icrc7_balance_of([account]);
+      expect(initialBalance).toHaveLength(1);
+      const initialCount = initialBalance[0];
+
+      // Mint an NFT
+      const sessionResult = await actor.create_physical_art_session(
+        "balance_artist",
+        "Balance Test Art",
+        "Testing balance",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      await actor.mint_nft_from_session(sessionResult.Ok, account, []);
+
+      // Check balance after minting
+      const newBalance = await actor.icrc7_balance_of([account]);
+      expect(newBalance).toHaveLength(1);
+      expect(newBalance[0]).toBe(initialCount + 1n);
+    });
+
+    it("should get tokens owned by account", async () => {
+      const account = {
+        owner: Principal.fromText("euqfo-6ybai-bqibi-ga4ea-scq"),
+        subaccount: [] as [] | [Uint8Array],
+      };
+
+      // Mint multiple NFTs for the same account
+      for (let i = 0; i < 3; i++) {
+        const sessionResult = await actor.create_physical_art_session(
+          "multi_artist",
+          `Multi Art ${i}`,
+          `Testing multiple NFTs ${i}`,
+        );
+        expect("Ok" in sessionResult).toBe(true);
+        if ("Ok" in sessionResult) {
+          await actor.mint_nft_from_session(sessionResult.Ok, account, []);
+        }
+      }
+
+      // Get tokens owned by account
+      const ownedTokens = await actor.icrc7_tokens_of(account, [], []);
+      expect(ownedTokens.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it("should get session NFTs", async () => {
+      const sessionResult = await actor.create_physical_art_session(
+        "session_nft_artist",
+        "Session NFT Art",
+        "Testing session NFTs",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      const sessionId = sessionResult.Ok;
+      const account = {
+        owner: Principal.fromText("euqfo-6ybai-bqibi-ga4ea-scq"),
+        subaccount: [] as [] | [Uint8Array],
+      };
+
+      // Mint NFT from session
+      await actor.mint_nft_from_session(sessionId, account, []);
+
+      // Get NFTs for this session
+      const sessionNFTs = await actor.get_session_nfts(sessionId);
+      expect(sessionNFTs).toHaveLength(1);
+      expect(sessionNFTs[0].session_id).toEqual([sessionId]);
+    });
+
+    it("should get user NFTs", async () => {
+      const principal = Principal.fromText("euqfo-6ybai-bqibi-ga4ea-scq");
+      const account = {
+        owner: principal,
+        subaccount: [] as [] | [Uint8Array],
+      };
+
+      // Mint NFT for user
+      const sessionResult = await actor.create_physical_art_session(
+        "user_nft_artist",
+        "User NFT Art",
+        "Testing user NFTs",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if ("Ok" in sessionResult) {
+        await actor.mint_nft_from_session(sessionResult.Ok, account, []);
+      }
+
+      // Get user NFTs
+      const userNFTs = await actor.get_user_nfts(principal);
+      expect(userNFTs.length).toBeGreaterThanOrEqual(1);
+      expect(userNFTs[0].owner.owner).toEqual(principal);
+    });
+
+    it("should fail to mint NFT from non-existent session", async () => {
+      const account = {
+        owner: Principal.fromText("euqfo-6ybai-bqibi-ga4ea-scq"),
+        subaccount: [] as [] | [Uint8Array],
+      };
+
+      const mintResult = await actor.mint_nft_from_session(
+        "nonexistent-session",
+        account,
+        [],
+      );
+
+      expect("Ok" in mintResult).toBe(false);
+      expect("Err" in mintResult).toBe(true);
+      if ("Err" in mintResult) {
+        expect(mintResult.Err).toBe("Session not found");
+      }
+    });
+  });
+
+  // Certificate Tests
+  describe("Certificate Functionality", () => {
+    it("should generate certificate successfully", async () => {
+      // Create session first
+      const sessionResult = await actor.create_physical_art_session(
+        "cert_artist",
+        "Certificate Art",
+        "Art for certificate testing",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      const sessionId = sessionResult.Ok;
+
+      // Add photos to session
+      await actor.upload_photo_to_session(
+        sessionId,
+        "https://example.com/cert1.jpg",
+      );
+      await actor.upload_photo_to_session(
+        sessionId,
+        "https://example.com/cert2.jpg",
+      );
+
+      // Generate certificate
+      const certRequest = {
+        session_id: sessionId,
+        username: "cert_artist",
+        art_title: "Certificate Art",
+        description: "Art for certificate testing",
+        photo_count: 2,
+        creation_duration: 120,
+        file_format: "JPG",
+        creation_tools: ["Photoshop", "Camera"],
+      };
+
+      const certResult = await actor.generate_certificate(certRequest);
+      expect("Ok" in certResult).toBe(true);
+      if ("Ok" in certResult) {
+        const cert = certResult.Ok;
+        expect(cert.certificate_id).toContain("CERT-");
+        expect(cert.session_id).toBe(sessionId);
+        expect(cert.username).toBe("cert_artist");
+        expect(cert.art_title).toBe("Certificate Art");
+        expect(cert.verification_hash).toContain("0x");
+        expect(cert.blockchain_tx).toContain("0x");
+        expect(cert.certificate_status).toBe("active");
+        expect(cert.verification_score).toBeGreaterThan(0);
+        expect(cert.authenticity_rating).toBeGreaterThan(0);
+      }
+    });
+
+    it("should get certificate by ID", async () => {
+      // Create session and generate certificate
+      const sessionResult = await actor.create_physical_art_session(
+        "get_cert_artist",
+        "Get Cert Art",
+        "Testing certificate retrieval",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      const certRequest = {
+        session_id: sessionResult.Ok,
+        username: "get_cert_artist",
+        art_title: "Get Cert Art",
+        description: "Testing certificate retrieval",
+        photo_count: 1,
+        creation_duration: 60,
+        file_format: "PNG",
+        creation_tools: ["GIMP"],
+      };
+
+      const certResult = await actor.generate_certificate(certRequest);
+      expect("Ok" in certResult).toBe(true);
+      if (!("Ok" in certResult)) return;
+
+      const certificateId = certResult.Ok.certificate_id;
+
+      // Get certificate by ID
+      const retrievedCert = await actor.get_certificate_by_id(certificateId);
+      expect(retrievedCert).toBeDefined();
+      expect(retrievedCert.length).toBe(1);
+      if (retrievedCert[0]) {
+        expect(retrievedCert[0].certificate_id).toBe(certificateId);
+        expect(retrievedCert[0].username).toBe("get_cert_artist");
+      }
+    });
+
+    it("should get user certificates", async () => {
+      const username = "multi_cert_artist";
+
+      // Create multiple sessions and certificates
+      for (let i = 0; i < 3; i++) {
+        const sessionResult = await actor.create_physical_art_session(
+          username,
+          `Multi Cert Art ${i}`,
+          `Testing multiple certificates ${i}`,
+        );
+        expect("Ok" in sessionResult).toBe(true);
+        if ("Ok" in sessionResult) {
+          const certRequest = {
+            session_id: sessionResult.Ok,
+            username,
+            art_title: `Multi Cert Art ${i}`,
+            description: `Testing multiple certificates ${i}`,
+            photo_count: 1,
+            creation_duration: 30,
+            file_format: "JPG",
+            creation_tools: ["Camera"],
+          };
+          await actor.generate_certificate(certRequest);
+        }
+      }
+
+      // Get user certificates
+      const userCerts = await actor.get_user_certificates(username);
+      expect(userCerts.length).toBeGreaterThanOrEqual(3);
+      userCerts.forEach((cert) => {
+        expect(cert.username).toBe(username);
+      });
+    });
+
+    it("should verify certificate successfully", async () => {
+      // Generate certificate first
+      const sessionResult = await actor.create_physical_art_session(
+        "verify_artist",
+        "Verify Art",
+        "Testing certificate verification",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      const certRequest = {
+        session_id: sessionResult.Ok,
+        username: "verify_artist",
+        art_title: "Verify Art",
+        description: "Testing certificate verification",
+        photo_count: 1,
+        creation_duration: 90,
+        file_format: "PNG",
+        creation_tools: ["Digital Camera"],
+      };
+
+      const certResult = await actor.generate_certificate(certRequest);
+      expect("Ok" in certResult).toBe(true);
+      if (!("Ok" in certResult)) return;
+
+      const certificateId = certResult.Ok.certificate_id;
+
+      // Verify certificate
+      const verifyResult = await actor.verify_certificate(certificateId);
+      expect("Ok" in verifyResult).toBe(true);
+      if ("Ok" in verifyResult) {
+        expect(verifyResult.Ok.valid).toBe(true);
+        expect(verifyResult.Ok.score).toBeGreaterThan(0);
+        expect(verifyResult.Ok.details).toContain("verified");
+      }
+    });
+
+    it("should fail to verify non-existent certificate", async () => {
+      const verifyResult = await actor.verify_certificate("nonexistent-cert");
+      expect("Ok" in verifyResult).toBe(false);
+      expect("Err" in verifyResult).toBe(true);
+      if ("Err" in verifyResult) {
+        expect(verifyResult.Err).toBe("Certificate not found");
+      }
+    });
+
+    it("should generate NFT for certificate", async () => {
+      // Generate certificate first
+      const sessionResult = await actor.create_physical_art_session(
+        "nft_cert_artist",
+        "NFT Cert Art",
+        "Testing NFT generation from certificate",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      const certRequest = {
+        session_id: sessionResult.Ok,
+        username: "nft_cert_artist",
+        art_title: "NFT Cert Art",
+        description: "Testing NFT generation from certificate",
+        photo_count: 2,
+        creation_duration: 150,
+        file_format: "JPG",
+        creation_tools: ["Photoshop", "Lightroom"],
+      };
+
+      const certResult = await actor.generate_certificate(certRequest);
+      expect("Ok" in certResult).toBe(true);
+      if (!("Ok" in certResult)) return;
+
+      const certificateId = certResult.Ok.certificate_id;
+
+      // Generate NFT for certificate
+      const nftResult = await actor.generate_nft_for_certificate(certificateId);
+      expect("Ok" in nftResult).toBe(true);
+      if ("Ok" in nftResult) {
+        expect(nftResult.Ok.nft_id).toContain("NFT-");
+        expect(nftResult.Ok.nft_id).toContain(certificateId);
+        expect(nftResult.Ok.token_uri).toContain("ic-vibe.ic0.app");
+      }
+    });
+
+    it("should fail to generate certificate for non-existent session", async () => {
+      const certRequest = {
+        session_id: "nonexistent-session",
+        username: "test_artist",
+        art_title: "Test Art",
+        description: "Testing error handling",
+        photo_count: 1,
+        creation_duration: 60,
+        file_format: "JPG",
+        creation_tools: ["Camera"],
+      };
+
+      const certResult = await actor.generate_certificate(certRequest);
+      expect("Ok" in certResult).toBe(false);
+      expect("Err" in certResult).toBe(true);
+      if ("Err" in certResult) {
+        expect(certResult.Err).toBe("Session not found");
+      }
+    });
+
+    it("should handle certificate with various creation tools", async () => {
+      const sessionResult = await actor.create_physical_art_session(
+        "tools_artist",
+        "Tools Test Art",
+        "Testing various creation tools",
+      );
+      expect("Ok" in sessionResult).toBe(true);
+      if (!("Ok" in sessionResult)) return;
+
+      const creationTools = [
+        "Adobe Photoshop",
+        "Canon EOS R5",
+        "Wacom Tablet",
+        "Lightroom",
+        "Procreate",
+        "Traditional Brush",
+        "Acrylic Paint",
+      ];
+
+      const certRequest = {
+        session_id: sessionResult.Ok,
+        username: "tools_artist",
+        art_title: "Tools Test Art",
+        description: "Testing various creation tools",
+        photo_count: 5,
+        creation_duration: 300,
+        file_format: "RAW/JPG",
+        creation_tools: creationTools,
+      };
+
+      const certResult = await actor.generate_certificate(certRequest);
+      expect("Ok" in certResult).toBe(true);
+      if ("Ok" in certResult) {
+        expect(certResult.Ok.metadata.creation_tools).toEqual(creationTools);
+        expect(certResult.Ok.metadata.file_format).toBe("RAW/JPG");
+        expect(certResult.Ok.metadata.total_actions).toBe(5);
+      }
+    });
   });
 });

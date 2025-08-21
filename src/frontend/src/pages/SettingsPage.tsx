@@ -88,6 +88,18 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div className="dashboard">
+      {/* Settings Page Header */}
+      <div className="dashboard__header">
+        <div className="dashboard__header-left">
+          <div className="dashboard__header-info">
+            <h1 className="dashboard__title">{t("settings")}</h1>
+            <p className="dashboard__subtitle">
+              {t("manage_account_preferences")}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Main Content with Bento Layout */}
       <div className="dashboard__main-content">
         <div className="settings-bento-grid">
@@ -119,7 +131,9 @@ const SettingsPage: React.FC = () => {
               <div className="account-details">
                 <div className="account-detail">
                   <span className="account-label">{t("username")}:</span>
-                  <span className="account-value">{user?.username}</span>
+                  <span className="account-value">
+                    {user?.username || "N/A"}
+                  </span>
                 </div>
 
                 {user?.email && (
@@ -132,7 +146,14 @@ const SettingsPage: React.FC = () => {
                 {user?.principal && (
                   <div className="account-detail">
                     <span className="account-label">{t("icp_principal")}:</span>
-                    <span className="account-value">{user.principal}</span>
+                    <span
+                      className="account-value account-value--truncated"
+                      title={user.principal}
+                    >
+                      {user.principal.length > 25
+                        ? `${user.principal.slice(0, 12)}...${user.principal.slice(-8)}`
+                        : user.principal}
+                    </span>
                   </div>
                 )}
               </div>

@@ -68,6 +68,7 @@ describe("PhysicalArtService - AWS S3 Integration", () => {
           secretAccessKey: mockS3Config.secret_access_key,
         },
         endpoint: mockS3Config.endpoint[0],
+        forcePathStyle: true,
       });
 
       // Verify PutObjectCommand was created
@@ -103,7 +104,9 @@ describe("PhysicalArtService - AWS S3 Integration", () => {
       );
 
       expect(result.success).toBe(false);
-      expect(result.message).toBe("S3 configuration not found");
+      expect(result.message).toBe(
+        "Invalid S3 configuration: missing required fields",
+      );
     });
 
     it("should handle S3 upload errors", async () => {
@@ -129,7 +132,7 @@ describe("PhysicalArtService - AWS S3 Integration", () => {
       );
 
       expect(result.success).toBe(false);
-      expect(result.message).toBe("S3 upload failed");
+      expect(result.message).toBe("S3 upload failed: S3 upload failed");
     });
   });
 

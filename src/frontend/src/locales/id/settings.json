@@ -1,6 +1,7 @@
 {
   "settings": "Pengaturan",
   "settings_description": "Kelola akun dan preferensi Anda",
+  "manage_account_preferences": "Kelola pengaturan akun dan preferensi Anda",
   "back": "Kembali",
   "account_information": "Informasi Akun",
   "username_password_login": "Login Username & Password",
