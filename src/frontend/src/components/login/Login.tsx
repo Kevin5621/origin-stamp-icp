@@ -3,11 +3,12 @@ import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LoginForm } from "./LoginForm";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToastContext } from "../../contexts/ToastContext";
 import { TransformableAvatar } from "../profile/TransformableAvatar";
 import { AuthClient } from "@dfinity/auth-client";
-import { googleAuthService } from "../../services/googleAuth";
+import { GoogleUser } from "../../services/googleAuth";
 import { X } from "lucide-react";
 
 interface LoginProps {
@@ -160,19 +161,32 @@ export function Login({ className = "" }: LoginProps) {
 
   // Implement login with ICP (Internet Computer Protocol)
   const handleInternetIdentityLogin = useCallback(async () => {
+    console.log("Starting Internet Identity login...");
     try {
+      // Check if AuthClient is available
+      if (!AuthClient) {
+        console.error("AuthClient is not available");
+        error(t("login_failed", { message: "AuthClient not loaded" }));
+        return;
+      }
+
       const authClient = await AuthClient.create();
+      console.log("AuthClient created successfully");
 
       const isAuthenticated = await authClient.isAuthenticated();
+      console.log("Authentication check:", isAuthenticated);
+
       if (isAuthenticated) {
         const identity = authClient.getIdentity();
         const principal = identity.getPrincipal().toString();
+        console.log("Already authenticated with principal:", principal);
         loginWithInternetIdentity(principal);
         handleCloseModal();
         navigate("/dashboard");
         return;
       }
 
+      console.log("Starting login process...");
       await authClient.login({
         identityProvider: "https://identity.ic0.app",
         windowOpenerFeatures:
@@ -181,6 +195,7 @@ export function Login({ className = "" }: LoginProps) {
           console.log("Internet Identity login successful");
           const identity = authClient.getIdentity();
           const principal = identity.getPrincipal().toString();
+          console.log("Login successful with principal:", principal);
           loginWithInternetIdentity(principal);
           handleCloseModal();
           navigate("/dashboard");
@@ -197,24 +212,41 @@ export function Login({ className = "" }: LoginProps) {
           );
         },
       });
-    } catch (error) {
-      console.error("Error during Internet Identity login:", error);
+    } catch (errorObj) {
+      console.error("Error during Internet Identity login:", errorObj);
+      error(
+        t("login_failed", { message: t("internet_identity_login_failed") }),
+      );
     }
-  }, [handleCloseModal, navigate, loginWithInternetIdentity]);
+  }, [
+    handleCloseModal,
+    navigate,
+    loginWithInternetIdentity,
+    success,
+    error,
+    t,
+  ]);
 
-  // Implement login with Gmail (Google)
-  const handleGoogleLogin = useCallback(async () => {
-    try {
-      const userInfo = await googleAuthService.signIn();
+  // Handle Google login success
+  const handleGoogleLoginSuccess = useCallback(
+    (userInfo: GoogleUser) => {
+      console.log("Google login successful, user info:", userInfo);
       loginWithGoogle(userInfo);
       handleCloseModal();
       navigate("/dashboard");
       success(t("login_success", { username: userInfo.name }));
-    } catch (err) {
-      console.error("Google login failed:", err);
+    },
+    [handleCloseModal, navigate, loginWithGoogle, success, t],
+  );
+
+  // Handle Google login error
+  const handleGoogleLoginError = useCallback(
+    (errorObj: Error) => {
+      console.error("Google login failed:", errorObj);
       error(t("login_failed", { message: t("google_login_failed") }));
-    }
-  }, [handleCloseModal, navigate, loginWithGoogle, success, error, t]);
+    },
+    [error, t],
+  );
 
   // Render transformable avatar jika sudah login
   if (isAuthenticated && user) {
@@ -324,19 +356,15 @@ export function Login({ className = "" }: LoginProps) {
                       <span>{t("login_with_internet_identity")}</span>
                     </button>
 
-                    <button
-                      onClick={handleGoogleLogin}
-                      className="auth-btn auth-btn--icp"
-                      aria-label={t("login_with_google")}
-                    >
-                      <img
-                        src="/assets/google-logo.svg"
-                        alt=""
-                        className="auth-btn-icon"
-                        aria-hidden="true"
+                    <div className="auth-btn auth-btn--google">
+                      <GoogleLoginButton
+                        onSuccess={handleGoogleLoginSuccess}
+                        onError={handleGoogleLoginError}
+                        text="signin_with"
+                        theme="outline"
+                        size="large"
                       />
-                      <span>{t("login_with_google")}</span>
-                    </button>
+                    </div>
 
                     <button
                       onClick={handleShowCustomLogin}
