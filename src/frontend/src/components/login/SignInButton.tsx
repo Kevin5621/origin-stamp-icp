@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { useToastContext } from "../../contexts/ToastContext";
 import { LoginForm } from "./LoginForm";
+import { GoogleLoginButton } from "./GoogleLoginButton";
+import { GoogleUser } from "../../services/googleAuth";
 import { X } from "lucide-react";
+import { AuthClient } from "@dfinity/auth-client";
 
 interface SignInButtonProps {
   className?: string;
@@ -114,6 +120,9 @@ export const SignInButton: React.FC<SignInButtonProps> = ({
 // Komponen LoginModal yang hanya menampilkan modal tanpa button
 const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { t } = useTranslation("auth");
+  const navigate = useNavigate();
+  const { success, error } = useToastContext();
+  const { loginWithInternetIdentity, loginWithGoogle } = useAuth();
   const [showCustomLogin, setShowCustomLogin] = useState(false);
 
   // Handle escape key
@@ -135,6 +144,67 @@ const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const handleBackToLoginOptions = () => {
     setShowCustomLogin(false);
   };
+
+  // Handle Internet Identity login
+  const handleInternetIdentityLogin = useCallback(async () => {
+    try {
+      const authClient = await AuthClient.create();
+      // Always use production Internet Identity
+      const identityProvider = "https://identity.ic0.app/#authorize";
+
+      await authClient.login({
+        identityProvider,
+        maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000), // 7 days
+        windowOpenerFeatures:
+          "toolbar=0,location=0,menubar=0,width=500,height=500,left=100,top=100",
+        onSuccess: () => {
+          console.log("Internet Identity login successful");
+          const identity = authClient.getIdentity();
+          const principal = identity.getPrincipal().toString();
+          loginWithInternetIdentity(principal);
+          onClose();
+          navigate("/dashboard");
+          success(
+            t("login_success", {
+              username: `User ${principal.slice(0, 8)}...`,
+            }),
+          );
+        },
+        onError: (err) => {
+          console.error("Internet Identity login failed:", err);
+          error(
+            t("login_failed", { message: t("internet_identity_login_failed") }),
+          );
+        },
+      });
+    } catch (errorObj) {
+      console.error("Error during Internet Identity login:", errorObj);
+      error(
+        t("login_failed", { message: t("internet_identity_login_failed") }),
+      );
+    }
+  }, [onClose, navigate, loginWithInternetIdentity, success, error, t]);
+
+  // Handle Google login success
+  const handleGoogleLoginSuccess = useCallback(
+    (userInfo: GoogleUser) => {
+      console.log("Google login successful, user info:", userInfo);
+      loginWithGoogle(userInfo);
+      onClose();
+      navigate("/dashboard");
+      success(t("login_success", { username: userInfo.name }));
+    },
+    [onClose, navigate, loginWithGoogle, success, t],
+  );
+
+  // Handle Google login error
+  const handleGoogleLoginError = useCallback(
+    (err: Error) => {
+      console.error("Google login failed:", err);
+      error(t("login_failed", { message: t("google_login_failed") }));
+    },
+    [error, t],
+  );
 
   return (
     <div
@@ -168,7 +238,11 @@ const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <main className="auth-modal-body">
           {!showCustomLogin ? (
             <div className="auth-options">
-              <button className="auth-btn auth-btn--icp">
+              <button
+                onClick={handleInternetIdentityLogin}
+                className="auth-btn auth-btn--icp"
+                aria-label={t("login_with_internet_identity")}
+              >
                 <img
                   src="/assets/ii-logo.svg"
                   alt=""
@@ -178,15 +252,15 @@ const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <span>{t("login_with_internet_identity")}</span>
               </button>
 
-              <button className="auth-btn auth-btn--icp">
-                <img
-                  src="/assets/google-logo.svg"
-                  alt=""
-                  className="auth-btn-icon"
-                  aria-hidden="true"
+              <div className="auth-btn auth-btn--google">
+                <GoogleLoginButton
+                  onSuccess={handleGoogleLoginSuccess}
+                  onError={handleGoogleLoginError}
+                  text="signin_with"
+                  theme="outline"
+                  size="large"
                 />
-                <span>{t("login_with_google")}</span>
-              </button>
+              </div>
 
               <button
                 onClick={handleShowCustomLogin}

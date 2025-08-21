@@ -3,6 +3,33 @@ import { cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import React from "react";
 
+// Mock environment variables
+vi.mock("../src/services/googleAuth", () => ({
+  googleAuthService: {
+    signIn: vi.fn().mockResolvedValue({
+      id: "test-id",
+      name: "Test User",
+      email: "test@example.com",
+      picture: "test-picture.jpg",
+    }),
+    signOut: vi.fn().mockResolvedValue(undefined),
+    isAuthenticated: vi.fn().mockReturnValue(false),
+    getCurrentUser: vi.fn().mockReturnValue(null),
+  },
+}));
+
+// Mock Vite environment variables
+Object.defineProperty(import.meta, "env", {
+  value: {
+    VITE_GOOGLE_CLIENT_ID: "test-google-client-id",
+    MODE: "test",
+    DEV: false,
+    PROD: false,
+    SSR: false,
+  },
+  writable: true,
+});
+
 // Animation frame tracking for cleanup
 let animationFrameCallbacks = new Set<FrameRequestCallback>();
 let animationFrameTimeouts = new Set<NodeJS.Timeout>();
