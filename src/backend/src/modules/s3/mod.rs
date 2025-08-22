@@ -1,5 +1,5 @@
-use std::cell::RefCell;
 use crate::types::{S3Config, UploadFileData};
+use std::cell::RefCell;
 
 // Global state for S3 configuration
 thread_local! {
@@ -35,7 +35,10 @@ pub fn set_s3_config(config: S3Config) -> bool {
 
 // Generate upload URL using S3 configuration
 #[ic_cdk::update]
-pub fn generate_upload_url(_session_id: String, file_data: UploadFileData) -> Result<String, String> {
+pub fn generate_upload_url(
+    _session_id: String,
+    file_data: UploadFileData,
+) -> Result<String, String> {
     S3_CONFIG.with(|config| {
         match config.borrow().as_ref() {
             Some(s3_config) => {

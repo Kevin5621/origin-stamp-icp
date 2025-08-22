@@ -1,6 +1,6 @@
+use crate::types::{LoginResult, User};
 use std::cell::RefCell;
 use std::collections::HashMap;
-use crate::types::{User, LoginResult};
 
 thread_local! {
     static USERS: RefCell<HashMap<String, User>> = RefCell::new(HashMap::new());

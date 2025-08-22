@@ -1,8 +1,10 @@
+use crate::modules::physical_art;
+use crate::types::{
+    Account, CollectionMetadata, Token, TokenMetadata, TransferRequest, TransferResponse,
+};
+use sha2::{Digest, Sha256};
 use std::cell::RefCell;
 use std::collections::HashMap;
-use sha2::{Digest, Sha256};
-use crate::types::{Account, Token, TokenMetadata, TransferRequest, TransferResponse, CollectionMetadata};
-use crate::modules::physical_art;
 
 // =============================================================================
 // ICRC-7 NFT Implementation
