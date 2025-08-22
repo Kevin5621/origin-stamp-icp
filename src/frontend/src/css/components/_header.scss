@@ -231,7 +231,7 @@
   min-height: 40px;
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-md);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -524,7 +524,7 @@
     min-height: 40px;
     width: 40px;
     height: 40px;
-    border-radius: var(--radius-md);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -569,7 +569,7 @@
     padding: var(--space-3);
     gap: var(--space-2);
     min-height: 44px;
-    border-radius: var(--radius-md);
+    border-radius: 50%;
   }
 
   .floating-header__authenticated,
