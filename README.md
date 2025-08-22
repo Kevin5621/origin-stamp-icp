@@ -70,8 +70,446 @@ This project is built with:
 
 ---
 
+## 🏗️ System Architecture
+
+### High-Level Architecture Diagram
+
+```mermaid
+graph TB
+    subgraph "Frontend Layer"
+        UI[React + TypeScript UI]
+        Auth[Authentication Components]
+        Dashboard[Dashboard Components]
+        Marketplace[Marketplace Components]
+        Plugin[Creative Software Plugin]
+    end
+
+    subgraph "Backend Layer (Internet Computer)"
+        subgraph "Core Canisters"
+            Users[Users Module]
+            Sessions[Physical Art Sessions]
+            Certificates[Certificates Module]
+            NFT[NFT Module]
+            S3[S3 Integration]
+        end
+        
+        subgraph "Storage Layer"
+            OnChain[On-Chain Storage]
+            S3Storage[S3 Storage]
+        end
+    end
+
+    subgraph "External Services"
+        II[Internet Identity]
+        S3[S3 Compatible Storage]
+        ICP[Internet Computer Protocol]
+    end
+
+    subgraph "Creative Software"
+        PS[Photoshop]
+        VS[VS Code]
+        AB[Ableton]
+        Other[Other Creative Tools]
+    end
+
+    %% Frontend connections
+    UI --> Auth
+    UI --> Dashboard
+    UI --> Marketplace
+    Plugin --> UI
+
+    %% Backend connections
+    Auth --> Users
+    Dashboard --> Sessions
+    Dashboard --> Certificates
+    Marketplace --> NFT
+    Sessions --> S3
+
+    %% External connections
+    Auth --> II
+    S3 --> S3Storage
+    Users --> OnChain
+    Sessions --> OnChain
+    Certificates --> OnChain
+    NFT --> OnChain
+
+    %% Creative software connections
+    PS --> Plugin
+    VS --> Plugin
+    AB --> Plugin
+    Other --> Plugin
+
+    %% ICP connections
+    Users --> ICP
+    Sessions --> ICP
+    Certificates --> ICP
+    NFT --> ICP
+```
+
+### Backend Module Architecture
+
+```mermaid
+graph LR
+    subgraph "Backend Canister (Rust)"
+        subgraph "Core Modules"
+            Users[Users Module<br/>- User Management<br/>- Authentication<br/>- Profile Data]
+            
+            Sessions[Physical Art Sessions<br/>- Session Creation<br/>- Process Logging<br/>- Real-time Updates]
+            
+            Certificates[Certificates Module<br/>- Certificate Generation<br/>- Verification<br/>- Metadata Storage]
+            
+            NFT[NFT Module<br/>- ICRC-7 Implementation<br/>- Token Minting<br/>- Collection Management]
+            
+            S3[S3 Integration<br/>- File Upload/Download<br/>- Storage Management<br/>- URL Generation]
+        end
+        
+        subgraph "Supporting Layer"
+            Types[Type Definitions<br/>- Data Structures<br/>- Candid Interfaces]
+            
+            Utils[Utility Functions<br/>- Helper Methods<br/>- Common Operations]
+        end
+    end
+
+    subgraph "External Dependencies"
+        ICP[Internet Computer Protocol]
+        II[Internet Identity]
+        S3Service[S3 Storage Service]
+    end
+
+    %% Module connections
+    Users --> Types
+    Sessions --> Types
+    Certificates --> Types
+    NFT --> Types
+    S3 --> Types
+
+    Users --> Utils
+    Sessions --> Utils
+    Certificates --> Utils
+    NFT --> Utils
+    S3 --> Utils
+
+    %% External connections
+    Users --> II
+    Sessions --> ICP
+    Certificates --> ICP
+    NFT --> ICP
+    S3 --> S3Service
+```
+
+### Frontend Architecture
+
+```mermaid
+graph TB
+    subgraph "Frontend Application (React + TypeScript)"
+        subgraph "Page Layer"
+            Landing[Landing Page]
+            Auth[Authentication Pages]
+            Dashboard[Dashboard Pages]
+            Marketplace[Marketplace Pages]
+            Settings[Settings Page]
+        end
+
+        subgraph "Component Layer"
+            Common[Common Components<br/>- Button, Card, Modal<br/>- Form Elements, Toast]
+            
+            Layout[Layout Components<br/>- Header, Sidebar<br/>- Navigation, Footer]
+            
+            Feature[Feature Components<br/>- Session Management<br/>- Certificate Display<br/>- NFT Gallery]
+        end
+
+        subgraph "Service Layer"
+            AuthService[Authentication Service]
+            SessionService[Session Service]
+            CertificateService[Certificate Service]
+            NFTService[NFT Service]
+            S3Service[S3 Service]
+        end
+
+        subgraph "State Management"
+            AuthContext[Auth Context]
+            ToastContext[Toast Context]
+            ThemeContext[Theme Context]
+        end
+
+        subgraph "Utilities"
+            Hooks[Custom Hooks]
+            Utils[Utility Functions]
+            Types[TypeScript Types]
+        end
+    end
+
+    subgraph "External Integrations"
+        Backend[Backend Canister]
+        II[Internet Identity]
+        S3[S3 Storage]
+    end
+
+    %% Page connections
+    Landing --> Common
+    Auth --> Common
+    Dashboard --> Common
+    Marketplace --> Common
+    Settings --> Common
+
+    %% Component connections
+    Common --> Layout
+    Feature --> Common
+
+    %% Service connections
+    Auth --> AuthService
+    Dashboard --> SessionService
+    Dashboard --> CertificateService
+    Marketplace --> NFTService
+    Settings --> S3Service
+
+    %% Context connections
+    AuthService --> AuthContext
+    SessionService --> ToastContext
+    CertificateService --> ToastContext
+    NFTService --> ToastContext
+
+    %% Utility connections
+    AuthService --> Hooks
+    SessionService --> Hooks
+    CertificateService --> Hooks
+    NFTService --> Hooks
+
+    %% External connections
+    AuthService --> II
+    SessionService --> Backend
+    CertificateService --> Backend
+    NFTService --> Backend
+    S3Service --> S3
+```
+
+---
+
+## 🔄 User Flow Diagrams
+
+### 1. User Registration & Authentication Flow
+
+```mermaid
+flowchart TD
+    Start([User visits OriginStamp]) --> Landing{Landing Page}
+    Landing --> |Learn More| HowItWorks[How It Works Page]
+    Landing --> |Get Started| Login[Login Page]
+    
+    HowItWorks --> Login
+    
+    Login --> |Internet Identity| IIAuth[Internet Identity Auth]
+    Login --> |Google OAuth| GoogleAuth[Google OAuth]
+    
+    IIAuth --> |Success| Dashboard[Dashboard]
+    GoogleAuth --> |Success| Dashboard
+    
+    IIAuth --> |Failed| LoginError[Authentication Error]
+    GoogleAuth --> |Failed| LoginError
+    
+    LoginError --> Login
+    
+    Dashboard --> |Logout| Login
+```
+
+### 2. Creation Session Flow
+
+```mermaid
+flowchart TD
+    Start([User starts creation]) --> CreateSession[Create New Session]
+    
+    CreateSession --> |Fill Form| SessionForm[Session Details Form]
+    SessionForm --> |Project Name| ProjectName[Enter Project Name]
+    SessionForm --> |Description| Description[Add Description]
+    SessionForm --> |Category| Category[Select Category]
+    
+    ProjectName --> ValidateForm{Validate Form}
+    Description --> ValidateForm
+    Category --> ValidateForm
+    
+    ValidateForm --> |Valid| InitSession[Initialize Session]
+    ValidateForm --> |Invalid| SessionForm
+    
+    InitSession --> |Success| ActiveSession[Active Session Dashboard]
+    InitSession --> |Failed| SessionError[Session Error]
+    
+    SessionError --> CreateSession
+    
+    ActiveSession --> |Start Recording| Recording[Process Recording Active]
+    ActiveSession --> |Pause| Paused[Session Paused]
+    ActiveSession --> |Stop| Finalize[Finalize Session]
+    
+    Recording --> |Auto-save| AutoSave[Auto-save Process Data]
+    Recording --> |Manual Save| ManualSave[Manual Save]
+    
+    AutoSave --> Recording
+    ManualSave --> Recording
+    
+    Paused --> |Resume| Recording
+    Paused --> |Stop| Finalize
+    
+    Finalize --> |Generate Certificate| Certificate[Certificate NFT]
+    Finalize --> |Save Draft| Draft[Save as Draft]
+    
+    Certificate --> |Success| CertificateView[View Certificate]
+    Certificate --> |Failed| CertError[Certificate Error]
+    
+    CertError --> Finalize
+    Draft --> ActiveSession
+```
+
+### 3. Process Logging & Verification Flow
+
+```mermaid
+flowchart TD
+    Start([Creative Process Begins]) --> Plugin[Creative Software Plugin]
+    
+    Plugin --> |Detect Actions| ActionDetection[Action Detection]
+    ActionDetection --> |Tool Usage| ToolUsage[Tool Usage Log]
+    ActionDetection --> |File Changes| FileChanges[File Change Log]
+    ActionDetection --> |Time Tracking| TimeTracking[Time Tracking]
+    
+    ToolUsage --> |Periodic Upload| UploadToChain[Upload to Blockchain]
+    FileChanges --> |Hash Generation| FileHash[File Hash Generation]
+    TimeTracking --> |Session Duration| Duration[Session Duration]
+    
+    FileHash --> UploadToChain
+    Duration --> UploadToChain
+    
+    UploadToChain --> |Success| ChainStorage[On-Chain Storage]
+    UploadToChain --> |Failed| RetryUpload[Retry Upload]
+    
+    RetryUpload --> UploadToChain
+    
+    ChainStorage --> |Session Complete| Finalize[Finalize Session]
+    
+    Finalize --> |Generate NFT| NFTCreation[NFT Certificate Creation]
+    NFTCreation --> |Success| NFTCertificate[NFT Certificate]
+    NFTCreation --> |Failed| NFTRetry[NFT Creation Retry]
+    
+    NFTRetry --> NFTCreation
+    
+    NFTCertificate --> |Public Verification| Verification[Public Verification Page]
+    
+    Verification --> |QR Code Scan| QRScan[QR Code Scanner]
+    Verification --> |Direct URL| DirectURL[Direct URL Access]
+    
+    QRScan --> VerificationResult[Verification Result]
+    DirectURL --> VerificationResult
+    
+    VerificationResult --> |Valid| ValidCertificate[Valid Certificate Display]
+    VerificationResult --> |Invalid| InvalidCertificate[Invalid Certificate Alert]
+    
+    ValidCertificate --> |View Timeline| Timeline[Creation Timeline]
+    ValidCertificate --> |View Metadata| Metadata[Certificate Metadata]
+    
+    Timeline --> |Interactive Display| InteractiveTimeline[Interactive Timeline]
+    Metadata --> |Certificate Info| CertificateInfo[Certificate Information]
+```
+
+### 4. Marketplace & Discovery Flow
+
+```mermaid
+flowchart TD
+    Start([User visits Marketplace]) --> Marketplace[Marketplace Home]
+    
+    Marketplace --> |Browse Collections| Collections[Collections Page]
+    Marketplace --> |View Activity| Activity[Activity Feed]
+    Marketplace --> |Check Rankings| Rankings[Rankings Page]
+    Marketplace --> |View Stats| Stats[Statistics Page]
+    
+    Collections --> |Select Collection| CollectionDetail[Collection Detail]
+    CollectionDetail --> |View Certificate| CertificateDetail[Certificate Detail]
+    
+    Activity --> |View Recent| RecentActivity[Recent Activity]
+    Rankings --> |Top Creators| TopCreators[Top Creators]
+    Stats --> |Platform Stats| PlatformStats[Platform Statistics]
+    
+    CertificateDetail --> |Verify Certificate| Verification[Certificate Verification]
+    CertificateDetail --> |View Creator| CreatorProfile[Creator Profile]
+    CertificateDetail --> |Share| ShareCertificate[Share Certificate]
+    
+    Verification --> |Valid| ValidCert[Valid Certificate]
+    Verification --> |Invalid| InvalidCert[Invalid Certificate]
+    
+    ValidCert --> |View Process| ProcessHistory[Process History]
+    ValidCert --> |Download| DownloadAsset[Download Asset]
+    
+    CreatorProfile --> |View Portfolio| Portfolio[Creator Portfolio]
+    CreatorProfile --> |Follow| FollowCreator[Follow Creator]
+    
+    ShareCertificate --> |Social Media| SocialShare[Social Media Share]
+    ShareCertificate --> |Direct Link| DirectShare[Direct Link Share]
+    
+    ProcessHistory --> |Timeline View| TimelineView[Timeline View]
+    ProcessHistory --> |Metadata View| MetadataView[Metadata View]
+```
+
+### 5. Admin & Analytics Flow
+
+```mermaid
+flowchart TD
+    Start([Admin Access]) --> AdminAuth[Admin Authentication]
+    
+    AdminAuth --> |Success| AdminDashboard[Admin Dashboard]
+    AdminAuth --> |Failed| AuthError[Authentication Error]
+    
+    AuthError --> AdminAuth
+    
+    AdminDashboard --> |User Management| UserMgmt[User Management]
+    AdminDashboard --> |Session Monitoring| SessionMonitor[Session Monitoring]
+    AdminDashboard --> |Certificate Management| CertMgmt[Certificate Management]
+    AdminDashboard --> |Analytics| Analytics[Analytics Dashboard]
+    
+    UserMgmt --> |View Users| UserList[User List]
+    UserMgmt --> |User Details| UserDetails[User Details]
+    UserMgmt --> |Moderate User| ModerateUser[User Moderation]
+    
+    SessionMonitor --> |Active Sessions| ActiveSessions[Active Sessions]
+    SessionMonitor --> |Session History| SessionHistory[Session History]
+    SessionMonitor --> |Session Analytics| SessionAnalytics[Session Analytics]
+    
+    CertMgmt --> |View Certificates| CertList[Certificate List]
+    CertMgmt --> |Certificate Details| CertDetails[Certificate Details]
+    CertMgmt --> |Verify Certificate| CertVerification[Certificate Verification]
+    
+    Analytics --> |Platform Metrics| PlatformMetrics[Platform Metrics]
+    Analytics --> |User Analytics| UserAnalytics[User Analytics]
+    Analytics --> |Session Analytics| SessionAnalytics[Session Analytics]
+    Analytics --> |Certificate Analytics| CertAnalytics[Certificate Analytics]
+    
+    PlatformMetrics --> |Generate Report| PlatformReport[Platform Report]
+    UserAnalytics --> |Generate Report| UserReport[User Report]
+    SessionAnalytics --> |Generate Report| SessionReport[Session Report]
+    CertAnalytics --> |Generate Report| CertReport[Certificate Report]
+    
+    PlatformReport --> |Export| ExportReport[Export Report]
+    UserReport --> |Export| ExportReport
+    SessionReport --> |Export| ExportReport
+    CertReport --> |Export| ExportReport
+```
+
+---
+
 ## 📜 Table of Contents
 
+- [🎯 Project Overview](#-project-overview)
+- [🚨 The Problem](#-the-problem-the-digital-authenticity-crisis)
+- [💡 Our Solution](#-our-solution-a-paradigm-shift)
+- [🔧 How It Works](#-how-it-works-the-three-pillars-of-trust)
+- [🔍 The Verification Experience](#-the-verification-experience)
+- [🌐 Why Internet Computer](#-why-internet-computer-icp)
+- [🎯 Hackathon Goal](#-hackathon-goal-mvp)
+- [🚀 Technology Stack](#-technology-stack)
+- [🏗️ System Architecture](#️-system-architecture)
+  - [High-Level Architecture Diagram](#high-level-architecture-diagram)
+  - [Backend Module Architecture](#backend-module-architecture)
+  - [Frontend Architecture](#frontend-architecture)
+- [🔄 User Flow Diagrams](#-user-flow-diagrams)
+  - [User Registration & Authentication Flow](#1-user-registration--authentication-flow)
+  - [Creation Session Flow](#2-creation-session-flow)
+  - [Process Logging & Verification Flow](#3-process-logging--verification-flow)
+  - [Marketplace & Discovery Flow](#4-marketplace--discovery-flow)
+  - [Admin & Analytics Flow](#5-admin--analytics-flow)
 - [🚀 Getting Started](#-getting-started)
 - [📁 Project Structure](#-project-structure)
 - [✅ Testing Patterns](#-testing-patterns)
