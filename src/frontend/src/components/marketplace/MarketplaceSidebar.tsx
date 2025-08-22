@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Menu } from "lucide-react";
 import { CategoryFilter } from "./CategoryFilter";
 import { PriceFilter } from "./PriceFilter";
 
@@ -40,15 +41,14 @@ export const MarketplaceSidebar: React.FC<MarketplaceSidebarProps> = ({
           className="marketplace-sidebar__toggle"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M3 12h18M3 6h18M3 18h18"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Menu
+            size={20}
+            color="currentColor"
+            style={{
+              width: "20px",
+              height: "20px",
+            }}
+          />
         </button>
       </div>
 
