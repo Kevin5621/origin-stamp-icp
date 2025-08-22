@@ -1,315 +1,480 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { MarketplaceHeader } from "./MarketplaceHeader";
-import { SearchBar } from "./SearchBar";
-import { MarketplaceSidebar } from "./MarketplaceSidebar";
-import { CollectionGrid } from "./CollectionGrid";
-import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
-import PhysicalArtService from "../../services/physicalArtService";
-import { backendService } from "../../services/backendService";
-import type { PhysicalArtSession } from "../../services/physicalArtService";
+import { Heart, Zap, User } from "lucide-react";
+import { MarketplaceService } from "../../services/marketplaceService";
+import { useToastContext } from "../../contexts/ToastContext";
+import type { NFT } from "../../types/marketplace";
 
-interface Collection {
+interface NFTItem {
   id: string;
   title: string;
-  description: string;
   image: string;
-  price: number;
-  artist: string;
-  category: string;
-  likes: number;
+  currentBid: string;
+  endingTime: string;
+  creator: {
+    name: string;
+    avatar: string;
+  };
+  blockchain: string;
+  metadata: string;
+  date: string;
+  instantPrice: string;
+  isLiked: boolean;
 }
 
-interface Category {
-  id: string;
-  name: string;
-  count: number;
-}
-
-interface PriceRange {
-  min: number;
-  max: number;
-}
-
-interface MarketplaceMainProps {
-  className?: string;
-}
-
-export const MarketplaceMain: React.FC<MarketplaceMainProps> = ({
-  className = "",
-}) => {
-  const { t } = useTranslation("marketplace");
+export const MarketplaceMain: React.FC = () => {
+  useTranslation("marketplace");
+  const { user } = useAuth();
   const { addToast } = useToastContext();
-  const { user, isAuthenticated } = useAuth();
-  const [collections, setCollections] = useState<Collection[]>([]);
-  const [userCollections, setUserCollections] = useState<Collection[]>([]);
-  const [filteredCollections, setFilteredCollections] = useState<Collection[]>(
-    [],
-  );
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [priceRange, setPriceRange] = useState<PriceRange>({
-    min: 0,
-    max: Infinity,
+
+  const [nfts, setNfts] = useState<NFT[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load NFTs from backend
+  useEffect(() => {
+    const loadNFTs = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const backendNfts = await MarketplaceService.getNFTs();
+        setNfts(backendNfts);
+
+        if (backendNfts.length === 0) {
+          addToast("info", "No NFTs found in marketplace");
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to load NFTs";
+        setError(errorMessage);
+        addToast("error", errorMessage);
+        console.error("Failed to load marketplace NFTs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNFTs();
+  }, [addToast]);
+
+  // Convert NFT type to NFTItem type for UI compatibility
+  const convertNFTToNFTItem = (nft: NFT): NFTItem => ({
+    id: nft.id,
+    title: nft.title,
+    image:
+      nft.imageUrl ||
+      `https://via.placeholder.com/400x400/667eea/ffffff?text=${encodeURIComponent(nft.title)}`,
+    currentBid: nft.price.amount + " " + nft.price.currency,
+    endingTime: "Ongoing", // Could be calculated from auction end time if available
+    creator: {
+      name: nft.creator.username,
+      avatar: nft.creator.avatar,
+    },
+    blockchain: "Internet Computer",
+    metadata: nft.originStamp.verified ? "Verified" : "Pending",
+    date: new Date(nft.createdAt).toLocaleDateString(),
+    instantPrice: nft.price.amount + " " + nft.price.currency,
+    isLiked: false, // Would need to be tracked separately
   });
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"all-items" | "collections">(
-    "all-items",
-  );
 
-  useEffect(() => {
-    loadAllCollections();
-    loadUserCollections();
-    // Categories will be loaded as part of loadAllCollections
-  }, []);
+  // Get featured NFT (first one) and top collection (rest)
+  const featuredNFT = nfts.length > 0 ? convertNFTToNFTItem(nfts[0]) : null;
+  const topCollection = nfts.slice(1, 4).map(convertNFTToNFTItem);
 
-  useEffect(() => {
-    filterCollections();
-  }, [
-    collections,
-    userCollections,
-    selectedCategory,
-    priceRange,
-    searchQuery,
-    activeTab,
-  ]);
-
-  const loadAllCollections = async () => {
-    try {
-      console.log("Loading collections from sessions...");
-
-      // Try to get sessions data from all users
-      let sessionsToShow: PhysicalArtSession[] = [];
-
-      // First try to get all users and their sessions to ensure we show all available data
-      try {
-        console.log("Loading all users to get all sessions...");
-        const allUsers = await backendService.getAllUsers();
-        console.log("All users:", allUsers);
-
-        for (const username of allUsers) {
-          try {
-            const userSessions =
-              await PhysicalArtService.getUserSessions(username);
-            console.log(`Sessions for user ${username}:`, userSessions);
-            sessionsToShow.push(...userSessions);
-          } catch (error) {
-            console.warn(
-              `Failed to load sessions for user ${username}:`,
-              error,
-            );
-          }
-        }
-      } catch (error) {
-        console.warn("Failed to load all users:", error);
-
-        // Fallback: try current user if authenticated
-        if (isAuthenticated && user) {
-          console.log(
-            "Fallback: loading sessions for current user:",
-            user.username,
-          );
-          try {
-            const userSessions = await PhysicalArtService.getUserSessions(
-              user.username,
-            );
-            console.log("User sessions loaded:", userSessions);
-            sessionsToShow = userSessions;
-          } catch (sessionError) {
-            console.error("Failed to load user sessions:", sessionError);
-          }
-        }
-      }
-
-      console.log("Total sessions found:", sessionsToShow);
-
-      if (sessionsToShow.length > 0) {
-        console.log("Found sessions, converting to collections...");
-        // Convert sessions to collections format
-        const sessionCollections: Collection[] = sessionsToShow.map(
-          (session) => ({
-            id: session.session_id,
-            title: session.art_title,
-            description: session.description,
-            image:
-              session.uploaded_photos.length > 0
-                ? session.uploaded_photos[session.uploaded_photos.length - 1]
-                : "https://via.placeholder.com/300x400/4A5568/ffffff?text=" +
-                  encodeURIComponent(session.art_title),
-            price: 0,
-            artist: session.username,
-            category: "physical-art",
-            likes: 0,
-          }),
-        );
-
-        console.log("Session collections created:", sessionCollections);
-        setCollections(sessionCollections);
-
-        // Update categories based on loaded data
-        const uniqueCategories = ["physical-art", "digital"];
-        const categoriesWithCount: Category[] = uniqueCategories.map((cat) => ({
-          id: cat,
-          name: cat === "physical-art" ? "Physical Art" : "Digital",
-          count: sessionCollections.filter((c) => c.category === cat).length,
-        }));
-        setCategories(categoriesWithCount);
-
-        return;
-      } else {
-        console.log("No sessions found, setting empty collections");
-        setCollections([]);
-        setCategories([]);
-      }
-    } catch (error) {
-      console.error("Failed to load collections:", error);
-      if (addToast) {
-        addToast("error", "Failed to load collections");
-      }
-      setCollections([]);
-    }
-  };
-
-  const loadUserCollections = async () => {
-    try {
-      if (!isAuthenticated || !user) {
-        console.log("User not authenticated, clearing user collections");
-        setUserCollections([]);
-        return;
-      }
-
-      console.log("Loading collections for current user:", user.username);
-
-      try {
-        const userSessions = await PhysicalArtService.getUserSessions(
-          user.username,
-        );
-        console.log("Current user sessions loaded:", userSessions);
-
-        if (userSessions.length > 0) {
-          // Convert sessions to collections format
-          const sessionCollections: Collection[] = userSessions.map(
-            (session) => ({
-              id: session.session_id,
-              title: session.art_title,
-              description: session.description,
-              image:
-                session.uploaded_photos.length > 0
-                  ? session.uploaded_photos[session.uploaded_photos.length - 1]
-                  : "https://via.placeholder.com/300x400/4A5568/ffffff?text=" +
-                    encodeURIComponent(session.art_title),
-              price: 0,
-              artist: session.username,
-              category: "physical-art",
-              likes: 0,
-            }),
-          );
-
-          console.log("User session collections created:", sessionCollections);
-          setUserCollections(sessionCollections);
-        } else {
-          console.log("No user sessions found");
-          setUserCollections([]);
-        }
-      } catch (sessionError) {
-        console.error("Failed to load user sessions:", sessionError);
-        setUserCollections([]);
-      }
-    } catch (error) {
-      console.error("Failed to load user collections:", error);
-      setUserCollections([]);
-    }
-  };
-
-  const filterCollections = () => {
-    // Choose data source based on active tab
-    let sourceCollections =
-      activeTab === "collections" ? userCollections : collections;
-    let filtered = sourceCollections;
-
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(
-        (collection) => collection.category === selectedCategory,
-      );
-    }
-
-    filtered = filtered.filter(
-      (collection) =>
-        collection.price >= priceRange.min &&
-        (priceRange.max === Infinity || collection.price <= priceRange.max),
+  // Loading state
+  if (loading) {
+    return (
+      <div className="marketplace__container">
+        <div className="marketplace__header">
+          <div className="marketplace__greeting">
+            <h1>Hello, {user?.username || "User"}</h1>
+            <p>Loading marketplace...</p>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "400px",
+            flexDirection: "column",
+            gap: "var(--space-4)",
+          }}
+        >
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              border: "3px solid var(--color-border)",
+              borderTop: "3px solid var(--color-accent)",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+            }}
+          ></div>
+          <p style={{ color: "var(--color-text-secondary)" }}>
+            Loading NFTs from blockchain...
+          </p>
+        </div>
+      </div>
     );
+  }
 
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (collection) =>
-          collection.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          collection.artist.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          collection.description
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()),
-      );
-    }
+  // Error state
+  if (error) {
+    return (
+      <div className="marketplace__container">
+        <div className="marketplace__header">
+          <div className="marketplace__greeting">
+            <h1>Hello, {user?.username || "User"}</h1>
+            <p>Marketplace unavailable</p>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "400px",
+            flexDirection: "column",
+            gap: "var(--space-4)",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "48px",
+              color: "var(--color-error)",
+            }}
+          >
+            ⚠️
+          </div>
+          <h3 style={{ color: "var(--color-text-primary)", margin: 0 }}>
+            Failed to load marketplace
+          </h3>
+          <p style={{ color: "var(--color-text-secondary)", margin: 0 }}>
+            {error}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "var(--space-3) var(--space-6)",
+              background: "var(--color-accent)",
+              color: "var(--color-surface)",
+              border: "none",
+              borderRadius: "var(--radius-md)",
+              cursor: "pointer",
+              fontWeight: "var(--font-weight-medium)",
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-    setFilteredCollections(filtered);
-  };
-
-  const handleCollectionClick = (collection: Collection) => {
-    console.log("Collection clicked:", collection);
-  };
+  // Empty state
+  if (nfts.length === 0) {
+    return (
+      <div className="marketplace__container">
+        <div className="marketplace__header">
+          <div className="marketplace__greeting">
+            <h1>Hello, {user?.username || "User"}</h1>
+            <p>No NFTs in marketplace yet</p>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "400px",
+            flexDirection: "column",
+            gap: "var(--space-4)",
+            textAlign: "center",
+          }}
+        >
+          <pre
+            style={{
+              fontFamily: "monospace",
+              fontSize: "12px",
+              color: "var(--color-text-secondary)",
+              margin: 0,
+              lineHeight: 1.2,
+              whiteSpace: "pre",
+              textAlign: "center",
+            }}
+          >{`─────────────███████████████────────────
+──────────████▒▒▒▒▒▒▒▒▒▒▒▒▒████─────────
+────────███▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒███───────
+───────██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒███─────
+──────██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒███████▒▒▒██────
+─────██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒▒▒▒▒▒▒▒██▒▒▒██───
+────██▒▒██▒▒▒▒███▒▒▒▒▒▒▒▒▒▒▒▒▒▒███▒▒██──
+───██▒▒▒▒▒████▒▒▒▒██▒▒▒██▒▒▒▒▒▒▒▒██▒▒█──
+───█▒▒▒▒▒▒▒▒▒▒▒███░█▒▒▒█░███▒▒▒▒▒▒▒▒▒█──
+───█▒▒▒▒▒██████░░░░█▒▒▒█░░░░██████▒▒▒█──
+───█▒▒▒▒▒▒▒█░░░░▓▓██▒▒▒██▓▓░░░░█▒▒▒▒▒█──
+───█▒▒▒▒▒▒▒▒██████▒▒▒▒▒▒▒██████▒█▒▒▒▒█──
+───█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█▒▒▒▒█──
+───█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█░█▒▒▒█──
+───██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█░█▒▒██──
+────██▒▒▒▒▒▒▒▒▒▒▒████████▒▒▒▒▒▒██▒▒██───
+─────██▒▒▒▒▒▒█████▒▒▒▒▒▒█████▒▒▒▒▒██────
+──────██▒▒▒███▒▒▒▒▒████▒▒▒▒▒███▒▒██─────
+───────███▒▒▒▒▒▒▒▒█▒▒▒▒█▒▒▒▒▒▒▒▒██──────
+─────────███▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒███───────
+───────────█████▒▒▒▒▒▒▒▒▒██████─────────
+───────────────████████████─────────────`}</pre>
+          <h3 style={{ color: "var(--color-text-primary)", margin: 0 }}>
+            No NFTs Available
+          </h3>
+          <p style={{ color: "var(--color-text-secondary)", margin: 0 }}>
+            Be the first to create an NFT through our physical art sessions!
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`marketplace-main ${className}`}>
-      <MarketplaceHeader />
+    <div className="marketplace__container">
+      {/* Header Section */}
+      <div className="marketplace__header">
+        {/* Left - Greeting */}
+        <div className="marketplace__greeting">
+          <h1>Hello, {user?.username || "User"}</h1>
+          <p>
+            {nfts.length} NFT{nfts.length !== 1 ? "s" : ""} in marketplace
+          </p>
+        </div>
+      </div>
 
-      <div className="marketplace-main__content">
-        <div className="marketplace-main__search">
-          <SearchBar onSearch={setSearchQuery} />
+      {/* Featured NFT Section */}
+      {featuredNFT && (
+        <div className="marketplace__featured">
+          <div className="marketplace__featured-content">
+            {/* Left - NFT Image */}
+            <div className="marketplace__nft-image">
+              <img
+                src={featuredNFT.image}
+                alt={featuredNFT.title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+
+              {/* Countdown Timer Overlay */}
+              <div className="marketplace__nft-image-timer">
+                <span>{featuredNFT.endingTime}</span>
+              </div>
+            </div>
+
+            {/* Right - NFT Details */}
+            <div className="marketplace__nft-details">
+              <h2>{featuredNFT.title}</h2>
+
+              {/* Current Bid */}
+              <div className="marketplace__bid-section">
+                <div className="marketplace__bid-info">
+                  <p>Current Bid</p>
+                  <p>{featuredNFT.currentBid}</p>
+                </div>
+                <button className="marketplace__bid-btn">Place a Bid</button>
+              </div>
+
+              {/* NFT Details */}
+              <div className="marketplace__nft-meta">
+                <div className="marketplace__meta-item">
+                  <div
+                    className="marketplace__meta-item-dot"
+                    style={{
+                      width: "8px",
+                      height: "8px",
+                      borderRadius: "50%",
+                      backgroundColor: "var(--color-info)",
+                      marginRight: "12px",
+                    }}
+                  ></div>
+                  <span>Date: {featuredNFT.date}</span>
+                </div>
+                <div className="marketplace__meta-item">
+                  <div
+                    className="marketplace__meta-item-dot"
+                    style={{
+                      width: "8px",
+                      height: "8px",
+                      borderRadius: "50%",
+                      backgroundColor: "var(--color-primary)",
+                      marginRight: "12px",
+                    }}
+                  ></div>
+                  <span>Metadata: {featuredNFT.metadata}</span>
+                </div>
+                <div className="marketplace__meta-item">
+                  <div
+                    className="marketplace__meta-item-dot"
+                    style={{
+                      width: "8px",
+                      height: "8px",
+                      borderRadius: "50%",
+                      backgroundColor: "var(--color-accent)",
+                      marginRight: "12px",
+                    }}
+                  ></div>
+                  <span>Blockchain: {featuredNFT.blockchain}</span>
+                </div>
+              </div>
+
+              {/* Creator Info */}
+              <div className="marketplace__creator-info">
+                <div className="marketplace__creator">
+                  <div className="marketplace__creator-avatar">
+                    {featuredNFT.creator.avatar ? (
+                      <img
+                        src={featuredNFT.creator.avatar}
+                        alt="Creator Avatar"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "var(--color-surface-disabled)",
+                          borderRadius: "50%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          border: "1px solid var(--color-border)",
+                        }}
+                      >
+                        <User size={20} color="var(--color-text-secondary)" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="marketplace__creator-details">
+                    <p>{featuredNFT.creator.name}</p>
+                    <p>Creator</p>
+                  </div>
+                </div>
+                <div className="marketplace__instant-price">
+                  <Zap
+                    size={16}
+                    style={{
+                      color: "var(--color-warning)",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span>{featuredNFT.instantPrice}</span>
+                  <span>Instant Price</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Top Collection Section */}
+      <div>
+        <div className="marketplace__top-collection-header">
+          <h3>Top Collection</h3>
+          <a href="#">View All</a>
         </div>
 
-        <div className="marketplace-main__layout">
-          <MarketplaceSidebar
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            onPriceChange={setPriceRange}
-          />
+        <div className="marketplace__top-collection-grid">
+          {topCollection.map((nft) => (
+            <div key={nft.id} className="marketplace__nft-card">
+              {/* NFT Image */}
+              <div className="marketplace__card-image">
+                <img
+                  src={nft.image}
+                  alt={nft.title}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
 
-          <div className="marketplace-main__collections">
-            {/* Tab Navigation */}
-            <div className="marketplace-main__tabs">
-              <button
-                className={`marketplace-main__tab ${
-                  activeTab === "all-items"
-                    ? "marketplace-main__tab--active"
-                    : ""
-                }`}
-                onClick={() => setActiveTab("all-items")}
-              >
-                {t("all_items", "All Items")}
-              </button>
-              <button
-                className={`marketplace-main__tab ${
-                  activeTab === "collections"
-                    ? "marketplace-main__tab--active"
-                    : ""
-                }`}
-                onClick={() => setActiveTab("collections")}
-              >
-                {t("collections", "Collections")}
-              </button>
-            </div>
+                {/* Place a Bid Button Overlay */}
+                <button className="marketplace__card-image-btn">
+                  Place a Bid
+                </button>
+              </div>
 
-            <div className="marketplace-main__results">
-              <p className="marketplace-main__count">
-                {t("results_count", { count: filteredCollections.length })}
-              </p>
+              {/* NFT Info */}
+              <div className="marketplace__card-content">
+                {/* Creator Info */}
+                <div className="marketplace__card-creator">
+                  <div className="marketplace__card-creator-info">
+                    <div className="marketplace__card-creator-info-avatar">
+                      {nft.creator.avatar ? (
+                        <img
+                          src={nft.creator.avatar}
+                          alt="Creator Avatar"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: "50%",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: "var(--color-surface-disabled)",
+                            borderRadius: "50%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            border: "1px solid var(--color-border)",
+                          }}
+                        >
+                          <User size={12} color="var(--color-text-secondary)" />
+                        </div>
+                      )}
+                    </div>
+                    <span>{nft.creator.name}</span>
+                  </div>
+                  <div className="marketplace__card-creator-like">
+                    <Heart
+                      size={16}
+                      fill={nft.isLiked ? "var(--color-error)" : "none"}
+                      color={
+                        nft.isLiked
+                          ? "var(--color-error)"
+                          : "var(--color-text-tertiary)"
+                      }
+                      style={{
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* NFT Title */}
+                <h4 className="marketplace__card-title">{nft.title}</h4>
+
+                {/* NFT Details */}
+                <div className="marketplace__card-details">
+                  <div>
+                    <p>Ending in {nft.endingTime}</p>
+                    <p>Highest bid {nft.currentBid}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <CollectionGrid
-              collections={filteredCollections}
-              onCollectionClick={handleCollectionClick}
-            />
-          </div>
+          ))}
         </div>
       </div>
     </div>

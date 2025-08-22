@@ -1,8 +1,10 @@
-export { default as MarketplaceHeader } from "./MarketplaceHeader";
-export { default as CategoryFilter } from "./CategoryFilter";
-export { default as CollectionCard } from "./CollectionCard";
-export { default as CollectionGrid } from "./CollectionGrid";
-export { default as SearchBar } from "./SearchBar";
-export { default as PriceFilter } from "./PriceFilter";
-export { default as MarketplaceSidebar } from "./MarketplaceSidebar";
-export { default as MarketplaceMain } from "./MarketplaceMain";
+export { MarketplaceMain } from "./MarketplaceMain";
+export { MarketplaceHeader } from "./MarketplaceHeader";
+export { SearchBar } from "./SearchBar";
+export { MarketplaceSidebar } from "./MarketplaceSidebar";
+export { CollectionGrid } from "./CollectionGrid";
+export { CollectionCard } from "./CollectionCard";
+export { PriceFilter } from "./PriceFilter";
+export { CategoryFilter } from "./CategoryFilter";
+export { FeaturedNFT } from "./FeaturedNFT";
+export { TopCollection } from "./TopCollection";
