@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Loader, ErrorDisplay } from "./components";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import AuthRedirect from "./components/auth/AuthRedirect";
 import { AppErrorBoundary } from "./components/error";
 import { PhysicalArtService } from "./services/physicalArtService";
@@ -26,25 +27,27 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <BrowserRouter>
-          <AppErrorBoundary>
-            {/* Global authentication redirect handler */}
-            <AuthRedirect />
+    <ThemeProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <BrowserRouter>
+            <AppErrorBoundary>
+              {/* Global authentication redirect handler */}
+              <AuthRedirect />
 
-            {/* Main routing */}
-            <AppRoutes />
+              {/* Main routing */}
+              <AppRoutes />
 
-            {loading && !error && <Loader />}
-            {!!error && <ErrorDisplay message={error} />}
+              {loading && !error && <Loader />}
+              {!!error && <ErrorDisplay message={error} />}
 
-            {/* Portal target untuk modal */}
-            <div id="modal-root"></div>
-          </AppErrorBoundary>
-        </BrowserRouter>
-      </ToastProvider>
-    </AuthProvider>
+              {/* Portal target untuk modal */}
+              <div id="modal-root"></div>
+            </AppErrorBoundary>
+          </BrowserRouter>
+        </ToastProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

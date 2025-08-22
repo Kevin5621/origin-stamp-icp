@@ -49,6 +49,28 @@
   }
 }
 
+/* Override khusus untuk Settings Page */
+.layout-main-content:has(.settings-page-container),
+.layout-main-content .settings-page-container {
+  padding: 0 !important;
+}
+
+/* Override yang lebih spesifik untuk Settings Page */
+.layout-main-content:has(.settings-page-container) {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.settings-page-container {
+  padding: var(--space-6) !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  background: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  min-height: 100vh !important;
+}
+
 /* Override untuk halaman dengan overlay header (landing dan login) */
 .main-content--overlay {
   padding-top: 0 !important;

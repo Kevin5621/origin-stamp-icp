@@ -41,6 +41,13 @@
   "delete_account": "Hapus Akun",
   "delete_account_description": "Hapus akun Anda secara permanen. Tindakan ini tidak dapat dibatalkan.",
   "confirm_delete_account": "Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan.",
+  "file_upload": "Upload File",
+  "file_upload_description": "Upload file untuk proyek dan sesi Anda",
+  "choose_file": "Pilih File",
+  "file_selected": "Dipilih:",
+  "edit_username": "Edit Username",
+  "edit_email": "Edit Email",
+  "save_changes": "Simpan Perubahan",
   "s3_config": {
     "saved_success": "Konfigurasi S3 berhasil disimpan!",
     "save_failed": "Gagal menyimpan konfigurasi S3.",

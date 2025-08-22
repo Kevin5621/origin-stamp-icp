@@ -1,0 +1,131 @@
+/* =============================================================================
+   THEME TOGGLE COMPONENT
+   ============================================================================= */
+
+.theme-toggle {
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-primary-rgb), 0.1) 0%,
+      rgba(var(--color-accent-rgb), 0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-border-hover);
+    box-shadow:
+      0 4px 12px rgba(var(--color-primary-rgb), 0.15),
+      0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+    color: inherit;
+  }
+
+  /* Dark theme adjustments */
+  [data-theme="dark"] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+
+    &:hover {
+      border-color: var(--color-border-hover);
+      box-shadow:
+        0 4px 12px rgba(var(--color-primary-rgb), 0.2),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    min-width: 36px;
+    min-height: 36px;
+    width: 36px;
+    height: 36px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+/* Specific styling for header theme toggles */
+.app-top-header .theme-toggle,
+.landing-header .theme-toggle {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(var(--color-surface-rgb), 0.8);
+  border-color: rgba(var(--color-border-rgb), 0.3);
+
+  &:hover {
+    background: rgba(var(--color-surface-rgb), 0.9);
+    border-color: rgba(var(--color-primary-rgb), 0.4);
+  }
+
+  [data-theme="dark"] & {
+    background: rgba(var(--color-surface-rgb), 0.8);
+    border-color: rgba(var(--color-border-rgb), 0.4);
+
+    &:hover {
+      background: rgba(var(--color-surface-rgb), 0.9);
+      border-color: rgba(var(--color-primary-rgb), 0.5);
+    }
+  }
+}
