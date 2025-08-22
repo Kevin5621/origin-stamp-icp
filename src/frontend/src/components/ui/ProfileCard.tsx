@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 
 interface ProfileCardProps {
   className?: string;
@@ -18,7 +17,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   onSettingsClick,
   onLogoutClick,
 }) => {
-  const { t } = useTranslation("common");
   const [isExpanded, setIsExpanded] = useState(false);
 
   const getInitials = (name: string) => {

@@ -14,13 +14,26 @@ export default defineConfig({
     outDir: "dist/",
     emptyOutDir: true,
     chunkSizeWarningLimit: 1000,
+    minify: "esbuild",
+    target: "esnext",
     rollupOptions: {
       output: {
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
+            if (id.includes("@dfinity")) {
+              return "dfinity";
+            }
+            if (id.includes("react") || id.includes("react-dom")) {
+              return "react-vendor";
+            }
             return "vendor";
           }
         },
+      },
+      onwarn(warning, warn) {
+        // Suppress Rollup warnings about PURE comments
+        if (warning.code === "INVALID_ANNOTATION") return;
+        warn(warning);
       },
     },
   },
