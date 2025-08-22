@@ -5,14 +5,17 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { AuthProvider } from "../../src/contexts/AuthContext";
 import { ToastProvider } from "../../src/contexts/ToastContext";
+import { ThemeProvider } from "../../src/contexts/ThemeContext";
 
 // All-in-one test wrapper that provides all necessary context providers
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <MemoryRouter>
-      <AuthProvider>
-        <ToastProvider>{children}</ToastProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </MemoryRouter>
   );
 };
