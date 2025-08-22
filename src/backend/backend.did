@@ -46,6 +46,11 @@ type CreateCertificateRequest = record {
   description : text;
   creation_tools : vec text;
 };
+type DashboardMetrics = record {
+  total_sessions : nat64;
+  total_users : nat64;
+  total_certificates : nat64;
+};
 type LoginResult = record {
   username : opt text;
   message : text;
@@ -115,8 +120,11 @@ service : {
   generate_upload_url : (text, UploadFileData) -> (Result);
   get_all_users : () -> (vec text) query;
   get_certificate_by_id : (text) -> (opt Certificate) query;
+  get_certificate_count : () -> (nat64) query;
+  get_dashboard_metrics : () -> (DashboardMetrics) query;
   get_s3_config : () -> (opt S3Config) query;
   get_s3_config_status : () -> (bool) query;
+  get_session_count : () -> (nat64) query;
   get_session_details : (text) -> (opt PhysicalArtSession) query;
   get_session_nfts : (text) -> (vec Token) query;
   get_token_details : (nat64) -> (opt Token) query;

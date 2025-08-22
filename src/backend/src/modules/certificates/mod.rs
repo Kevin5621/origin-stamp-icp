@@ -1,9 +1,12 @@
+use crate::modules::physical_art;
+use crate::types::{
+    Certificate, CertificateMetadata, CreateCertificateRequest, NFTGenerationResult,
+    VerificationResult,
+};
+use crate::utils::generate_random_id;
+use sha2::{Digest, Sha256};
 use std::cell::RefCell;
 use std::collections::HashMap;
-use sha2::{Digest, Sha256};
-use crate::types::{Certificate, CertificateMetadata, CreateCertificateRequest, VerificationResult, NFTGenerationResult};
-use crate::modules::physical_art;
-use crate::utils::generate_random_id;
 
 thread_local! {
     static CERTIFICATES: RefCell<HashMap<String, Certificate>> = RefCell::new(HashMap::new());
@@ -187,4 +190,10 @@ pub fn generate_nft_for_certificate(certificate_id: String) -> Result<NFTGenerat
     let token_uri = format!("https://ic-vibe.ic0.app/nft/{certificate_id}");
 
     Ok(NFTGenerationResult { nft_id, token_uri })
+}
+
+// Get total certificate count
+#[ic_cdk::query]
+pub fn get_certificate_count() -> usize {
+    CERTIFICATES.with(|certificates| certificates.borrow().len())
 }

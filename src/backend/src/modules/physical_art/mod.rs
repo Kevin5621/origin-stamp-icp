@@ -1,7 +1,7 @@
+use crate::types::PhysicalArtSession;
+use crate::utils::generate_random_id;
 use std::cell::RefCell;
 use std::collections::HashMap;
-use crate::types::{PhysicalArtSession};
-use crate::utils::generate_random_id;
 
 thread_local! {
     static PHYSICAL_ART_SESSIONS: RefCell<HashMap<String, PhysicalArtSession>> = RefCell::new(HashMap::new());
@@ -100,3 +100,8 @@ pub fn remove_photo_from_session(session_id: String, photo_url: String) -> Resul
     })
 }
 
+// Get total session count
+#[ic_cdk::query]
+pub fn get_session_count() -> usize {
+    PHYSICAL_ART_SESSIONS.with(|sessions| sessions.borrow().len())
+}
