@@ -28,17 +28,30 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       const savedTheme = localStorage.getItem("originstamp-theme") as Theme;
       // Check if there's a saved theme preference
       if (savedTheme) return savedTheme;
-      // Check for OS preference for dark mode
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches)
-        return "dark";
+      // Check for OS preference for dark mode - safely check matchMedia
+      try {
+        if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          return "dark";
+        }
+      } catch (error) {
+        // Fallback to light theme if matchMedia fails
+        console.warn("Failed to detect system theme preference:", error);
+      }
     }
     return "light";
   });
 
   // Effect to update the data-theme attribute on the document and save to localStorage
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("originstamp-theme", theme);
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+      localStorage.setItem("originstamp-theme", theme);
+    }
   }, [theme]);
 
   // Function to toggle between light and dark theme

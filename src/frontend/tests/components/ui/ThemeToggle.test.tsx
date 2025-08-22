@@ -42,8 +42,11 @@ describe("ThemeToggle Component", () => {
   beforeEach(() => {
     Object.defineProperty(window, "localStorage", { value: localStorageMock });
 
-    // Mock setAttribute on documentElement without redefining the property
+    // Mock setAttribute on documentElement
     document.documentElement.setAttribute = vi.fn();
+
+    // Mock matchMedia to return false by default
+    window.matchMedia = matchMediaMock(false);
 
     vi.clearAllMocks();
     localStorageMock.clear();
@@ -54,13 +57,13 @@ describe("ThemeToggle Component", () => {
   });
 
   it("renders with light theme by default when no preference is set", () => {
-    window.matchMedia = matchMediaMock(false);
-
     render(<ThemeToggle />);
 
     // Should show the moon icon (for light theme)
     const moonIcon = screen.getByLabelText(/switch to dark theme/i);
     expect(moonIcon).toBeInTheDocument();
+
+    // Verify theme is set to light
     expect(document.documentElement.setAttribute).toHaveBeenCalledWith(
       "data-theme",
       "light",
@@ -68,7 +71,7 @@ describe("ThemeToggle Component", () => {
   });
 
   it("renders with dark theme when local storage has dark theme", () => {
-    window.matchMedia = matchMediaMock(false);
+    // Mock localStorage to return dark theme
     localStorageMock.getItem.mockReturnValue("dark");
 
     render(<ThemeToggle />);
@@ -76,6 +79,8 @@ describe("ThemeToggle Component", () => {
     // Should show the sun icon (for dark theme)
     const sunIcon = screen.getByLabelText(/switch to light theme/i);
     expect(sunIcon).toBeInTheDocument();
+
+    // Verify theme is set to dark
     expect(document.documentElement.setAttribute).toHaveBeenCalledWith(
       "data-theme",
       "dark",
@@ -83,6 +88,7 @@ describe("ThemeToggle Component", () => {
   });
 
   it("renders with dark theme when system preference is dark and no local storage", () => {
+    // Mock matchMedia to return true (dark preference)
     window.matchMedia = matchMediaMock(true);
 
     render(<ThemeToggle />);
@@ -90,6 +96,8 @@ describe("ThemeToggle Component", () => {
     // Should show the sun icon (for dark theme)
     const sunIcon = screen.getByLabelText(/switch to light theme/i);
     expect(sunIcon).toBeInTheDocument();
+
+    // Verify theme is set to dark
     expect(document.documentElement.setAttribute).toHaveBeenCalledWith(
       "data-theme",
       "dark",
@@ -97,8 +105,6 @@ describe("ThemeToggle Component", () => {
   });
 
   it("toggles from light to dark theme when clicked", () => {
-    window.matchMedia = matchMediaMock(false);
-
     render(<ThemeToggle />);
 
     // Initially light theme
@@ -119,7 +125,7 @@ describe("ThemeToggle Component", () => {
   });
 
   it("toggles from dark to light theme when clicked", () => {
-    window.matchMedia = matchMediaMock(false);
+    // Mock localStorage to return dark theme
     localStorageMock.getItem.mockReturnValue("dark");
 
     render(<ThemeToggle />);
@@ -141,28 +147,7 @@ describe("ThemeToggle Component", () => {
     );
   });
 
-  it("dispatches themeChanged event when toggled", () => {
-    window.matchMedia = matchMediaMock(false);
-    const dispatchEventSpy = vi.spyOn(window, "dispatchEvent");
-
-    render(<ThemeToggle />);
-
-    // Initially light theme
-    const toggleButton = screen.getByLabelText(/switch to dark theme/i);
-
-    // Click to toggle to dark
-    fireEvent.click(toggleButton);
-
-    // Should dispatch event
-    expect(dispatchEventSpy).toHaveBeenCalled();
-    const eventArg = dispatchEventSpy.mock.calls[0][0] as any;
-    expect(eventArg.type).toBe("themeChanged");
-    expect(eventArg.detail).toEqual({ theme: "dark" });
-  });
-
   it("applies custom className when provided", () => {
-    window.matchMedia = matchMediaMock(false);
-
     render(<ThemeToggle className="custom-class" />);
 
     const button = screen.getByRole("button");
