@@ -72,121 +72,136 @@ const CreateSessionPage: React.FC = () => {
   }, [sessionTitle, sessionDescription, t, navigate, addToast]);
 
   return (
-    <div className="create-session">
-      <div className="create-session-layout">
-        {/* Header */}
-        <div className="create-session__header">
-          <button className="btn-back" onClick={() => navigate("/session")}>
-            <ArrowLeft size={20} />
-            {t("back_to_sessions")}
-          </button>
-          <div className="create-session__title">
-            <h1>{t("create_new_session_title")}</h1>
-            <p>{t("create_new_session_description")}</p>
+    <div className="dashboard">
+      <div className="dashboard__content">
+        <div className="dashboard__main">
+          {/* Header Section */}
+          <div className="dashboard__section">
+            <div className="dashboard__header">
+              <button className="btn-back" onClick={() => navigate("/session")}>
+                <ArrowLeft size={20} />
+                {t("back_to_sessions")}
+              </button>
+              <h1 className="dashboard__title">
+                {t("create_new_session_title")}
+              </h1>
+              <p className="dashboard__subtitle">
+                {t("create_new_session_description")}
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Session Creation Form */}
-        <div className="create-session__content">
-          <div className="create-session__form">
-            {/* Art Type Selection */}
-            <div className="form-group">
-              <label>{t("art_type_label")}</label>
-              <div className="art-type-selector">
-                <button
-                  type="button"
-                  className={`art-type-option ${artType === "physical" ? "art-type-option--active" : ""}`}
-                  onClick={() => setArtType("physical")}
-                >
-                  <div className="art-type-icon">
-                    <Camera size={24} />
-                  </div>
-                  <div className="art-type-content">
-                    <h4>{t("physical_art_option_title")}</h4>
-                    <p>{t("physical_art_option_description")}</p>
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  className={`art-type-option ${artType === "digital" ? "art-type-option--active" : ""}`}
-                  onClick={() => setArtType("digital")}
-                >
-                  <div className="art-type-icon">
-                    <Palette size={24} />
-                  </div>
-                  <div className="art-type-content">
-                    <h4>{t("digital_art_option_title")}</h4>
-                    <p>{t("digital_art_option_description")}</p>
-                  </div>
-                </button>
+          {/* Session Creation Form */}
+          <div className="dashboard__section">
+            <div className="dashboard-card">
+              <div className="dashboard-card__header">
+                <h2 className="dashboard-card__title">
+                  {t("session_details")}
+                </h2>
               </div>
-            </div>
+              <div className="dashboard-card__content">
+                <div className="create-session__form">
+                  {/* Art Type Selection */}
+                  <div className="form-group">
+                    <label className="form-label">{t("art_type_label")}</label>
+                    <div className="art-type-selector">
+                      <button
+                        type="button"
+                        className={`art-type-option ${artType === "physical" ? "art-type-option--active" : ""}`}
+                        onClick={() => setArtType("physical")}
+                      >
+                        <div className="art-type-icon">
+                          <Camera size={24} />
+                        </div>
+                        <div className="art-type-content">
+                          <h4>{t("physical_art_option_title")}</h4>
+                          <p>{t("physical_art_option_description")}</p>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        className={`art-type-option ${artType === "digital" ? "art-type-option--active" : ""}`}
+                        onClick={() => setArtType("digital")}
+                      >
+                        <div className="art-type-icon">
+                          <Palette size={24} />
+                        </div>
+                        <div className="art-type-content">
+                          <h4>{t("digital_art_option_title")}</h4>
+                          <p>{t("digital_art_option_description")}</p>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
 
-            {/* Session Title */}
-            <div className="form-group">
-              <label htmlFor="session-title">
-                {t("session_title")}
-                <span className="required">*</span>
-              </label>
-              <input
-                id="session-title"
-                type="text"
-                value={sessionTitle}
-                onChange={(e) => {
-                  setSessionTitle(e.target.value);
-                  if (errors.title) {
-                    setErrors((prev) => ({ ...prev, title: "" }));
-                  }
-                }}
-                placeholder={t("enter_session_title")}
-                className={`form-input ${errors.title ? "form-input--error" : ""}`}
-              />
-              {errors.title && (
-                <div className="error-message">{errors.title}</div>
-              )}
-            </div>
+                  {/* Session Title */}
+                  <div className="form-group">
+                    <label htmlFor="session-title" className="form-label">
+                      {t("session_title")}
+                      <span className="required">*</span>
+                    </label>
+                    <input
+                      id="session-title"
+                      type="text"
+                      value={sessionTitle}
+                      onChange={(e) => {
+                        setSessionTitle(e.target.value);
+                        if (errors.title) {
+                          setErrors((prev) => ({ ...prev, title: "" }));
+                        }
+                      }}
+                      placeholder={t("enter_session_title")}
+                      className={`form-input ${errors.title ? "form-input--error" : ""}`}
+                    />
+                    {errors.title && (
+                      <div className="error-message">{errors.title}</div>
+                    )}
+                  </div>
 
-            {/* Session Description */}
-            <div className="form-group">
-              <label htmlFor="session-description">
-                {t("description")} ({t("optional")})
-              </label>
-              <textarea
-                id="session-description"
-                value={sessionDescription}
-                onChange={(e) => setSessionDescription(e.target.value)}
-                placeholder={t("describe_session_placeholder")}
-                className="form-textarea"
-                rows={4}
-              />
-            </div>
+                  {/* Session Description */}
+                  <div className="form-group">
+                    <label htmlFor="session-description" className="form-label">
+                      {t("description")} ({t("optional")})
+                    </label>
+                    <textarea
+                      id="session-description"
+                      value={sessionDescription}
+                      onChange={(e) => setSessionDescription(e.target.value)}
+                      placeholder={t("describe_session_placeholder")}
+                      className="form-textarea"
+                      rows={4}
+                    />
+                  </div>
 
-            {/* Form Actions */}
-            <div className="form-actions">
-              <button
-                className="btn-cancel"
-                onClick={() => navigate("/session")}
-                disabled={isCreating}
-              >
-                {t("cancel")}
-              </button>
-              <button
-                className="btn-create"
-                onClick={handleCreateSession}
-                disabled={isCreating}
-              >
-                {isCreating ? (
-                  <>
-                    <Loader size={16} className="animate-spin" />
-                    {t("creating_session")}
-                  </>
-                ) : (
-                  <>
-                    <Plus size={16} />
-                    {t("create_session_button")}
-                  </>
-                )}
-              </button>
+                  {/* Form Actions */}
+                  <div className="form-actions">
+                    <button
+                      className="btn btn--secondary"
+                      onClick={() => navigate("/session")}
+                      disabled={isCreating}
+                    >
+                      {t("cancel")}
+                    </button>
+                    <button
+                      className="btn btn--primary"
+                      onClick={handleCreateSession}
+                      disabled={isCreating}
+                    >
+                      {isCreating ? (
+                        <>
+                          <Loader size={16} className="animate-spin" />
+                          {t("creating_session")}
+                        </>
+                      ) : (
+                        <>
+                          <Plus size={16} />
+                          {t("create_session_button")}
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
