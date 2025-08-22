@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
 
 interface ThemeToggleProps {

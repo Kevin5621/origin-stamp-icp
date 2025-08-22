@@ -28,7 +28,7 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
   collections: propCollections,
 }) => {
   useTranslation("marketplace");
-  const { addToast } = useToastContext();
+  useToastContext();
 
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(true);
