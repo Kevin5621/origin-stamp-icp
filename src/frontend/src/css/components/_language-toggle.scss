@@ -1,8 +1,8 @@
 /* =============================================================================
-   THEME TOGGLE COMPONENT
+   LANGUAGE TOGGLE COMPONENT
    ============================================================================= */
 
-.theme-toggle {
+.language-toggle {
   min-width: 44px;
   min-height: 44px;
   width: 44px;
@@ -106,9 +106,9 @@
   }
 }
 
-/* Specific styling for header theme toggles */
-.app-top-header .theme-toggle,
-.landing-header .theme-toggle {
+/* Specific styling for header language toggles */
+.app-top-header .language-toggle,
+.landing-header .language-toggle {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   background: rgba(var(--color-surface-rgb), 0.8);
@@ -131,7 +131,7 @@
   }
 }
 
-/* Ensure all theme toggles are circular */
-.theme-toggle {
+/* Ensure all language toggles are circular */
+.language-toggle {
   border-radius: 50% !important;
 }
