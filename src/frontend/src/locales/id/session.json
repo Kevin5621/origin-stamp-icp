@@ -352,6 +352,9 @@
     "active": "Aktif",
     "completed": "Selesai",
     "no_photos": "Tidak ada foto",
+    "session_overview": "Ringkasan Sesi",
+    "search_and_filter": "Cari dan Filter",
+    "total": "Total",
     "mock_data": {
       "landscape_painting_study_title": "",
       "landscape_painting_study_description": "",
