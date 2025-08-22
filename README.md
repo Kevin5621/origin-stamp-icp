@@ -92,7 +92,7 @@ graph TB
             NFT[NFT Module]
             S3[S3 Integration]
         end
-        
+
         subgraph "Storage Layer"
             OnChain[On-Chain Storage]
             S3Storage[S3 Storage]
@@ -153,19 +153,19 @@ graph LR
     subgraph "Backend Canister (Rust)"
         subgraph "Core Modules"
             Users[Users Module<br/>- User Management<br/>- Authentication<br/>- Profile Data]
-            
+
             Sessions[Physical Art Sessions<br/>- Session Creation<br/>- Process Logging<br/>- Real-time Updates]
-            
+
             Certificates[Certificates Module<br/>- Certificate Generation<br/>- Verification<br/>- Metadata Storage]
-            
+
             NFT[NFT Module<br/>- ICRC-7 Implementation<br/>- Token Minting<br/>- Collection Management]
-            
+
             S3[S3 Integration<br/>- File Upload/Download<br/>- Storage Management<br/>- URL Generation]
         end
-        
+
         subgraph "Supporting Layer"
             Types[Type Definitions<br/>- Data Structures<br/>- Candid Interfaces]
-            
+
             Utils[Utility Functions<br/>- Helper Methods<br/>- Common Operations]
         end
     end
@@ -212,9 +212,9 @@ graph TB
 
         subgraph "Component Layer"
             Common[Common Components<br/>- Button, Card, Modal<br/>- Form Elements, Toast]
-            
+
             Layout[Layout Components<br/>- Header, Sidebar<br/>- Navigation, Footer]
-            
+
             Feature[Feature Components<br/>- Session Management<br/>- Certificate Display<br/>- NFT Gallery]
         end
 
@@ -294,20 +294,20 @@ flowchart TD
     Start([User visits OriginStamp]) --> Landing{Landing Page}
     Landing --> |Learn More| HowItWorks[How It Works Page]
     Landing --> |Get Started| Login[Login Page]
-    
+
     HowItWorks --> Login
-    
+
     Login --> |Internet Identity| IIAuth[Internet Identity Auth]
     Login --> |Google OAuth| GoogleAuth[Google OAuth]
-    
+
     IIAuth --> |Success| Dashboard[Dashboard]
     GoogleAuth --> |Success| Dashboard
-    
+
     IIAuth --> |Failed| LoginError[Authentication Error]
     GoogleAuth --> |Failed| LoginError
-    
+
     LoginError --> Login
-    
+
     Dashboard --> |Logout| Login
 ```
 
@@ -316,43 +316,43 @@ flowchart TD
 ```mermaid
 flowchart TD
     Start([User starts creation]) --> CreateSession[Create New Session]
-    
+
     CreateSession --> |Fill Form| SessionForm[Session Details Form]
     SessionForm --> |Project Name| ProjectName[Enter Project Name]
     SessionForm --> |Description| Description[Add Description]
     SessionForm --> |Category| Category[Select Category]
-    
+
     ProjectName --> ValidateForm{Validate Form}
     Description --> ValidateForm
     Category --> ValidateForm
-    
+
     ValidateForm --> |Valid| InitSession[Initialize Session]
     ValidateForm --> |Invalid| SessionForm
-    
+
     InitSession --> |Success| ActiveSession[Active Session Dashboard]
     InitSession --> |Failed| SessionError[Session Error]
-    
+
     SessionError --> CreateSession
-    
+
     ActiveSession --> |Start Recording| Recording[Process Recording Active]
     ActiveSession --> |Pause| Paused[Session Paused]
     ActiveSession --> |Stop| Finalize[Finalize Session]
-    
+
     Recording --> |Auto-save| AutoSave[Auto-save Process Data]
     Recording --> |Manual Save| ManualSave[Manual Save]
-    
+
     AutoSave --> Recording
     ManualSave --> Recording
-    
+
     Paused --> |Resume| Recording
     Paused --> |Stop| Finalize
-    
+
     Finalize --> |Generate Certificate| Certificate[Certificate NFT]
     Finalize --> |Save Draft| Draft[Save as Draft]
-    
+
     Certificate --> |Success| CertificateView[View Certificate]
     Certificate --> |Failed| CertError[Certificate Error]
-    
+
     CertError --> Finalize
     Draft --> ActiveSession
 ```
@@ -362,46 +362,46 @@ flowchart TD
 ```mermaid
 flowchart TD
     Start([Creative Process Begins]) --> Plugin[Creative Software Plugin]
-    
+
     Plugin --> |Detect Actions| ActionDetection[Action Detection]
     ActionDetection --> |Tool Usage| ToolUsage[Tool Usage Log]
     ActionDetection --> |File Changes| FileChanges[File Change Log]
     ActionDetection --> |Time Tracking| TimeTracking[Time Tracking]
-    
+
     ToolUsage --> |Periodic Upload| UploadToChain[Upload to Blockchain]
     FileChanges --> |Hash Generation| FileHash[File Hash Generation]
     TimeTracking --> |Session Duration| Duration[Session Duration]
-    
+
     FileHash --> UploadToChain
     Duration --> UploadToChain
-    
+
     UploadToChain --> |Success| ChainStorage[On-Chain Storage]
     UploadToChain --> |Failed| RetryUpload[Retry Upload]
-    
+
     RetryUpload --> UploadToChain
-    
+
     ChainStorage --> |Session Complete| Finalize[Finalize Session]
-    
+
     Finalize --> |Generate NFT| NFTCreation[NFT Certificate Creation]
     NFTCreation --> |Success| NFTCertificate[NFT Certificate]
     NFTCreation --> |Failed| NFTRetry[NFT Creation Retry]
-    
+
     NFTRetry --> NFTCreation
-    
+
     NFTCertificate --> |Public Verification| Verification[Public Verification Page]
-    
+
     Verification --> |QR Code Scan| QRScan[QR Code Scanner]
     Verification --> |Direct URL| DirectURL[Direct URL Access]
-    
+
     QRScan --> VerificationResult[Verification Result]
     DirectURL --> VerificationResult
-    
+
     VerificationResult --> |Valid| ValidCertificate[Valid Certificate Display]
     VerificationResult --> |Invalid| InvalidCertificate[Invalid Certificate Alert]
-    
+
     ValidCertificate --> |View Timeline| Timeline[Creation Timeline]
     ValidCertificate --> |View Metadata| Metadata[Certificate Metadata]
-    
+
     Timeline --> |Interactive Display| InteractiveTimeline[Interactive Timeline]
     Metadata --> |Certificate Info| CertificateInfo[Certificate Information]
 ```
@@ -411,35 +411,35 @@ flowchart TD
 ```mermaid
 flowchart TD
     Start([User visits Marketplace]) --> Marketplace[Marketplace Home]
-    
+
     Marketplace --> |Browse Collections| Collections[Collections Page]
     Marketplace --> |View Activity| Activity[Activity Feed]
     Marketplace --> |Check Rankings| Rankings[Rankings Page]
     Marketplace --> |View Stats| Stats[Statistics Page]
-    
+
     Collections --> |Select Collection| CollectionDetail[Collection Detail]
     CollectionDetail --> |View Certificate| CertificateDetail[Certificate Detail]
-    
+
     Activity --> |View Recent| RecentActivity[Recent Activity]
     Rankings --> |Top Creators| TopCreators[Top Creators]
     Stats --> |Platform Stats| PlatformStats[Platform Statistics]
-    
+
     CertificateDetail --> |Verify Certificate| Verification[Certificate Verification]
     CertificateDetail --> |View Creator| CreatorProfile[Creator Profile]
     CertificateDetail --> |Share| ShareCertificate[Share Certificate]
-    
+
     Verification --> |Valid| ValidCert[Valid Certificate]
     Verification --> |Invalid| InvalidCert[Invalid Certificate]
-    
+
     ValidCert --> |View Process| ProcessHistory[Process History]
     ValidCert --> |Download| DownloadAsset[Download Asset]
-    
+
     CreatorProfile --> |View Portfolio| Portfolio[Creator Portfolio]
     CreatorProfile --> |Follow| FollowCreator[Follow Creator]
-    
+
     ShareCertificate --> |Social Media| SocialShare[Social Media Share]
     ShareCertificate --> |Direct Link| DirectShare[Direct Link Share]
-    
+
     ProcessHistory --> |Timeline View| TimelineView[Timeline View]
     ProcessHistory --> |Metadata View| MetadataView[Metadata View]
 ```
