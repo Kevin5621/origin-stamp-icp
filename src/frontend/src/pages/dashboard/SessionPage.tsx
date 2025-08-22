@@ -141,7 +141,7 @@ const SessionPage: React.FC = () => {
     return (
       <div
         key={session.id}
-        className="session__session-card"
+        className="session-card"
         role="button"
         tabIndex={0}
         onClick={() => handleContinueSession(session.id)}
@@ -152,43 +152,45 @@ const SessionPage: React.FC = () => {
           }
         }}
       >
-        <div className="session__session-image">
+        <div className="session-card__image">
           {session.lastPhotoUrl ? (
             <img
               src={session.lastPhotoUrl}
               alt={session.title}
-              className="session__image"
+              className="session-card__image img"
             />
           ) : (
-            <div className="session__image-placeholder">
+            <div className="session-card__image-placeholder">
               <Camera size={16} />
               <span>{t("session.no_photos")}</span>
             </div>
           )}
-          <div className="session__session-status">
+          <div
+            className={`session-card__status session-card__status--${session.status}`}
+          >
             {getStatusBadge(session.status)}
           </div>
         </div>
 
-        <div className="session__session-content">
-          <div className="session__session-header">
-            <h3 className="session__session-title">{session.title}</h3>
-            <p className="session__session-type">
+        <div className="session-card__content">
+          <div className="session-card__header">
+            <h3 className="session-card__title">{session.title}</h3>
+            <p className="session-card__type">
               {session.artType === "physical"
                 ? t("session.physical")
                 : t("session.digital")}
             </p>
-            <span className="session__session-id">ID: {session.id}</span>
+            <span className="session-card__id">ID: {session.id}</span>
           </div>
 
-          <div className="session__session-details">
-            <div className="session__detail-item">
+          <div className="session-card__details">
+            <div className="session-card__detail-item">
               <Clock size={16} />
               <span>
                 {t("session.updated")} {formatDate(session.updatedAt)}
               </span>
             </div>
-            <div className="session__detail-item">
+            <div className="session-card__detail-item">
               <Camera size={16} />
               <span>
                 {session.photoCount} {t("session.photos")}
@@ -196,10 +198,10 @@ const SessionPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="session__session-actions">
+          <div className="session-card__actions">
             {isActive && (
               <button
-                className="btn"
+                className="btn btn--primary"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleContinueSession(session.id);
@@ -212,7 +214,7 @@ const SessionPage: React.FC = () => {
 
             {isCompleted && (
               <button
-                className="btn"
+                className="btn btn--primary"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleViewCertificate(session.id);
@@ -229,19 +231,21 @@ const SessionPage: React.FC = () => {
   };
 
   const renderEmptyState = () => (
-    <div className="session__empty-state">
-      <div className="session__empty-icon">
+    <div className="empty-state">
+      <div className="empty-state__icon">
         <FolderOpen size={40} />
       </div>
-      <h3>{t("session.no_active_sessions")}</h3>
-      <p>{t("session.no_sessions_description")}</p>
-      <div className="session__empty-actions">
-        <button className="btn-primary" onClick={handleCreateNewSession}>
+      <h3 className="empty-state__title">{t("session.no_active_sessions")}</h3>
+      <p className="empty-state__description">
+        {t("session.no_sessions_description")}
+      </p>
+      <div className="empty-state__actions">
+        <button className="btn btn--primary" onClick={handleCreateNewSession}>
           <Plus size={16} />
           {t("session.create_first_session")}
         </button>
         <button
-          className="btn-secondary"
+          className="btn btn--secondary"
           onClick={() => navigate("/dashboard")}
         >
           <FileText size={16} />
@@ -254,8 +258,8 @@ const SessionPage: React.FC = () => {
   const renderSessionsGrid = () => {
     if (loading) {
       return (
-        <div className="session__loading">
-          <Loader size={24} className="animate-spin" />
+        <div className="loading-state">
+          <Loader size={24} className="loading-state__spinner" />
           <p>{t("loading_sessions")}</p>
         </div>
       );
@@ -266,88 +270,129 @@ const SessionPage: React.FC = () => {
     }
 
     return (
-      <div className="session__sessions-grid">
+      <div className="sessions-grid">
         {filteredSessions.map(renderSessionCard)}
       </div>
     );
   };
 
   return (
-    <div className="session">
-      <div className="session-layout">
-        <div className="session__welcome">
-          <div className="session__welcome-content">
-            <div className="session__welcome-text">
-              <h1>{t("session.active_sessions")}</h1>
-              <p>{t("session.continue_sessions_description")}</p>
+    <div className="dashboard">
+      <div className="dashboard__content">
+        <div className="dashboard__main">
+          {/* Header Section */}
+          <div className="dashboard__section">
+            <div className="dashboard__header">
+              <h1 className="dashboard__title">
+                {t("session.active_sessions")}
+              </h1>
+              <p className="dashboard__subtitle">
+                {t("session.continue_sessions_description")}
+              </p>
             </div>
           </div>
-          <div className="session__welcome-actions">
-            <div className="session__stats">
-              <div className="session__stat-item">
-                <span className="session__stat-value">{activeSessions}</span>
-                <span className="session__stat-label">
-                  {t("session.active")}
-                </span>
-              </div>
-              <div className="session__stat-item">
-                <span className="session__stat-value">{completedSessions}</span>
-                <span className="session__stat-label">
-                  {t("session.completed")}
-                </span>
-              </div>
-            </div>
-            <button
-              className="btn-new-session"
-              onClick={handleCreateNewSession}
-            >
-              <Plus size={16} />
-              {t("session.new_session")}
-            </button>
-          </div>
-        </div>
 
-        <div className="session__search-filter">
-          <div className="session__search-container">
-            <Search className="session__search-icon" size={20} />
-            <input
-              type="text"
-              className="session__search-input"
-              placeholder={t("session.search_sessions")}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="session__filter-controls">
-            <div className="session__filter-tabs">
-              <button
-                className={`session__filter-tab ${activeFilter === "all" ? "active" : ""}`}
-                onClick={() => setActiveFilter("all")}
-              >
-                {t("session.all")}
-              </button>
-              <button
-                className={`session__filter-tab ${activeFilter === "active" ? "active" : ""}`}
-                onClick={() => setActiveFilter("active")}
-              >
-                {t("session.active")}
-              </button>
-              <button
-                className={`session__filter-tab ${activeFilter === "completed" ? "active" : ""}`}
-                onClick={() => setActiveFilter("completed")}
-              >
-                {t("session.completed")}
-              </button>
+          {/* Stats Section */}
+          <div className="dashboard__section">
+            <div className="dashboard-card">
+              <div className="dashboard-card__header">
+                <h2 className="dashboard-card__title">
+                  {t("session.session_overview")}
+                </h2>
+              </div>
+              <div className="dashboard-card__content">
+                <div className="session-stats">
+                  <div className="session-stat-item">
+                    <div className="session-stat-value">{activeSessions}</div>
+                    <div className="session-stat-label">
+                      {t("session.active")}
+                    </div>
+                  </div>
+                  <div className="session-stat-item">
+                    <div className="session-stat-value">
+                      {completedSessions}
+                    </div>
+                    <div className="session-stat-label">
+                      {t("session.completed")}
+                    </div>
+                  </div>
+                  <div className="session-stat-item">
+                    <div className="session-stat-value">{sessions.length}</div>
+                    <div className="session-stat-label">
+                      {t("session.total")}
+                    </div>
+                  </div>
+                </div>
+                <div className="session-actions">
+                  <button
+                    className="btn btn--primary"
+                    onClick={handleCreateNewSession}
+                  >
+                    <Plus size={16} />
+                    {t("session.new_session")}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="session__main-content">
-          <div className="session__sessions">
-            <div className="session__sessions-header">
-              <h2>{t("session.your_sessions")}</h2>
+          {/* Search and Filter Section */}
+          <div className="dashboard__section">
+            <div className="dashboard-card">
+              <div className="dashboard-card__header">
+                <h2 className="dashboard-card__title">
+                  {t("session.search_and_filter")}
+                </h2>
+              </div>
+              <div className="dashboard-card__content">
+                <div className="search-filter-container">
+                  <div className="search-container">
+                    <Search className="search-icon" size={20} />
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder={t("session.search_sessions")}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <div className="filter-tabs">
+                    <button
+                      className={`filter-tab ${activeFilter === "all" ? "filter-tab--active" : ""}`}
+                      onClick={() => setActiveFilter("all")}
+                    >
+                      {t("session.all")}
+                    </button>
+                    <button
+                      className={`filter-tab ${activeFilter === "active" ? "filter-tab--active" : ""}`}
+                      onClick={() => setActiveFilter("active")}
+                    >
+                      {t("session.active")}
+                    </button>
+                    <button
+                      className={`filter-tab ${activeFilter === "completed" ? "filter-tab--active" : ""}`}
+                      onClick={() => setActiveFilter("completed")}
+                    >
+                      {t("session.completed")}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            {renderSessionsGrid()}
+          </div>
+
+          {/* Sessions Grid Section */}
+          <div className="dashboard__section">
+            <div className="dashboard-card">
+              <div className="dashboard-card__header">
+                <h2 className="dashboard-card__title">
+                  {t("session.your_sessions")}
+                </h2>
+              </div>
+              <div className="dashboard-card__content">
+                {renderSessionsGrid()}
+              </div>
+            </div>
           </div>
         </div>
       </div>
