@@ -103,19 +103,6 @@ const CertificatesPage: React.FC = () => {
     alert("Certificate URL copied to clipboard!");
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "verified":
-        return "var(--color-success)";
-      case "pending":
-        return "var(--color-warning)";
-      case "expired":
-        return "var(--color-error)";
-      default:
-        return "var(--color-text-secondary)";
-    }
-  };
-
   const getTypeIcon = (type: string) => {
     return type === "digital" ? "💻" : "🎨";
   };

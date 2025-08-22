@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Heart, User } from "lucide-react";
+import { Heart } from "lucide-react";
 
 interface Collection {
   id: string;
