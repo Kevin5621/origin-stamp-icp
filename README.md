@@ -98,7 +98,61 @@ A **devcontainer** is preconfigured for you to start coding instantly!
 npm install
 ```
 
-### 3. Start Local Development
+### 3. Configure S3 Storage
+
+OriginStamp requires S3 storage for handling file uploads and storage. Follow these steps to configure S3:
+
+#### Create Environment File
+
+Copy the example environment file and configure your S3 credentials:
+
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file and replace the placeholder values with your actual S3 credentials:
+
+```bash
+# S3 Configuration for Development
+# Replace with your actual S3/AWS credentials
+S3_ACCESS_KEY=your_actual_access_key
+S3_SECRET_KEY=your_actual_secret_key
+S3_REGION=ap-southeast-1
+S3_ENDPOINT=https://your-s3-endpoint.com/  # Optional: for S3-compatible services
+S3_BUCKET_NAME=your_bucket_name
+```
+
+#### Required S3 Environment Variables
+
+- `S3_ACCESS_KEY`: Your AWS/S3 access key
+- `S3_SECRET_KEY`: Your AWS/S3 secret key
+- `S3_REGION`: AWS/S3 region (e.g., `ap-southeast-1`, `us-west-2`)
+- `S3_BUCKET_NAME`: Your S3 bucket name
+
+#### Optional S3 Environment Variables
+
+- `S3_ENDPOINT`: Custom S3 endpoint for S3-compatible services (leave empty for AWS S3)
+
+#### Apply S3 Configuration
+
+After deploying the backend canister, run the S3 setup script to configure the canister:
+
+```bash
+# For local development
+./scripts/setup-s3.sh local
+
+# For IC mainnet deployment
+./scripts/setup-s3.sh ic
+```
+
+The script will:
+
+- ✅ Validate your S3 credentials in the `.env` file
+- ✅ Configure the backend canister with S3 settings
+- ✅ Test the S3 configuration by generating an upload URL
+- ✅ Verify that the configuration is working properly
+
+### 4. Start Local Development
 
 #### Option A: Quick Development (Recommended)
 
@@ -127,17 +181,22 @@ npm run deploy:backend
 npm run deploy:frontend
 ```
 
-### 4. Development Workflow
+### 5. Development Workflow
 
 ```bash
 # For daily development (starts DFX, deploys backend, starts frontend)
 npm run dev
 
+# After backend deployment, configure S3 (one-time setup)
+./scripts/setup-s3.sh local
+
 # For frontend development only (if backend is already running)
 npm start
 ```
 
-### 5. Run Tests
+**Note**: The S3 configuration script (`./scripts/setup-s3.sh`) should be run after the backend canister is deployed. It's a one-time setup unless you change your S3 credentials or redeploy the backend canister.
+
+### 6. Run Tests
 
 ```bash
 # Run all tests
