@@ -155,6 +155,7 @@ service : {
       Result_5,
     );
   update_session_status : (text, text) -> (Result_5);
+  update_username : (text, text, text) -> (LoginResult);
   upload_photo_to_session : (text, text) -> (Result_5);
   verify_certificate : (text) -> (Result_6);
 }

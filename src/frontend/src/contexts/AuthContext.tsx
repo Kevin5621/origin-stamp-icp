@@ -29,6 +29,7 @@ interface AuthContextType {
     picture: string;
   }) => void;
   logout: () => Promise<void>;
+  updateUser: (updatedUser: User) => void;
   authClient: AuthClient | null;
 }
 
@@ -137,6 +138,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem("auth-user");
   };
 
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser);
+    localStorage.setItem("auth-user", JSON.stringify(updatedUser));
+  };
+
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
@@ -145,6 +151,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loginWithInternetIdentity,
     loginWithGoogle,
     logout,
+    updateUser,
     authClient,
   };
 
