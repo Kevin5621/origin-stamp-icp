@@ -1,39 +1,44 @@
 /* ==========================================================================
-   Error Fallback Styles - Modern Clean Design (Consistent with Not Found Page)
+   Error Page Styles - Modern Clean Design
    ========================================================================== */
 
-.error-fallback {
+/* =============================================================================
+   ERROR PAGE CONTAINER
+   ============================================================================= */
+
+.error-page {
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    rgba(var(--color-error-rgb), 0.02) 100%
-  );
-  padding: var(--spacing-xl);
+  background: var(--color-surface);
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  overflow: hidden;
 }
 
-.error-fallback__container {
+.error-page__container {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
+  padding: var(--spacing-2xl);
 }
 
-.error-fallback__content {
+.error-page__content {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-2xl);
   padding: var(--spacing-3xl);
   text-align: center;
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  animation: errorFallbackSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: errorPageSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes errorFallbackSlideIn {
+@keyframes errorPageSlideIn {
   from {
     opacity: 0;
     transform: translateY(20px) scale(0.98);
@@ -45,30 +50,23 @@
 }
 
 /* =============================================================================
-   ERROR FALLBACK NUMBER
+   ERROR NUMBER
    ============================================================================= */
 
-.error-fallback__number {
+.error-page__number {
   margin-bottom: var(--spacing-lg);
 }
 
-.error-fallback-number {
+.error-number {
   font-size: 6rem;
   font-weight: 900;
-  background: linear-gradient(
-    135deg,
-    var(--color-error) 0%,
-    var(--color-warning) 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--color-error);
   letter-spacing: -0.05em;
   line-height: 1;
-  animation: errorFallbackNumberFloat 3s ease-in-out infinite;
+  animation: errorNumberFloat 3s ease-in-out infinite;
 }
 
-@keyframes errorFallbackNumberFloat {
+@keyframes errorNumberFloat {
   0%,
   100% {
     transform: translateY(0px);
@@ -79,10 +77,10 @@
 }
 
 /* =============================================================================
-   ERROR FALLBACK ICON
+   ERROR ICON
    ============================================================================= */
 
-.error-fallback__icon {
+.error-page__icon {
   text-align: center;
   margin-bottom: var(--spacing-xl);
   display: flex;
@@ -91,25 +89,19 @@
   width: 100%;
 }
 
-/* =============================================================================
-   ERROR FALLBACK ICON - OVERRIDE KHUSUS
-   ============================================================================= */
-
-.error-fallback__icon .error-fallback-icon,
-.error-fallback-icon {
+.error-icon {
   color: var(--color-error);
   opacity: 0.8;
-  animation: errorFallbackIconPulse 2s ease-in-out infinite;
-  width: 29.4px !important;
-  height: 29.4px !important;
-  min-width: 29.4px !important;
-  min-height: 29.4px !important;
-  max-width: 29.4px !important;
-  max-height: 29.4px !important;
-  flex-shrink: 0 !important;
+  animation: errorIconPulse 2s ease-in-out infinite;
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
 }
 
-@keyframes errorFallbackIconPulse {
+@keyframes errorIconPulse {
   0%,
   100% {
     transform: scale(1);
@@ -122,22 +114,22 @@
 }
 
 /* =============================================================================
-   ERROR FALLBACK MESSAGE
+   ERROR MESSAGE
    ============================================================================= */
 
-.error-fallback__message {
+.error-page__message {
   margin-bottom: var(--spacing-2xl);
 }
 
-.error-fallback__title {
+.error-page__title {
   font-size: 2.25rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 var(--spacing-md);
   letter-spacing: -0.025em;
 }
 
-.error-fallback__description {
+.error-page__description {
   font-size: 1.125rem;
   color: var(--color-text-secondary);
   line-height: 1.6;
@@ -151,18 +143,18 @@
    QUICK LINKS
    ============================================================================= */
 
-.error-fallback__quick-links {
+.error-page__quick-links {
   margin-bottom: var(--spacing-2xl);
 }
 
-.error-fallback__quick-title {
+.error-page__quick-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 var(--spacing-lg);
 }
 
-.error-fallback__links-grid {
+.error-page__links-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: var(--spacing-md);
@@ -176,7 +168,7 @@
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-lg);
-  background: var(--color-surface-variant);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 16px;
   cursor: pointer;
@@ -186,7 +178,7 @@
 }
 
 .quick-link-card:hover {
-  background: var(--color-surface-hover);
+  background: var(--color-gray-100);
   border-color: var(--color-primary);
   color: var(--color-primary);
   transform: translateY(-2px);
@@ -195,6 +187,12 @@
 
 .quick-link-card svg {
   flex-shrink: 0;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
 }
 
 .quick-link-card span {
@@ -204,18 +202,18 @@
 }
 
 /* =============================================================================
-   ERROR FALLBACK ACTIONS
+   ERROR ACTIONS
    ============================================================================= */
 
-.error-fallback__actions {
+.error-page__actions {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
   align-items: center;
 }
 
-.error-fallback__action-btn {
+.error-page__action-btn {
   min-width: 180px;
   display: flex;
   align-items: center;
@@ -224,20 +222,20 @@
 }
 
 /* =============================================================================
-   ERROR FALLBACK DETAILS (DEVELOPMENT)
+   ERROR DETAILS (Development)
    ============================================================================= */
 
-.error-fallback__details {
+.error-page__details {
   margin-bottom: var(--spacing-xl);
   text-align: left;
-  background: rgba(var(--color-warning-rgb), 0.05);
-  border: 1px solid rgba(var(--color-warning-rgb), 0.15);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: var(--spacing-lg);
-  animation: errorFallbackDetailsSlideIn 0.4s ease-out;
+  animation: errorDetailsSlideIn 0.4s ease-out;
 }
 
-@keyframes errorFallbackDetailsSlideIn {
+@keyframes errorDetailsSlideIn {
   from {
     opacity: 0;
     max-height: 0;
@@ -248,7 +246,7 @@
   }
 }
 
-.error-fallback__details-summary {
+.error-page__details-summary {
   cursor: pointer;
   font-weight: 600;
   color: var(--color-warning);
@@ -258,11 +256,12 @@
   gap: var(--spacing-xs);
 }
 
-.error-fallback__details-summary:hover {
-  color: var(--color-warning-hover);
+.error-page__details-summary:hover {
+  color: var(--color-warning);
+  opacity: 0.8;
 }
 
-.error-fallback__details-content {
+.error-page__details-content {
   margin-top: var(--spacing-md);
 }
 
@@ -273,7 +272,7 @@
 .error-code-block h4 {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-primary-text);
   margin: 0 0 var(--spacing-xs);
 }
 
@@ -282,20 +281,20 @@
   font-family: "Fira Code", "Monaco", "Consolas", monospace;
   font-size: 0.875rem;
   color: var(--color-info);
-  background: rgba(var(--color-info-rgb), 0.05);
-  border: 1px solid rgba(var(--color-info-rgb), 0.15);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: var(--spacing-sm);
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-.error-fallback__error-text {
+.error-stack {
   font-family: "Fira Code", "Monaco", "Consolas", monospace;
   font-size: 0.8rem;
   color: var(--color-error);
-  background: rgba(var(--color-error-rgb), 0.05);
-  border: 1px solid rgba(var(--color-error-rgb), 0.15);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: var(--spacing-sm);
   white-space: pre-wrap;
@@ -309,16 +308,58 @@
    HELP TEXT
    ============================================================================= */
 
-.error-fallback__help {
+.error-page__help {
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--color-border);
 }
 
-.error-fallback-help-text {
+.error-help-text {
   font-size: 0.875rem;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
   margin: 0;
   font-style: italic;
+}
+
+/* =============================================================================
+   DARK THEME OVERRIDES
+   ============================================================================= */
+
+[data-theme="dark"] {
+  .error-page {
+    background: var(--color-surface);
+  }
+
+  .error-page__content {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
+
+  .quick-link-card {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  .quick-link-card:hover {
+    background: var(--color-gray-800);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .error-page__details {
+    background: var(--color-gray-800);
+    border-color: var(--color-border);
+  }
+
+  .error-code-block code {
+    background: var(--color-gray-800);
+    border-color: var(--color-border);
+  }
+
+  .error-stack {
+    background: var(--color-gray-800);
+    border-color: var(--color-border);
+  }
 }
 
 /* =============================================================================
@@ -326,27 +367,31 @@
    ============================================================================= */
 
 @media (max-width: 768px) {
-  .error-fallback {
+  .error-page {
+    padding: 0;
+  }
+
+  .error-page__container {
     padding: var(--spacing-lg);
   }
 
-  .error-fallback__content {
-    padding: var(--spacing-2xl);
+  .error-page__content {
+    padding: var(--spacing-xl);
   }
 
-  .error-fallback-number {
+  .error-number {
     font-size: 4.5rem;
   }
 
-  .error-fallback__title {
+  .error-page__title {
     font-size: 1.875rem;
   }
 
-  .error-fallback__description {
+  .error-page__description {
     font-size: 1rem;
   }
 
-  .error-fallback__links-grid {
+  .error-page__links-grid {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: var(--spacing-sm);
   }
@@ -359,52 +404,53 @@
     font-size: 0.8rem;
   }
 
-  .error-fallback__actions {
+  .error-page__actions {
     flex-direction: column;
     width: 100%;
   }
 
-  .error-fallback__action-btn {
+  .error-page__action-btn {
     width: 100%;
     min-width: unset;
   }
 
-  .error-fallback__icon .error-fallback-icon,
-  .error-fallback-icon {
-    width: 25.2px !important;
-    height: 25.2px !important;
-    min-width: 25.2px !important;
-    min-height: 25.2px !important;
-    max-width: 25.2px !important;
-    max-height: 25.2px !important;
-    flex-shrink: 0 !important;
+  .error-icon {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .error-fallback__content {
-    padding: var(--spacing-xl);
+  .error-page__container {
+    padding: var(--spacing-md);
   }
 
-  .error-fallback-number {
+  .error-page__content {
+    padding: var(--spacing-lg);
+  }
+
+  .error-number {
     font-size: 3.5rem;
   }
 
-  .error-fallback__title {
+  .error-page__title {
     font-size: 1.5rem;
   }
 
-  .error-fallback__description {
+  .error-page__description {
     font-size: 0.9rem;
   }
 
-  .error-fallback-icon {
-    width: 21px !important; /* 30px * 0.7 = 21px */
-    height: 21px !important;
-    min-width: 21px !important;
-    min-height: 21px !important;
-    max-width: 21px !important;
-    max-height: 21px !important;
-    flex-shrink: 0 !important;
+  .error-icon {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
   }
 }
