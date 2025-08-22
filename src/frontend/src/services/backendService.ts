@@ -50,4 +50,19 @@ export const backendService = {
   async getUserCount(): Promise<bigint> {
     return await backend.get_user_count();
   },
+
+  /**
+   * Updates user username
+   * @param oldUsername Current username
+   * @param newUsername New username
+   * @param password User's password for verification
+   * @returns Promise with the update result
+   */
+  async updateUsername(
+    oldUsername: string,
+    newUsername: string,
+    password: string,
+  ): Promise<LoginResult> {
+    return await backend.update_username(oldUsername, newUsername, password);
+  },
 };

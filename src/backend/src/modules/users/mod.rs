@@ -107,3 +107,78 @@ pub fn get_user_info(username: String) -> Option<(String, u64)> {
 pub fn get_user_count() -> usize {
     USERS.with(|users| users.borrow().len())
 }
+
+#[ic_cdk::update]
+pub fn update_username(
+    old_username: String,
+    new_username: String,
+    password: String,
+) -> LoginResult {
+    if old_username.is_empty() || new_username.is_empty() || password.is_empty() {
+        return LoginResult {
+            success: false,
+            message: "Username and password cannot be empty".to_string(),
+            username: None,
+        };
+    }
+
+    if old_username == new_username {
+        return LoginResult {
+            success: false,
+            message: "New username must be different from current username".to_string(),
+            username: None,
+        };
+    }
+
+    USERS.with(|users: &RefCell<HashMap<String, User>>| {
+        let mut users_map: std::cell::RefMut<'_, HashMap<String, User>> = users.borrow_mut();
+
+        // Check if old user exists and password is correct
+        match users_map.get(&old_username) {
+            Some(user) => {
+                let password_hash = simple_hash(&password);
+                if user.password_hash != password_hash {
+                    return LoginResult {
+                        success: false,
+                        message: "Invalid password".to_string(),
+                        username: None,
+                    };
+                }
+            }
+            None => {
+                return LoginResult {
+                    success: false,
+                    message: "User not found".to_string(),
+                    username: None,
+                };
+            }
+        }
+
+        // Check if new username already exists
+        if users_map.contains_key(&new_username) {
+            return LoginResult {
+                success: false,
+                message: "New username already exists".to_string(),
+                username: None,
+            };
+        }
+
+        // Update username
+        if let Some(mut user) = users_map.remove(&old_username) {
+            user.username = new_username.clone();
+            users_map.insert(new_username.clone(), user);
+
+            LoginResult {
+                success: true,
+                message: "Username updated successfully".to_string(),
+                username: Some(new_username),
+            }
+        } else {
+            LoginResult {
+                success: false,
+                message: "Failed to update username".to_string(),
+                username: None,
+            }
+        }
+    })
+}
