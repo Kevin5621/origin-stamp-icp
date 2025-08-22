@@ -444,50 +444,6 @@ flowchart TD
     ProcessHistory --> |Metadata View| MetadataView[Metadata View]
 ```
 
-### 5. Admin & Analytics Flow
-
-```mermaid
-flowchart TD
-    Start([Admin Access]) --> AdminAuth[Admin Authentication]
-    
-    AdminAuth --> |Success| AdminDashboard[Admin Dashboard]
-    AdminAuth --> |Failed| AuthError[Authentication Error]
-    
-    AuthError --> AdminAuth
-    
-    AdminDashboard --> |User Management| UserMgmt[User Management]
-    AdminDashboard --> |Session Monitoring| SessionMonitor[Session Monitoring]
-    AdminDashboard --> |Certificate Management| CertMgmt[Certificate Management]
-    AdminDashboard --> |Analytics| Analytics[Analytics Dashboard]
-    
-    UserMgmt --> |View Users| UserList[User List]
-    UserMgmt --> |User Details| UserDetails[User Details]
-    UserMgmt --> |Moderate User| ModerateUser[User Moderation]
-    
-    SessionMonitor --> |Active Sessions| ActiveSessions[Active Sessions]
-    SessionMonitor --> |Session History| SessionHistory[Session History]
-    SessionMonitor --> |Session Analytics| SessionAnalytics[Session Analytics]
-    
-    CertMgmt --> |View Certificates| CertList[Certificate List]
-    CertMgmt --> |Certificate Details| CertDetails[Certificate Details]
-    CertMgmt --> |Verify Certificate| CertVerification[Certificate Verification]
-    
-    Analytics --> |Platform Metrics| PlatformMetrics[Platform Metrics]
-    Analytics --> |User Analytics| UserAnalytics[User Analytics]
-    Analytics --> |Session Analytics| SessionAnalytics[Session Analytics]
-    Analytics --> |Certificate Analytics| CertAnalytics[Certificate Analytics]
-    
-    PlatformMetrics --> |Generate Report| PlatformReport[Platform Report]
-    UserAnalytics --> |Generate Report| UserReport[User Report]
-    SessionAnalytics --> |Generate Report| SessionReport[Session Report]
-    CertAnalytics --> |Generate Report| CertReport[Certificate Report]
-    
-    PlatformReport --> |Export| ExportReport[Export Report]
-    UserReport --> |Export| ExportReport
-    SessionReport --> |Export| ExportReport
-    CertReport --> |Export| ExportReport
-```
-
 ---
 
 ## 📜 Table of Contents
