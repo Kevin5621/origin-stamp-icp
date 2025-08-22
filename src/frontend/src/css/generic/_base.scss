@@ -259,11 +259,6 @@ svg {
   outline-offset: 2px;
 }
 
-::selection {
-  background-color: var(--color-selection-bg);
-  color: var(--color-selection-text);
-}
-
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,

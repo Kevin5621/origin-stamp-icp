@@ -77,6 +77,10 @@
   --color-accent-rgb: 45, 55, 72;
   --color-border-rgb: 229, 231, 235;
 
+  /* Text Selection Colors */
+  --color-selection-bg: rgba(45, 55, 72, 0.2);
+  --color-selection-text: #2d3748;
+
   /* Icon Filters */
   --icon-filter: none;
   --icon-filter-hover: none;
@@ -295,6 +299,10 @@
   --color-surface-rgb: 26, 32, 44;
   --color-accent-rgb: 45, 55, 72;
   --color-border-rgb: 74, 85, 104;
+
+  /* Text Selection Colors */
+  --color-selection-bg: rgba(247, 250, 252, 0.2);
+  --color-selection-text: #f7fafc;
 
   /* Icon Filters */
   --icon-filter: none;
