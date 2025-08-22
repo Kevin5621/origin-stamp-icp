@@ -2,6 +2,3 @@
 
 /* Import theme variables */
 @import "./css/theme.css";
-
-/* Import main SCSS file yang sudah include semua komponen */
-@import "./css/main.scss";
