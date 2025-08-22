@@ -13,6 +13,7 @@
   --color-primary-dark: #1a202c;
   --color-primary-text: #2d3748;
   --color-primary-bg: #f7fafc;
+  --color-primary-light: #4a5568;
 
   /* Secondary Colors - 10% */
   --color-secondary: #2d3748;
@@ -33,6 +34,8 @@
   --color-gray-700: #374151;
   --color-gray-800: #1f2937;
   --color-gray-900: #111827;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
 
   /* Surface Colors */
   --color-surface: #ffffff;
@@ -41,11 +44,14 @@
   --color-text-primary: #2d3748;
   --color-text-secondary: #6b7280;
   --color-text-tertiary: #9ca3af;
+  --color-background-subtle: #f9fafb;
 
   /* Accent Colors */
   --color-accent: #2d3748;
   --color-accent-light: #4a5568;
   --color-accent-dark: #1a202c;
+  --color-accent-hover: #1a202c;
+  --color-accent-rgb: 45, 55, 72;
 
   /* Status Colors */
   --color-success: #38a169;
@@ -56,6 +62,7 @@
   --color-warning-rgb: 221, 107, 32;
   --color-info: #3182ce;
   --color-info-rgb: 49, 130, 206;
+  --color-danger: #e53e3e;
 
   /* Border Colors */
   --color-border: #e5e7eb;
@@ -67,6 +74,12 @@
   --color-primary-rgb: 45, 55, 72;
   --color-surface-rgb: 255, 255, 255;
   --color-focus-rgb: 45, 55, 72;
+  --color-accent-rgb: 45, 55, 72;
+  --color-border-rgb: 229, 231, 235;
+
+  /* Icon Filters */
+  --icon-filter: none;
+  --icon-filter-hover: none;
 
   /* =============================================================================
      TYPOGRAPHY
@@ -129,6 +142,15 @@
   --space-20: 5rem; /* 80px */
   --space-24: 6rem; /* 96px */
 
+  /* Additional spacing variables for marketplace */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 1.5rem; /* 24px */
+  --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
+  --spacing-3xl: 4rem; /* 64px */
+
   /* Viewport-based spacing */
   --spacing-vw-sm: 2vw;
   --spacing-vw-md: 3vw;
@@ -161,6 +183,12 @@
   --radius-2xl: 1rem; /* 16px */
   --radius-full: 9999px;
 
+  /* Additional radius variables for marketplace */
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+
   /* Design System Icon Sizes */
   --icon-xs: 10px; /* Meta info, timestamps */
   --icon-sm: 12px; /* Button icons, overlays */
@@ -173,10 +201,6 @@
 
   /* Touch Target Minimum */
   --touch-target-min: 44px;
-
-  /* Icon Filters */
-  --icon-filter: none;
-  --icon-filter-hover: none;
 
   /* =============================================================================
      TRANSITIONS & ANIMATIONS
@@ -267,10 +291,12 @@
   --color-hover-overlay: rgba(247, 250, 252, 0.05);
   --color-focus: #2d3748;
   --color-focus-rgb: 45, 55, 72;
+  --color-primary-rgb: 45, 55, 72;
+  --color-surface-rgb: 26, 32, 44;
+  --color-accent-rgb: 45, 55, 72;
+  --color-border-rgb: 74, 85, 104;
 
   /* Icon Filters */
   --icon-filter: none;
   --icon-filter-hover: none;
-  --color-primary-rgb: 45, 55, 72;
-  --color-surface-rgb: 26, 32, 44;
 }

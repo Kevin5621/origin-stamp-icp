@@ -39,6 +39,13 @@
   "delete_account": "Delete Account",
   "delete_account_description": "Permanently delete your account. This action cannot be undone.",
   "confirm_delete_account": "Are you sure you want to delete your account? This action cannot be undone.",
+  "file_upload": "File Upload",
+  "file_upload_description": "Upload files for your projects and sessions",
+  "choose_file": "Choose File",
+  "file_selected": "Selected:",
+  "edit_username": "Edit Username",
+  "edit_email": "Edit Email",
+  "save_changes": "Save Changes",
   "s3_config": {
     "saved_success": "S3 configuration saved successfully!",
     "save_failed": "Failed to save S3 configuration.",

@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useTheme } from "../../contexts/ThemeContext";
 
 interface ThemeToggleProps {
   className?: string;
@@ -8,37 +9,8 @@ interface ThemeToggleProps {
  * Theme Toggle Component with semantic design
  */
 export function ThemeToggle({ className = "" }: ThemeToggleProps) {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    // Check for saved theme preference or default to light
-    const savedTheme = localStorage.getItem("originstamp-theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      setIsDark(true);
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      setIsDark(false);
-      document.documentElement.setAttribute("data-theme", "light");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = isDark ? "light" : "dark";
-    setIsDark(!isDark);
-    document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("originstamp-theme", newTheme);
-
-    // Dispatch custom event untuk memberitahu komponen lain
-    window.dispatchEvent(
-      new CustomEvent("themeChanged", {
-        detail: { theme: newTheme },
-      }),
-    );
-  };
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <button
