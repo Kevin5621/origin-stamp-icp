@@ -112,14 +112,12 @@ fn check_reentrancy_certificate(session_id: &str) -> Result<(), String> {
                     );
                 } else {
                     // Remove stale lock
-                    ic_cdk::println!("DEBUG: Removing stale lock for session {}", session_id);
                     progress.remove(session_id);
                 }
             }
         }
 
         // Set new lock with current timestamp
-        ic_cdk::println!("DEBUG: Setting new lock for session {}", session_id);
         progress.insert(session_id.to_string(), ic_cdk::api::time());
         Ok(())
     })
@@ -128,7 +126,6 @@ fn check_reentrancy_certificate(session_id: &str) -> Result<(), String> {
 fn release_reentrancy_certificate(session_id: &str) {
     CERTIFICATE_GENERATION_IN_PROGRESS.with(|in_progress| {
         let mut progress = in_progress.borrow_mut();
-        ic_cdk::println!("DEBUG: Releasing lock for session {}", session_id);
         progress.remove(session_id);
     });
 }

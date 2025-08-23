@@ -72,11 +72,9 @@ export class CertificateService {
         const transformedData = this.transformCertificateData(result.Ok);
         return transformedData;
       } else {
-        console.error("❌ Backend returned Err:", result.Err);
         throw new Error(result.Err);
       }
     } catch (error) {
-      console.error("❌ generateCertificate error:", error);
       throw error;
     }
   }
@@ -91,7 +89,6 @@ export class CertificateService {
       const result = await backend.get_certificate_by_id(certificateId);
       return result ? this.transformCertificateData(result) : null;
     } catch (error) {
-      console.error("Failed to get certificate:", error);
       return null;
     }
   }
@@ -106,7 +103,6 @@ export class CertificateService {
       const result = await backend.get_user_certificates(username);
       return result.map((cert) => this.transformCertificateData(cert));
     } catch (error) {
-      console.error("Failed to get user certificates:", error);
       return [];
     }
   }
@@ -135,7 +131,6 @@ export class CertificateService {
         };
       }
     } catch (error) {
-      console.error("Failed to verify certificate:", error);
       return {
         valid: false,
         score: 0,
@@ -149,20 +144,18 @@ export class CertificateService {
     certificateId: string,
   ): Promise<{ nft_id: string; token_uri: string }> {
     try {
-      console.log("🎨 Starting NFT generation for certificate:", certificateId);
-
-      // Use valid test principal for development
-      // In production, get this from authenticated user
+      // Get authenticated user principal for production
       const { Principal } = await import("@dfinity/principal");
-      const testPrincipal = Principal.fromText("2vxsx-fae"); // Anonymous principal
+
+      // TODO: Get actual user principal from authentication context
+      // For now, use anonymous principal as fallback
+      const userPrincipal = Principal.fromText("2vxsx-fae");
 
       // Create recipient account for NFT
       const recipient = {
-        owner: testPrincipal,
-        subaccount: [] as [] | [number[]], // Correct type for subaccount
+        owner: userPrincipal,
+        subaccount: [] as [] | [number[]],
       };
-
-      console.log("🔧 Using principal for NFT:", testPrincipal.toString());
 
       // Call NFT Module to mint NFT
       const result = await backend.mint_certificate_nft(
@@ -195,38 +188,16 @@ export class CertificateService {
   // Get NFT metadata from NFT Module
   static async getNFTMetadata(certificateId: string): Promise<string | null> {
     try {
-      console.log("🔍 Getting NFT metadata for certificate:", certificateId);
-
       // Call NFT Module to get certificate metadata
       const result = await backend.get_certificate_nft_metadata(certificateId);
 
       // Handle Candid optional type: [] | [string]
       if (result && result.length > 0 && result[0]) {
-        console.log("✅ NFT metadata retrieved successfully");
-        console.log("🔍 Raw metadata content:", result[0]);
-
-        // Try to parse and validate metadata
-        try {
-          const parsedMetadata = JSON.parse(result[0]);
-          console.log("✅ Parsed metadata:", parsedMetadata);
-          console.log(
-            "📊 Attributes count:",
-            parsedMetadata.attributes?.length || 0,
-          );
-        } catch (parseError) {
-          console.warn("⚠️ Failed to parse metadata as JSON:", parseError);
-        }
-
         return result[0]; // Extract string from [string]
       } else {
-        console.warn(
-          "⚠️ NFT metadata not found for certificate:",
-          certificateId,
-        );
         return null;
       }
     } catch (error) {
-      console.error("❌ getNFTMetadata error:", error);
       return null;
     }
   }
@@ -240,10 +211,6 @@ export class CertificateService {
     nft: { nft_id: string; token_uri: string } | null;
   }> {
     try {
-      console.log(
-        "🚀 Starting complete certificate generation and NFT minting",
-      );
-
       // Check if session already has a certificate to prevent duplicates
       if (session.certificateGenerated) {
         throw new Error("Certificate already generated for this session");
@@ -270,15 +237,11 @@ export class CertificateService {
         throw new Error("Failed to generate certificate");
       }
 
-      console.log("✅ Certificate generated:", certificate.certificate_id);
-
       // 2. Generate NFT
       const nftData = await this.generateNFT(certificate.certificate_id);
       if (!nftData) {
         throw new Error("Failed to generate NFT");
       }
-
-      console.log("✅ NFT generated:", nftData.nft_id);
 
       // 3. Mark session as completed to prevent duplicates
       session.certificateGenerated = true;
@@ -288,7 +251,6 @@ export class CertificateService {
         nft: nftData,
       };
     } catch (error) {
-      console.error("❌ completeCertificateGeneration error:", error);
       throw error;
     }
   }
