@@ -15,7 +15,7 @@ import {
   Hash,
   ExternalLink,
 } from "lucide-react";
-import { CertificateData } from "../../services/certificateService";
+import { CertificateData, CertificateService } from "../../services/certificateService";
 import { NFTDisplay } from "../../components/certificate/NFTDisplay";
 
 // Types for certificate data
@@ -76,9 +76,36 @@ const ViewCertificatePage: React.FC = () => {
             setCertificateData(location.state as CertificateDetailData);
             setIsLoading(false);
           } else {
-            // TODO: Load from backend if not in state
+            // Load from backend if not in state
+            try {
+              const backendCertificate = await CertificateService.getCertificateById(certificateId);
+              if (backendCertificate) {
+                // Transform backend data to match expected format
+                const transformedData: CertificateDetailData = {
+                  certificate: backendCertificate,
+                  nftData: {
+                    nft_id: backendCertificate.nft_id || "N/A",
+                    token_uri: backendCertificate.token_uri || "N/A",
+                  },
+                  sessionData: {
+                    id: backendCertificate.session_id,
+                    title: backendCertificate.art_title,
+                    description: backendCertificate.description,
+                    status: "completed",
+                    createdAt: backendCertificate.issue_date,
+                    photos: [], // Will be loaded separately if needed
+                  },
+                  photos: [], // Will be loaded separately if needed
+                };
+                setCertificateData(transformedData);
+              } else {
+                setCertificateData(null);
+              }
+            } catch (error) {
+              console.error("Failed to load certificate from backend:", error);
+              setCertificateData(null);
+            }
             setIsLoading(false);
-            setCertificateData(null);
           }
         } catch (error) {
           console.error("Failed to load certificate:", error);

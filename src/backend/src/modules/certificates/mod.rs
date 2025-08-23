@@ -242,7 +242,7 @@ fn generate_secure_random_id() -> String {
 }
 
 // BUSINESS MODEL - Photo Upload Limits
-#[derive(CandidType, Deserialize, Clone, PartialEq, Eq)]
+#[derive(CandidType, Deserialize, Clone, PartialEq, Eq, Debug)]
 pub enum SubscriptionTier {
     Free,
     Basic,
