@@ -76,23 +76,8 @@ fn authorize_certificate_creation(username: &str) -> Result<(), String> {
     })
 }
 
-fn authorize_nft_generation(username: &str) -> Result<(), String> {
-    USER_PERMISSIONS.with(|permissions| {
-        let perms = permissions.borrow();
-        if let Some(user_perm) = perms.get(username) {
-            if user_perm.can_generate_nfts {
-                Ok(())
-            } else {
-                Err(format!(
-                    "User {username} is not authorized to generate NFTs"
-                ))
-            }
-        } else {
-            // Default user permissions
-            Ok(())
-        }
-    })
-}
+// TODO: NFT authorization moved to NFT Module
+// TODO: This function will be replaced by NFT Module authorization
 
 thread_local! {
     static CERTIFICATES: RefCell<HashMap<String, Certificate>> = RefCell::new(HashMap::new());
@@ -100,47 +85,56 @@ thread_local! {
 
 // Reentrancy protection
 thread_local! {
-    static CERTIFICATE_GENERATION_IN_PROGRESS: RefCell<HashMap<String, bool>> = RefCell::new(HashMap::new());
-    static NFT_GENERATION_IN_PROGRESS: RefCell<HashMap<String, bool>> = RefCell::new(HashMap::new());
+    static CERTIFICATE_GENERATION_IN_PROGRESS: RefCell<HashMap<String, u64>> = RefCell::new(HashMap::new());
 }
 
 fn check_reentrancy_certificate(session_id: &str) -> Result<(), String> {
     CERTIFICATE_GENERATION_IN_PROGRESS.with(|in_progress| {
         let mut progress = in_progress.borrow_mut();
         if progress.contains_key(session_id) {
-            Err("Certificate generation already in progress for this session".to_string())
-        } else {
-            progress.insert(session_id.to_string(), true);
-            Ok(())
+            // Check if the previous attempt is still valid (within 10 seconds)
+            if let Some(timestamp) = progress.get(session_id) {
+                let current_time = ic_cdk::api::time();
+                let time_diff = current_time.saturating_sub(*timestamp);
+                let ten_seconds = 10 * 1_000_000_000; // 10 seconds in nanoseconds
+
+                // Debug logging
+                ic_cdk::println!(
+                    "DEBUG: Session {} lock check - time_diff: {}ns, threshold: {}ns",
+                    session_id,
+                    time_diff,
+                    ten_seconds
+                );
+
+                if time_diff < ten_seconds {
+                    return Err(
+                        "Certificate generation already in progress for this session".to_string(),
+                    );
+                } else {
+                    // Remove stale lock
+                    ic_cdk::println!("DEBUG: Removing stale lock for session {}", session_id);
+                    progress.remove(session_id);
+                }
+            }
         }
+
+        // Set new lock with current timestamp
+        ic_cdk::println!("DEBUG: Setting new lock for session {}", session_id);
+        progress.insert(session_id.to_string(), ic_cdk::api::time());
+        Ok(())
     })
 }
 
 fn release_reentrancy_certificate(session_id: &str) {
     CERTIFICATE_GENERATION_IN_PROGRESS.with(|in_progress| {
         let mut progress = in_progress.borrow_mut();
+        ic_cdk::println!("DEBUG: Releasing lock for session {}", session_id);
         progress.remove(session_id);
     });
 }
 
-fn check_reentrancy_nft(certificate_id: &str) -> Result<(), String> {
-    NFT_GENERATION_IN_PROGRESS.with(|in_progress| {
-        let mut progress = in_progress.borrow_mut();
-        if progress.contains_key(certificate_id) {
-            Err("NFT generation already in progress for this certificate".to_string())
-        } else {
-            progress.insert(certificate_id.to_string(), true);
-            Ok(())
-        }
-    })
-}
-
-fn release_reentrancy_nft(certificate_id: &str) {
-    NFT_GENERATION_IN_PROGRESS.with(|in_progress| {
-        let mut progress = in_progress.borrow_mut();
-        progress.remove(certificate_id);
-    });
-}
+// TODO: NFT reentrancy protection moved to NFT Module
+// TODO: These functions will be replaced by NFT Module reentrancy protection
 
 // Input validation and sanitization
 fn validate_and_sanitize_input(
@@ -174,7 +168,7 @@ fn validate_and_sanitize_input(
     }
 
     // Validate file_format
-    let allowed_formats = vec!["JPEG", "PNG", "GIF", "WEBP"];
+    let allowed_formats = vec!["JPEG", "PNG", "GIF", "WEBP", "JPEG/PNG"];
     if !allowed_formats.contains(&request.file_format.as_str()) {
         return Err(format!(
             "Invalid file_format: must be one of {allowed_formats:?}"
@@ -248,11 +242,21 @@ fn generate_secure_random_id() -> String {
     format!("{:016x}", hasher.finish())
 }
 
+// TODO: BUSINESS MODEL - Photo Upload Limits
+// TODO: Add subscription tiers for photo upload limits
+// TODO: Validate photo count based on user subscription
+// TODO: Premium features for higher subscription tiers
+
+// TODO: BLOCKCHAIN INFO DISPLAY
+// TODO: Show verification hash in NFT metadata
+// TODO: Display blockchain transaction details
+// TODO: Add verification status indicators
+
 // Certificate generation
 #[ic_cdk::update]
 pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certificate, String> {
     // 1. Authentication
-    let caller_principal = authenticate_user()?;
+    authenticate_user()?;
 
     // 2. Authorization
     authorize_certificate_creation(&request.username)?;
@@ -285,6 +289,11 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
         return Err("Session ownership mismatch".to_string());
     }
 
+    // TODO: BUSINESS MODEL - Photo Upload Limit Validation
+    // TODO: Check user subscription tier
+    // TODO: Validate photo count against subscription limit
+    // TODO: Return upgrade prompt if limit exceeded
+
     // Validate photo count
     if session.uploaded_photos.len() != sanitized_request.photo_count as usize {
         release_reentrancy_certificate(&request.session_id);
@@ -299,6 +308,7 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
     );
 
     // 7. Generate verification hash with additional entropy
+    let caller_principal = caller();
     let verification_data = format!(
         "{}{}{}{}{}",
         sanitized_request.session_id,
@@ -365,7 +375,7 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
             file_format: sanitized_request.file_format,
             creation_tools: sanitized_request.creation_tools,
         },
-        // Initialize NFT fields
+        // NFT fields - will be set by NFT Module
         nft_generated: false,
         nft_id: None,
         token_uri: None,
@@ -450,140 +460,70 @@ pub fn verify_certificate(
     })
 }
 
-// Generate NFT for certificate
+// TODO: NFT Generation moved to NFT Module
+// TODO: This function will be replaced by NFT Module integration
+// TODO: Certificate only provides metadata, NFT Module handles minting
+
+// Generate NFT for certificate - DEPRECATED, use NFT Module instead
 #[ic_cdk::update]
 pub fn generate_nft_for_certificate(certificate_id: String) -> Result<NFTGenerationResult, String> {
-    // 1. Authentication
-    authenticate_user()?;
+    // TODO: This function is deprecated
+    // TODO: Use NFT Module::mint_certificate_nft instead
+    // TODO: Certificate only provides metadata
 
-    // 2. Input validation
-    if certificate_id.is_empty() || certificate_id.len() > 100 {
-        return Err("Invalid certificate ID".to_string());
-    }
-
-    // 3. Reentrancy protection
-    check_reentrancy_nft(&certificate_id)?;
-
-    // 4. Certificate validation
-    let certificate =
-        CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned());
-
-    if certificate.is_none() {
-        release_reentrancy_nft(&certificate_id);
-        return Err("Certificate not found".to_string());
-    }
-
-    let certificate = certificate.unwrap();
-
-    // 5. Authorization check
-    authorize_nft_generation(&certificate.username)?;
-
-    // 6. Certificate status validation
-    if certificate.certificate_status != "active" {
-        release_reentrancy_nft(&certificate_id);
-        return Err("Certificate is not active".to_string());
-    }
-
-    // 7. Check if NFT already exists
-    if certificate.nft_generated {
-        release_reentrancy_nft(&certificate_id);
-        return Err("NFT already generated for this certificate".to_string());
-    }
-
-    // 8. Generate secure NFT ID
-    let nft_id = format!("NFT-{}-{}", certificate_id, generate_secure_random_id());
-
-    // 9. Generate token URI with validation
-    let token_uri = format!("https://ic-vibe.ic0.app/nft/{certificate_id}/metadata");
-
-    // 10. Update certificate with NFT info
-    CERTIFICATES.with(|certificates| {
-        if let Some(cert) = certificates.borrow_mut().get_mut(&certificate_id) {
-            cert.nft_generated = true;
-            cert.nft_id = Some(nft_id.clone());
-            cert.token_uri = Some(token_uri.clone());
-        }
-    });
-
-    // 11. Release reentrancy protection
-    release_reentrancy_nft(&certificate_id);
-
-    Ok(NFTGenerationResult { nft_id, token_uri })
+    Err("NFT generation moved to NFT Module. Use mint_certificate_nft instead.".to_string())
 }
 
-// Get NFT metadata for certificate
+// TODO: NFT Metadata moved to NFT Module
+// TODO: This function will be replaced by NFT Module metadata
+// TODO: Certificate only provides data, NFT Module generates metadata
+
+// Get NFT metadata for certificate - DEPRECATED, use NFT Module instead
 #[ic_cdk::query]
 pub fn get_nft_metadata(certificate_id: String) -> Option<String> {
-    if certificate_id.is_empty() {
-        return None;
-    }
+    // TODO: This function is deprecated
+    // TODO: Use NFT Module::get_token_metadata instead
+    // TODO: Certificate only provides data, NFT Module handles metadata
 
-    let certificate =
-        CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned());
+    None
+}
 
-    certificate.as_ref()?;
+// New function: Get certificate data for NFT minting
+#[ic_cdk::query]
+pub fn get_certificate_for_nft_minting(certificate_id: String) -> Option<Certificate> {
+    // TODO: This function provides certificate data to NFT Module
+    // TODO: NFT Module will use this data to mint NFT
+    // TODO: Includes all metadata needed for NFT generation
 
-    let certificate = certificate.unwrap();
+    get_certificate_by_id(certificate_id)
+}
 
-    // Generate NFT metadata with certificate information
-    let nft_metadata = format!(
-        r#"{{
-            "name": "IC-Vibe Certificate NFT - {}",
-            "description": "Digital certificate for artwork: {}",
-            "image": "https://ic-vibe.ic0.app/certificate/{}/image",
-            "attributes": [
-                {{
-                    "trait_type": "Certificate ID",
-                    "value": "{}"
-                }},
-                {{
-                    "trait_type": "Art Title",
-                    "value": "{}"
-                }},
-                {{
-                    "trait_type": "Artist",
-                    "value": "{}"
-                }},
-                {{
-                    "trait_type": "Verification Score",
-                    "value": {}
-                }},
-                {{
-                    "trait_type": "Authenticity Rating",
-                    "value": {}
-                }},
-                {{
-                    "trait_type": "Creation Duration",
-                    "value": "{}"
-                }},
-                {{
-                    "trait_type": "Issue Date",
-                    "value": "{}"
-                }},
-                {{
-                    "trait_type": "Blockchain",
-                    "value": "{}"
-                }}
-            ],
-            "external_url": "{}",
-            "verification_hash": "{}"
-        }}"#,
-        certificate.art_title,
-        certificate.art_title,
-        certificate_id,
-        certificate_id,
-        certificate.art_title,
-        certificate.username,
-        certificate.verification_score,
-        certificate.authenticity_rating,
-        certificate.metadata.creation_duration,
-        certificate.issue_date,
-        certificate.blockchain,
-        certificate.verification_url,
-        certificate.verification_hash
-    );
+// New function: Update certificate after NFT minting
+#[ic_cdk::update]
+pub fn update_certificate_nft_info(
+    _certificate_id: String,
+    nft_id: String,
+    token_uri: String,
+) -> Result<bool, String> {
+    // TODO: This function updates certificate after NFT is minted
+    // TODO: Called by NFT Module after successful minting
+    // TODO: Links certificate with generated NFT
 
-    Some(nft_metadata)
+    authenticate_user()?;
+
+    // TODO: Add authorization check
+    // TODO: Verify caller has permission to update
+
+    CERTIFICATES.with(|certificates| {
+        if let Some(cert) = certificates.borrow_mut().get_mut(&_certificate_id) {
+            cert.nft_generated = true;
+            cert.nft_id = Some(nft_id);
+            cert.token_uri = Some(token_uri);
+            Ok(true)
+        } else {
+            Err("Certificate not found".to_string())
+        }
+    })
 }
 
 // Get total certificate count

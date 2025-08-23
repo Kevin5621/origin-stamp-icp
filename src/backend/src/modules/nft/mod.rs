@@ -335,6 +335,25 @@ pub fn get_token_details(token_id: u64) -> Option<Token> {
     TOKENS.with(|tokens| tokens.borrow().get(&token_id).cloned())
 }
 
+// TODO: CERTIFICATE NFT INTEGRATION
+// TODO: This function mints NFT from certificate data
+// TODO: Integrates with certificate module for metadata
+
+// Mint NFT from certificate
+#[ic_cdk::update]
+pub fn mint_certificate_nft(certificate_id: String, recipient: Account) -> Result<u64, String> {
+    let _caller = ic_cdk::api::caller();
+
+    // TODO: Get certificate data from certificate module
+    // TODO: This will be implemented when certificate module is ready
+    // TODO: For now, return error indicating integration needed
+
+    Err(
+        "Certificate NFT minting not yet implemented. Certificate module integration needed."
+            .to_string(),
+    )
+}
+
 fn generate_token_hash(token_id: u64, session_id: &str, timestamp: u64) -> String {
     let mut hasher = Sha256::new();
     hasher.update(token_id.to_be_bytes());
