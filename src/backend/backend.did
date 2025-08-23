@@ -77,6 +77,13 @@ type Result_3 = variant { Ok; Err : text };
 type Result_4 = variant { Ok : nat64; Err : text };
 type Result_5 = variant { Ok : bool; Err : text };
 type Result_6 = variant { Ok : VerificationResult; Err : text };
+type SubscriptionTier = variant { Free; Basic; Premium; Enterprise };
+type SubscriptionLimits = record {
+  max_photos : nat32;
+  max_file_size_mb : nat32;
+  can_generate_nft : bool;
+  priority_support : bool;
+};
 type S3Config = record {
   region : text;
   endpoint : opt text;
@@ -140,6 +147,8 @@ service : {
   get_user_info : (text) -> (opt record { text; nat64 }) query;
   get_user_nfts : (principal) -> (vec Token) query;
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
+  get_user_subscription : (text) -> (opt SubscriptionTier) query;
+  get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   icrc7_balance_of : (vec Account) -> (vec nat64) query;
   icrc7_collection_metadata : () -> (CollectionMetadata) query;
   icrc7_description : () -> (opt text) query;
@@ -160,6 +169,7 @@ service : {
   remove_photo_from_session : (text, text) -> (Result_5);
   set_s3_config : (S3Config) -> (bool);
   update_certificate_nft_info : (text, text, text) -> (Result_5);
+  set_user_subscription : (text, SubscriptionTier) -> (Result_5);
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
       Result_5,
     );
