@@ -6,6 +6,7 @@
   "description": "OriginStamp",
   "scripts": {
     "start": "vite",
+    "dev": "vite",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' tsc && NODE_OPTIONS='--max-old-space-size=4096' vite build",
     "test": "vitest run",
     "type-check": "tsc --noEmit"
