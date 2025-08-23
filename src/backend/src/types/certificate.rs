@@ -48,6 +48,7 @@ pub struct CreateCertificateRequest {
     pub creation_duration: u32,
     pub file_format: String,
     pub creation_tools: Vec<String>,
+    pub file_sizes: Vec<u64>, // Actual file sizes in bytes
 }
 
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize)]

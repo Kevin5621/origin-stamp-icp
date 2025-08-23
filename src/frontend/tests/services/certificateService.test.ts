@@ -67,6 +67,13 @@ describe("CertificateService", () => {
         creation_duration: 150,
         file_format: "JPG",
         creation_tools: ["Photoshop", "Camera"],
+        file_sizes: [
+          BigInt(1024 * 1024),
+          BigInt(2048 * 1024),
+          BigInt(1536 * 1024),
+          BigInt(3072 * 1024),
+          BigInt(1024 * 1024),
+        ], // 1MB, 2MB, 1.5MB, 3MB, 1MB
       };
 
       const result = await CertificateService.generateCertificate(request);
@@ -92,6 +99,13 @@ describe("CertificateService", () => {
         creation_duration: 150,
         file_format: "JPG",
         creation_tools: ["Photoshop", "Camera"],
+        file_sizes: [
+          BigInt(1024 * 1024),
+          BigInt(2048 * 1024),
+          BigInt(1536 * 1024),
+          BigInt(3072 * 1024),
+          BigInt(1024 * 1024),
+        ], // 1MB, 2MB, 1.5MB, 3MB, 1MB
       };
 
       await expect(
