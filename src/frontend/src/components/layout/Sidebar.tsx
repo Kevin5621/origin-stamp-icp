@@ -52,6 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       } else if (user.username === "test_user") {
         setSubscriptionTier("Basic");
       } else {
+        // All new users default to Free tier
         setSubscriptionTier("Free");
       }
     };

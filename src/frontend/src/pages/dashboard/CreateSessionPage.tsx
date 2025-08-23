@@ -63,6 +63,7 @@ const CreateSessionPage: React.FC = () => {
             priority_support: false,
           });
         } else {
+          // All new users default to Free tier
           setSubscriptionTier("Free");
           setSubscriptionLimits({
             max_photos: 5,

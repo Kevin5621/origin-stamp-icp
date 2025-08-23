@@ -58,6 +58,7 @@ const SubscriptionPage: React.FC = () => {
       } else if (user.username === "test_user") {
         setCurrentTier("Basic");
       } else {
+        // All new users default to Free tier
         setCurrentTier("Free");
       }
     };

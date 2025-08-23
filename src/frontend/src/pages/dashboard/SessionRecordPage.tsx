@@ -16,6 +16,9 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCcw,
+  Crown,
+  Star,
+  ArrowRight,
 } from "lucide-react";
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -79,6 +82,7 @@ const SessionRecordPage: React.FC = () => {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<FileList | null>(null);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const cancelRef = useRef<boolean>(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
@@ -123,6 +127,7 @@ const SessionRecordPage: React.FC = () => {
           priority_support: false,
         });
       } else {
+        // All new users default to Free tier
         setSubscriptionTier("Free");
         setSubscriptionLimits({
           max_photos: 5,
@@ -600,6 +605,12 @@ const SessionRecordPage: React.FC = () => {
 
   const handleCompleteSessionAndGenerateNFT = async () => {
     if (!session || !user) return;
+
+    // Check subscription tier for NFT generation
+    if (subscriptionTier === "Free") {
+      setShowSubscriptionModal(true);
+      return;
+    }
 
     // Validate session data before proceeding
     if (!session.title || !session.description || session.photos.length === 0) {
@@ -1317,6 +1328,85 @@ const SessionRecordPage: React.FC = () => {
               >
                 <Upload size={14} />
                 {t("session.upload_to_blockchain")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Subscription Upgrade Modal for Free Users */}
+      {showSubscriptionModal && (
+        <div
+          className="photo-modal-overlay"
+          onClick={() => setShowSubscriptionModal(false)}
+        >
+          <div
+            className="photo-modal-content subscription-upgrade-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>Upgrade Required</h2>
+              <button
+                className="modal-close-btn"
+                onClick={() => setShowSubscriptionModal(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="subscription-upgrade-content">
+                <div className="upgrade-icon">
+                  <Crown size={48} />
+                </div>
+                <div className="upgrade-text">
+                  <h3>NFT Generation Not Available</h3>
+                  <p>
+                    Your current Free tier doesn't include NFT generation.
+                    Upgrade to Basic tier or higher to unlock this feature and
+                    more!
+                  </p>
+
+                  <div className="tier-benefits">
+                    <div className="benefit-item">
+                      <Star size={16} />
+                      <span>
+                        Basic Tier: 20 photos, NFT generation, $9.99/month
+                      </span>
+                    </div>
+                    <div className="benefit-item">
+                      <Star size={16} />
+                      <span>
+                        Premium Tier: 100 photos, Priority support, $29.99/month
+                      </span>
+                    </div>
+                    <div className="benefit-item">
+                      <Star size={16} />
+                      <span>
+                        Enterprise Tier: Unlimited, All features, $99.99/month
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn btn--secondary"
+                onClick={() => setShowSubscriptionModal(false)}
+              >
+                Maybe Later
+              </button>
+              <button
+                className="btn btn--primary"
+                onClick={() => {
+                  setShowSubscriptionModal(false);
+                  navigate("/subscription");
+                }}
+              >
+                <ArrowRight size={14} />
+                Upgrade Now
               </button>
             </div>
           </div>

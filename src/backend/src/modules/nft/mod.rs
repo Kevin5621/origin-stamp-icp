@@ -393,15 +393,15 @@ pub fn mint_certificate_nft(certificate_id: String, recipient: Account) -> Resul
     }
 
     // 5. Validate subscription tier for NFT generation
-    let user_subscription = crate::modules::certificates::get_user_subscription(certificate.username.clone());
+    let user_subscription =
+        crate::modules::certificates::get_user_subscription(certificate.username.clone());
     match user_subscription {
         Some(tier) => {
             let subscription_limits = tier.get_limits();
-            
+
             if !subscription_limits.can_generate_nft {
                 return Err(format!(
-                    "NFT generation not allowed for {:?} tier. Upgrade to Basic tier or higher to generate NFTs.",
-                    tier
+                    "NFT generation not allowed for {tier:?} tier. Upgrade to Basic tier or higher to generate NFTs."
                 ));
             }
         }
