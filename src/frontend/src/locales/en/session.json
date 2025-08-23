@@ -491,6 +491,11 @@
     "photos_saved_securely": "Photos saved securely",
     "session_footer": "Session Footer",
     "session_completed": "Session completed successfully!",
-    "session_completed_description": "Your session has been completed and saved. You can now view your progress or start a new session."
+    "session_completed_description": "Your session has been completed and saved. You can now view your progress or start a new session.",
+    "starting_certificate_generation": "Starting certificate generation...",
+    "certificate_generation_failed": "Certificate generation failed",
+    "certificate_and_nft_generated_successfully": "Certificate and NFT generated successfully!",
+    "nft_metadata_loading": "Loading NFT metadata...",
+    "nft_metadata_not_found": "NFT metadata not found"
   }
 }

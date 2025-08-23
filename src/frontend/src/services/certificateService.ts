@@ -144,109 +144,158 @@ export class CertificateService {
     }
   }
 
-  /**
-   * Generate NFT for certificate
-   */
-  static async generateNFT(certificateId: string): Promise<{
-    success: boolean;
-    nft_id?: string;
-    token_uri?: string;
-    error?: string;
-  }> {
+  // Generate NFT for certificate using NFT Module
+  static async generateNFT(
+    certificateId: string,
+  ): Promise<{ nft_id: string; token_uri: string }> {
     try {
-      const result = await backend.generate_nft_for_certificate(certificateId);
+      console.log("🎨 Starting NFT generation for certificate:", certificateId);
+
+      // Use valid test principal for development
+      // In production, get this from authenticated user
+      const { Principal } = await import("@dfinity/principal");
+      const testPrincipal = Principal.fromText("2vxsx-fae"); // Anonymous principal
+
+      // Create recipient account for NFT
+      const recipient = {
+        owner: testPrincipal,
+        subaccount: [] as [] | [number[]], // Correct type for subaccount
+      };
+
+      console.log("🔧 Using principal for NFT:", testPrincipal.toString());
+
+      // Call NFT Module to mint NFT
+      const result = await backend.mint_certificate_nft(
+        certificateId,
+        recipient,
+      );
 
       if ("Ok" in result) {
-        return {
-          success: true,
-          nft_id: result.Ok.nft_id,
-          token_uri: result.Ok.token_uri,
+        const tokenId = result.Ok;
+
+        // Generate token URI
+        const tokenUri = `https://ic-vibe.ic0.app/nft/${tokenId}/metadata`;
+
+        const nftData = {
+          nft_id: tokenId.toString(),
+          token_uri: tokenUri,
         };
+
+        console.log("✅ NFT generated successfully:", nftData);
+        return nftData;
       } else {
-        return {
-          success: false,
-          error: result.Err,
-        };
+        throw new Error(result.Err);
       }
     } catch (error) {
-      console.error("Failed to generate NFT:", error);
-      return {
-        success: false,
-        error: "Failed to generate NFT",
-      };
+      console.error("❌ generateNFT error:", error);
+      throw error;
     }
   }
 
-  /**
-   * Get NFT metadata for certificate
-   */
+  // Get NFT metadata from NFT Module
   static async getNFTMetadata(certificateId: string): Promise<string | null> {
     try {
-      const result = await backend.get_nft_metadata(certificateId);
-      // Ensure result is either a string or null
-      return typeof result === "string" ? result : null;
+      console.log("🔍 Getting NFT metadata for certificate:", certificateId);
+
+      // Call NFT Module to get certificate metadata
+      const result = await backend.get_certificate_nft_metadata(certificateId);
+
+      // Handle Candid optional type: [] | [string]
+      if (result && result.length > 0 && result[0]) {
+        console.log("✅ NFT metadata retrieved successfully");
+        console.log("🔍 Raw metadata content:", result[0]);
+        
+        // Try to parse and validate metadata
+        try {
+          const parsedMetadata = JSON.parse(result[0]);
+          console.log("✅ Parsed metadata:", parsedMetadata);
+          console.log("📊 Attributes count:", parsedMetadata.attributes?.length || 0);
+        } catch (parseError) {
+          console.warn("⚠️ Failed to parse metadata as JSON:", parseError);
+        }
+        
+        return result[0]; // Extract string from [string]
+      } else {
+        console.warn(
+          "⚠️ NFT metadata not found for certificate:",
+          certificateId,
+        );
+        return null;
+      }
     } catch (error) {
-      console.error("Failed to get NFT metadata:", error);
+      console.error("❌ getNFTMetadata error:", error);
       return null;
     }
   }
 
-  /**
-   * Complete certificate generation flow
-   */
+  // Complete certificate generation and NFT minting
   static async completeCertificateGeneration(
-    sessionId: string,
-    username: string,
-    artTitle: string,
-    description: string,
-    photoCount: number,
-    creationDuration: number,
-    fileFormat: string = "JPEG/PNG",
-    creationTools: string[] = ["Digital Camera", "IC-Vibe Platform"],
+    session: any, // TODO: Use proper SessionData type
+    _photos: string[], // TODO: Use photos when needed
   ): Promise<{
-    success: boolean;
-    certificate?: CertificateData;
-    nft?: { nft_id: string; token_uri: string };
-    error?: string;
+    certificate: CertificateData | null;
+    nft: { nft_id: string; token_uri: string } | null;
   }> {
     try {
-      // Step 1: Generate certificate
-      const certificate = await this.generateCertificate({
-        session_id: sessionId,
-        username,
-        art_title: artTitle,
-        description,
-        photo_count: photoCount,
-        creation_duration: creationDuration,
-        file_format: fileFormat,
-        creation_tools: creationTools,
-      });
+      console.log(
+        "🚀 Starting complete certificate generation and NFT minting",
+      );
 
-      // Step 2: Generate NFT for the certificate
-      const nftResult = await this.generateNFT(certificate.certificate_id);
-
-      if (!nftResult.success) {
-        return {
-          success: false,
-          error: `Certificate generated but NFT generation failed: ${nftResult.error}`,
-        };
+      // Check if session already has a certificate to prevent duplicates
+      if (session.certificateGenerated) {
+        throw new Error("Certificate already generated for this session");
       }
 
+      // Ensure session has required fields
+      if (!session.username) {
+        throw new Error("Session username is required");
+      }
+
+      // 1. Generate certificate
+      const certificate = await this.generateCertificate({
+        session_id: session.id,
+        username: session.username,
+        art_title: session.title,
+        description: session.description,
+        photo_count: session.photos.length,
+        creation_duration: this.calculateCreationDuration(session.createdAt),
+        file_format: "JPEG/PNG",
+        creation_tools: ["Digital Camera", "IC-Vibe Platform"],
+      });
+
+      if (!certificate) {
+        throw new Error("Failed to generate certificate");
+      }
+
+      console.log("✅ Certificate generated:", certificate.certificate_id);
+
+      // 2. Generate NFT
+      const nftData = await this.generateNFT(certificate.certificate_id);
+      if (!nftData) {
+        throw new Error("Failed to generate NFT");
+      }
+
+      console.log("✅ NFT generated:", nftData.nft_id);
+
+      // 3. Mark session as completed to prevent duplicates
+      session.certificateGenerated = true;
+
       return {
-        success: true,
         certificate,
-        nft: {
-          nft_id: nftResult.nft_id!,
-          token_uri: nftResult.token_uri!,
-        },
+        nft: nftData,
       };
     } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      };
+      console.error("❌ completeCertificateGeneration error:", error);
+      throw error;
     }
+  }
+
+  // Helper function to calculate creation duration
+  private static calculateCreationDuration(createdAt: Date): number {
+    const now = new Date();
+    const diffMs = now.getTime() - createdAt.getTime();
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    return Math.max(1, diffMinutes); // Minimum 1 minute
   }
 
   /**
