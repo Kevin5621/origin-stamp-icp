@@ -124,6 +124,7 @@ service : {
   get_all_users : () -> (vec text) query;
   get_certificate_by_id : (text) -> (opt Certificate) query;
   get_certificate_count : () -> (nat64) query;
+  get_certificate_for_nft_minting : (text) -> (opt Certificate) query;
   get_dashboard_metrics : () -> (DashboardMetrics) query;
   get_nft_metadata : (text) -> (opt text) query;
   get_s3_config : () -> (opt S3Config) query;
@@ -149,12 +150,14 @@ service : {
   icrc7_total_supply : () -> (nat64) query;
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
   login : (text, text) -> (LoginResult);
+  mint_certificate_nft : (text, Account) -> (Result_4);
   mint_nft_from_session : (text, Account, vec record { text; text }) -> (
       Result_4,
     );
   register_user : (text, text) -> (LoginResult);
   remove_photo_from_session : (text, text) -> (Result_5);
   set_s3_config : (S3Config) -> (bool);
+  update_certificate_nft_info : (text, text, text) -> (Result_5);
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
       Result_5,
     );
