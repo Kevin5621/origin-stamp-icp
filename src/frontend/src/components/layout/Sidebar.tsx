@@ -152,6 +152,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     return [
       {
+        id: "subscription",
+        icon: Crown,
+        label: t("sidebar.subscription"),
+        path: "/subscription",
+      },
+      {
         id: "marketplace",
         icon: Compass,
         label: t("sidebar.marketplace"),
