@@ -648,6 +648,7 @@ pub fn get_subscription_limits(username: String) -> Option<SubscriptionLimits> {
 pub fn initialize_default_subscriptions() {
     USER_SUBSCRIPTIONS.with(|subs| {
         let mut subscriptions = subs.borrow_mut();
+        // Only set specific test users, all others default to Free
         subscriptions.insert("admin_user".to_string(), SubscriptionTier::Enterprise);
         subscriptions.insert("test_user".to_string(), SubscriptionTier::Basic);
     });

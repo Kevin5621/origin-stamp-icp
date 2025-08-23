@@ -15,7 +15,10 @@ import {
   Hash,
   ExternalLink,
 } from "lucide-react";
-import { CertificateData, CertificateService } from "../../services/certificateService";
+import {
+  CertificateData,
+  CertificateService,
+} from "../../services/certificateService";
 import { NFTDisplay } from "../../components/certificate/NFTDisplay";
 
 // Types for certificate data
@@ -78,7 +81,8 @@ const ViewCertificatePage: React.FC = () => {
           } else {
             // Load from backend if not in state
             try {
-              const backendCertificate = await CertificateService.getCertificateById(certificateId);
+              const backendCertificate =
+                await CertificateService.getCertificateById(certificateId);
               if (backendCertificate) {
                 // Transform backend data to match expected format
                 const transformedData: CertificateDetailData = {
