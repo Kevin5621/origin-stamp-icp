@@ -12,10 +12,7 @@ import CreateSessionPage from "../pages/dashboard/CreateSessionPage";
 import ViewCertificatePage from "../pages/dashboard/ViewCertificatePage";
 import FinalizationPage from "../pages/dashboard/FinalizationPage";
 import VerificationPage from "../pages/dashboard/VerificationPage";
-import CertificatesPage from "../pages/dashboard/CertificatesPage";
-import AnalyticsPage from "../pages/dashboard/AnalyticsPage";
-import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
-import CertificateDetailPage from "../pages/dashboard/CertificateDetailPage";
+
 import KaryaDetailPage from "../pages/dashboard/KaryaDetailPage";
 import SettingsPage from "../pages/SettingsPage";
 import SubscriptionPage from "../pages/subscription/SubscriptionPage";
@@ -126,38 +123,7 @@ export const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/certificates"
-          element={
-            <ProtectedRoute>
-              <CertificatesPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/analytics"
-          element={
-            <ProtectedRoute>
-              <AnalyticsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/analytics/:karyaId"
-          element={
-            <ProtectedRoute>
-              <AnalyticsDetailPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/certificate/:karyaId"
-          element={
-            <ProtectedRoute>
-              <CertificateDetailPage />
-            </ProtectedRoute>
-          }
-        />
+
         <Route
           path="/karya/:karyaId"
           element={

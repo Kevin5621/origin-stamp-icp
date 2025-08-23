@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
   Settings,
-  BarChart3,
-  Award,
   ChevronLeft,
   ChevronRight,
   Grid,
@@ -98,7 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: "stats",
-          icon: BarChart3,
+          icon: Activity,
           label: t("sidebar.stats"),
           path: "/marketplace/stats",
         },
@@ -117,18 +115,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         icon: Palette,
         label: t("sidebar.session"),
         path: "/session",
-      },
-      {
-        id: "certificates",
-        icon: Award,
-        label: t("sidebar.certificates"),
-        path: "/certificates",
-      },
-      {
-        id: "analytics",
-        icon: BarChart3,
-        label: t("sidebar.analytics"),
-        path: "/analytics",
       },
     ];
   };

@@ -20,20 +20,7 @@ export function AppNavigation() {
           {/* Dashboard icon can be added here */}
           <span>{t("dashboard_nav")}</span>
         </button>
-        <button
-          onClick={() => navigate("/certificates")}
-          className={`nav-button ${currentView === "/certificates" ? "active" : ""}`}
-          aria-current={currentView === "/certificates" ? "page" : undefined}
-        >
-          <span>{t("view_certificates_title")}</span>
-        </button>
-        <button
-          onClick={() => navigate("/analytics")}
-          className={`nav-button ${currentView === "/analytics" ? "active" : ""}`}
-          aria-current={currentView === "/analytics" ? "page" : undefined}
-        >
-          <span>{t("analytics_title")}</span>
-        </button>
+
         <button
           onClick={() => navigate("/")}
           className="nav-button"
