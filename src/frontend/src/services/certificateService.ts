@@ -144,12 +144,16 @@ export class CertificateService {
     certificateId: string,
   ): Promise<{ nft_id: string; token_uri: string }> {
     try {
-      // Get authenticated user principal for production
+            // Get authenticated user principal from authentication context
       const { Principal } = await import("@dfinity/principal");
-
-      // TODO: Get actual user principal from authentication context
-      // For now, use anonymous principal as fallback
-      const userPrincipal = Principal.fromText("2vxsx-fae");
+      
+      // Get user principal from authentication service
+      const { AuthService } = await import("./authService");
+      const userPrincipal = await AuthService.getCurrentUserPrincipal();
+      
+      if (!userPrincipal) {
+        throw new Error("User not authenticated. Please sign in to generate NFT.");
+      }
 
       // Create recipient account for NFT
       const recipient = {
@@ -167,20 +171,18 @@ export class CertificateService {
         const tokenId = result.Ok;
 
         // Generate token URI
-        const tokenUri = `https://ic-vibe.ic0.app/nft/${tokenId}/metadata`;
+        const tokenUri = `https://originstamp.ic0.app/nft/${tokenId}/metadata`;
 
         const nftData = {
           nft_id: tokenId.toString(),
           token_uri: tokenUri,
         };
 
-        console.log("✅ NFT generated successfully:", nftData);
         return nftData;
       } else {
         throw new Error(result.Err);
       }
     } catch (error) {
-      console.error("❌ generateNFT error:", error);
       throw error;
     }
   }
