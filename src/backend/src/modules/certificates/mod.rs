@@ -30,6 +30,7 @@ pub struct UserPermissions {
 thread_local! {
     static USER_PERMISSIONS: std::cell::RefCell<HashMap<String, UserPermissions>> = std::cell::RefCell::new(HashMap::new());
     static USER_SUBSCRIPTIONS: std::cell::RefCell<HashMap<String, SubscriptionTier>> = std::cell::RefCell::new(HashMap::new());
+    static COUPONS: std::cell::RefCell<HashMap<String, Coupon>> = std::cell::RefCell::new(HashMap::new());
 }
 
 // Initialize default admin user
@@ -248,6 +249,25 @@ pub enum SubscriptionTier {
     Basic,
     Premium,
     Enterprise,
+}
+
+// Coupon system for subscription upgrades
+#[derive(CandidType, Deserialize, Clone, PartialEq, Eq)]
+pub enum CouponType {
+    Free,
+    Basic,
+    Premium,
+    Enterprise,
+}
+
+#[derive(CandidType, Deserialize, Clone)]
+pub struct Coupon {
+    pub code: String,
+    pub coupon_type: CouponType,
+    pub is_active: bool,
+    pub max_uses: u32,
+    pub current_uses: u32,
+    pub expires_at: u64, // Unix timestamp in nanoseconds
 }
 
 #[derive(CandidType, Deserialize, Clone)]
@@ -653,6 +673,124 @@ pub fn initialize_default_subscriptions() -> Result<bool, String> {
         subscriptions.insert("admin_user".to_string(), SubscriptionTier::Enterprise);
         subscriptions.insert("test_user".to_string(), SubscriptionTier::Basic);
         Ok(true)
+    })
+}
+
+// Initialize demo coupons for testing
+#[ic_cdk::update]
+pub fn initialize_demo_coupons() -> Result<bool, String> {
+    let current_time = ic_cdk::api::time();
+    let one_year = 365 * 24 * 60 * 60 * 1_000_000_000; // 1 year in nanoseconds
+
+    COUPONS.with(|coupons| {
+        let mut coupon_map = coupons.borrow_mut();
+
+        // Demo Enterprise coupon - unlimited uses, expires in 1 year
+        coupon_map.insert(
+            "DEMO-ENTERPRISE-2024".to_string(),
+            Coupon {
+                code: "DEMO-ENTERPRISE-2024".to_string(),
+                coupon_type: CouponType::Enterprise,
+                is_active: true,
+                max_uses: 999999, // Unlimited for demo
+                current_uses: 0,
+                expires_at: current_time + one_year,
+            },
+        );
+
+        // Demo Basic coupon - limited uses, expires in 1 year
+        coupon_map.insert(
+            "DEMO-BASIC-2024".to_string(),
+            Coupon {
+                code: "DEMO-BASIC-2024".to_string(),
+                coupon_type: CouponType::Basic,
+                is_active: true,
+                max_uses: 100,
+                current_uses: 0,
+                expires_at: current_time + one_year,
+            },
+        );
+
+        // Demo Premium coupon - limited uses, expires in 1 year
+        coupon_map.insert(
+            "DEMO-PREMIUM-2024".to_string(),
+            Coupon {
+                code: "DEMO-PREMIUM-2024".to_string(),
+                coupon_type: CouponType::Premium,
+                is_active: true,
+                max_uses: 50,
+                current_uses: 0,
+                expires_at: current_time + one_year,
+            },
+        );
+
+        Ok(true)
+    })
+}
+
+// Redeem coupon for subscription upgrade
+#[ic_cdk::update]
+pub fn redeem_coupon(username: String, coupon_code: String) -> Result<bool, String> {
+    // 1. Authentication
+    authenticate_user()?;
+
+    // 2. Check if coupon exists and is valid
+    let coupon = COUPONS.with(|coupons| {
+        let coupon_map = coupons.borrow();
+        coupon_map.get(&coupon_code).cloned()
+    });
+
+    if coupon.is_none() {
+        return Err("Invalid coupon code".to_string());
+    }
+
+    let coupon = coupon.unwrap();
+
+    // 3. Validate coupon
+    if !coupon.is_active {
+        return Err("Coupon is not active".to_string());
+    }
+
+    let current_time = ic_cdk::api::time();
+    if current_time > coupon.expires_at {
+        return Err("Coupon has expired".to_string());
+    }
+
+    if coupon.current_uses >= coupon.max_uses {
+        return Err("Coupon usage limit exceeded".to_string());
+    }
+
+    // 4. Convert coupon type to subscription tier
+    let subscription_tier = match coupon.coupon_type {
+        CouponType::Free => SubscriptionTier::Free,
+        CouponType::Basic => SubscriptionTier::Basic,
+        CouponType::Premium => SubscriptionTier::Premium,
+        CouponType::Enterprise => SubscriptionTier::Enterprise,
+    };
+
+    // 5. Update user subscription
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let mut subscriptions = subs.borrow_mut();
+        subscriptions.insert(username.clone(), subscription_tier.clone());
+    });
+
+    // 6. Update coupon usage count
+    COUPONS.with(|coupons| {
+        let mut coupon_map = coupons.borrow_mut();
+        if let Some(coupon) = coupon_map.get_mut(&coupon_code) {
+            coupon.current_uses += 1;
+        }
+    });
+
+    Ok(true)
+}
+
+// Get available coupons (for admin/debug purposes)
+#[ic_cdk::query]
+pub fn get_available_coupons() -> Vec<Coupon> {
+    COUPONS.with(|coupons| {
+        let coupon_map = coupons.borrow();
+        coupon_map.values().cloned().collect()
     })
 }
 

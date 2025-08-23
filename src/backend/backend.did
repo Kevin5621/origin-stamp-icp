@@ -39,6 +39,15 @@ type CollectionMetadata = record {
   image : opt text;
   total_supply : nat64;
 };
+type Coupon = record {
+  max_uses : nat32;
+  code : text;
+  coupon_type : CouponType;
+  current_uses : nat32;
+  is_active : bool;
+  expires_at : nat64;
+};
+type CouponType = variant { Premium; Enterprise; Free; Basic };
 type CreateCertificateRequest = record {
   username : text;
   file_sizes : vec nat64;
@@ -134,6 +143,7 @@ service : () -> {
       vec record { text; SubscriptionTier },
     ) query;
   get_all_users : () -> (vec text) query;
+  get_available_coupons : () -> (vec Coupon) query;
   get_certificate_by_id : (text) -> (opt Certificate) query;
   get_certificate_count : () -> (nat64) query;
   get_certificate_for_nft_minting : (text) -> (opt Certificate) query;
@@ -152,8 +162,8 @@ service : () -> {
   get_user_info : (text) -> (opt record { text; nat64 }) query;
   get_user_nfts : (principal) -> (vec Token) query;
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
-  get_user_subscription : (text) -> (opt SubscriptionTier) query;
-  get_user_subscription_debug : (text) -> (opt SubscriptionTier) query;
+  get_user_subscription : (text) -> (opt CouponType) query;
+  get_user_subscription_debug : (text) -> (opt CouponType) query;
   icrc7_balance_of : (vec Account) -> (vec nat64) query;
   icrc7_collection_metadata : () -> (CollectionMetadata) query;
   icrc7_description : () -> (opt text) query;
@@ -166,15 +176,17 @@ service : () -> {
   icrc7_total_supply : () -> (nat64) query;
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
   initialize_default_subscriptions : () -> (Result_4);
+  initialize_demo_coupons : () -> (Result_4);
   login : (text, text) -> (LoginResult);
   mint_certificate_nft : (text, Account) -> (Result_5);
   mint_nft_from_session : (text, Account, vec record { text; text }) -> (
       Result_5,
     );
+  redeem_coupon : (text, text) -> (Result_4);
   register_user : (text, text) -> (LoginResult);
   remove_photo_from_session : (text, text) -> (Result_4);
   set_s3_config : (S3Config) -> (bool);
-  set_user_subscription : (text, SubscriptionTier) -> (Result_4);
+  set_user_subscription : (text, CouponType) -> (Result_4);
   update_certificate_nft_info : (text, text, text) -> (Result_4);
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
       Result_4,
