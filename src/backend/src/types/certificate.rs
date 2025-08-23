@@ -24,6 +24,9 @@ pub struct Certificate {
     pub blockchain: String,
     pub token_standard: String,
     pub metadata: CertificateMetadata,
+    pub nft_generated: bool,
+    pub nft_id: Option<String>,
+    pub token_uri: Option<String>,
 }
 
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
@@ -45,6 +48,7 @@ pub struct CreateCertificateRequest {
     pub creation_duration: u32,
     pub file_format: String,
     pub creation_tools: Vec<String>,
+    pub file_sizes: Vec<u64>, // Actual file sizes in bytes
 }
 
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize)]

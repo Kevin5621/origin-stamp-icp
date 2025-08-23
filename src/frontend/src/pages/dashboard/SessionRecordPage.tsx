@@ -39,11 +39,12 @@ interface SessionData {
   title: string;
   description: string;
   artType: "physical" | "digital";
-  status: "active" | "completed";
+  status: "draft" | "active" | "completed";
   createdAt: Date;
   photos: PhotoLog[];
   currentStep: number;
   nftGenerated?: boolean;
+  username?: string; // Add username field for backend compatibility
 }
 
 /**
@@ -81,6 +82,10 @@ const SessionRecordPage: React.FC = () => {
   const cancelRef = useRef<boolean>(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
+  // Subscription state for upload limits
+  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
+  const [subscriptionLimits, setSubscriptionLimits] = useState<any>(null);
+
   // Reset progress states when selectedFiles changes
   useEffect(() => {
     if (!selectedFiles) {
@@ -94,6 +99,43 @@ const SessionRecordPage: React.FC = () => {
     }
   }, [selectedFiles]);
 
+  // Load subscription data for upload limits
+  useEffect(() => {
+    const loadSubscriptionData = () => {
+      if (!user?.username) return;
+
+      // TODO: Replace with real backend call when module resolution is fixed
+      // For now, use mock data based on username
+      if (user.username === "admin_user") {
+        setSubscriptionTier("Enterprise");
+        setSubscriptionLimits({
+          max_photos: 100,
+          max_file_size_mb: 50,
+          can_generate_nft: true,
+          priority_support: true,
+        });
+      } else if (user.username === "test_user") {
+        setSubscriptionTier("Basic");
+        setSubscriptionLimits({
+          max_photos: 20,
+          max_file_size_mb: 25,
+          can_generate_nft: true,
+          priority_support: false,
+        });
+      } else {
+        setSubscriptionTier("Free");
+        setSubscriptionLimits({
+          max_photos: 5,
+          max_file_size_mb: 10,
+          can_generate_nft: false,
+          priority_support: false,
+        });
+      }
+    };
+
+    loadSubscriptionData();
+  }, [user?.username]);
+
   // Load session data from backend
   useEffect(() => {
     const loadSession = async () => {
@@ -103,19 +145,68 @@ const SessionRecordPage: React.FC = () => {
         // Try to load from localStorage first for faster loading
         const cachedSession = localStorage.getItem(`session_${sessionId}`);
         if (cachedSession) {
-          const parsedSession = JSON.parse(cachedSession);
-          // Convert timestamp strings back to Date objects
-          parsedSession.photos = parsedSession.photos.map((photo: any) => ({
-            ...photo,
-            timestamp: photo.timestamp ? new Date(photo.timestamp) : new Date(),
-          }));
-          setSession(parsedSession);
+          try {
+            const parsedSession = JSON.parse(cachedSession);
+
+            // Validate cached createdAt
+            let cachedCreatedAt = parsedSession.createdAt;
+            if (cachedCreatedAt) {
+              const cachedDate = new Date(cachedCreatedAt);
+              if (isNaN(cachedDate.getTime())) {
+                console.warn(
+                  "Invalid cached createdAt, using current time as fallback:",
+                  cachedCreatedAt,
+                );
+                cachedCreatedAt = new Date().toISOString();
+              }
+            } else {
+              console.warn(
+                "No cached createdAt, using current time as fallback",
+              );
+              cachedCreatedAt = new Date().toISOString();
+            }
+
+            // Convert timestamp strings back to Date objects
+            parsedSession.photos = parsedSession.photos.map((photo: any) => ({
+              ...photo,
+              timestamp: photo.timestamp
+                ? new Date(photo.timestamp)
+                : new Date(),
+            }));
+
+            // Ensure createdAt is valid
+            parsedSession.createdAt = new Date(cachedCreatedAt);
+
+            setSession(parsedSession);
+          } catch (parseError) {
+            console.error(
+              "Failed to parse cached session, clearing localStorage:",
+              parseError,
+            );
+            localStorage.removeItem(`session_${sessionId}`);
+          }
         }
 
         // Always fetch fresh data from backend
         const sessionDetails =
           await PhysicalArtService.getSessionDetails(sessionId);
         if (sessionDetails) {
+          // Validate created_at from backend
+          let createdTimestamp = Number(sessionDetails.created_at);
+          if (isNaN(createdTimestamp) || createdTimestamp <= 0) {
+            console.warn(
+              "Invalid created_at from backend, using current time as fallback:",
+              sessionDetails.created_at,
+            );
+            createdTimestamp = Date.now();
+          }
+
+          // Ensure timestamp is in milliseconds (backend might return nanoseconds)
+          if (createdTimestamp > 1000000000000000) {
+            // If timestamp is in nanoseconds
+            createdTimestamp = Math.floor(createdTimestamp / 1000000);
+          }
+
           // Transform backend data to frontend format
           const sessionWithPhotos: SessionData = {
             id: sessionDetails.session_id,
@@ -123,14 +214,12 @@ const SessionRecordPage: React.FC = () => {
             description: sessionDetails.description,
             artType: "physical",
             status: sessionDetails.status as "active" | "completed",
-            createdAt: new Date(Number(sessionDetails.created_at)),
+            createdAt: new Date(createdTimestamp),
             currentStep: sessionDetails.uploaded_photos.length + 1,
             photos: sessionDetails.uploaded_photos.map((photoUrl, index) => ({
               id: `photo-${index}`,
               filename: `photo-${index + 1}.jpg`,
-              timestamp: new Date(
-                Number(sessionDetails.created_at) + index * 60000,
-              ),
+              timestamp: new Date(createdTimestamp + index * 60000),
               description: `Step ${index + 1}`,
               fileSize: 0, // Will be updated from cache if available
               url: photoUrl,
@@ -188,7 +277,15 @@ const SessionRecordPage: React.FC = () => {
   // Save session data to localStorage whenever it changes
   useEffect(() => {
     if (session && sessionId) {
-      localStorage.setItem(`session_${sessionId}`, JSON.stringify(session));
+      // Ensure session data is valid before saving
+      if (session.createdAt && !isNaN(session.createdAt.getTime())) {
+        localStorage.setItem(`session_${sessionId}`, JSON.stringify(session));
+      } else {
+        console.warn(
+          "Invalid session createdAt, not saving to localStorage:",
+          session.createdAt,
+        );
+      }
     }
   }, [session, sessionId]);
 
@@ -201,6 +298,28 @@ const SessionRecordPage: React.FC = () => {
     setUploadInProgress(false);
     setShouldCancelUpload(false);
     setIsCancelling(false);
+
+    // Check subscription limits first
+    if (subscriptionLimits && session) {
+      const currentPhotoCount = session.photos.length;
+      const newPhotoCount = files.length;
+      const totalAfterUpload = currentPhotoCount + newPhotoCount;
+
+      if (totalAfterUpload > subscriptionLimits.max_photos) {
+        const remainingSlots =
+          subscriptionLimits.max_photos - currentPhotoCount;
+        addToast(
+          "error",
+          t("subscription.photo_limit_exceeded", {
+            current: currentPhotoCount,
+            limit: subscriptionLimits.max_photos,
+            remaining: remainingSlots,
+            tier: subscriptionTier,
+          }),
+        );
+        return;
+      }
+    }
 
     // Check for duplicates with existing photos
     if (session) {
@@ -219,10 +338,13 @@ const SessionRecordPage: React.FC = () => {
       }
     }
 
-    // Validate file types and sizes
+    // Validate file types and sizes based on subscription
+    const maxFileSizeMB = subscriptionLimits?.max_file_size_mb || 10;
+    const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
+
     const validFiles = Array.from(files).filter((file) => {
       const isValidType = file.type.startsWith("image/");
-      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
+      const isValidSize = file.size <= maxFileSizeBytes;
 
       if (!isValidType) {
         addToast(
@@ -233,7 +355,15 @@ const SessionRecordPage: React.FC = () => {
       }
 
       if (!isValidSize) {
-        addToast("error", t("session.file_too_large", { filename: file.name }));
+        addToast(
+          "error",
+          t("subscription.file_size_exceeded", {
+            filename: file.name,
+            current: (file.size / (1024 * 1024)).toFixed(1),
+            limit: maxFileSizeMB,
+            tier: subscriptionTier,
+          }),
+        );
         return false;
       }
 
@@ -471,50 +601,107 @@ const SessionRecordPage: React.FC = () => {
   const handleCompleteSessionAndGenerateNFT = async () => {
     if (!session || !user) return;
 
+    // Validate session data before proceeding
+    if (!session.title || !session.description || session.photos.length === 0) {
+      addToast("error", t("session.incomplete_session_data"));
+      return;
+    }
+
     setIsGeneratingNFT(true);
     addToast("info", t("session.starting_certificate_generation"));
 
     try {
+      // Validate createdAt
+      if (
+        !session.createdAt ||
+        !(session.createdAt instanceof Date) ||
+        isNaN(session.createdAt.getTime())
+      ) {
+        throw new Error("Invalid session creation date");
+      }
+
       // Calculate creation duration (in minutes)
-      const creationDuration = Math.floor(
-        (Date.now() - session.createdAt.getTime()) / (1000 * 60),
+      const rawDurationMs = Date.now() - session.createdAt.getTime();
+      const rawDurationMinutes = rawDurationMs / (1000 * 60);
+
+      // Ensure minimum duration of 1 minute for very new sessions
+      const creationDuration = Math.max(1, Math.floor(rawDurationMinutes));
+
+      // Validate creation duration
+      if (creationDuration <= 0) {
+        throw new Error(
+          `Invalid creation duration calculated: ${creationDuration} minutes`,
+        );
+      }
+
+      // Update session status from "draft" to "active" if needed
+      if (session.status === "draft") {
+        try {
+          await PhysicalArtService.updateSessionStatus(session.id, "active");
+
+          // Update local session state
+          setSession((prev) =>
+            prev ? { ...prev, status: "active" as const } : null,
+          );
+        } catch (statusError) {
+          console.warn(
+            "Failed to update session status, continuing with certificate generation:",
+            statusError,
+          );
+        }
+      }
+
+      // Ensure session has username for backend compatibility
+      if (!user?.username) {
+        throw new Error("User not authenticated or username not found");
+      }
+
+      // Add username to session data
+      const sessionWithUsername = {
+        ...session,
+        username: user.username,
+      };
+
+      // Use the new complete certificate generation flow
+      const result = await CertificateService.completeCertificateGeneration(
+        sessionWithUsername,
+        session.photos.map((photo) => photo.url),
       );
 
-      // Generate certificate
-      const certificate = await CertificateService.generateCertificate({
-        session_id: session.id,
-        username: user.username,
-        art_title: session.title,
-        description: session.description,
-        photo_count: session.photos.length,
-        creation_duration: creationDuration,
-        file_format: "JPEG/PNG",
-        creation_tools: ["Digital Camera", "IC-Vibe Platform"],
-      });
+      if (!result.certificate || !result.nft) {
+        throw new Error("Failed to generate certificate and NFT");
+      }
 
       // Update session status to completed
       await PhysicalArtService.updateSessionStatus(session.id, "completed");
-
-      // Update local session state
       setSession((prev) =>
-        prev
-          ? {
-              ...prev,
-              status: "completed",
-              nftGenerated: true,
-            }
-          : null,
+        prev ? { ...prev, status: "completed" as const } : null,
       );
 
-      setIsGeneratingNFT(false);
-      addToast("success", t("session.certificate_generated_successfully"));
+      addToast(
+        "success",
+        t("session.certificate_and_nft_generated_successfully"),
+      );
 
-      // Navigate to certificate page
-      navigate(`/certificate/${certificate.certificate_id}`);
+      // Navigate to certificate page with all necessary data
+      navigate(`/certificate/${result.certificate?.certificate_id}`, {
+        state: {
+          certificate: result.certificate,
+          nftData: result.nft,
+          sessionData: session,
+          photos: session.photos,
+        },
+      });
     } catch (error) {
       console.error("Failed to generate certificate:", error);
       setIsGeneratingNFT(false);
-      addToast("error", t("session.certificate_generation_failed"));
+
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      addToast(
+        "error",
+        `${t("session.certificate_generation_failed")}: ${errorMessage}`,
+      );
     }
   };
 
@@ -652,6 +839,39 @@ const SessionRecordPage: React.FC = () => {
           <div className="session-record__upload">
             <div className="upload-card">
               <h2>{t("session.upload_progress_photos_to_s3")}</h2>
+
+              {/* Subscription Info */}
+              {subscriptionLimits && (
+                <div className="subscription-info">
+                  <div className="subscription-tier">
+                    <span className="tier-label">
+                      {t("subscription.your_tier")}:
+                    </span>
+                    <span
+                      className={`tier-value tier-value--${subscriptionTier.toLowerCase()}`}
+                    >
+                      {subscriptionTier}
+                    </span>
+                  </div>
+                  <div className="subscription-limits">
+                    <span className="limit-item">
+                      {t("subscription.photo_limit")}: {session.photos.length}/
+                      {subscriptionLimits.max_photos}
+                    </span>
+                    <span className="limit-item">
+                      {t("subscription.file_size_limit")}:{" "}
+                      {subscriptionLimits.max_file_size_mb}MB
+                    </span>
+                  </div>
+                  {subscriptionTier === "Free" && (
+                    <div className="upgrade-prompt">
+                      <span className="upgrade-text">
+                        {t("subscription.upgrade_for_more_photos")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* File Drop Zone */}
               <div
