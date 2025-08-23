@@ -545,7 +545,7 @@ pub fn mint_certificate_nft(certificate_id: String, recipient: Account) -> Resul
     });
 
     // 15. Update certificate with NFT info
-    let token_uri = format!("https://ic-vibe.ic0.app/nft/{token_id}/metadata");
+    let token_uri = format!("https://originstamp.ic0.app/nft/{token_id}/metadata");
     let update_result = crate::modules::certificates::update_certificate_nft_info(
         certificate_id,
         token_id.to_string(),
