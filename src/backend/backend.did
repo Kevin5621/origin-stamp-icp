@@ -41,6 +41,7 @@ type CollectionMetadata = record {
 };
 type CreateCertificateRequest = record {
   username : text;
+  file_sizes : vec nat64;
   session_id : text;
   photo_count : nat32;
   file_format : text;

@@ -194,6 +194,7 @@ fn validate_and_sanitize_input(
         creation_duration: request.creation_duration,
         file_format: request.file_format.clone(),
         creation_tools: sanitized_tools,
+        file_sizes: request.file_sizes.clone(),
     })
 }
 
@@ -356,12 +357,15 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
         ));
     }
 
-    // Validate file size against subscription limit
-    let total_file_size_mb: u32 = session
-        .uploaded_photos
-        .iter()
-        .map(|_| 5) // Assume 5MB per photo for now
-        .sum();
+    // Validate file size against subscription limit using actual file sizes
+    let total_file_size_mb: u32 = if !sanitized_request.file_sizes.is_empty() {
+        // Use actual file sizes from frontend
+        let total_bytes: u64 = sanitized_request.file_sizes.iter().sum();
+        (total_bytes / (1024 * 1024)) as u32
+    } else {
+        // Fallback: assume 5MB per photo if no file sizes provided
+        session.uploaded_photos.len() as u32 * 5
+    };
 
     if total_file_size_mb > subscription_limits.max_file_size_mb {
         release_reentrancy_certificate(&request.session_id);
@@ -455,7 +459,7 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
                 sanitized_request.creation_duration % 60
             ),
             total_actions: sanitized_request.photo_count,
-            file_size: format!("{} MB", 10 + (sanitized_request.photo_count * 2)),
+            file_size: format!("{:.2} MB", total_file_size_mb as f32),
             file_format: sanitized_request.file_format,
             creation_tools: sanitized_request.creation_tools,
         },

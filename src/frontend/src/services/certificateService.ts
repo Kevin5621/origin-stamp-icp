@@ -44,6 +44,7 @@ export interface CreateCertificateRequest {
   creation_duration: number; // in minutes
   file_format: string;
   creation_tools: string[];
+  file_sizes: bigint[]; // Actual file sizes in bytes (bigint for Candid compatibility)
 }
 
 /**
@@ -66,6 +67,7 @@ export class CertificateService {
         creation_duration: request.creation_duration,
         file_format: request.file_format,
         creation_tools: request.creation_tools,
+        file_sizes: request.file_sizes,
       });
 
       if ("Ok" in result) {
@@ -236,6 +238,9 @@ export class CertificateService {
         creation_duration: this.calculateCreationDuration(session.createdAt),
         file_format: "JPEG/PNG",
         creation_tools: ["Digital Camera", "IC-Vibe Platform"],
+        file_sizes: session.photos.map((photo: { fileSize: number }) =>
+          BigInt(photo.fileSize),
+        ), // Convert to bigint for Candid
       });
 
       if (!certificate) {
