@@ -1,0 +1,76 @@
+{
+  "subscription_plans": "Subscription Plans",
+  "subscription_subtitle": "Unlock more features and grow your creative journey with OriginStamp",
+  "back_to_dashboard": "Back to Dashboard",
+  "current_plan": "Current Plan",
+  "have_coupon_code": "Have a Coupon Code?",
+  "enter_coupon_code": "Enter coupon code",
+  "redeem": "Redeem",
+  "processing": "Processing...",
+  "demo_coupons_title": "Demo Coupons (for testing):",
+  "choose_your_plan": "Choose Your Plan",
+  "most_popular": "Most Popular",
+  "current_plan_badge": "Current Plan",
+  "billed_monthly": "Billed monthly",
+  "upgrade_to": "Upgrade to",
+  "downgrade_to_free": "Downgrade to Free",
+  "upgrade_functionality_coming_soon": "Upgrade functionality coming soon!",
+  "please_login_to_upgrade": "Please log in to upgrade your subscription",
+  "coupon_redeemed_successfully": "Coupon redeemed successfully! Your subscription has been upgraded.",
+  "invalid_coupon_code": "Invalid coupon code. Try one of the demo codes above.",
+  "failed_to_redeem_coupon": "Failed to redeem coupon. Please try again.",
+  "please_enter_coupon_code": "Please enter a coupon code",
+  "enter_coupon_code_aria": "Enter coupon code to upgrade your subscription",
+  "redeem_coupon_code_aria": "Redeem coupon code",
+  "use_demo_coupon_code_aria": "Use demo coupon code: {{code}}",
+  "click_to_use": "Click to use",
+
+  "tiers": {
+    "free": {
+      "name": "Free",
+      "description": "Perfect for trying out OriginStamp",
+      "features": [
+        "5 photos per session",
+        "10MB file size limit",
+        "Community support",
+        "Basic verification"
+      ]
+    },
+    "basic": {
+      "name": "Basic",
+      "description": "Great for regular creators",
+      "features": [
+        "20 photos per session",
+        "25MB file size limit",
+        "NFT generation",
+        "Email support",
+        "Advanced analytics"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Perfect for professional creators",
+      "features": [
+        "100 photos per session",
+        "50MB file size limit",
+        "NFT generation",
+        "Priority support",
+        "Advanced features",
+        "Custom branding"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "For teams and organizations",
+      "features": [
+        "Unlimited photos",
+        "100MB file size limit",
+        "NFT generation",
+        "Priority support",
+        "API access",
+        "White label solution",
+        "Dedicated support"
+      ]
+    }
+  }
+}
