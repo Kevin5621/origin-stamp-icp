@@ -80,11 +80,11 @@ type PhysicalArtSession = record {
   description : text;
   created_at : nat64;
 };
-type Result = variant { Ok : text; Err : text };
-type Result_1 = variant { Ok : Certificate; Err : text };
-type Result_2 = variant { Ok : NFTGenerationResult; Err : text };
-type Result_3 = variant { Ok; Err : text };
-type Result_4 = variant { Ok : bool; Err : text };
+type Result = variant { Ok : bool; Err : text };
+type Result_1 = variant { Ok : text; Err : text };
+type Result_2 = variant { Ok : Certificate; Err : text };
+type Result_3 = variant { Ok : NFTGenerationResult; Err : text };
+type Result_4 = variant { Ok; Err : text };
 type Result_5 = variant { Ok : nat64; Err : text };
 type Result_6 = variant { Ok : VerificationResult; Err : text };
 type S3Config = record {
@@ -100,7 +100,6 @@ type SubscriptionLimits = record {
   max_file_size_mb : nat32;
   max_photos : nat32;
 };
-type SubscriptionTier = variant { Premium; Enterprise; Free; Basic };
 type Token = record {
   id : nat64;
   session_id : opt text;
@@ -122,7 +121,7 @@ type TransferRequest = record {
   memo : opt blob;
   created_at_time : opt nat64;
 };
-type TransferResponse = record { result : Result_3; token_id : nat64 };
+type TransferResponse = record { result : Result_4; token_id : nat64 };
 type UploadFileData = record {
   content_type : text;
   file_size : nat64;
@@ -135,13 +134,12 @@ type VerificationResult = record {
 };
 service : () -> {
   configure_s3 : (S3Config) -> (bool);
-  create_physical_art_session : (text, text, text) -> (Result);
-  generate_certificate : (CreateCertificateRequest) -> (Result_1);
-  generate_nft_for_certificate : (text) -> (Result_2);
-  generate_upload_url : (text, UploadFileData) -> (Result);
-  get_all_subscriptions_debug : () -> (
-      vec record { text; SubscriptionTier },
-    ) query;
+  create_coupon : (text, CouponType, nat32, nat64) -> (Result);
+  create_physical_art_session : (text, text, text) -> (Result_1);
+  generate_certificate : (CreateCertificateRequest) -> (Result_2);
+  generate_nft_for_certificate : (text) -> (Result_3);
+  generate_upload_url : (text, UploadFileData) -> (Result_1);
+  get_all_subscriptions_debug : () -> (vec record { text; CouponType }) query;
   get_all_users : () -> (vec text) query;
   get_available_coupons : () -> (vec Coupon) query;
   get_certificate_by_id : (text) -> (opt Certificate) query;
@@ -175,24 +173,25 @@ service : () -> {
   icrc7_tokens_of : (Account, opt nat64, opt nat64) -> (vec nat64) query;
   icrc7_total_supply : () -> (nat64) query;
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
-  initialize_default_subscriptions : () -> (Result_4);
-  initialize_demo_coupons : () -> (Result_4);
+  initialize_demo_coupons : () -> (Result);
+  initialize_user_subscription : (text) -> (Result);
   login : (text, text) -> (LoginResult);
   mint_certificate_nft : (text, Account) -> (Result_5);
   mint_nft_from_session : (text, Account, vec record { text; text }) -> (
       Result_5,
     );
-  redeem_coupon : (text, text) -> (Result_4);
+  redeem_coupon : (text, text) -> (Result);
   register_user : (text, text) -> (LoginResult);
-  remove_photo_from_session : (text, text) -> (Result_4);
+  remove_photo_from_session : (text, text) -> (Result);
   set_s3_config : (S3Config) -> (bool);
-  set_user_subscription : (text, CouponType) -> (Result_4);
-  update_certificate_nft_info : (text, text, text) -> (Result_4);
+  set_user_subscription : (text, CouponType) -> (Result);
+  update_certificate_nft_info : (text, text, text) -> (Result);
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
-      Result_4,
+      Result,
     );
-  update_session_status : (text, text) -> (Result_4);
+  update_session_status : (text, text) -> (Result);
+  update_user_subscription : (text, CouponType) -> (Result);
   update_username : (text, text, text) -> (LoginResult);
-  upload_photo_to_session : (text, text) -> (Result_4);
+  upload_photo_to_session : (text, text) -> (Result);
   verify_certificate : (text) -> (Result_6);
 }

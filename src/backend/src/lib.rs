@@ -47,8 +47,8 @@ pub fn get_dashboard_metrics() -> DashboardMetrics {
 // Initialize canister with default data
 #[ic_cdk::init]
 fn init() {
-    // Initialize default subscriptions for testing
-    let _ = modules::certificates::initialize_default_subscriptions();
+    // Initialize demo coupons for development/testing
+    let _ = modules::certificates::initialize_demo_coupons();
 }
 
 // Export the Candid interface
