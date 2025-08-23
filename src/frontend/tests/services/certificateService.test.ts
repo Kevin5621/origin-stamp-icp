@@ -8,7 +8,26 @@ vi.mock("../../../declarations/backend", () => ({
     get_certificate_by_id: vi.fn(),
     get_user_certificates: vi.fn(),
     verify_certificate: vi.fn(),
-    generate_nft_for_certificate: vi.fn(),
+    mint_certificate_nft: vi.fn(),
+    get_certificate_nft_metadata: vi.fn(),
+  },
+}));
+
+// Mock AuthService
+vi.mock("../../src/services/authService", () => ({
+  AuthService: {
+    getCurrentUserPrincipal: vi.fn().mockResolvedValue({
+      toString: () => "2vxsx-fae",
+    }),
+  },
+}));
+
+// Mock @dfinity/principal
+vi.mock("@dfinity/principal", () => ({
+  Principal: {
+    fromText: vi.fn((text: string) => ({
+      toString: () => text,
+    })),
   },
 }));
 
@@ -251,28 +270,29 @@ describe("CertificateService", () => {
 
   describe("generateNFT", () => {
     it("should generate NFT for certificate", async () => {
-      const mockNFTResult = {
-        nft_id: "NFT-CERT-123-456",
-        token_uri: "https://ic-vibe.ic0.app/nft/CERT-123",
-      };
+      const mockNFTResult = "NFT-CERT-123-456"; // Token ID as string
 
       const { backend } = await import("../../../declarations/backend");
-      (backend.generate_nft_for_certificate as any).mockResolvedValue({
+      (backend.mint_certificate_nft as any).mockResolvedValue({
         Ok: mockNFTResult,
       });
 
       const result = await CertificateService.generateNFT("CERT-123");
 
-      expect(backend.generate_nft_for_certificate).toHaveBeenCalledWith(
+      expect(backend.mint_certificate_nft).toHaveBeenCalledWith(
         "CERT-123",
+        expect.objectContaining({
+          owner: expect.any(Object),
+          subaccount: [],
+        }),
       );
       expect(result.nft_id).toBe("NFT-CERT-123-456");
-      expect(result.token_uri).toBe("https://ic-vibe.ic0.app/nft/CERT-123");
+      expect(result.token_uri).toBe("https://originstamp.ic0.app/nft/NFT-CERT-123-456/metadata");
     });
 
     it("should handle NFT generation errors", async () => {
       const { backend } = await import("../../../declarations/backend");
-      (backend.generate_nft_for_certificate as any).mockResolvedValue({
+      (backend.mint_certificate_nft as any).mockResolvedValue({
         Err: "Failed to generate NFT",
       });
 
