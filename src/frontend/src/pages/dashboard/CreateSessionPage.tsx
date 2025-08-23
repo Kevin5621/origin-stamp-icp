@@ -285,14 +285,27 @@ const CreateSessionPage: React.FC = () => {
   };
 
   const handleCreateSession = useCallback(async () => {
-    // Reset errors
+    // PRODUCTION: Input validation and sanitization
     setErrors({});
 
-    // Validation
+    // Enhanced validation
     const newErrors: { [key: string]: string } = {};
 
-    if (!sessionTitle.trim()) {
+    // Title validation
+    const sanitizedTitle = sessionTitle.trim();
+    if (!sanitizedTitle) {
       newErrors.title = t("session_title_required");
+    } else if (sanitizedTitle.length < 3) {
+      newErrors.title = "Title must be at least 3 characters";
+    } else if (sanitizedTitle.length > 100) {
+      newErrors.title = "Title must be less than 100 characters";
+    } else if (!/^[a-zA-Z0-9\s\-_.,!?()]+$/.test(sanitizedTitle)) {
+      newErrors.title = "Title contains invalid characters";
+    }
+
+    // Description validation
+    if (sessionDescription.trim().length > 500) {
+      newErrors.description = "Description must be less than 500 characters";
     }
 
     if (Object.keys(newErrors).length > 0) {

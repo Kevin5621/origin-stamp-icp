@@ -389,7 +389,7 @@
     "upload_error": "Error upload: {{error}}",
     "photo_deleted_success": "Foto berhasil dihapus: {{filename}}",
     "failed_to_delete_photo": "Gagal menghapus foto",
-    "blockchain_permanence_warning": "⚠️ Foto akan disimpan permanen di blockchain",
+    "blockchain_permanence_warning": "Foto akan disimpan permanen di blockchain",
     "blockchain_upload_confirmation": "File-file ini akan disimpan permanen di blockchain dan tidak dapat dihapus.",
     "starting_nft_generation_process": "Memulai proses generate NFT...",
     "close": "Tutup",

@@ -49,7 +49,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const savedUser = localStorage.getItem("auth-user");
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+
+        // Ensure principal is stored in the same location as AuthService
+        if (userData.principal) {
+          localStorage.setItem(
+            "originstamp_user_principal",
+            userData.principal,
+          );
+        } else {
+          // Regenerate principal for existing user if missing
+          if (userData.loginMethod === "username") {
+            regeneratePrincipalForExistingUser(userData.username);
+          }
+        }
       } catch (error) {
         console.error("Error parsing saved user:", error);
         localStorage.removeItem("auth-user");
@@ -67,6 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // Check if user is already authenticated with Internet Identity
         const isAuthenticated = await client.isAuthenticated();
+
         if (isAuthenticated) {
           const identity = client.getIdentity();
           const principal = identity.getPrincipal().toString();
@@ -82,6 +97,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             };
             setUser(userData);
             localStorage.setItem("auth-user", JSON.stringify(userData));
+
+            // Store principal in the same location as AuthService
+            localStorage.setItem("originstamp_user_principal", principal);
           }
         }
       } catch (error) {
@@ -93,13 +111,46 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = (username: string) => {
-    const userData = {
-      username,
-      loginTime: new Date().toLocaleString(),
-      loginMethod: "username" as const,
+    // Generate a deterministic principal for username login
+    const generateUsernamePrincipal = async () => {
+      try {
+        // Create a deterministic hash from username
+        const encoder = new TextEncoder();
+        const data = encoder.encode(username + "originstamp_SALT_2024");
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+
+        // Convert to principal format (first 16 characters)
+        const principalText = hashHex.slice(0, 16);
+        return principalText;
+      } catch (error) {
+        console.error("Failed to generate principal for username:", error);
+        return null;
+      }
     };
-    setUser(userData);
-    localStorage.setItem("auth-user", JSON.stringify(userData));
+
+    // Generate principal and create user data
+    generateUsernamePrincipal().then((principal) => {
+      if (principal) {
+        const userData = {
+          username,
+          loginTime: new Date().toLocaleString(),
+          principal,
+          loginMethod: "username" as const,
+        };
+
+        setUser(userData);
+        localStorage.setItem("auth-user", JSON.stringify(userData));
+
+        // Store principal in the same location as AuthService
+        localStorage.setItem("originstamp_user_principal", principal);
+      } else {
+        console.error("Failed to generate principal for username:", username);
+      }
+    });
   };
 
   const loginWithInternetIdentity = (principal: string) => {
@@ -111,6 +162,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
     setUser(userData);
     localStorage.setItem("auth-user", JSON.stringify(userData));
+
+    // Also store principal in the same location as AuthService
+    localStorage.setItem("originstamp_user_principal", principal);
   };
 
   const loginWithGoogle = (userInfo: {
@@ -119,15 +173,53 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     email: string;
     picture: string;
   }) => {
-    const userData = {
-      username: userInfo.name,
-      loginTime: new Date().toLocaleString(),
-      email: userInfo.email,
-      picture: userInfo.picture,
-      loginMethod: "google" as const,
+    // Generate a deterministic principal for Google login
+    const generateGooglePrincipal = async () => {
+      try {
+        // Create a deterministic hash from Google user ID
+        const encoder = new TextEncoder();
+        const data = encoder.encode(
+          userInfo.id + "originstamp_GOOGLE_SALT_2024",
+        );
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+
+        // Convert to principal format (first 16 characters)
+        const principalText = hashHex.slice(0, 16);
+        return principalText;
+      } catch (error) {
+        console.error("Failed to generate principal for Google user:", error);
+        return null;
+      }
     };
-    setUser(userData);
-    localStorage.setItem("auth-user", JSON.stringify(userData));
+
+    // Generate principal and create user data
+    generateGooglePrincipal().then((principal) => {
+      if (principal) {
+        const userData = {
+          username: userInfo.name,
+          loginTime: new Date().toLocaleString(),
+          email: userInfo.email,
+          picture: userInfo.picture,
+          principal,
+          loginMethod: "google" as const,
+        };
+
+        setUser(userData);
+        localStorage.setItem("auth-user", JSON.stringify(userData));
+
+        // Store principal in the same location as AuthService
+        localStorage.setItem("originstamp_user_principal", principal);
+      } else {
+        console.error(
+          "Failed to generate principal for Google user:",
+          userInfo.name,
+        );
+      }
+    });
   };
 
   const logout = async () => {
@@ -136,11 +228,76 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
     setUser(null);
     localStorage.removeItem("auth-user");
+
+    // Remove principal from the same location as AuthService
+    localStorage.removeItem("originstamp_user_principal");
+  };
+
+  // Helper function to regenerate principal for existing users
+  const regeneratePrincipalForExistingUser = (username: string) => {
+    const generateUsernamePrincipal = async () => {
+      try {
+        // Create a deterministic hash from username
+        const encoder = new TextEncoder();
+        const data = encoder.encode(username + "originstamp_SALT_2024");
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+
+        // Convert to principal format (first 16 characters)
+        const principalText = hashHex.slice(0, 16);
+        return principalText;
+      } catch (error) {
+        console.error(
+          "Failed to regenerate principal for existing user:",
+          error,
+        );
+        return null;
+      }
+    };
+
+    // Generate principal and update user data
+    generateUsernamePrincipal().then((principal) => {
+      if (principal) {
+        // Update localStorage with new principal
+        localStorage.setItem("originstamp_user_principal", principal);
+
+        // Update user data with new principal
+        const currentUser = localStorage.getItem("auth-user");
+        if (currentUser) {
+          try {
+            const userData = JSON.parse(currentUser);
+            userData.principal = principal;
+            localStorage.setItem("auth-user", JSON.stringify(userData));
+
+            // Update state
+            setUser(userData);
+          } catch (error) {
+            console.error(
+              "Failed to update user data with new principal:",
+              error,
+            );
+          }
+        }
+      } else {
+        console.error(
+          "Failed to regenerate principal for existing user:",
+          username,
+        );
+      }
+    });
   };
 
   const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
     localStorage.setItem("auth-user", JSON.stringify(updatedUser));
+
+    // Update principal in localStorage if available
+    if (updatedUser.principal) {
+      localStorage.setItem("originstamp_user_principal", updatedUser.principal);
+    }
   };
 
   const value: AuthContextType = {
