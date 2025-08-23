@@ -40,9 +40,64 @@ const SubscriptionPage: React.FC = () => {
   const { user } = useAuth();
   const { addToast } = useToastContext();
 
+  // Demo coupon codes for testing
+  const demoCoupons = [
+    "DEMO-ENTERPRISE-2024",
+    "DEMO-BASIC-2024",
+    "DEMO-PREMIUM-2024",
+  ];
+
+  const handleRedeemCoupon = async () => {
+    if (!couponCode.trim() || !user?.username) {
+      setCouponMessage("Please enter a coupon code");
+      return;
+    }
+
+    setIsRedeemingCoupon(true);
+    setCouponMessage("");
+
+    try {
+      // TODO: Replace with real backend call when module resolution is fixed
+      // For now, simulate coupon redemption
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+
+      if (demoCoupons.includes(couponCode.toUpperCase())) {
+        // Determine tier from coupon code
+        let newTier = "Free";
+        if (couponCode.toUpperCase().includes("ENTERPRISE")) {
+          newTier = "Enterprise";
+        } else if (couponCode.toUpperCase().includes("PREMIUM")) {
+          newTier = "Premium";
+        } else if (couponCode.toUpperCase().includes("BASIC")) {
+          newTier = "Basic";
+        }
+
+        setCurrentTier(newTier);
+        setCouponMessage(
+          `🎉 Coupon redeemed successfully! You now have ${newTier} tier.`,
+        );
+        addToast("success", `Coupon redeemed! Upgraded to ${newTier} tier.`);
+        setCouponCode("");
+      } else {
+        setCouponMessage(
+          "❌ Invalid coupon code. Try one of the demo codes above.",
+        );
+        addToast("error", "Invalid coupon code");
+      }
+    } catch (error) {
+      setCouponMessage("❌ Failed to redeem coupon. Please try again.");
+      addToast("error", "Failed to redeem coupon");
+    } finally {
+      setIsRedeemingCoupon(false);
+    }
+  };
+
   const [currentTier, setCurrentTier] = useState<string>("Free");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  const [couponCode, setCouponCode] = useState<string>("");
+  const [isRedeemingCoupon, setIsRedeemingCoupon] = useState(false);
+  const [couponMessage, setCouponMessage] = useState<string>("");
 
   // Load current subscription tier
   useEffect(() => {
@@ -243,6 +298,64 @@ const SubscriptionPage: React.FC = () => {
               <span className="current-plan-text">
                 Current Plan: <strong>{currentTier}</strong>
               </span>
+            </div>
+
+            {/* Coupon Section */}
+            <div className="coupon-section">
+              <div className="coupon-section__header">
+                <Sparkles className="coupon-section__icon" />
+                <h3>Have a Coupon?</h3>
+              </div>
+              <div className="coupon-section__content">
+                <div className="coupon-input-group">
+                  <input
+                    type="text"
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    className="coupon-input"
+                    disabled={isRedeemingCoupon}
+                  />
+                  <button
+                    onClick={handleRedeemCoupon}
+                    disabled={!couponCode.trim() || isRedeemingCoupon}
+                    className="coupon-redeem-btn"
+                  >
+                    {isRedeemingCoupon ? (
+                      <Loader className="coupon-redeem-btn__loader" />
+                    ) : (
+                      "Redeem"
+                    )}
+                  </button>
+                </div>
+
+                {couponMessage && (
+                  <div
+                    className={`coupon-message ${couponMessage.includes("🎉") ? "success" : "error"}`}
+                  >
+                    {couponMessage}
+                  </div>
+                )}
+
+                {/* Demo Coupon Codes */}
+                <div className="demo-coupons">
+                  <p className="demo-coupons__title">
+                    Demo Coupons (for testing):
+                  </p>
+                  <div className="demo-coupons__list">
+                    {demoCoupons.map((code) => (
+                      <button
+                        key={code}
+                        onClick={() => setCouponCode(code)}
+                        className="demo-coupon-code"
+                        title="Click to copy"
+                      >
+                        {code}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
