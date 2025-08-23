@@ -94,9 +94,9 @@ export class MarketplaceService {
    * Helper function to extract tags from token attributes
    */
   private static getTagsFromAttributes(
-    attributes: Array<[string, string]>,
+    attributes: Array<{ trait_type: string; value: string }>,
   ): string[] {
-    return attributes.map(([key, value]) => `${key}:${value}`);
+    return attributes.map((attr) => `${attr.trait_type}:${attr.value}`);
   }
 
   /**

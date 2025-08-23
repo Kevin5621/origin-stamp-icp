@@ -91,10 +91,11 @@ type Token = record {
   metadata : TokenMetadata;
   created_at : nat64;
 };
+type TokenAttribute = record { trait_type : text; value : text };
 type TokenMetadata = record {
   name : text;
   description : opt text;
-  attributes : vec record { text; text };
+  attributes : vec TokenAttribute;
   image : opt text;
 };
 type TransferRequest = record {

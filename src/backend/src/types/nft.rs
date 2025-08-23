@@ -8,11 +8,17 @@ pub struct Account {
 }
 
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub struct TokenAttribute {
+    pub trait_type: String,
+    pub value: String,
+}
+
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
 pub struct TokenMetadata {
     pub name: String,
     pub description: Option<String>,
     pub image: Option<String>,
-    pub attributes: Vec<(String, String)>,
+    pub attributes: Vec<TokenAttribute>,
 }
 
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
