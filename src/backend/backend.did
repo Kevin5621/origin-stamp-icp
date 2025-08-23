@@ -75,8 +75,8 @@ type Result = variant { Ok : text; Err : text };
 type Result_1 = variant { Ok : Certificate; Err : text };
 type Result_2 = variant { Ok : NFTGenerationResult; Err : text };
 type Result_3 = variant { Ok; Err : text };
-type Result_4 = variant { Ok : nat64; Err : text };
-type Result_5 = variant { Ok : bool; Err : text };
+type Result_4 = variant { Ok : bool; Err : text };
+type Result_5 = variant { Ok : nat64; Err : text };
 type Result_6 = variant { Ok : VerificationResult; Err : text };
 type S3Config = record {
   region : text;
@@ -124,12 +124,15 @@ type VerificationResult = record {
   score : nat32;
   details : text;
 };
-service : {
+service : () -> {
   configure_s3 : (S3Config) -> (bool);
   create_physical_art_session : (text, text, text) -> (Result);
   generate_certificate : (CreateCertificateRequest) -> (Result_1);
   generate_nft_for_certificate : (text) -> (Result_2);
   generate_upload_url : (text, UploadFileData) -> (Result);
+  get_all_subscriptions_debug : () -> (
+      vec record { text; SubscriptionTier },
+    ) query;
   get_all_users : () -> (vec text) query;
   get_certificate_by_id : (text) -> (opt Certificate) query;
   get_certificate_count : () -> (nat64) query;
@@ -150,6 +153,7 @@ service : {
   get_user_nfts : (principal) -> (vec Token) query;
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
   get_user_subscription : (text) -> (opt SubscriptionTier) query;
+  get_user_subscription_debug : (text) -> (opt SubscriptionTier) query;
   icrc7_balance_of : (vec Account) -> (vec nat64) query;
   icrc7_collection_metadata : () -> (CollectionMetadata) query;
   icrc7_description : () -> (opt text) query;
@@ -161,21 +165,22 @@ service : {
   icrc7_tokens_of : (Account, opt nat64, opt nat64) -> (vec nat64) query;
   icrc7_total_supply : () -> (nat64) query;
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
+  initialize_default_subscriptions : () -> (Result_4);
   login : (text, text) -> (LoginResult);
-  mint_certificate_nft : (text, Account) -> (Result_4);
+  mint_certificate_nft : (text, Account) -> (Result_5);
   mint_nft_from_session : (text, Account, vec record { text; text }) -> (
-      Result_4,
-    );
-  register_user : (text, text) -> (LoginResult);
-  remove_photo_from_session : (text, text) -> (Result_5);
-  set_s3_config : (S3Config) -> (bool);
-  set_user_subscription : (text, SubscriptionTier) -> (Result_5);
-  update_certificate_nft_info : (text, text, text) -> (Result_5);
-  update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
       Result_5,
     );
-  update_session_status : (text, text) -> (Result_5);
+  register_user : (text, text) -> (LoginResult);
+  remove_photo_from_session : (text, text) -> (Result_4);
+  set_s3_config : (S3Config) -> (bool);
+  set_user_subscription : (text, SubscriptionTier) -> (Result_4);
+  update_certificate_nft_info : (text, text, text) -> (Result_4);
+  update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
+      Result_4,
+    );
+  update_session_status : (text, text) -> (Result_4);
   update_username : (text, text, text) -> (LoginResult);
-  upload_photo_to_session : (text, text) -> (Result_5);
+  upload_photo_to_session : (text, text) -> (Result_4);
   verify_certificate : (text) -> (Result_6);
 }

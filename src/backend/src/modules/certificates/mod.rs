@@ -645,11 +645,34 @@ pub fn get_subscription_limits(username: String) -> Option<SubscriptionLimits> {
 }
 
 // Initialize default subscriptions for testing
-pub fn initialize_default_subscriptions() {
+#[ic_cdk::update]
+pub fn initialize_default_subscriptions() -> Result<bool, String> {
     USER_SUBSCRIPTIONS.with(|subs| {
         let mut subscriptions = subs.borrow_mut();
         // Only set specific test users, all others default to Free
         subscriptions.insert("admin_user".to_string(), SubscriptionTier::Enterprise);
         subscriptions.insert("test_user".to_string(), SubscriptionTier::Basic);
-    });
+        Ok(true)
+    })
+}
+
+// Debug function to check user subscription
+#[ic_cdk::query]
+pub fn get_user_subscription_debug(username: String) -> Option<SubscriptionTier> {
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let subscriptions = subs.borrow();
+        subscriptions.get(&username).cloned()
+    })
+}
+
+// Debug function to check all subscriptions
+#[ic_cdk::query]
+pub fn get_all_subscriptions_debug() -> Vec<(String, SubscriptionTier)> {
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let subscriptions = subs.borrow();
+        subscriptions
+            .iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect()
+    })
 }
