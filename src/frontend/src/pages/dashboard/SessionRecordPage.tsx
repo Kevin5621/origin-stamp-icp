@@ -604,7 +604,16 @@ const SessionRecordPage: React.FC = () => {
         "success",
         t("session.certificate_and_nft_generated_successfully"),
       );
-      navigate(`/dashboard/certificates/${result.certificate?.certificate_id}`);
+
+      // Navigate to certificate page with all necessary data
+      navigate(`/certificate/${result.certificate?.certificate_id}`, {
+        state: {
+          certificate: result.certificate,
+          nftData: result.nft,
+          sessionData: session,
+          photos: session.photos,
+        },
+      });
     } catch (error) {
       console.error("Failed to generate certificate:", error);
       setIsGeneratingNFT(false);

@@ -425,15 +425,11 @@
     "zoom_btn--out": "Tombol Zoom Keluar",
     "zoom_btn--reset": "Tombol Reset Zoom",
     "zoom_btn--in": "Tombol Zoom Masuk",
-    "zoom_out": "Zoom Keluar",
-    "reset_zoom": "Reset Zoom",
-    "zoom_in": "Zoom Masuk",
     "photo_details": "Detail Foto",
     "detail_section": "Bagian Detail",
     "detail_meta": "Meta Detail",
     "meta_item": "Item Meta",
     "modal_footer": "Footer Modal",
-    "close": "Tutup",
     "confirmation_modal": "Modal Konfirmasi",
     "confirmation_content": "Konten Konfirmasi",
     "warning_icon": "Icon Peringatan",
@@ -441,5 +437,7 @@
     "file_list_preview": "Preview Daftar File",
     "file_name": "Nama File",
     "file_size": "Ukuran File"
-  }
+  },
+  "session_completed": "Sesi berhasil diselesaikan!",
+  "session_completed_description": "Sesi Anda telah selesai dan disimpan. Anda sekarang dapat melihat progress atau memulai sesi baru."
 }

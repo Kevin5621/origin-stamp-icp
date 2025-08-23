@@ -1,5 +1,6 @@
 type Account = record { owner : principal; subaccount : opt blob };
 type Certificate = record {
+  nft_id : opt text;
   authenticity_rating : nat32;
   username : text;
   verification_score : nat32;
@@ -11,12 +12,14 @@ type Certificate = record {
   blockchain_tx : text;
   community_trust : nat32;
   issuer : text;
+  nft_generated : bool;
   blockchain : text;
   expiry_date : nat64;
   token_standard : text;
   verification_hash : text;
   issue_date : nat64;
   qr_code_data : text;
+  token_uri : opt text;
   certificate_type : text;
   certificate_id : text;
   provenance_score : nat32;
