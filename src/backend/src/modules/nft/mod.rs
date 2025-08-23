@@ -392,14 +392,33 @@ pub fn mint_certificate_nft(certificate_id: String, recipient: Account) -> Resul
         return Err("NFT already generated for this certificate".to_string());
     }
 
-    // 5. Get session details for progress photos
+    // 5. Validate subscription tier for NFT generation
+    let user_subscription = crate::modules::certificates::get_user_subscription(certificate.username.clone());
+    match user_subscription {
+        Some(tier) => {
+            let subscription_limits = tier.get_limits();
+            
+            if !subscription_limits.can_generate_nft {
+                return Err(format!(
+                    "NFT generation not allowed for {:?} tier. Upgrade to Basic tier or higher to generate NFTs.",
+                    tier
+                ));
+            }
+        }
+        None => {
+            // Default to Free tier if no subscription found
+            return Err("NFT generation not allowed for Free tier. Upgrade to Basic tier or higher to generate NFTs.".to_string());
+        }
+    }
+
+    // 6. Get session details for progress photos
     let session = crate::modules::physical_art::get_session_details(certificate.session_id.clone());
     if session.is_none() {
         return Err("Session not found for NFT generation".to_string());
     }
     let session = session.unwrap();
 
-    // 6. Generate token ID
+    // 7. Generate token ID
     let token_id = TOKEN_COUNTER.with(|counter| {
         let mut counter_val = counter.borrow_mut();
         let id = *counter_val;
@@ -407,11 +426,11 @@ pub fn mint_certificate_nft(certificate_id: String, recipient: Account) -> Resul
         id
     });
 
-    // 7. Generate token hash
+    // 8. Generate token hash
     let current_time = ic_cdk::api::time();
     let token_hash = generate_token_hash(token_id, &certificate.session_id, current_time);
 
-    // 8. Create comprehensive metadata with certificate info
+    // 9. Create comprehensive metadata with certificate info
     let mut attributes = vec![
         // Basic certificate info
         TokenAttribute {
