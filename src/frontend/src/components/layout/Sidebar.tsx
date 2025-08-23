@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 
 interface SidebarProps {
   onSectionChange?: (section: string) => void;
@@ -32,31 +33,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
 
-  // Subscription state
-  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
+  const { currentTier } = useSubscription();
 
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
   const isCollapsed = externalIsCollapsed ?? internalIsCollapsed;
-
-  // Load user subscription data
-  useEffect(() => {
-    const loadSubscriptionData = () => {
-      if (!user?.username) return;
-
-      // TODO: Replace with real backend call when module resolution is fixed
-      // For now, use mock data based on username
-      if (user.username === "admin_user") {
-        setSubscriptionTier("Enterprise");
-      } else if (user.username === "test_user") {
-        setSubscriptionTier("Basic");
-      } else {
-        // All new users default to Free tier
-        setSubscriptionTier("Free");
-      }
-    };
-
-    loadSubscriptionData();
-  }, [user?.username]);
 
   const handleToggleCollapse = () => {
     const newCollapsedState = !isCollapsed;
@@ -251,7 +231,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Subscription Tier Badge */}
             <div className="sidebar__tier-badge">
               <Crown size={12} className="sidebar__tier-icon" />
-              <span className="sidebar__tier-text">{subscriptionTier}</span>
+              <span className="sidebar__tier-text">{currentTier}</span>
             </div>
           </div>
         )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Crown,
@@ -13,9 +13,10 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToastContext } from "../../contexts/ToastContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 
-// Subscription tier types
-interface SubscriptionTier {
+// Subscription tier configuration
+interface SubscriptionTierConfig {
   id: string;
   name: string;
   price: number;
@@ -39,12 +40,17 @@ const SubscriptionPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { addToast } = useToastContext();
+  const { currentTier, redeemCoupon, isLoading } = useSubscription();
+
+  // Local state for coupon input
+  const [couponCode, setCouponCode] = useState<string>("");
+  const [couponMessage, setCouponMessage] = useState<string>("");
 
   // Demo coupon codes for testing
   const demoCoupons = [
-    "DEMO-ENTERPRISE-2024",
-    "DEMO-BASIC-2024",
-    "DEMO-PREMIUM-2024",
+    "DEMO-ENTERPRISE-2025",
+    "DEMO-BASIC-2025",
+    "DEMO-PREMIUM-2025",
   ];
 
   const handleRedeemCoupon = async () => {
@@ -53,30 +59,16 @@ const SubscriptionPage: React.FC = () => {
       return;
     }
 
-    setIsRedeemingCoupon(true);
     setCouponMessage("");
 
     try {
-      // TODO: Replace with real backend call when module resolution is fixed
-      // For now, simulate coupon redemption
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+      const success = await redeemCoupon(couponCode);
 
-      if (demoCoupons.includes(couponCode.toUpperCase())) {
-        // Determine tier from coupon code
-        let newTier = "Free";
-        if (couponCode.toUpperCase().includes("ENTERPRISE")) {
-          newTier = "Enterprise";
-        } else if (couponCode.toUpperCase().includes("PREMIUM")) {
-          newTier = "Premium";
-        } else if (couponCode.toUpperCase().includes("BASIC")) {
-          newTier = "Basic";
-        }
-
-        setCurrentTier(newTier);
+      if (success) {
         setCouponMessage(
-          `🎉 Coupon redeemed successfully! You now have ${newTier} tier.`,
+          "🎉 Coupon redeemed successfully! Your subscription has been upgraded.",
         );
-        addToast("success", `Coupon redeemed! Upgraded to ${newTier} tier.`);
+        addToast("success", "Coupon redeemed successfully!");
         setCouponCode("");
       } else {
         setCouponMessage(
@@ -87,42 +79,11 @@ const SubscriptionPage: React.FC = () => {
     } catch (error) {
       setCouponMessage("❌ Failed to redeem coupon. Please try again.");
       addToast("error", "Failed to redeem coupon");
-    } finally {
-      setIsRedeemingCoupon(false);
     }
   };
 
-  const [currentTier, setCurrentTier] = useState<string>("Free");
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<string | null>(null);
-  const [couponCode, setCouponCode] = useState<string>("");
-  const [isRedeemingCoupon, setIsRedeemingCoupon] = useState(false);
-  const [couponMessage, setCouponMessage] = useState<string>("");
-
-  // Load current subscription tier
-  useEffect(() => {
-    const loadCurrentTier = () => {
-      if (!user?.username) {
-        setCurrentTier("Free");
-        return;
-      }
-
-      // Mock data based on username
-      if (user.username === "admin_user") {
-        setCurrentTier("Enterprise");
-      } else if (user.username === "test_user") {
-        setCurrentTier("Basic");
-      } else {
-        // All new users default to Free tier
-        setCurrentTier("Free");
-      }
-    };
-
-    loadCurrentTier();
-  }, [user?.username]);
-
   // Subscription tiers configuration
-  const subscriptionTiers: SubscriptionTier[] = [
+  const subscriptionTiers: SubscriptionTierConfig[] = [
     {
       id: "free",
       name: "Free",
@@ -224,32 +185,17 @@ const SubscriptionPage: React.FC = () => {
     },
   ];
 
-  const handleUpgrade = async (tierName: string) => {
+  const handleUpgrade = async (_tierName: string) => {
     if (!user) {
       addToast("error", "Please log in to upgrade your subscription");
       navigate("/login");
       return;
     }
 
-    setIsLoading(true);
-    setSelectedTier(tierName);
-
-    try {
-      // Mock upgrade process
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // In production, this would call backend to upgrade tier
-      addToast("success", `Successfully upgraded to ${tierName} plan!`);
-      setCurrentTier(tierName);
-    } catch (error) {
-      addToast("error", "Failed to upgrade subscription. Please try again.");
-    } finally {
-      setIsLoading(false);
-      setSelectedTier(null);
-    }
+    addToast("info", "Upgrade functionality coming soon!");
   };
 
-  const getTierButtonText = (tier: SubscriptionTier) => {
+  const getTierButtonText = (tier: SubscriptionTierConfig) => {
     if (currentTier === tier.name) {
       return "Current Plan";
     }
@@ -261,7 +207,7 @@ const SubscriptionPage: React.FC = () => {
     return `Upgrade to ${tier.name}`;
   };
 
-  const getTierButtonVariant = (tier: SubscriptionTier) => {
+  const getTierButtonVariant = (tier: SubscriptionTierConfig) => {
     if (currentTier === tier.name) {
       return "current";
     }
@@ -274,8 +220,7 @@ const SubscriptionPage: React.FC = () => {
   };
 
   const isCurrentTier = (tierName: string) => currentTier === tierName;
-  const isLoadingTier = (tierName: string) =>
-    isLoading && selectedTier === tierName;
+  const isLoadingTier = (_tierName: string) => false; // Simplified for now
 
   return (
     <div className="subscription-page">
@@ -313,15 +258,26 @@ const SubscriptionPage: React.FC = () => {
                     placeholder="Enter coupon code"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (
+                        e.key === "Enter" &&
+                        couponCode.trim() &&
+                        !isLoading
+                      ) {
+                        handleRedeemCoupon();
+                      }
+                    }}
                     className="coupon-input"
-                    disabled={isRedeemingCoupon}
+                    disabled={isLoading}
+                    aria-label="Enter coupon code to upgrade your subscription"
                   />
                   <button
                     onClick={handleRedeemCoupon}
-                    disabled={!couponCode.trim() || isRedeemingCoupon}
+                    disabled={!couponCode.trim() || isLoading}
                     className="coupon-redeem-btn"
+                    aria-label="Redeem coupon code"
                   >
-                    {isRedeemingCoupon ? (
+                    {isLoading ? (
                       <Loader className="coupon-redeem-btn__loader" />
                     ) : (
                       "Redeem"
@@ -349,6 +305,7 @@ const SubscriptionPage: React.FC = () => {
                         onClick={() => setCouponCode(code)}
                         className="demo-coupon-code"
                         title="Click to copy"
+                        aria-label={`Use demo coupon code: ${code}`}
                       >
                         {code}
                       </button>
