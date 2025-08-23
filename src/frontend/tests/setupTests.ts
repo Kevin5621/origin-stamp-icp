@@ -59,6 +59,17 @@ Object.defineProperty(window, "sessionStorage", {
   writable: true,
 });
 
+// Mock global sessionStorage and localStorage for Node.js environment
+Object.defineProperty(global, "sessionStorage", {
+  value: sessionStorageMock,
+  writable: true,
+});
+
+Object.defineProperty(global, "localStorage", {
+  value: localStorageMock,
+  writable: true,
+});
+
 // Mock IndexedDB for @dfinity/auth-client
 Object.defineProperty(global, "indexedDB", {
   value: {

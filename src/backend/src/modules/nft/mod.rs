@@ -1,7 +1,9 @@
 use crate::modules::physical_art;
 use crate::types::{
-    Account, CollectionMetadata, Token, TokenMetadata, TransferRequest, TransferResponse,
+    Account, CollectionMetadata, Token, TokenAttribute, TokenMetadata, TransferRequest,
+    TransferResponse,
 };
+use serde_json;
 use sha2::{Digest, Sha256};
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -237,23 +239,46 @@ pub fn mint_nft_from_session(
 
     // Create metadata with session information
     let mut attributes = vec![
-        ("session_id".to_string(), session_id.clone()),
-        ("artist".to_string(), session.username.clone()),
-        ("art_title".to_string(), session.art_title.clone()),
-        ("created_at".to_string(), current_time.to_string()),
-        ("token_hash".to_string(), token_hash),
-        (
-            "photo_count".to_string(),
-            session.uploaded_photos.len().to_string(),
-        ),
+        TokenAttribute {
+            trait_type: "session_id".to_string(),
+            value: session_id.clone(),
+        },
+        TokenAttribute {
+            trait_type: "artist".to_string(),
+            value: session.username.clone(),
+        },
+        TokenAttribute {
+            trait_type: "art_title".to_string(),
+            value: session.art_title.clone(),
+        },
+        TokenAttribute {
+            trait_type: "created_at".to_string(),
+            value: current_time.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "token_hash".to_string(),
+            value: token_hash,
+        },
+        TokenAttribute {
+            trait_type: "photo_count".to_string(),
+            value: session.uploaded_photos.len().to_string(),
+        },
     ];
 
     // Add additional attributes
-    attributes.extend(additional_attributes);
+    for (key, value) in additional_attributes {
+        attributes.push(TokenAttribute {
+            trait_type: key,
+            value,
+        });
+    }
 
     // Add photo URLs as attributes if available
     for (i, photo_url) in session.uploaded_photos.iter().enumerate() {
-        attributes.push((format!("photo_{}", i + 1), photo_url.clone()));
+        attributes.push(TokenAttribute {
+            trait_type: format!("photo_{}", i + 1),
+            value: photo_url.clone(),
+        });
     }
 
     let metadata = TokenMetadata {
@@ -333,6 +358,238 @@ pub fn update_collection_metadata(
 #[ic_cdk::query]
 pub fn get_token_details(token_id: u64) -> Option<Token> {
     TOKENS.with(|tokens| tokens.borrow().get(&token_id).cloned())
+}
+
+// TODO: CERTIFICATE NFT INTEGRATION
+// TODO: This function mints NFT from certificate data
+// TODO: Integrates with certificate module for metadata
+
+// Mint NFT from certificate
+#[ic_cdk::update]
+pub fn mint_certificate_nft(certificate_id: String, recipient: Account) -> Result<u64, String> {
+    let _caller = ic_cdk::api::caller();
+
+    // 1. Input validation
+    if certificate_id.is_empty() || certificate_id.len() > 100 {
+        return Err("Invalid certificate ID".to_string());
+    }
+
+    // 2. Get certificate data from certificate module
+    let certificate =
+        crate::modules::certificates::get_certificate_for_nft_minting(certificate_id.clone());
+    if certificate.is_none() {
+        return Err("Certificate not found".to_string());
+    }
+    let certificate = certificate.unwrap();
+
+    // 3. Verify certificate is active
+    if certificate.certificate_status != "active" {
+        return Err("Certificate is not active".to_string());
+    }
+
+    // 4. Check if NFT already exists
+    if certificate.nft_generated {
+        return Err("NFT already generated for this certificate".to_string());
+    }
+
+    // 5. Get session details for progress photos
+    let session = crate::modules::physical_art::get_session_details(certificate.session_id.clone());
+    if session.is_none() {
+        return Err("Session not found for NFT generation".to_string());
+    }
+    let session = session.unwrap();
+
+    // 6. Generate token ID
+    let token_id = TOKEN_COUNTER.with(|counter| {
+        let mut counter_val = counter.borrow_mut();
+        let id = *counter_val;
+        *counter_val += 1;
+        id
+    });
+
+    // 7. Generate token hash
+    let current_time = ic_cdk::api::time();
+    let token_hash = generate_token_hash(token_id, &certificate.session_id, current_time);
+
+    // 8. Create comprehensive metadata with certificate info
+    let mut attributes = vec![
+        // Basic certificate info
+        TokenAttribute {
+            trait_type: "certificate_id".to_string(),
+            value: certificate.certificate_id.clone(),
+        },
+        TokenAttribute {
+            trait_type: "art_title".to_string(),
+            value: certificate.art_title.clone(),
+        },
+        TokenAttribute {
+            trait_type: "artist".to_string(),
+            value: certificate.username.clone(),
+        },
+        TokenAttribute {
+            trait_type: "description".to_string(),
+            value: certificate.description.clone(),
+        },
+        // Verification info
+        TokenAttribute {
+            trait_type: "verification_hash".to_string(),
+            value: certificate.verification_hash.clone(),
+        },
+        TokenAttribute {
+            trait_type: "verification_score".to_string(),
+            value: certificate.verification_score.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "authenticity_rating".to_string(),
+            value: certificate.authenticity_rating.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "provenance_score".to_string(),
+            value: certificate.provenance_score.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "community_trust".to_string(),
+            value: certificate.community_trust.to_string(),
+        },
+        // Creation metadata
+        TokenAttribute {
+            trait_type: "creation_duration".to_string(),
+            value: certificate.metadata.creation_duration.clone(),
+        },
+        TokenAttribute {
+            trait_type: "total_actions".to_string(),
+            value: certificate.metadata.total_actions.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "file_format".to_string(),
+            value: certificate.metadata.file_format.clone(),
+        },
+        TokenAttribute {
+            trait_type: "creation_tools".to_string(),
+            value: certificate.metadata.creation_tools.join(", "),
+        },
+        // Blockchain info
+        TokenAttribute {
+            trait_type: "blockchain".to_string(),
+            value: certificate.blockchain.clone(),
+        },
+        TokenAttribute {
+            trait_type: "token_standard".to_string(),
+            value: certificate.token_standard.clone(),
+        },
+        TokenAttribute {
+            trait_type: "issuer".to_string(),
+            value: certificate.issuer.clone(),
+        },
+        TokenAttribute {
+            trait_type: "issue_date".to_string(),
+            value: certificate.issue_date.to_string(),
+        },
+        // Progress photos info
+        TokenAttribute {
+            trait_type: "photo_count".to_string(),
+            value: session.uploaded_photos.len().to_string(),
+        },
+        TokenAttribute {
+            trait_type: "session_id".to_string(),
+            value: certificate.session_id.clone(),
+        },
+        TokenAttribute {
+            trait_type: "token_hash".to_string(),
+            value: token_hash.clone(),
+        },
+    ];
+
+    // 9. Add progress photos as attributes
+    for (i, photo_url) in session.uploaded_photos.iter().enumerate() {
+        attributes.push(TokenAttribute {
+            trait_type: format!("progress_photo_{}", i + 1),
+            value: photo_url.clone(),
+        });
+    }
+
+    // 10. Set main image as last progress photo (final progress)
+    let main_image = session.uploaded_photos.last().cloned();
+
+    // 11. Create NFT metadata
+    let metadata = TokenMetadata {
+        name: format!("{} - Certificate NFT #{}", certificate.art_title, token_id),
+        description: Some(format!(
+            "Digital certificate NFT for artwork: {}. This NFT represents the authenticated certificate with verification score {} and authenticity rating {}.",
+            certificate.art_title,
+            certificate.verification_score,
+            certificate.authenticity_rating
+        )),
+        image: main_image, // Main image = progress photo terakhir
+        attributes,
+    };
+
+    // 12. Create token
+    let token = Token {
+        id: token_id,
+        owner: recipient,
+        metadata,
+        created_at: current_time,
+        session_id: Some(certificate.session_id.clone()),
+    };
+
+    // 13. Store token
+    TOKENS.with(|tokens| {
+        tokens.borrow_mut().insert(token_id, token);
+    });
+
+    // 14. Update collection total supply
+    COLLECTION_METADATA.with(|metadata| {
+        let mut collection = metadata.borrow_mut();
+        collection.total_supply += 1;
+    });
+
+    // 15. Update certificate with NFT info
+    let token_uri = format!("https://originstamp.ic0.app/nft/{token_id}/metadata");
+    let update_result = crate::modules::certificates::update_certificate_nft_info(
+        certificate_id,
+        token_id.to_string(),
+        token_uri,
+    );
+
+    match update_result {
+        Ok(_) => Ok(token_id),
+        Err(e) => {
+            // Rollback token creation if certificate update fails
+            TOKENS.with(|tokens| {
+                tokens.borrow_mut().remove(&token_id);
+            });
+            COLLECTION_METADATA.with(|metadata| {
+                let mut collection = metadata.borrow_mut();
+                collection.total_supply = collection.total_supply.saturating_sub(1);
+            });
+            Err(format!("Failed to update certificate: {e}"))
+        }
+    }
+}
+
+// Get certificate NFT metadata
+#[ic_cdk::query]
+pub fn get_certificate_nft_metadata(certificate_id: String) -> Option<String> {
+    // 1. Get certificate data
+    let certificate =
+        crate::modules::certificates::get_certificate_for_nft_minting(certificate_id.clone());
+    let certificate = certificate?;
+
+    // 2. Check if NFT exists
+    if !certificate.nft_generated || certificate.nft_id.is_none() {
+        return None;
+    }
+
+    // 3. Get NFT token ID
+    let nft_id = certificate.nft_id.unwrap();
+    let token_id = nft_id.parse::<u64>().ok()?;
+
+    // 4. Get token details
+    let token = get_token_details(token_id)?;
+
+    // 5. Return metadata as JSON string
+    Some(serde_json::to_string(&token.metadata).unwrap_or_default())
 }
 
 fn generate_token_hash(token_id: u64, session_id: &str, timestamp: u64) -> String {

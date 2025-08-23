@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
@@ -29,6 +29,7 @@ import { usePreloadData } from "../../hooks/usePreloadData";
 import DashboardLoader from "../../components/dashboard/DashboardLoader";
 import { Button } from "../../components/common/Button";
 import { Card } from "../../components/common/Card";
+import NFTDisplay from "../../components/certificate/NFTDisplay";
 
 interface CertificateData {
   certificate_id: string;
@@ -59,10 +60,14 @@ interface CertificateData {
 const CertificateDetailPage: React.FC = () => {
   const { karyaId } = useParams<{ karyaId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   useErrorHandler({
     context: "CertificateDetailPage",
   });
+
+  // Get NFT data from navigation state
+  const nftData = location.state?.nftData;
 
   const [activeTab, setActiveTab] = useState<
     "overview" | "verification" | "metadata" | "share"
@@ -490,6 +495,15 @@ const CertificateDetailPage: React.FC = () => {
                     </div>
                   </div>
                 </Card>
+
+                {/* NFT Display Section */}
+                {nftData && (
+                  <NFTDisplay
+                    certificateId={karyaId || ""}
+                    nftData={nftData}
+                    className="certificate-detail-page__nft-section"
+                  />
+                )}
               </div>
             )}
 

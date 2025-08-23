@@ -153,6 +153,91 @@
         margin: 0 0 var(--space-4) 0;
         color: var(--color-text-secondary);
       }
+
+      // Subscription Info
+      .subscription-info {
+        margin-bottom: var(--space-4);
+        padding: var(--space-4);
+        background: var(--color-surface-secondary);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--color-border);
+
+        .subscription-tier {
+          display: flex;
+          align-items: center;
+          gap: var(--space-2);
+          margin-bottom: var(--space-2);
+
+          .tier-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-secondary);
+          }
+
+          .tier-value {
+            font-weight: var(--font-weight-semibold);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            &--free {
+              background: var(--color-gray-100);
+              color: var(--color-gray-700);
+              border: 1px solid var(--color-gray-300);
+            }
+
+            &--basic {
+              background: var(--color-blue-100);
+              color: var(--color-blue-700);
+              border: 1px solid var(--color-blue-700);
+            }
+
+            &--enterprise {
+              background: linear-gradient(
+                135deg,
+                var(--color-accent),
+                var(--color-accent-dark)
+              );
+              color: white;
+              border: 1px solid var(--color-accent);
+            }
+          }
+        }
+
+        .subscription-limits {
+          display: flex;
+          gap: var(--space-4);
+          margin-bottom: var(--space-2);
+
+          .limit-item {
+            font-size: var(--text-sm);
+            color: var(--color-text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+
+            &::before {
+              content: "•";
+              color: var(--color-accent);
+              font-weight: var(--font-weight-bold);
+            }
+          }
+        }
+
+        .upgrade-prompt {
+          padding: var(--space-2);
+          background: var(--color-warning-light);
+          border: 1px solid var(--color-warning);
+          border-radius: var(--radius-sm);
+
+          .upgrade-text {
+            font-size: var(--text-sm);
+            color: var(--color-warning-dark);
+            font-weight: var(--font-weight-medium);
+          }
+        }
+      }
     }
 
     .upload-zone {

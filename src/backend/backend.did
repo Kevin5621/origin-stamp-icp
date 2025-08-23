@@ -1,5 +1,6 @@
 type Account = record { owner : principal; subaccount : opt blob };
 type Certificate = record {
+  nft_id : opt text;
   authenticity_rating : nat32;
   username : text;
   verification_score : nat32;
@@ -11,12 +12,14 @@ type Certificate = record {
   blockchain_tx : text;
   community_trust : nat32;
   issuer : text;
+  nft_generated : bool;
   blockchain : text;
   expiry_date : nat64;
   token_standard : text;
   verification_hash : text;
   issue_date : nat64;
   qr_code_data : text;
+  token_uri : opt text;
   certificate_type : text;
   certificate_id : text;
   provenance_score : nat32;
@@ -38,6 +41,7 @@ type CollectionMetadata = record {
 };
 type CreateCertificateRequest = record {
   username : text;
+  file_sizes : vec nat64;
   session_id : text;
   photo_count : nat32;
   file_format : text;
@@ -81,6 +85,13 @@ type S3Config = record {
   bucket_name : text;
   access_key_id : text;
 };
+type SubscriptionLimits = record {
+  priority_support : bool;
+  can_generate_nft : bool;
+  max_file_size_mb : nat32;
+  max_photos : nat32;
+};
+type SubscriptionTier = variant { Premium; Enterprise; Free; Basic };
 type Token = record {
   id : nat64;
   session_id : opt text;
@@ -88,10 +99,11 @@ type Token = record {
   metadata : TokenMetadata;
   created_at : nat64;
 };
+type TokenAttribute = record { trait_type : text; value : text };
 type TokenMetadata = record {
   name : text;
   description : opt text;
-  attributes : vec record { text; text };
+  attributes : vec TokenAttribute;
   image : opt text;
 };
 type TransferRequest = record {
@@ -121,18 +133,23 @@ service : {
   get_all_users : () -> (vec text) query;
   get_certificate_by_id : (text) -> (opt Certificate) query;
   get_certificate_count : () -> (nat64) query;
+  get_certificate_for_nft_minting : (text) -> (opt Certificate) query;
+  get_certificate_nft_metadata : (text) -> (opt text) query;
   get_dashboard_metrics : () -> (DashboardMetrics) query;
+  get_nft_metadata : (text) -> (opt text) query;
   get_s3_config : () -> (opt S3Config) query;
   get_s3_config_status : () -> (bool) query;
   get_session_count : () -> (nat64) query;
   get_session_details : (text) -> (opt PhysicalArtSession) query;
   get_session_nfts : (text) -> (vec Token) query;
+  get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   get_token_details : (nat64) -> (opt Token) query;
   get_user_certificates : (text) -> (vec Certificate) query;
   get_user_count : () -> (nat64) query;
   get_user_info : (text) -> (opt record { text; nat64 }) query;
   get_user_nfts : (principal) -> (vec Token) query;
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
+  get_user_subscription : (text) -> (opt SubscriptionTier) query;
   icrc7_balance_of : (vec Account) -> (vec nat64) query;
   icrc7_collection_metadata : () -> (CollectionMetadata) query;
   icrc7_description : () -> (opt text) query;
@@ -145,12 +162,15 @@ service : {
   icrc7_total_supply : () -> (nat64) query;
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
   login : (text, text) -> (LoginResult);
+  mint_certificate_nft : (text, Account) -> (Result_4);
   mint_nft_from_session : (text, Account, vec record { text; text }) -> (
       Result_4,
     );
   register_user : (text, text) -> (LoginResult);
   remove_photo_from_session : (text, text) -> (Result_5);
   set_s3_config : (S3Config) -> (bool);
+  set_user_subscription : (text, SubscriptionTier) -> (Result_5);
+  update_certificate_nft_info : (text, text, text) -> (Result_5);
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
       Result_5,
     );

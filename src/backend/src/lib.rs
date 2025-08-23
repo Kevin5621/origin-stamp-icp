@@ -8,6 +8,10 @@ pub mod modules;
 pub mod types;
 pub mod utils;
 
+// Re-export NFT module functions for certificate integration
+pub use modules::nft::get_certificate_nft_metadata;
+pub use modules::nft::mint_certificate_nft;
+
 // Re-export all types needed for Candid interface
 pub use types::{
     Account, Certificate, CollectionMetadata, CreateCertificateRequest, LoginResult,

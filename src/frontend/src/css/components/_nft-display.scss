@@ -1,0 +1,313 @@
+.nft-display {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+
+  &--loading {
+    text-align: center;
+    padding: var(--spacing-2xl);
+  }
+
+  &--error {
+    text-align: center;
+    padding: var(--spacing-lg);
+    border-color: var(--color-error);
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+
+    .loading-icon {
+      color: var(--color-accent);
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+
+    .error-message {
+      color: var(--color-error);
+      font-weight: 500;
+    }
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: var(--spacing-md);
+      align-items: flex-start;
+    }
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+
+    h3 {
+      margin: 0;
+      color: var(--color-primary-text);
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--spacing-sm);
+
+    @media (max-width: 480px) {
+      flex-wrap: wrap;
+    }
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--spacing-xl);
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-lg);
+    }
+  }
+
+  &__image {
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--border-radius-md);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+}
+
+.nft-info {
+  &__section {
+    h4 {
+      margin: 0 0 var(--spacing-sm) 0;
+      color: var(--color-primary-text);
+      font-size: var(--font-size-md);
+      font-weight: 600;
+    }
+
+    h5 {
+      margin: 0 0 var(--spacing-sm) 0;
+      color: var(--color-primary-text);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    p {
+      margin: 0;
+      color: var(--color-secondary-text);
+      line-height: 1.6;
+    }
+  }
+}
+
+.nft-description {
+  color: var(--color-secondary-text) !important;
+  font-style: italic;
+}
+
+.nft-attributes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nft-attribute {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm);
+  background: var(--color-surface-secondary);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+
+  .attribute-label {
+    font-weight: 500;
+    color: var(--color-primary-text);
+    font-size: var(--font-size-sm);
+  }
+
+  .attribute-value {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+  }
+}
+
+.nft-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm);
+  background: var(--color-surface-secondary);
+  border-radius: var(--border-radius-sm);
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .detail-label {
+    font-weight: 500;
+    color: var(--color-primary-text);
+    font-size: var(--font-size-sm);
+  }
+
+  .detail-value {
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-sm);
+    word-break: break-all;
+  }
+}
+
+.token-uri-link {
+  color: var(--color-accent);
+  text-decoration: none;
+  word-break: break-all;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Button styles
+.btn {
+  &--icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-primary-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--color-surface-secondary);
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  &--small {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+  }
+
+  &--secondary {
+    background: var(--color-surface-secondary);
+    border-color: var(--color-border);
+    color: var(--color-primary-text);
+
+    &:hover {
+      background: var(--color-surface-tertiary);
+      border-color: var(--color-accent);
+    }
+  }
+
+  &--primary {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: white;
+
+    &:hover {
+      background: var(--color-accent-hover);
+      border-color: var(--color-accent-hover);
+    }
+  }
+}
+
+// Animation
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Dark theme
+[data-theme="dark"] {
+  .nft-display {
+    background: var(--color-surface-dark);
+    border-color: var(--color-border-dark);
+
+    &__header {
+      border-bottom-color: var(--color-border-dark);
+    }
+  }
+
+  .nft-attribute,
+  .detail-item {
+    background: var(--color-surface-secondary-dark);
+    border-color: var(--color-border-dark);
+  }
+
+  .btn--icon {
+    background: var(--color-surface-dark);
+    border-color: var(--color-border-dark);
+    color: var(--color-primary-text-dark);
+
+    &:hover {
+      background: var(--color-surface-secondary-dark);
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+  }
+}

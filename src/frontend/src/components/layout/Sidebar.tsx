@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
@@ -12,6 +12,7 @@ import {
   Compass,
   Palette,
   Activity,
+  Crown,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -33,8 +34,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
 
+  // Subscription state
+  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
+
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
   const isCollapsed = externalIsCollapsed ?? internalIsCollapsed;
+
+  // Load user subscription data
+  useEffect(() => {
+    const loadSubscriptionData = () => {
+      if (!user?.username) return;
+
+      // TODO: Replace with real backend call when module resolution is fixed
+      // For now, use mock data based on username
+      if (user.username === "admin_user") {
+        setSubscriptionTier("Enterprise");
+      } else if (user.username === "test_user") {
+        setSubscriptionTier("Basic");
+      } else {
+        setSubscriptionTier("Free");
+      }
+    };
+
+    loadSubscriptionData();
+  }, [user?.username]);
 
   const handleToggleCollapse = () => {
     const newCollapsedState = !isCollapsed;
@@ -128,6 +151,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
 
     return [
+      {
+        id: "subscription",
+        icon: Crown,
+        label: t("sidebar.subscription"),
+        path: "/subscription",
+      },
       {
         id: "marketplace",
         icon: Compass,
@@ -231,6 +260,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="sidebar__user-name">{getUserName()}</div>
             <div className="sidebar__user-status">
               {isAuthenticated ? t("sidebar.online") : t("sidebar.offline")}
+            </div>
+            {/* Subscription Tier Badge */}
+            <div className="sidebar__tier-badge">
+              <Crown size={12} className="sidebar__tier-icon" />
+              <span className="sidebar__tier-text">{subscriptionTier}</span>
             </div>
           </div>
         )}

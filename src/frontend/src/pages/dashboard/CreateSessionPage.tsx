@@ -1,11 +1,21 @@
 // src/frontend/src/pages/dashboard/CreateSessionPage.tsx
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Camera, Palette, Loader } from "lucide-react";
+import {
+  ArrowLeft,
+  Plus,
+  Camera,
+  Palette,
+  Loader,
+  Crown,
+  AlertTriangle,
+  Info,
+} from "lucide-react";
 import PhysicalArtService from "../../services/physicalArtService";
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
+// Dynamic import for backend to avoid TypeScript module resolution issues
 
 /**
  * Create Session Page - Halaman untuk membuat sesi baru
@@ -20,6 +30,64 @@ const CreateSessionPage: React.FC = () => {
   const [artType, setArtType] = useState<"physical" | "digital">("physical");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isCreating, setIsCreating] = useState(false);
+
+  // Subscription state
+  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
+  const [subscriptionLimits, setSubscriptionLimits] = useState<any>(null);
+  const [isLoadingSubscription, setIsLoadingSubscription] = useState(true);
+
+  // Load user subscription data on component mount
+  useEffect(() => {
+    const loadSubscriptionData = async () => {
+      if (!user?.username) return;
+
+      try {
+        setIsLoadingSubscription(true);
+
+        // TODO: Replace with real backend call when module resolution is fixed
+        // For now, use mock data based on username
+        if (user.username === "admin_user") {
+          setSubscriptionTier("Enterprise");
+          setSubscriptionLimits({
+            max_photos: 100,
+            max_file_size_mb: 50,
+            can_generate_nft: true,
+            priority_support: true,
+          });
+        } else if (user.username === "test_user") {
+          setSubscriptionTier("Basic");
+          setSubscriptionLimits({
+            max_photos: 20,
+            max_file_size_mb: 25,
+            can_generate_nft: true,
+            priority_support: false,
+          });
+        } else {
+          setSubscriptionTier("Free");
+          setSubscriptionLimits({
+            max_photos: 5,
+            max_file_size_mb: 10,
+            can_generate_nft: false,
+            priority_support: false,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load subscription data:", error);
+        // Set default values
+        setSubscriptionTier("Free");
+        setSubscriptionLimits({
+          max_photos: 5,
+          max_file_size_mb: 10,
+          can_generate_nft: false,
+          priority_support: false,
+        });
+      } finally {
+        setIsLoadingSubscription(false);
+      }
+    };
+
+    loadSubscriptionData();
+  }, [user?.username]);
 
   const handleCreateSession = useCallback(async () => {
     // Reset errors
@@ -88,6 +156,94 @@ const CreateSessionPage: React.FC = () => {
               <p className="dashboard__subtitle">
                 {t("create_new_session_description")}
               </p>
+            </div>
+          </div>
+
+          {/* Subscription Status Card */}
+          <div className="dashboard__section">
+            <div className="dashboard-card">
+              <div className="dashboard-card__header">
+                <div className="subscription-header">
+                  <div className="subscription-tier">
+                    <Crown size={20} className="subscription-icon" />
+                    <span className="subscription-title">
+                      {t("subscription_status")}: {subscriptionTier}
+                    </span>
+                  </div>
+                  {subscriptionTier !== "Free" && (
+                    <span className="subscription-badge subscription-badge--premium">
+                      {t("premium")}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="dashboard-card__content">
+                {isLoadingSubscription ? (
+                  <div className="subscription-loading">
+                    <Loader size={16} className="animate-spin" />
+                    <span>{t("loading_subscription")}</span>
+                  </div>
+                ) : subscriptionLimits ? (
+                  <div className="subscription-limits">
+                    <div className="limit-item">
+                      <Info size={16} />
+                      <span className="limit-label">{t("max_photos")}:</span>
+                      <span className="limit-value">
+                        {subscriptionLimits.max_photos}
+                      </span>
+                    </div>
+                    <div className="limit-item">
+                      <Info size={16} />
+                      <span className="limit-label">{t("max_file_size")}:</span>
+                      <span className="limit-value">
+                        {subscriptionLimits.max_file_size_mb}MB
+                      </span>
+                    </div>
+                    <div className="limit-item">
+                      <Info size={16} />
+                      <span className="limit-label">
+                        {t("nft_generation")}:
+                      </span>
+                      <span
+                        className={`limit-value limit-value--${subscriptionLimits.can_generate_nft ? "enabled" : "disabled"}`}
+                      >
+                        {subscriptionLimits.can_generate_nft
+                          ? t("enabled")
+                          : t("disabled")}
+                      </span>
+                    </div>
+                    {subscriptionLimits.priority_support && (
+                      <div className="limit-item">
+                        <Crown size={16} />
+                        <span className="limit-label">
+                          {t("priority_support")}:
+                        </span>
+                        <span className="limit-value limit-value--enabled">
+                          {t("enabled")}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+
+                {/* Upgrade Prompt for Free Users */}
+                {subscriptionTier === "Free" && (
+                  <div className="upgrade-prompt">
+                    <AlertTriangle size={16} className="upgrade-icon" />
+                    <div className="upgrade-content">
+                      <h4>{t("upgrade_recommended")}</h4>
+                      <p>{t("upgrade_description")}</p>
+                      <button
+                        className="btn btn--upgrade"
+                        onClick={() => navigate("/subscription")}
+                      >
+                        <Crown size={16} />
+                        {t("upgrade_now")}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -172,6 +328,24 @@ const CreateSessionPage: React.FC = () => {
                       rows={4}
                     />
                   </div>
+
+                  {/* Subscription Warning for Free Users */}
+                  {subscriptionTier === "Free" && (
+                    <div className="subscription-warning">
+                      <AlertTriangle size={16} className="warning-icon" />
+                      <div className="warning-content">
+                        <p className="warning-text">
+                          <strong>{t("free_tier_limitation")}:</strong>{" "}
+                          {t("free_tier_photo_limit", {
+                            count: subscriptionLimits?.max_photos || 5,
+                          })}
+                        </p>
+                        <p className="warning-text">
+                          {t("free_tier_nft_disabled")}
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Form Actions */}
                   <div className="form-actions">
