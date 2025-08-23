@@ -204,16 +204,19 @@ export class CertificateService {
       if (result && result.length > 0 && result[0]) {
         console.log("✅ NFT metadata retrieved successfully");
         console.log("🔍 Raw metadata content:", result[0]);
-        
+
         // Try to parse and validate metadata
         try {
           const parsedMetadata = JSON.parse(result[0]);
           console.log("✅ Parsed metadata:", parsedMetadata);
-          console.log("📊 Attributes count:", parsedMetadata.attributes?.length || 0);
+          console.log(
+            "📊 Attributes count:",
+            parsedMetadata.attributes?.length || 0,
+          );
         } catch (parseError) {
           console.warn("⚠️ Failed to parse metadata as JSON:", parseError);
         }
-        
+
         return result[0]; // Extract string from [string]
       } else {
         console.warn(

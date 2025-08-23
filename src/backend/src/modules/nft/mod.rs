@@ -1,6 +1,7 @@
 use crate::modules::physical_art;
 use crate::types::{
-    Account, CollectionMetadata, Token, TokenMetadata, TransferRequest, TransferResponse,
+    Account, CollectionMetadata, Token, TokenAttribute, TokenMetadata, TransferRequest,
+    TransferResponse,
 };
 use serde_json;
 use sha2::{Digest, Sha256};
@@ -238,23 +239,46 @@ pub fn mint_nft_from_session(
 
     // Create metadata with session information
     let mut attributes = vec![
-        ("session_id".to_string(), session_id.clone()),
-        ("artist".to_string(), session.username.clone()),
-        ("art_title".to_string(), session.art_title.clone()),
-        ("created_at".to_string(), current_time.to_string()),
-        ("token_hash".to_string(), token_hash),
-        (
-            "photo_count".to_string(),
-            session.uploaded_photos.len().to_string(),
-        ),
+        TokenAttribute {
+            trait_type: "session_id".to_string(),
+            value: session_id.clone(),
+        },
+        TokenAttribute {
+            trait_type: "artist".to_string(),
+            value: session.username.clone(),
+        },
+        TokenAttribute {
+            trait_type: "art_title".to_string(),
+            value: session.art_title.clone(),
+        },
+        TokenAttribute {
+            trait_type: "created_at".to_string(),
+            value: current_time.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "token_hash".to_string(),
+            value: token_hash,
+        },
+        TokenAttribute {
+            trait_type: "photo_count".to_string(),
+            value: session.uploaded_photos.len().to_string(),
+        },
     ];
 
     // Add additional attributes
-    attributes.extend(additional_attributes);
+    for (key, value) in additional_attributes {
+        attributes.push(TokenAttribute {
+            trait_type: key,
+            value,
+        });
+    }
 
     // Add photo URLs as attributes if available
     for (i, photo_url) in session.uploaded_photos.iter().enumerate() {
-        attributes.push((format!("photo_{}", i + 1), photo_url.clone()));
+        attributes.push(TokenAttribute {
+            trait_type: format!("photo_{}", i + 1),
+            value: photo_url.clone(),
+        });
     }
 
     let metadata = TokenMetadata {
@@ -390,71 +414,98 @@ pub fn mint_certificate_nft(certificate_id: String, recipient: Account) -> Resul
     // 8. Create comprehensive metadata with certificate info
     let mut attributes = vec![
         // Basic certificate info
-        (
-            "certificate_id".to_string(),
-            certificate.certificate_id.clone(),
-        ),
-        ("art_title".to_string(), certificate.art_title.clone()),
-        ("artist".to_string(), certificate.username.clone()),
-        ("description".to_string(), certificate.description.clone()),
+        TokenAttribute {
+            trait_type: "certificate_id".to_string(),
+            value: certificate.certificate_id.clone(),
+        },
+        TokenAttribute {
+            trait_type: "art_title".to_string(),
+            value: certificate.art_title.clone(),
+        },
+        TokenAttribute {
+            trait_type: "artist".to_string(),
+            value: certificate.username.clone(),
+        },
+        TokenAttribute {
+            trait_type: "description".to_string(),
+            value: certificate.description.clone(),
+        },
         // Verification info
-        (
-            "verification_hash".to_string(),
-            certificate.verification_hash.clone(),
-        ),
-        (
-            "verification_score".to_string(),
-            certificate.verification_score.to_string(),
-        ),
-        (
-            "authenticity_rating".to_string(),
-            certificate.authenticity_rating.to_string(),
-        ),
-        (
-            "provenance_score".to_string(),
-            certificate.provenance_score.to_string(),
-        ),
-        (
-            "community_trust".to_string(),
-            certificate.community_trust.to_string(),
-        ),
+        TokenAttribute {
+            trait_type: "verification_hash".to_string(),
+            value: certificate.verification_hash.clone(),
+        },
+        TokenAttribute {
+            trait_type: "verification_score".to_string(),
+            value: certificate.verification_score.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "authenticity_rating".to_string(),
+            value: certificate.authenticity_rating.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "provenance_score".to_string(),
+            value: certificate.provenance_score.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "community_trust".to_string(),
+            value: certificate.community_trust.to_string(),
+        },
         // Creation metadata
-        (
-            "creation_duration".to_string(),
-            certificate.metadata.creation_duration.clone(),
-        ),
-        (
-            "total_actions".to_string(),
-            certificate.metadata.total_actions.to_string(),
-        ),
-        (
-            "file_format".to_string(),
-            certificate.metadata.file_format.clone(),
-        ),
-        (
-            "creation_tools".to_string(),
-            certificate.metadata.creation_tools.join(", "),
-        ),
+        TokenAttribute {
+            trait_type: "creation_duration".to_string(),
+            value: certificate.metadata.creation_duration.clone(),
+        },
+        TokenAttribute {
+            trait_type: "total_actions".to_string(),
+            value: certificate.metadata.total_actions.to_string(),
+        },
+        TokenAttribute {
+            trait_type: "file_format".to_string(),
+            value: certificate.metadata.file_format.clone(),
+        },
+        TokenAttribute {
+            trait_type: "creation_tools".to_string(),
+            value: certificate.metadata.creation_tools.join(", "),
+        },
         // Blockchain info
-        ("blockchain".to_string(), certificate.blockchain.clone()),
-        (
-            "token_standard".to_string(),
-            certificate.token_standard.clone(),
-        ),
-        ("issuer".to_string(), certificate.issuer.clone()),
-        ("issue_date".to_string(), certificate.issue_date.to_string()),
+        TokenAttribute {
+            trait_type: "blockchain".to_string(),
+            value: certificate.blockchain.clone(),
+        },
+        TokenAttribute {
+            trait_type: "token_standard".to_string(),
+            value: certificate.token_standard.clone(),
+        },
+        TokenAttribute {
+            trait_type: "issuer".to_string(),
+            value: certificate.issuer.clone(),
+        },
+        TokenAttribute {
+            trait_type: "issue_date".to_string(),
+            value: certificate.issue_date.to_string(),
+        },
         // Progress photos info
-        (
-            "photo_count".to_string(),
-            session.uploaded_photos.len().to_string(),
-        ),
-        ("session_id".to_string(), certificate.session_id.clone()),
-        ("token_hash".to_string(), token_hash.clone()),
+        TokenAttribute {
+            trait_type: "photo_count".to_string(),
+            value: session.uploaded_photos.len().to_string(),
+        },
+        TokenAttribute {
+            trait_type: "session_id".to_string(),
+            value: certificate.session_id.clone(),
+        },
+        TokenAttribute {
+            trait_type: "token_hash".to_string(),
+            value: token_hash.clone(),
+        },
     ];
 
     // 9. Add progress photos as attributes
     for (i, photo_url) in session.uploaded_photos.iter().enumerate() {
-        attributes.push((format!("progress_photo_{}", i + 1), photo_url.clone()));
+        attributes.push(TokenAttribute {
+            trait_type: format!("progress_photo_{}", i + 1),
+            value: photo_url.clone(),
+        });
     }
 
     // 10. Set main image as last progress photo (final progress)
