@@ -49,7 +49,7 @@ const SubscriptionPage: React.FC = () => {
   const [couponCode, setCouponCode] = useState<string>("");
   const [couponMessage, setCouponMessage] = useState<string>("");
 
-  // Demo coupon codes for testing
+  // Demo coupon codes for development/testing
   const demoCoupons = [
     "DEMO-ENTERPRISE-2025",
     "DEMO-BASIC-2025",
@@ -314,7 +314,7 @@ const SubscriptionPage: React.FC = () => {
                   {/* Demo Coupon Codes */}
                   <div className="subscription-demo-coupons">
                     <p className="subscription-demo-coupons__title">
-                      {t("demo_coupons_title")}
+                      Demo Coupons (for testing):
                     </p>
                     <div className="subscription-demo-coupons__list">
                       {demoCoupons.map((code) => (
@@ -322,8 +322,8 @@ const SubscriptionPage: React.FC = () => {
                           key={code}
                           onClick={() => setCouponCode(code)}
                           className="subscription-demo-coupon__code"
-                          title={t("click_to_use")}
-                          aria-label={t("use_demo_coupon_code_aria", { code })}
+                          title="Click to use"
+                          aria-label={`Use demo coupon code: ${code}`}
                         >
                           {code}
                         </button>

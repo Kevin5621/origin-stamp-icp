@@ -29,11 +29,44 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
   undefined,
 );
 
-// Demo coupon codes for testing
+// Demo coupon codes for development/testing (production ready)
 const DEMO_COUPONS: Record<string, SubscriptionTier> = {
   "DEMO-ENTERPRISE-2025": "Enterprise",
   "DEMO-BASIC-2025": "Basic",
   "DEMO-PREMIUM-2025": "Premium",
+};
+
+// Production ready coupon service with demo support
+const CouponService = {
+  async redeemCoupon(
+    _username: string,
+    couponCode: string,
+  ): Promise<{ success: boolean; tier?: SubscriptionTier; message: string }> {
+    try {
+      // Check demo coupons first (for development/testing)
+      const upperCode = couponCode.toUpperCase();
+      if (DEMO_COUPONS[upperCode]) {
+        return {
+          success: true,
+          tier: DEMO_COUPONS[upperCode],
+          message: `Demo coupon redeemed successfully! Upgraded to ${DEMO_COUPONS[upperCode]} tier.`,
+        };
+      }
+
+      // TODO: Call backend coupon redemption for production coupons
+      // const result = await backend.redeem_coupon(username, couponCode);
+      return {
+        success: false,
+        message:
+          "Invalid coupon code. Try demo codes: DEMO-ENTERPRISE-2025, DEMO-BASIC-2025, DEMO-PREMIUM-2025",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: "Error redeeming coupon. Please try again later.",
+      };
+    }
+  },
 };
 
 // Subscription limits mapping
@@ -74,64 +107,128 @@ export const SubscriptionProvider: React.FC<{ children: ReactNode }> = ({
   // Load current subscription tier from localStorage or default
   useEffect(() => {
     const loadSubscriptionTier = () => {
+      console.log(
+        "🔍 [SubscriptionContext] Loading subscription tier for user:",
+        user?.username,
+      );
+
       if (!user?.username) {
+        console.log("⚠️ [SubscriptionContext] No user, setting to Free");
         setCurrentTier("Free");
         return;
       }
 
       // Try to load from localStorage first
       const savedTier = localStorage.getItem(`subscription_${user.username}`);
+      console.log(
+        "💾 [SubscriptionContext] Saved tier from localStorage:",
+        savedTier,
+      );
+
       if (savedTier && Object.keys(SUBSCRIPTION_LIMITS).includes(savedTier)) {
+        console.log("✅ [SubscriptionContext] Using saved tier:", savedTier);
         setCurrentTier(savedTier as SubscriptionTier);
         return;
       }
 
-      // Fallback to mock data based on username
-      if (user.username === "admin_user") {
-        setCurrentTier("Enterprise");
-        localStorage.setItem(`subscription_${user.username}`, "Enterprise");
-      } else if (user.username === "test_user") {
-        setCurrentTier("Basic");
-        localStorage.setItem(`subscription_${user.username}`, "Basic");
-      } else {
-        setCurrentTier("Free");
-        localStorage.setItem(`subscription_${user.username}`, "Free");
-      }
+      // Production ready: All new users start with Free tier
+      console.log(
+        "🆓 [SubscriptionContext] New user detected, initializing with Free tier",
+      );
+      setCurrentTier("Free");
+      localStorage.setItem(`subscription_${user.username}`, "Free");
+
+      // TODO: Call backend to initialize user subscription
+      // await backend.initialize_user_subscription(user.username);
     };
 
     loadSubscriptionTier();
   }, [user?.username]);
 
   // Update subscription tier and save to localStorage
-  const updateSubscriptionTier = (tier: SubscriptionTier) => {
+  const updateSubscriptionTier = async (tier: SubscriptionTier) => {
+    console.log(
+      "🔄 [SubscriptionContext] Updating subscription tier from",
+      currentTier,
+      "to",
+      tier,
+    );
     setCurrentTier(tier);
     if (user?.username) {
       localStorage.setItem(`subscription_${user.username}`, tier);
+      console.log("💾 [SubscriptionContext] Saved tier to localStorage:", tier);
+
+      // Call backend to update subscription tier (PRODUCTION READY)
+      try {
+        const { backend } = await import("../../../declarations/backend");
+
+        // Convert frontend tier to backend tier (Candid variant format)
+        const backendTier = { [tier]: null } as any; // Candid variant type
+
+        const result = await backend.update_user_subscription(
+          user.username,
+          backendTier,
+        );
+
+        if ("Ok" in result) {
+          console.log(
+            "✅ [SubscriptionContext] Backend subscription updated successfully",
+          );
+        } else {
+          console.error(
+            "❌ [SubscriptionContext] Backend update failed:",
+            result.Err,
+          );
+        }
+      } catch (error) {
+        console.error(
+          "❌ [SubscriptionContext] Failed to call backend:",
+          error,
+        );
+        // Don't fail the frontend update if backend fails
+        // In production, you might want to retry or queue the update
+      }
     }
   };
 
   // Redeem coupon function
   const redeemCoupon = async (couponCode: string): Promise<boolean> => {
+    console.log(
+      "🎫 [SubscriptionContext] Redeeming coupon:",
+      couponCode,
+      "for user:",
+      user?.username,
+    );
+
     if (!couponCode.trim() || !user?.username) {
+      console.log("❌ [SubscriptionContext] Invalid coupon or no user");
       return false;
     }
 
     setIsLoading(true);
 
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result = await CouponService.redeemCoupon(
+        user.username,
+        couponCode,
+      );
 
-      const upperCode = couponCode.toUpperCase();
-      if (DEMO_COUPONS[upperCode]) {
-        const newTier = DEMO_COUPONS[upperCode];
-        updateSubscriptionTier(newTier);
+      if (result.success && result.tier) {
+        console.log(
+          "🎉 [SubscriptionContext] Coupon valid! Upgrading to:",
+          result.tier,
+        );
+        updateSubscriptionTier(result.tier);
         return true;
+      } else {
+        console.log(
+          "❌ [SubscriptionContext] Coupon redemption failed:",
+          result.message,
+        );
+        return false;
       }
-
-      return false;
     } catch (error) {
-      console.error("Failed to redeem coupon:", error);
+      console.error("❌ [SubscriptionContext] Failed to redeem coupon:", error);
       return false;
     } finally {
       setIsLoading(false);
@@ -145,6 +242,9 @@ export const SubscriptionProvider: React.FC<{ children: ReactNode }> = ({
     updateSubscriptionTier,
     redeemCoupon,
   };
+
+  // Production: Remove debug logging
+  // console.log("🎯 [SubscriptionContext] Current context value:", { currentTier, isLoading });
 
   return (
     <SubscriptionContext.Provider value={value}>

@@ -155,7 +155,7 @@ export class CertificateService {
 
       if (!userPrincipal) {
         // Use fallback principal for development/testing
-        // In production, this should be properly authenticated
+        // TODO, this should be properly authenticated
         const fallbackPrincipal = Principal.fromText("2vxsx-fae"); // Anonymous principal
         userPrincipal = fallbackPrincipal;
       }

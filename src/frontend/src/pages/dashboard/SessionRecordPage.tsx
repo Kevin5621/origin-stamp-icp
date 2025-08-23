@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 import PhysicalArtService from "../../services/physicalArtService";
 import CertificateService from "../../services/certificateService";
 
@@ -86,9 +87,8 @@ const SessionRecordPage: React.FC = () => {
   const cancelRef = useRef<boolean>(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
-  // Subscription state for upload limits
-  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
-  const [subscriptionLimits, setSubscriptionLimits] = useState<any>(null);
+  // Subscription state from context
+  const { currentTier, subscriptionLimits } = useSubscription();
 
   // Reset progress states when selectedFiles changes
   useEffect(() => {
@@ -104,42 +104,6 @@ const SessionRecordPage: React.FC = () => {
   }, [selectedFiles]);
 
   // Load subscription data for upload limits
-  useEffect(() => {
-    const loadSubscriptionData = () => {
-      if (!user?.username) return;
-
-      // TODO: Replace with real backend call when module resolution is fixed
-      // For now, use mock data based on username
-      if (user.username === "admin_user") {
-        setSubscriptionTier("Enterprise");
-        setSubscriptionLimits({
-          max_photos: 100,
-          max_file_size_mb: 50,
-          can_generate_nft: true,
-          priority_support: true,
-        });
-      } else if (user.username === "test_user") {
-        setSubscriptionTier("Basic");
-        setSubscriptionLimits({
-          max_photos: 20,
-          max_file_size_mb: 25,
-          can_generate_nft: true,
-          priority_support: false,
-        });
-      } else {
-        // All new users default to Free tier
-        setSubscriptionTier("Free");
-        setSubscriptionLimits({
-          max_photos: 5,
-          max_file_size_mb: 10,
-          can_generate_nft: false,
-          priority_support: false,
-        });
-      }
-    };
-
-    loadSubscriptionData();
-  }, [user?.username]);
 
   // Load session data from backend
   useEffect(() => {
@@ -319,7 +283,7 @@ const SessionRecordPage: React.FC = () => {
             current: currentPhotoCount,
             limit: subscriptionLimits.max_photos,
             remaining: remainingSlots,
-            tier: subscriptionTier,
+            tier: currentTier,
           }),
         );
         return;
@@ -366,7 +330,7 @@ const SessionRecordPage: React.FC = () => {
             filename: file.name,
             current: (file.size / (1024 * 1024)).toFixed(1),
             limit: maxFileSizeMB,
-            tier: subscriptionTier,
+            tier: currentTier,
           }),
         );
         return false;
@@ -607,7 +571,7 @@ const SessionRecordPage: React.FC = () => {
     if (!session || !user) return;
 
     // Check subscription tier for NFT generation
-    if (subscriptionTier === "Free") {
+    if (currentTier === "Free") {
       setShowSubscriptionModal(true);
       return;
     }
@@ -859,9 +823,9 @@ const SessionRecordPage: React.FC = () => {
                       {t("subscription.your_tier")}:
                     </span>
                     <span
-                      className={`tier-value tier-value--${subscriptionTier.toLowerCase()}`}
+                      className={`tier-value tier-value--${currentTier.toLowerCase()}`}
                     >
-                      {subscriptionTier}
+                      {currentTier}
                     </span>
                   </div>
                   <div className="subscription-limits">
@@ -874,7 +838,7 @@ const SessionRecordPage: React.FC = () => {
                       {subscriptionLimits.max_file_size_mb}MB
                     </span>
                   </div>
-                  {subscriptionTier === "Free" && (
+                  {currentTier === "Free" && (
                     <div className="upgrade-prompt">
                       <span className="upgrade-text">
                         {t("subscription.upgrade_for_more_photos")}

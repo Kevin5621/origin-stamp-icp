@@ -14,7 +14,7 @@ declare global {
 }
 
 /**
- * Authentication Service - Production-ready user management
+ * Authentication Service
  */
 export class AuthService {
   private static currentUserPrincipal: Principal | null = null;
@@ -134,7 +134,7 @@ export class AuthService {
     const hash = this.simpleHash(userId);
 
     // Convert hash to principal format (this is a simplified approach)
-    // In production, you'd want a more secure method
+    // TODO, need more secure method
     const principalText = hash.toString(16).padStart(16, "0");
     return Principal.fromText(principalText);
   }

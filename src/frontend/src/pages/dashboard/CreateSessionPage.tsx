@@ -1,5 +1,5 @@
 // src/frontend/src/pages/dashboard/CreateSessionPage.tsx
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,6 +14,7 @@ import {
 import PhysicalArtService from "../../services/physicalArtService";
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 
 // Custom SVG Icons as inline components
 const CameraIcon = () => (
@@ -186,10 +187,8 @@ const CreateSessionPage: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isCreating, setIsCreating] = useState(false);
 
-  // Subscription state
-  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
-  const [subscriptionLimits, setSubscriptionLimits] = useState<any>(null);
-  const [isLoadingSubscription, setIsLoadingSubscription] = useState(true);
+  // Subscription state from context
+  const { currentTier, subscriptionLimits } = useSubscription();
 
   // Digital Art Plugin Categories
   const pluginCategories = [
@@ -280,57 +279,6 @@ const CreateSessionPage: React.FC = () => {
     },
   ];
 
-  // Load user subscription data on component mount
-  useEffect(() => {
-    const loadSubscriptionData = async () => {
-      if (!user?.username) return;
-
-      try {
-        setIsLoadingSubscription(true);
-
-        // Mock data based on username
-        if (user.username === "admin_user") {
-          setSubscriptionTier("Enterprise");
-          setSubscriptionLimits({
-            max_photos: 100,
-            max_file_size_mb: 50,
-            can_generate_nft: true,
-            priority_support: true,
-          });
-        } else if (user.username === "test_user") {
-          setSubscriptionTier("Basic");
-          setSubscriptionLimits({
-            max_photos: 20,
-            max_file_size_mb: 25,
-            can_generate_nft: true,
-            priority_support: false,
-          });
-        } else {
-          setSubscriptionTier("Free");
-          setSubscriptionLimits({
-            max_photos: 5,
-            max_file_size_mb: 10,
-            can_generate_nft: false,
-            priority_support: false,
-          });
-        }
-      } catch (error) {
-        console.error("Failed to load subscription data:", error);
-        setSubscriptionTier("Free");
-        setSubscriptionLimits({
-          max_photos: 5,
-          max_file_size_mb: 10,
-          can_generate_nft: false,
-          priority_support: false,
-        });
-      } finally {
-        setIsLoadingSubscription(false);
-      }
-    };
-
-    loadSubscriptionData();
-  }, [user?.username]);
-
   const handlePluginClick = (pluginKey: string) => {
     console.log("Plugin selected:", pluginKey);
     addToast("info", t("coming_soon"));
@@ -405,22 +353,17 @@ const CreateSessionPage: React.FC = () => {
                 <div className="subscription-card__title">
                   <Crown size={24} className="subscription-card__icon" />
                   <span>
-                    {t("subscription_status")}: {subscriptionTier}
+                    {t("subscription_status")}: {currentTier}
                   </span>
                 </div>
-                {subscriptionTier !== "Free" && (
+                {currentTier !== "Free" && (
                   <span className="subscription-card__badge">
                     {t("premium")}
                   </span>
                 )}
               </div>
 
-              {isLoadingSubscription ? (
-                <div className="subscription-card__loading">
-                  <Loader size={16} />
-                  <span>{t("loading_subscription")}</span>
-                </div>
-              ) : subscriptionLimits ? (
+              {subscriptionLimits ? (
                 <div className="subscription-card__limits">
                   <div className="subscription-card__limit-item">
                     <Info size={16} />
@@ -472,7 +415,7 @@ const CreateSessionPage: React.FC = () => {
               ) : null}
 
               {/* Upgrade Prompt for Free Users */}
-              {subscriptionTier === "Free" && (
+              {currentTier === "Free" && (
                 <div className="upgrade-prompt">
                   <AlertTriangle size={16} className="upgrade-icon" />
                   <div className="upgrade-content">
@@ -624,7 +567,7 @@ const CreateSessionPage: React.FC = () => {
                 </div>
 
                 {/* Free Tier Warning */}
-                {subscriptionTier === "Free" && (
+                {currentTier === "Free" && (
                   <div className="warning-banner">
                     <AlertTriangle size={16} className="warning-icon" />
                     <div className="warning-content">

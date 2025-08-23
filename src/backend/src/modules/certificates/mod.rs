@@ -664,19 +664,78 @@ pub fn get_subscription_limits(username: String) -> Option<SubscriptionLimits> {
     get_user_subscription(username).map(|tier| tier.get_limits())
 }
 
-// Initialize default subscriptions for testing
+// Initialize new users with Free tier
 #[ic_cdk::update]
-pub fn initialize_default_subscriptions() -> Result<bool, String> {
+pub fn initialize_user_subscription(username: String) -> Result<bool, String> {
     USER_SUBSCRIPTIONS.with(|subs| {
         let mut subscriptions = subs.borrow_mut();
-        // Only set specific test users, all others default to Free
-        subscriptions.insert("admin_user".to_string(), SubscriptionTier::Enterprise);
-        subscriptions.insert("test_user".to_string(), SubscriptionTier::Basic);
+
+        // Check if user already exists
+        if subscriptions.contains_key(&username) {
+            return Ok(false); // User already has subscription
+        }
+
+        // All new users start with Free tier
+        subscriptions.insert(username, SubscriptionTier::Free);
         Ok(true)
     })
 }
 
-// Initialize demo coupons for testing
+// Update user subscription tier (for coupon redemption)
+#[ic_cdk::update]
+pub fn update_user_subscription(username: String, tier: SubscriptionTier) -> Result<bool, String> {
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let mut subscriptions = subs.borrow_mut();
+
+        // Update existing user or create new user
+        subscriptions.insert(username, tier);
+        Ok(true)
+    })
+}
+
+// Create new coupon (admin only)
+#[ic_cdk::update]
+pub fn create_coupon(
+    code: String,
+    coupon_type: CouponType,
+    max_uses: u32,
+    expires_at: u64,
+) -> Result<bool, String> {
+    // TODO, add proper admin authentication here
+    // For now, we'll allow coupon creation
+
+    let current_time = ic_cdk::api::time();
+
+    // Validate expiration date
+    if expires_at <= current_time {
+        return Err("Expiration date must be in the future".to_string());
+    }
+
+    COUPONS.with(|coupons| {
+        let mut coupon_map = coupons.borrow_mut();
+
+        // Check if coupon already exists
+        if coupon_map.contains_key(&code) {
+            return Err("Coupon code already exists".to_string());
+        }
+
+        coupon_map.insert(
+            code.clone(),
+            Coupon {
+                code: code.clone(),
+                coupon_type,
+                is_active: true,
+                max_uses,
+                current_uses: 0,
+                expires_at,
+            },
+        );
+
+        Ok(true)
+    })
+}
+
+// Initialize demo coupons for development/testing
 #[ic_cdk::update]
 pub fn initialize_demo_coupons() -> Result<bool, String> {
     let current_time = ic_cdk::api::time();
@@ -687,9 +746,9 @@ pub fn initialize_demo_coupons() -> Result<bool, String> {
 
         // Demo Enterprise coupon - unlimited uses, expires in 1 year
         coupon_map.insert(
-            "DEMO-ENTERPRISE-2024".to_string(),
+            "DEMO-ENTERPRISE-2025".to_string(),
             Coupon {
-                code: "DEMO-ENTERPRISE-2024".to_string(),
+                code: "DEMO-ENTERPRISE-2025".to_string(),
                 coupon_type: CouponType::Enterprise,
                 is_active: true,
                 max_uses: 999999, // Unlimited for demo
@@ -700,9 +759,9 @@ pub fn initialize_demo_coupons() -> Result<bool, String> {
 
         // Demo Basic coupon - limited uses, expires in 1 year
         coupon_map.insert(
-            "DEMO-BASIC-2024".to_string(),
+            "DEMO-BASIC-2025".to_string(),
             Coupon {
-                code: "DEMO-BASIC-2024".to_string(),
+                code: "DEMO-BASIC-2025".to_string(),
                 coupon_type: CouponType::Basic,
                 is_active: true,
                 max_uses: 100,
@@ -713,9 +772,9 @@ pub fn initialize_demo_coupons() -> Result<bool, String> {
 
         // Demo Premium coupon - limited uses, expires in 1 year
         coupon_map.insert(
-            "DEMO-PREMIUM-2024".to_string(),
+            "DEMO-PREMIUM-2025".to_string(),
             Coupon {
-                code: "DEMO-PREMIUM-2024".to_string(),
+                code: "DEMO-PREMIUM-2025".to_string(),
                 coupon_type: CouponType::Premium,
                 is_active: true,
                 max_uses: 50,
