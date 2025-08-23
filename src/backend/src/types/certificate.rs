@@ -24,6 +24,9 @@ pub struct Certificate {
     pub blockchain: String,
     pub token_standard: String,
     pub metadata: CertificateMetadata,
+    pub nft_generated: bool,
+    pub nft_id: Option<String>,
+    pub token_uri: Option<String>,
 }
 
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
