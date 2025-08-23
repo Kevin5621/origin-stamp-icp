@@ -156,6 +156,29 @@
   line-height: var(--leading-tight);
 }
 
+.sidebar__tier-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.sidebar__tier-icon {
+  color: var(--color-accent);
+}
+
+.sidebar__tier-text {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .sidebar__nav {
   flex: 1;
   padding: var(--space-4) 0;
