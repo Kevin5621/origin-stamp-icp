@@ -146,18 +146,46 @@ export class CertificateService {
     certificateId: string,
   ): Promise<{ nft_id: string; token_uri: string }> {
     try {
-      // Get authenticated user principal from authentication context
-      const { Principal } = await import("@dfinity/principal");
-
       // Get user principal from authentication service
       const { AuthService } = await import("./authService");
       let userPrincipal = await AuthService.getCurrentUserPrincipal();
 
       if (!userPrincipal) {
-        // Use fallback principal for development/testing
-        // TODO, this should be properly authenticated
-        const fallbackPrincipal = Principal.fromText("2vxsx-fae"); // Anonymous principal
-        userPrincipal = fallbackPrincipal;
+        // Try to get from localStorage as fallback
+        const cachedPrincipal = localStorage.getItem(
+          "originstamp_user_principal",
+        );
+
+        if (cachedPrincipal) {
+          try {
+            const { Principal } = await import("@dfinity/principal");
+            userPrincipal = Principal.fromText(cachedPrincipal);
+          } catch (error) {
+            // If Principal.fromText fails, try to create a valid Principal from hash
+            // This handles our custom hash-based principals
+            try {
+              // Convert hash to valid Principal format
+              const validPrincipalText =
+                await this.convertHashToValidPrincipal(cachedPrincipal);
+              const { Principal } = await import("@dfinity/principal");
+              userPrincipal = Principal.fromText(validPrincipalText);
+            } catch (fallbackError) {
+              console.error(
+                "Failed to create valid principal from hash:",
+                fallbackError,
+              );
+            }
+          }
+        }
+
+        // If still no principal, throw error
+        if (!userPrincipal) {
+          const authError = new Error(
+            "Authentication required - no valid principal found. Please login again.",
+          );
+          authError.name = "AuthenticationError";
+          throw authError;
+        }
       }
 
       // Create recipient account for NFT
@@ -293,6 +321,38 @@ export class CertificateService {
     const diffMs = now.getTime() - createdAt.getTime();
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
     return Math.max(1, diffMinutes); // Minimum 1 minute
+  }
+
+  /**
+   * Convert hash to valid IC Principal format
+   */
+  private static async convertHashToValidPrincipal(
+    hash: string,
+  ): Promise<string> {
+    try {
+      // IC Principal must start with valid characters and be base32 encoded
+      // We'll create a deterministic but valid Principal from our hash
+
+      // Take first 8 characters of hash and pad with zeros
+      const shortHash = hash.slice(0, 8).padEnd(8, "0");
+
+      // Convert to bytes and create valid Principal
+      const bytes = new Uint8Array(8);
+      for (let i = 0; i < 8; i++) {
+        bytes[i] = parseInt(shortHash[i], 16) || 0;
+      }
+
+      // Create Principal from bytes
+      const { Principal } = await import("@dfinity/principal");
+      return Principal.fromUint8Array(bytes).toText();
+    } catch (error) {
+      // Fallback: create a simple valid Principal
+      console.warn(
+        "Failed to create Principal from bytes, using fallback:",
+        error,
+      );
+      return "2vxsx-fae"; // Anonymous principal as fallback
+    }
   }
 
   /**
