@@ -39,7 +39,7 @@ interface SessionData {
   title: string;
   description: string;
   artType: "physical" | "digital";
-  status: "active" | "completed";
+  status: "draft" | "active" | "completed";
   createdAt: Date;
   photos: PhotoLog[];
   currentStep: number;
@@ -103,19 +103,68 @@ const SessionRecordPage: React.FC = () => {
         // Try to load from localStorage first for faster loading
         const cachedSession = localStorage.getItem(`session_${sessionId}`);
         if (cachedSession) {
-          const parsedSession = JSON.parse(cachedSession);
-          // Convert timestamp strings back to Date objects
-          parsedSession.photos = parsedSession.photos.map((photo: any) => ({
-            ...photo,
-            timestamp: photo.timestamp ? new Date(photo.timestamp) : new Date(),
-          }));
-          setSession(parsedSession);
+          try {
+            const parsedSession = JSON.parse(cachedSession);
+
+            // Validate cached createdAt
+            let cachedCreatedAt = parsedSession.createdAt;
+            if (cachedCreatedAt) {
+              const cachedDate = new Date(cachedCreatedAt);
+              if (isNaN(cachedDate.getTime())) {
+                console.warn(
+                  "Invalid cached createdAt, using current time as fallback:",
+                  cachedCreatedAt,
+                );
+                cachedCreatedAt = new Date().toISOString();
+              }
+            } else {
+              console.warn(
+                "No cached createdAt, using current time as fallback",
+              );
+              cachedCreatedAt = new Date().toISOString();
+            }
+
+            // Convert timestamp strings back to Date objects
+            parsedSession.photos = parsedSession.photos.map((photo: any) => ({
+              ...photo,
+              timestamp: photo.timestamp
+                ? new Date(photo.timestamp)
+                : new Date(),
+            }));
+
+            // Ensure createdAt is valid
+            parsedSession.createdAt = new Date(cachedCreatedAt);
+
+            setSession(parsedSession);
+          } catch (parseError) {
+            console.error(
+              "Failed to parse cached session, clearing localStorage:",
+              parseError,
+            );
+            localStorage.removeItem(`session_${sessionId}`);
+          }
         }
 
         // Always fetch fresh data from backend
         const sessionDetails =
           await PhysicalArtService.getSessionDetails(sessionId);
         if (sessionDetails) {
+          // Validate created_at from backend
+          let createdTimestamp = Number(sessionDetails.created_at);
+          if (isNaN(createdTimestamp) || createdTimestamp <= 0) {
+            console.warn(
+              "Invalid created_at from backend, using current time as fallback:",
+              sessionDetails.created_at,
+            );
+            createdTimestamp = Date.now();
+          }
+
+          // Ensure timestamp is in milliseconds (backend might return nanoseconds)
+          if (createdTimestamp > 1000000000000000) {
+            // If timestamp is in nanoseconds
+            createdTimestamp = Math.floor(createdTimestamp / 1000000);
+          }
+
           // Transform backend data to frontend format
           const sessionWithPhotos: SessionData = {
             id: sessionDetails.session_id,
@@ -123,14 +172,12 @@ const SessionRecordPage: React.FC = () => {
             description: sessionDetails.description,
             artType: "physical",
             status: sessionDetails.status as "active" | "completed",
-            createdAt: new Date(Number(sessionDetails.created_at)),
+            createdAt: new Date(createdTimestamp),
             currentStep: sessionDetails.uploaded_photos.length + 1,
             photos: sessionDetails.uploaded_photos.map((photoUrl, index) => ({
               id: `photo-${index}`,
               filename: `photo-${index + 1}.jpg`,
-              timestamp: new Date(
-                Number(sessionDetails.created_at) + index * 60000,
-              ),
+              timestamp: new Date(createdTimestamp + index * 60000),
               description: `Step ${index + 1}`,
               fileSize: 0, // Will be updated from cache if available
               url: photoUrl,
@@ -188,7 +235,15 @@ const SessionRecordPage: React.FC = () => {
   // Save session data to localStorage whenever it changes
   useEffect(() => {
     if (session && sessionId) {
-      localStorage.setItem(`session_${sessionId}`, JSON.stringify(session));
+      // Ensure session data is valid before saving
+      if (session.createdAt && !isNaN(session.createdAt.getTime())) {
+        localStorage.setItem(`session_${sessionId}`, JSON.stringify(session));
+      } else {
+        console.warn(
+          "Invalid session createdAt, not saving to localStorage:",
+          session.createdAt,
+        );
+      }
     }
   }, [session, sessionId]);
 
@@ -471,50 +526,95 @@ const SessionRecordPage: React.FC = () => {
   const handleCompleteSessionAndGenerateNFT = async () => {
     if (!session || !user) return;
 
+    // Validate session data before proceeding
+    if (!session.title || !session.description || session.photos.length === 0) {
+      addToast("error", t("session.incomplete_session_data"));
+      return;
+    }
+
     setIsGeneratingNFT(true);
     addToast("info", t("session.starting_certificate_generation"));
 
     try {
+      // Validate createdAt
+      if (
+        !session.createdAt ||
+        !(session.createdAt instanceof Date) ||
+        isNaN(session.createdAt.getTime())
+      ) {
+        throw new Error("Invalid session creation date");
+      }
+
       // Calculate creation duration (in minutes)
-      const creationDuration = Math.floor(
-        (Date.now() - session.createdAt.getTime()) / (1000 * 60),
+      const rawDurationMs = Date.now() - session.createdAt.getTime();
+      const rawDurationMinutes = rawDurationMs / (1000 * 60);
+
+      // Ensure minimum duration of 1 minute for very new sessions
+      const creationDuration = Math.max(1, Math.floor(rawDurationMinutes));
+
+      // Validate creation duration
+      if (creationDuration <= 0) {
+        throw new Error(
+          `Invalid creation duration calculated: ${creationDuration} minutes`,
+        );
+      }
+
+      // Update session status from "draft" to "active" if needed
+      if (session.status === "draft") {
+        try {
+          await PhysicalArtService.updateSessionStatus(session.id, "active");
+
+          // Update local session state
+          setSession((prev) =>
+            prev ? { ...prev, status: "active" as const } : null,
+          );
+        } catch (statusError) {
+          console.warn(
+            "Failed to update session status, continuing with certificate generation:",
+            statusError,
+          );
+        }
+      }
+
+      // Use the new complete certificate generation flow
+      const result = await CertificateService.completeCertificateGeneration(
+        session.id,
+        user.username,
+        session.title,
+        session.description,
+        session.photos.length,
+        creationDuration,
+        "JPEG/PNG",
+        ["Digital Camera", "IC-Vibe Platform"],
       );
 
-      // Generate certificate
-      const certificate = await CertificateService.generateCertificate({
-        session_id: session.id,
-        username: user.username,
-        art_title: session.title,
-        description: session.description,
-        photo_count: session.photos.length,
-        creation_duration: creationDuration,
-        file_format: "JPEG/PNG",
-        creation_tools: ["Digital Camera", "IC-Vibe Platform"],
-      });
+      if (!result.success) {
+        throw new Error(
+          result.error || "Failed to generate certificate and NFT",
+        );
+      }
 
       // Update session status to completed
       await PhysicalArtService.updateSessionStatus(session.id, "completed");
-
-      // Update local session state
       setSession((prev) =>
-        prev
-          ? {
-              ...prev,
-              status: "completed",
-              nftGenerated: true,
-            }
-          : null,
+        prev ? { ...prev, status: "completed" as const } : null,
       );
 
-      setIsGeneratingNFT(false);
-      addToast("success", t("session.certificate_generated_successfully"));
-
-      // Navigate to certificate page
-      navigate(`/certificate/${certificate.certificate_id}`);
+      addToast(
+        "success",
+        t("session.certificate_and_nft_generated_successfully"),
+      );
+      navigate(`/dashboard/certificates/${result.certificate?.certificate_id}`);
     } catch (error) {
       console.error("Failed to generate certificate:", error);
       setIsGeneratingNFT(false);
-      addToast("error", t("session.certificate_generation_failed"));
+
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      addToast(
+        "error",
+        `${t("session.certificate_generation_failed")}: ${errorMessage}`,
+      );
     }
   };
 

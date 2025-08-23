@@ -65,12 +65,14 @@ export class CertificateService {
       });
 
       if ("Ok" in result) {
-        return this.transformCertificateData(result.Ok);
+        const transformedData = this.transformCertificateData(result.Ok);
+        return transformedData;
       } else {
+        console.error("❌ Backend returned Err:", result.Err);
         throw new Error(result.Err);
       }
     } catch (error) {
-      console.error("Failed to generate certificate:", error);
+      console.error("❌ generateCertificate error:", error);
       throw error;
     }
   }
@@ -149,6 +151,7 @@ export class CertificateService {
   }> {
     try {
       const result = await backend.generate_nft_for_certificate(certificateId);
+
       if ("Ok" in result) {
         return {
           success: true,
@@ -165,7 +168,79 @@ export class CertificateService {
       console.error("Failed to generate NFT:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "NFT generation failed",
+        error: "Failed to generate NFT",
+      };
+    }
+  }
+
+  /**
+   * Get NFT metadata for certificate
+   */
+  static async getNFTMetadata(certificateId: string): Promise<string | null> {
+    try {
+      const result = await backend.get_nft_metadata(certificateId);
+      // Ensure result is either a string or null
+      return typeof result === "string" ? result : null;
+    } catch (error) {
+      console.error("Failed to get NFT metadata:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Complete certificate generation flow
+   */
+  static async completeCertificateGeneration(
+    sessionId: string,
+    username: string,
+    artTitle: string,
+    description: string,
+    photoCount: number,
+    creationDuration: number,
+    fileFormat: string = "JPEG/PNG",
+    creationTools: string[] = ["Digital Camera", "IC-Vibe Platform"],
+  ): Promise<{
+    success: boolean;
+    certificate?: CertificateData;
+    nft?: { nft_id: string; token_uri: string };
+    error?: string;
+  }> {
+    try {
+      // Step 1: Generate certificate
+      const certificate = await this.generateCertificate({
+        session_id: sessionId,
+        username,
+        art_title: artTitle,
+        description,
+        photo_count: photoCount,
+        creation_duration: creationDuration,
+        file_format: fileFormat,
+        creation_tools: creationTools,
+      });
+
+      // Step 2: Generate NFT for the certificate
+      const nftResult = await this.generateNFT(certificate.certificate_id);
+
+      if (!nftResult.success) {
+        return {
+          success: false,
+          error: `Certificate generated but NFT generation failed: ${nftResult.error}`,
+        };
+      }
+
+      return {
+        success: true,
+        certificate,
+        nft: {
+          nft_id: nftResult.nft_id!,
+          token_uri: nftResult.token_uri!,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
       };
     }
   }
@@ -174,6 +249,13 @@ export class CertificateService {
    * Transform backend certificate data to frontend format
    */
   private static transformCertificateData(backendCert: any): CertificateData {
+    // Ensure creation_tools is always a string array
+    const creationTools = Array.isArray(backendCert.metadata?.creation_tools)
+      ? backendCert.metadata.creation_tools.filter(
+          (tool: any) => typeof tool === "string",
+        )
+      : [];
+
     return {
       certificate_id: backendCert.certificate_id,
       session_id: backendCert.session_id,
@@ -200,7 +282,7 @@ export class CertificateService {
         total_actions: Number(backendCert.metadata.total_actions),
         file_size: backendCert.metadata.file_size,
         file_format: backendCert.metadata.file_format,
-        creation_tools: backendCert.metadata.creation_tools,
+        creation_tools: creationTools,
       },
     };
   }
