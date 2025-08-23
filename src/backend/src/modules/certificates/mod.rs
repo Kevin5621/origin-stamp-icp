@@ -26,9 +26,10 @@ pub struct UserPermissions {
     pub can_delete_certificates: bool,
 }
 
-// User permissions storage
+// User permissions and subscription storage
 thread_local! {
     static USER_PERMISSIONS: std::cell::RefCell<HashMap<String, UserPermissions>> = std::cell::RefCell::new(HashMap::new());
+    static USER_SUBSCRIPTIONS: std::cell::RefCell<HashMap<String, SubscriptionTier>> = std::cell::RefCell::new(HashMap::new());
 }
 
 // Initialize default admin user
@@ -240,9 +241,52 @@ fn generate_secure_random_id() -> String {
 }
 
 // BUSINESS MODEL - Photo Upload Limits
-// Subscription tiers for photo upload limits implemented
-// Photo count validation based on user subscription
-// Premium features for higher subscription tiers
+#[derive(CandidType, Deserialize, Clone, PartialEq, Eq)]
+pub enum SubscriptionTier {
+    Free,
+    Basic,
+    Premium,
+    Enterprise,
+}
+
+#[derive(CandidType, Deserialize, Clone)]
+pub struct SubscriptionLimits {
+    pub max_photos: u32,
+    pub max_file_size_mb: u32,
+    pub can_generate_nft: bool,
+    pub priority_support: bool,
+}
+
+impl SubscriptionTier {
+    pub fn get_limits(&self) -> SubscriptionLimits {
+        match self {
+            SubscriptionTier::Free => SubscriptionLimits {
+                max_photos: 5,
+                max_file_size_mb: 10,
+                can_generate_nft: false,
+                priority_support: false,
+            },
+            SubscriptionTier::Basic => SubscriptionLimits {
+                max_photos: 20,
+                max_file_size_mb: 25,
+                can_generate_nft: true,
+                priority_support: false,
+            },
+            SubscriptionTier::Premium => SubscriptionLimits {
+                max_photos: 100,
+                max_file_size_mb: 50,
+                can_generate_nft: true,
+                priority_support: true,
+            },
+            SubscriptionTier::Enterprise => SubscriptionLimits {
+                max_photos: 1000,
+                max_file_size_mb: 100,
+                can_generate_nft: true,
+                priority_support: true,
+            },
+        }
+    }
+}
 
 // BLOCKCHAIN INFO DISPLAY
 // Verification hash displayed in NFT metadata
@@ -287,9 +331,52 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
     }
 
     // BUSINESS MODEL - Photo Upload Limit Validation
-    // Check user subscription tier
+    let user_subscription = USER_SUBSCRIPTIONS.with(|subs| {
+        subs.borrow()
+            .get(&sanitized_request.username)
+            .cloned()
+            .unwrap_or(SubscriptionTier::Free)
+    });
+
+    let subscription_limits = user_subscription.get_limits();
+
     // Validate photo count against subscription limit
-    // Return upgrade prompt if limit exceeded
+    if session.uploaded_photos.len() > subscription_limits.max_photos as usize {
+        release_reentrancy_certificate(&request.session_id);
+        return Err(format!(
+            "Photo count {} exceeds subscription limit {}. Upgrade to {} tier for more photos.",
+            session.uploaded_photos.len(),
+            subscription_limits.max_photos,
+            match user_subscription {
+                SubscriptionTier::Free => "Basic",
+                SubscriptionTier::Basic => "Premium",
+                SubscriptionTier::Premium => "Enterprise",
+                SubscriptionTier::Enterprise => "Enterprise",
+            }
+        ));
+    }
+
+    // Validate file size against subscription limit
+    let total_file_size_mb: u32 = session
+        .uploaded_photos
+        .iter()
+        .map(|_| 5) // Assume 5MB per photo for now
+        .sum();
+
+    if total_file_size_mb > subscription_limits.max_file_size_mb {
+        release_reentrancy_certificate(&request.session_id);
+        return Err(format!(
+            "Total file size {}MB exceeds subscription limit {}MB. Upgrade to {} tier for larger files.",
+            total_file_size_mb,
+            subscription_limits.max_file_size_mb,
+            match user_subscription {
+                SubscriptionTier::Free => "Basic",
+                SubscriptionTier::Basic => "Premium",
+                SubscriptionTier::Premium => "Enterprise",
+                SubscriptionTier::Enterprise => "Enterprise",
+            }
+        ));
+    }
 
     // Validate photo count
     if session.uploaded_photos.len() != sanitized_request.photo_count as usize {
@@ -529,4 +616,35 @@ pub fn update_certificate_nft_info(
 #[ic_cdk::query]
 pub fn get_certificate_count() -> usize {
     CERTIFICATES.with(|certificates| certificates.borrow().len())
+}
+
+// Subscription management functions
+#[ic_cdk::update]
+pub fn set_user_subscription(username: String, tier: SubscriptionTier) -> Result<bool, String> {
+    authenticate_user()?;
+
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let mut subscriptions = subs.borrow_mut();
+        subscriptions.insert(username, tier);
+        Ok(true)
+    })
+}
+
+#[ic_cdk::query]
+pub fn get_user_subscription(username: String) -> Option<SubscriptionTier> {
+    USER_SUBSCRIPTIONS.with(|subs| subs.borrow().get(&username).cloned())
+}
+
+#[ic_cdk::query]
+pub fn get_subscription_limits(username: String) -> Option<SubscriptionLimits> {
+    get_user_subscription(username).map(|tier| tier.get_limits())
+}
+
+// Initialize default subscriptions for testing
+pub fn initialize_default_subscriptions() {
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let mut subscriptions = subs.borrow_mut();
+        subscriptions.insert("admin_user".to_string(), SubscriptionTier::Enterprise);
+        subscriptions.insert("test_user".to_string(), SubscriptionTier::Basic);
+    });
 }
