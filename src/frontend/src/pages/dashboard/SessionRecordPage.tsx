@@ -82,6 +82,10 @@ const SessionRecordPage: React.FC = () => {
   const cancelRef = useRef<boolean>(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
+  // Subscription state for upload limits
+  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
+  const [subscriptionLimits, setSubscriptionLimits] = useState<any>(null);
+
   // Reset progress states when selectedFiles changes
   useEffect(() => {
     if (!selectedFiles) {
@@ -94,6 +98,43 @@ const SessionRecordPage: React.FC = () => {
       setIsCancelling(false);
     }
   }, [selectedFiles]);
+
+  // Load subscription data for upload limits
+  useEffect(() => {
+    const loadSubscriptionData = () => {
+      if (!user?.username) return;
+
+      // TODO: Replace with real backend call when module resolution is fixed
+      // For now, use mock data based on username
+      if (user.username === "admin_user") {
+        setSubscriptionTier("Enterprise");
+        setSubscriptionLimits({
+          max_photos: 100,
+          max_file_size_mb: 50,
+          can_generate_nft: true,
+          priority_support: true,
+        });
+      } else if (user.username === "test_user") {
+        setSubscriptionTier("Basic");
+        setSubscriptionLimits({
+          max_photos: 20,
+          max_file_size_mb: 25,
+          can_generate_nft: true,
+          priority_support: false,
+        });
+      } else {
+        setSubscriptionTier("Free");
+        setSubscriptionLimits({
+          max_photos: 5,
+          max_file_size_mb: 10,
+          can_generate_nft: false,
+          priority_support: false,
+        });
+      }
+    };
+
+    loadSubscriptionData();
+  }, [user?.username]);
 
   // Load session data from backend
   useEffect(() => {
@@ -258,6 +299,28 @@ const SessionRecordPage: React.FC = () => {
     setShouldCancelUpload(false);
     setIsCancelling(false);
 
+    // Check subscription limits first
+    if (subscriptionLimits && session) {
+      const currentPhotoCount = session.photos.length;
+      const newPhotoCount = files.length;
+      const totalAfterUpload = currentPhotoCount + newPhotoCount;
+
+      if (totalAfterUpload > subscriptionLimits.max_photos) {
+        const remainingSlots =
+          subscriptionLimits.max_photos - currentPhotoCount;
+        addToast(
+          "error",
+          t("subscription.photo_limit_exceeded", {
+            current: currentPhotoCount,
+            limit: subscriptionLimits.max_photos,
+            remaining: remainingSlots,
+            tier: subscriptionTier,
+          }),
+        );
+        return;
+      }
+    }
+
     // Check for duplicates with existing photos
     if (session) {
       const existingFilenames = session.photos.map((photo) => photo.filename);
@@ -275,10 +338,13 @@ const SessionRecordPage: React.FC = () => {
       }
     }
 
-    // Validate file types and sizes
+    // Validate file types and sizes based on subscription
+    const maxFileSizeMB = subscriptionLimits?.max_file_size_mb || 10;
+    const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
+
     const validFiles = Array.from(files).filter((file) => {
       const isValidType = file.type.startsWith("image/");
-      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
+      const isValidSize = file.size <= maxFileSizeBytes;
 
       if (!isValidType) {
         addToast(
@@ -289,7 +355,15 @@ const SessionRecordPage: React.FC = () => {
       }
 
       if (!isValidSize) {
-        addToast("error", t("session.file_too_large", { filename: file.name }));
+        addToast(
+          "error",
+          t("subscription.file_size_exceeded", {
+            filename: file.name,
+            current: (file.size / (1024 * 1024)).toFixed(1),
+            limit: maxFileSizeMB,
+            tier: subscriptionTier,
+          }),
+        );
         return false;
       }
 
@@ -765,6 +839,39 @@ const SessionRecordPage: React.FC = () => {
           <div className="session-record__upload">
             <div className="upload-card">
               <h2>{t("session.upload_progress_photos_to_s3")}</h2>
+
+              {/* Subscription Info */}
+              {subscriptionLimits && (
+                <div className="subscription-info">
+                  <div className="subscription-tier">
+                    <span className="tier-label">
+                      {t("subscription.your_tier")}:
+                    </span>
+                    <span
+                      className={`tier-value tier-value--${subscriptionTier.toLowerCase()}`}
+                    >
+                      {subscriptionTier}
+                    </span>
+                  </div>
+                  <div className="subscription-limits">
+                    <span className="limit-item">
+                      {t("subscription.photo_limit")}: {session.photos.length}/
+                      {subscriptionLimits.max_photos}
+                    </span>
+                    <span className="limit-item">
+                      {t("subscription.file_size_limit")}:{" "}
+                      {subscriptionLimits.max_file_size_mb}MB
+                    </span>
+                  </div>
+                  {subscriptionTier === "Free" && (
+                    <div className="upgrade-prompt">
+                      <span className="upgrade-text">
+                        {t("subscription.upgrade_for_more_photos")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* File Drop Zone */}
               <div
