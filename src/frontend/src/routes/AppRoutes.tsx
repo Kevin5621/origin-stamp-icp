@@ -18,6 +18,7 @@ import AnalyticsDetailPage from "../pages/dashboard/AnalyticsDetailPage";
 import CertificateDetailPage from "../pages/dashboard/CertificateDetailPage";
 import KaryaDetailPage from "../pages/dashboard/KaryaDetailPage";
 import SettingsPage from "../pages/SettingsPage";
+import SubscriptionPage from "../pages/subscription/SubscriptionPage";
 import { ErrorPage, NotFoundPage } from "../pages/error";
 import {
   MarketplaceHomePage,
@@ -162,6 +163,14 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <KaryaDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/subscription"
+          element={
+            <ProtectedRoute>
+              <SubscriptionPage />
             </ProtectedRoute>
           }
         />
