@@ -408,7 +408,6 @@
     "uploading": "Uploading",
     "of": "of",
     "files": "files",
-    "upload_cancelled": "Upload cancelled",
     "cancel": "Cancel",
     "upload_actions": "Upload Actions",
     "photo_log": "Photo Log",
@@ -490,6 +489,8 @@
     "log_empty": "Log Empty",
     "uploaded_photos_count": "Uploaded Photos Count",
     "photos_saved_securely": "Photos saved securely",
-    "session_footer": "Session Footer"
+    "session_footer": "Session Footer",
+    "session_completed": "Session completed successfully!",
+    "session_completed_description": "Your session has been completed and saved. You can now view your progress or start a new session."
   }
 }

@@ -29,6 +29,10 @@ export interface CertificateData {
     file_format: string;
     creation_tools: string[];
   };
+  // NFT fields
+  nft_generated: boolean;
+  nft_id?: string;
+  token_uri?: string;
 }
 
 export interface CreateCertificateRequest {
@@ -284,6 +288,10 @@ export class CertificateService {
         file_format: backendCert.metadata.file_format,
         creation_tools: creationTools,
       },
+      // NFT fields
+      nft_generated: backendCert.nft_generated,
+      nft_id: backendCert.nft_id,
+      token_uri: backendCert.token_uri,
     };
   }
 }

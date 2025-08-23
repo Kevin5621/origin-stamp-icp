@@ -1,9 +1,11 @@
-use ic_cdk::api::{caller, time};
+use crate::types::{
+    Certificate, CertificateMetadata, CreateCertificateRequest, NFTGenerationResult,
+};
 use candid::{CandidType, Deserialize};
+use ic_cdk::api::{caller, time};
 use sha2::{Digest, Sha256};
 use std::cell::RefCell;
 use std::collections::HashMap;
-use crate::types::{Certificate, CertificateMetadata, CreateCertificateRequest, NFTGenerationResult};
 
 // Role-based access control
 #[derive(CandidType, Deserialize, Clone, PartialEq, Eq)]
@@ -63,7 +65,9 @@ fn authorize_certificate_creation(username: &str) -> Result<(), String> {
             if user_perm.can_create_certificates {
                 Ok(())
             } else {
-                Err(format!("User {} is not authorized to create certificates", username))
+                Err(format!(
+                    "User {username} is not authorized to create certificates"
+                ))
             }
         } else {
             // Default user permissions
@@ -79,7 +83,9 @@ fn authorize_nft_generation(username: &str) -> Result<(), String> {
             if user_perm.can_generate_nfts {
                 Ok(())
             } else {
-                Err(format!("User {} is not authorized to generate NFTs", username))
+                Err(format!(
+                    "User {username} is not authorized to generate NFTs"
+                ))
             }
         } else {
             // Default user permissions
@@ -137,50 +143,56 @@ fn release_reentrancy_nft(certificate_id: &str) {
 }
 
 // Input validation and sanitization
-fn validate_and_sanitize_input(request: &CreateCertificateRequest) -> Result<CreateCertificateRequest, String> {
+fn validate_and_sanitize_input(
+    request: &CreateCertificateRequest,
+) -> Result<CreateCertificateRequest, String> {
     // Validate session_id
     if request.session_id.is_empty() || request.session_id.len() > 100 {
         return Err("Invalid session_id: must be between 1-100 characters".to_string());
     }
-    
+
     // Validate username
     if request.username.is_empty() || request.username.len() > 50 {
         return Err("Invalid username: must be between 1-50 characters".to_string());
     }
-    
+
     // Sanitize art_title (remove dangerous characters)
     let sanitized_art_title = sanitize_string(&request.art_title, 200)?;
-    
+
     // Sanitize description
     let sanitized_description = sanitize_string(&request.description, 1000)?;
-    
+
     // Validate photo_count
     if request.photo_count == 0 || request.photo_count > 100 {
         return Err("Invalid photo_count: must be between 1-100".to_string());
     }
-    
+
     // Validate creation_duration
-    if request.creation_duration == 0 || request.creation_duration > 525600 { // Max 1 year in minutes
+    if request.creation_duration == 0 || request.creation_duration > 525600 {
+        // Max 1 year in minutes
         return Err("Invalid creation_duration: must be between 1-525600 minutes".to_string());
     }
-    
+
     // Validate file_format
     let allowed_formats = vec!["JPEG", "PNG", "GIF", "WEBP"];
     if !allowed_formats.contains(&request.file_format.as_str()) {
-        return Err(format!("Invalid file_format: must be one of {:?}", allowed_formats));
+        return Err(format!(
+            "Invalid file_format: must be one of {allowed_formats:?}"
+        ));
     }
-    
+
     // Validate creation_tools
     if request.creation_tools.is_empty() || request.creation_tools.len() > 20 {
         return Err("Invalid creation_tools: must have 1-20 tools".to_string());
     }
-    
+
     // Sanitize creation_tools
-    let sanitized_tools: Vec<String> = request.creation_tools
+    let sanitized_tools: Vec<String> = request
+        .creation_tools
         .iter()
         .map(|tool| sanitize_string(tool, 50))
         .collect::<Result<Vec<String>, String>>()?;
-    
+
     Ok(CreateCertificateRequest {
         session_id: request.session_id.clone(),
         username: request.username.clone(),
@@ -195,19 +207,21 @@ fn validate_and_sanitize_input(request: &CreateCertificateRequest) -> Result<Cre
 
 fn sanitize_string(input: &str, max_length: usize) -> Result<String, String> {
     if input.is_empty() || input.len() > max_length {
-        return Err(format!("String length must be between 1-{} characters", max_length));
+        return Err(format!(
+            "String length must be between 1-{max_length} characters"
+        ));
     }
-    
+
     // Remove potentially dangerous characters
     let sanitized = input
         .chars()
         .filter(|c| c.is_alphanumeric() || c.is_whitespace() || ".,!?-()[]{}:;\"'".contains(*c))
         .collect::<String>();
-    
+
     if sanitized.is_empty() {
         return Err("String contains no valid characters after sanitization".to_string());
     }
-    
+
     Ok(sanitized)
 }
 
@@ -215,40 +229,43 @@ fn sanitize_string(input: &str, max_length: usize) -> Result<String, String> {
 fn generate_secure_random_id() -> String {
     use std::collections::hash_map::DefaultHasher;
     use std::hash::{Hash, Hasher};
-    
+
     // Combine multiple entropy sources
     let timestamp = time();
     let caller_principal = caller();
-    let random_seed = timestamp ^ (caller_principal.as_slice().iter().fold(0u64, |acc, &x| acc ^ x as u64));
-    
+    let random_seed = timestamp
+        ^ (caller_principal
+            .as_slice()
+            .iter()
+            .fold(0u64, |acc, &x| acc ^ x as u64));
+
     let mut hasher = DefaultHasher::new();
     timestamp.hash(&mut hasher);
     caller_principal.hash(&mut hasher);
     random_seed.hash(&mut hasher);
-    
+
     // Generate 16-character hex string
     format!("{:016x}", hasher.finish())
 }
 
 // Certificate generation
 #[ic_cdk::update]
-pub fn generate_certificate(
-    request: CreateCertificateRequest,
-) -> Result<Certificate, String> {
+pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certificate, String> {
     // 1. Authentication
     let caller_principal = authenticate_user()?;
-    
+
     // 2. Authorization
     authorize_certificate_creation(&request.username)?;
-    
+
     // 3. Reentrancy protection
     check_reentrancy_certificate(&request.session_id)?;
-    
+
     // 4. Input validation and sanitization
     let sanitized_request = validate_and_sanitize_input(&request)?;
-    
+
     // 5. Session validation
-    let session = crate::modules::physical_art::get_session_details(sanitized_request.session_id.clone());
+    let session =
+        crate::modules::physical_art::get_session_details(sanitized_request.session_id.clone());
     if session.is_none() {
         release_reentrancy_certificate(&request.session_id);
         return Err("Session not found".to_string());
@@ -387,7 +404,9 @@ pub fn get_user_certificates(username: String) -> Vec<Certificate> {
 
 // Verify certificate
 #[ic_cdk::update]
-pub fn verify_certificate(certificate_id: String) -> Result<crate::types::VerificationResult, String> {
+pub fn verify_certificate(
+    certificate_id: String,
+) -> Result<crate::types::VerificationResult, String> {
     let certificate =
         CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned());
 
@@ -404,7 +423,8 @@ pub fn verify_certificate(certificate_id: String) -> Result<crate::types::Verifi
             score: 0,
             details: format!(
                 "{{\"error\": \"Certificate expired\", \"expiry_date\": {}, \"current_time\": {}}}",
-                certificate.expiry_date, ic_cdk::api::time()
+                certificate.expiry_date,
+                ic_cdk::api::time()
             ),
         });
     }
@@ -432,60 +452,50 @@ pub fn verify_certificate(certificate_id: String) -> Result<crate::types::Verifi
 
 // Generate NFT for certificate
 #[ic_cdk::update]
-pub fn generate_nft_for_certificate(
-    certificate_id: String,
-) -> Result<NFTGenerationResult, String> {
+pub fn generate_nft_for_certificate(certificate_id: String) -> Result<NFTGenerationResult, String> {
     // 1. Authentication
     authenticate_user()?;
-    
+
     // 2. Input validation
     if certificate_id.is_empty() || certificate_id.len() > 100 {
         return Err("Invalid certificate ID".to_string());
     }
-    
+
     // 3. Reentrancy protection
     check_reentrancy_nft(&certificate_id)?;
-    
+
     // 4. Certificate validation
-    let certificate = CERTIFICATES.with(|certificates| {
-        certificates.borrow().get(&certificate_id).cloned()
-    });
-    
+    let certificate =
+        CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned());
+
     if certificate.is_none() {
         release_reentrancy_nft(&certificate_id);
         return Err("Certificate not found".to_string());
     }
-    
+
     let certificate = certificate.unwrap();
-    
+
     // 5. Authorization check
     authorize_nft_generation(&certificate.username)?;
-    
+
     // 6. Certificate status validation
     if certificate.certificate_status != "active" {
         release_reentrancy_nft(&certificate_id);
         return Err("Certificate is not active".to_string());
     }
-    
+
     // 7. Check if NFT already exists
     if certificate.nft_generated {
         release_reentrancy_nft(&certificate_id);
         return Err("NFT already generated for this certificate".to_string());
     }
-    
+
     // 8. Generate secure NFT ID
-    let nft_id = format!(
-        "NFT-{}-{}",
-        certificate_id,
-        generate_secure_random_id()
-    );
-    
+    let nft_id = format!("NFT-{}-{}", certificate_id, generate_secure_random_id());
+
     // 9. Generate token URI with validation
-    let token_uri = format!(
-        "https://ic-vibe.ic0.app/nft/{}/metadata",
-        certificate_id
-    );
-    
+    let token_uri = format!("https://ic-vibe.ic0.app/nft/{certificate_id}/metadata");
+
     // 10. Update certificate with NFT info
     CERTIFICATES.with(|certificates| {
         if let Some(cert) = certificates.borrow_mut().get_mut(&certificate_id) {
@@ -494,14 +504,11 @@ pub fn generate_nft_for_certificate(
             cert.token_uri = Some(token_uri.clone());
         }
     });
-    
+
     // 11. Release reentrancy protection
     release_reentrancy_nft(&certificate_id);
-    
-    Ok(NFTGenerationResult {
-        nft_id,
-        token_uri,
-    })
+
+    Ok(NFTGenerationResult { nft_id, token_uri })
 }
 
 // Get NFT metadata for certificate
