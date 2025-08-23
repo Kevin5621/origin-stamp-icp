@@ -15,6 +15,32 @@ thread_local! {
 // Certificate generation
 #[ic_cdk::update]
 pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certificate, String> {
+    // Validate input parameters
+    if request.session_id.is_empty() {
+        return Err("Session ID cannot be empty".to_string());
+    }
+    if request.username.is_empty() {
+        return Err("Username cannot be empty".to_string());
+    }
+    if request.art_title.is_empty() {
+        return Err("Art title cannot be empty".to_string());
+    }
+    if request.description.is_empty() {
+        return Err("Description cannot be empty".to_string());
+    }
+    if request.photo_count == 0 {
+        return Err("Photo count must be greater than 0".to_string());
+    }
+    if request.creation_duration == 0 {
+        return Err("Creation duration must be greater than 0".to_string());
+    }
+    if request.file_format.is_empty() {
+        return Err("File format cannot be empty".to_string());
+    }
+    if request.creation_tools.is_empty() {
+        return Err("Creation tools cannot be empty".to_string());
+    }
+
     // Get session details
     let session = physical_art::get_session_details(request.session_id.clone());
 
@@ -23,6 +49,11 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
     }
 
     let session = session.unwrap();
+
+    // Validate session status
+    if session.status != "active" && session.status != "uploading" {
+        return Err("Session is not in valid state for certificate generation".to_string());
+    }
 
     // Generate certificate ID
     let certificate_id = format!(
@@ -174,6 +205,11 @@ pub fn verify_certificate(certificate_id: String) -> Result<VerificationResult, 
 // Generate NFT for certificate
 #[ic_cdk::update]
 pub fn generate_nft_for_certificate(certificate_id: String) -> Result<NFTGenerationResult, String> {
+    // Validate input
+    if certificate_id.is_empty() {
+        return Err("Certificate ID cannot be empty".to_string());
+    }
+
     let certificate =
         CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned());
 
@@ -181,15 +217,100 @@ pub fn generate_nft_for_certificate(certificate_id: String) -> Result<NFTGenerat
         return Err("Certificate not found".to_string());
     }
 
-    let _certificate = certificate.unwrap();
+    let certificate = certificate.unwrap();
+
+    // Validate certificate status
+    if certificate.certificate_status != "active" {
+        return Err("Certificate is not active".to_string());
+    }
 
     // Generate NFT ID
     let nft_id = format!("NFT-{}-{}", certificate_id, generate_random_id());
 
-    // Create NFT metadata
-    let token_uri = format!("https://ic-vibe.ic0.app/nft/{certificate_id}");
+    // Create NFT metadata URI
+    let token_uri = format!("https://ic-vibe.ic0.app/nft/{certificate_id}/metadata");
 
-    Ok(NFTGenerationResult { nft_id, token_uri })
+    Ok(NFTGenerationResult { 
+        nft_id, 
+        token_uri
+    })
+}
+
+// Get NFT metadata for certificate
+#[ic_cdk::query]
+pub fn get_nft_metadata(certificate_id: String) -> Option<String> {
+    if certificate_id.is_empty() {
+        return None;
+    }
+
+    let certificate =
+        CERTIFICATES.with(|certificates| certificates.borrow().get(&certificate_id).cloned());
+
+    if certificate.is_none() {
+        return None;
+    }
+
+    let certificate = certificate.unwrap();
+
+    // Generate NFT metadata with certificate information
+    let nft_metadata = format!(
+        r#"{{
+            "name": "IC-Vibe Certificate NFT - {}",
+            "description": "Digital certificate for artwork: {}",
+            "image": "https://ic-vibe.ic0.app/certificate/{}/image",
+            "attributes": [
+                {{
+                    "trait_type": "Certificate ID",
+                    "value": "{}"
+                }},
+                {{
+                    "trait_type": "Art Title",
+                    "value": "{}"
+                }},
+                {{
+                    "trait_type": "Artist",
+                    "value": "{}"
+                }},
+                {{
+                    "trait_type": "Verification Score",
+                    "value": {}
+                }},
+                {{
+                    "trait_type": "Authenticity Rating",
+                    "value": {}
+                }},
+                {{
+                    "trait_type": "Creation Duration",
+                    "value": "{}"
+                }},
+                {{
+                    "trait_type": "Issue Date",
+                    "value": "{}"
+                }},
+                {{
+                    "trait_type": "Blockchain",
+                    "value": "{}"
+                }}
+            ],
+            "external_url": "{}",
+            "verification_hash": "{}"
+        }}"#,
+        certificate.art_title,
+        certificate.art_title,
+        certificate_id,
+        certificate_id,
+        certificate.art_title,
+        certificate.username,
+        certificate.verification_score,
+        certificate.authenticity_rating,
+        certificate.metadata.creation_duration,
+        certificate.issue_date,
+        certificate.blockchain,
+        certificate.verification_url,
+        certificate.verification_hash
+    );
+
+    Some(nft_metadata)
 }
 
 // Get total certificate count
