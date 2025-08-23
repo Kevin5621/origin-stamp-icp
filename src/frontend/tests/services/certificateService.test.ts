@@ -287,7 +287,9 @@ describe("CertificateService", () => {
         }),
       );
       expect(result.nft_id).toBe("NFT-CERT-123-456");
-      expect(result.token_uri).toBe("https://originstamp.ic0.app/nft/NFT-CERT-123-456/metadata");
+      expect(result.token_uri).toBe(
+        "https://originstamp.ic0.app/nft/NFT-CERT-123-456/metadata",
+      );
     });
 
     it("should handle NFT generation errors", async () => {
