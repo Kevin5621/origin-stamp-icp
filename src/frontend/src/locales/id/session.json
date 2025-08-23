@@ -396,7 +396,7 @@
     "log_empty": "Log Kosong",
     "uploaded_photos_count": "Jumlah Foto yang Diupload",
     "photos_saved_securely": "Foto disimpan dengan aman",
-    "session_footer": "Footer Sesi",
+    "session_footer": "Session Footer",
     "timeline_container": "Container Timeline",
     "timeline_steps": "Langkah Timeline",
     "timeline_step": "Langkah Timeline",
@@ -439,5 +439,10 @@
     "file_size": "Ukuran File"
   },
   "session_completed": "Sesi berhasil diselesaikan!",
-  "session_completed_description": "Sesi Anda telah selesai dan disimpan. Anda sekarang dapat melihat progress atau memulai sesi baru."
+  "session_completed_description": "Sesi Anda telah selesai dan disimpan. Anda sekarang dapat melihat progress atau memulai sesi baru.",
+  "starting_certificate_generation": "Memulai pembuatan sertifikat...",
+  "certificate_generation_failed": "Pembuatan sertifikat gagal",
+  "certificate_and_nft_generated_successfully": "Sertifikat dan NFT berhasil dibuat!",
+  "nft_metadata_loading": "Memuat metadata NFT...",
+  "nft_metadata_not_found": "Metadata NFT tidak ditemukan"
 }

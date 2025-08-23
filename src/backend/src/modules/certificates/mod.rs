@@ -466,7 +466,9 @@ pub fn verify_certificate(
 
 // Generate NFT for certificate - DEPRECATED, use NFT Module instead
 #[ic_cdk::update]
-pub fn generate_nft_for_certificate(certificate_id: String) -> Result<NFTGenerationResult, String> {
+pub fn generate_nft_for_certificate(
+    _certificate_id: String,
+) -> Result<NFTGenerationResult, String> {
     // TODO: This function is deprecated
     // TODO: Use NFT Module::mint_certificate_nft instead
     // TODO: Certificate only provides metadata
@@ -480,7 +482,7 @@ pub fn generate_nft_for_certificate(certificate_id: String) -> Result<NFTGenerat
 
 // Get NFT metadata for certificate - DEPRECATED, use NFT Module instead
 #[ic_cdk::query]
-pub fn get_nft_metadata(certificate_id: String) -> Option<String> {
+pub fn get_nft_metadata(_certificate_id: String) -> Option<String> {
     // TODO: This function is deprecated
     // TODO: Use NFT Module::get_token_metadata instead
     // TODO: Certificate only provides data, NFT Module handles metadata
@@ -490,12 +492,12 @@ pub fn get_nft_metadata(certificate_id: String) -> Option<String> {
 
 // New function: Get certificate data for NFT minting
 #[ic_cdk::query]
-pub fn get_certificate_for_nft_minting(certificate_id: String) -> Option<Certificate> {
+pub fn get_certificate_for_nft_minting(_certificate_id: String) -> Option<Certificate> {
     // TODO: This function provides certificate data to NFT Module
     // TODO: NFT Module will use this data to mint NFT
     // TODO: Includes all metadata needed for NFT generation
 
-    get_certificate_by_id(certificate_id)
+    get_certificate_by_id(_certificate_id)
 }
 
 // New function: Update certificate after NFT minting

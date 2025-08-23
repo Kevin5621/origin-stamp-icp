@@ -252,7 +252,6 @@ describe("CertificateService", () => {
       expect(backend.generate_nft_for_certificate).toHaveBeenCalledWith(
         "CERT-123",
       );
-      expect(result.success).toBe(true);
       expect(result.nft_id).toBe("NFT-CERT-123-456");
       expect(result.token_uri).toBe("https://ic-vibe.ic0.app/nft/CERT-123");
     });
@@ -263,10 +262,9 @@ describe("CertificateService", () => {
         Err: "Failed to generate NFT",
       });
 
-      const result = await CertificateService.generateNFT("CERT-123");
-
-      expect(result.success).toBe(false);
-      expect(result.error).toBe("Failed to generate NFT");
+      await expect(CertificateService.generateNFT("CERT-123")).rejects.toThrow(
+        "Failed to generate NFT",
+      );
     });
   });
 });

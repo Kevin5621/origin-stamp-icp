@@ -44,6 +44,7 @@ interface SessionData {
   photos: PhotoLog[];
   currentStep: number;
   nftGenerated?: boolean;
+  username?: string; // Add username field for backend compatibility
 }
 
 /**
@@ -576,22 +577,25 @@ const SessionRecordPage: React.FC = () => {
         }
       }
 
+      // Ensure session has username for backend compatibility
+      if (!user?.username) {
+        throw new Error("User not authenticated or username not found");
+      }
+
+      // Add username to session data
+      const sessionWithUsername = {
+        ...session,
+        username: user.username,
+      };
+
       // Use the new complete certificate generation flow
       const result = await CertificateService.completeCertificateGeneration(
-        session.id,
-        user.username,
-        session.title,
-        session.description,
-        session.photos.length,
-        creationDuration,
-        "JPEG/PNG",
-        ["Digital Camera", "IC-Vibe Platform"],
+        sessionWithUsername,
+        session.photos.map((photo) => photo.url),
       );
 
-      if (!result.success) {
-        throw new Error(
-          result.error || "Failed to generate certificate and NFT",
-        );
+      if (!result.certificate || !result.nft) {
+        throw new Error("Failed to generate certificate and NFT");
       }
 
       // Update session status to completed

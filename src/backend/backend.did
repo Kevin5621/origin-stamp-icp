@@ -125,6 +125,7 @@ service : {
   get_certificate_by_id : (text) -> (opt Certificate) query;
   get_certificate_count : () -> (nat64) query;
   get_certificate_for_nft_minting : (text) -> (opt Certificate) query;
+  get_certificate_nft_metadata : (text) -> (opt text) query;
   get_dashboard_metrics : () -> (DashboardMetrics) query;
   get_nft_metadata : (text) -> (opt text) query;
   get_s3_config : () -> (opt S3Config) query;
