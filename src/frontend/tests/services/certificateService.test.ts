@@ -282,12 +282,12 @@ describe("CertificateService", () => {
         removeItem: vi.fn(),
         clear: vi.fn(),
       };
-      
+
       Object.defineProperty(global, "localStorage", {
         value: localStorageMock,
         writable: true,
       });
-      
+
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
         writable: true,
