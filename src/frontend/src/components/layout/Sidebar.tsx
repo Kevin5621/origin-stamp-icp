@@ -11,6 +11,9 @@ import {
   Palette,
   Activity,
   Crown,
+  Users,
+  Camera,
+  Sparkles,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -183,6 +186,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return variant === "marketplace" ? "/marketplace" : "/";
   };
 
+  const getSubscriptionIcon = (tier: string) => {
+    switch (tier) {
+      case "Free":
+        return Users;
+      case "Basic":
+        return Camera;
+      case "Premium":
+        return Sparkles;
+      case "Enterprise":
+        return Crown;
+      default:
+        return Users;
+    }
+  };
+
+  const getSubscriptionColor = (tier: string) => {
+    switch (tier) {
+      case "Free":
+        return "var(--color-text-secondary)";
+      case "Basic":
+        return "var(--color-info)";
+      case "Premium":
+        return "var(--color-accent)";
+      case "Enterprise":
+        return "var(--color-warning)";
+      default:
+        return "var(--color-text-secondary)";
+    }
+  };
+
   return (
     <nav
       className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""} sidebar--${variant}`}
@@ -230,7 +263,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             {/* Subscription Tier Badge */}
             <div className="sidebar__tier-badge">
-              <Crown size={12} className="sidebar__tier-icon" />
+              {(() => {
+                const Icon = getSubscriptionIcon(currentTier);
+                return (
+                  <Icon
+                    size={12}
+                    className="sidebar__tier-icon"
+                    style={{ color: getSubscriptionColor(currentTier) }}
+                  />
+                );
+              })()}
               <span className="sidebar__tier-text">{currentTier}</span>
             </div>
           </div>
