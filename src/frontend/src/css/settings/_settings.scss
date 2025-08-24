@@ -39,6 +39,7 @@
 
   /* Surface Colors */
   --color-surface: #ffffff;
+  --color-surface-secondary: #f8fafc;
   --color-surface-disabled: #f3f4f6;
   --color-on-surface: #2d3748;
   --color-text-primary: #2d3748;
@@ -67,6 +68,7 @@
   /* Border Colors */
   --color-border: #e5e7eb;
   --color-border-hover: #d1d5db;
+  --color-border-light: #f1f5f9;
 
   /* Interactive States */
   --color-hover-overlay: rgba(45, 55, 72, 0.1);
@@ -76,6 +78,7 @@
   --color-focus-rgb: 45, 55, 72;
   --color-accent-rgb: 45, 55, 72;
   --color-border-rgb: 229, 231, 235;
+  --color-accent-hover: #1a202c;
 
   /* Text Selection Colors */
   --color-selection-bg: rgba(45, 55, 72, 0.2);
@@ -186,12 +189,12 @@
   --radius-xl: 0.75rem; /* 12px */
   --radius-2xl: 1rem; /* 16px */
   --radius-full: 9999px;
-
-  /* Additional radius variables for marketplace */
   --radius-6: 6px;
   --radius-8: 8px;
   --radius-12: 12px;
   --radius-16: 16px;
+
+  /* Additional radius variables for marketplace */
 
   /* Design System Icon Sizes */
   --icon-xs: 10px; /* Meta info, timestamps */
@@ -266,6 +269,7 @@
 
   /* Surface Colors */
   --color-surface: #1a202c;
+  --color-surface-secondary: #2d3748;
   --color-surface-disabled: #2d3748;
   --color-on-surface: #f7fafc;
   --color-text-primary: #f7fafc;

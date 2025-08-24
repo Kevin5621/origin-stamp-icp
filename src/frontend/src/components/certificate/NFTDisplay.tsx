@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Download, Share2, Copy, ExternalLink, Sparkles } from "lucide-react";
+import {
+  Download,
+  Share2,
+  Copy,
+  ExternalLink,
+  Sparkles,
+  FileText,
+  Hash,
+  Calendar,
+  User,
+  Image as ImageIcon,
+  Check,
+} from "lucide-react";
 import { CertificateService } from "../../services/certificateService";
 
 interface NFTDisplayProps {
@@ -33,6 +45,7 @@ export const NFTDisplay: React.FC<NFTDisplayProps> = ({
   const [metadata, setMetadata] = useState<NFTMetadata | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   useEffect(() => {
     if (certificateId) {
@@ -77,6 +90,8 @@ export const NFTDisplay: React.FC<NFTDisplayProps> = ({
   const handleCopyHash = () => {
     if (metadata?.verification_hash) {
       navigator.clipboard.writeText(metadata.verification_hash);
+      setCopiedField("verification_hash");
+      setTimeout(() => setCopiedField(null), 2000);
     }
   };
 
@@ -89,6 +104,8 @@ export const NFTDisplay: React.FC<NFTDisplayProps> = ({
       });
     } else if (metadata?.external_url) {
       navigator.clipboard.writeText(metadata.external_url);
+      setCopiedField("external_url");
+      setTimeout(() => setCopiedField(null), 2000);
     }
   };
 
@@ -96,8 +113,10 @@ export const NFTDisplay: React.FC<NFTDisplayProps> = ({
     return (
       <div className={`nft-display nft-display--loading ${className}`}>
         <div className="nft-display__loading">
-          <Sparkles size={24} className="loading-icon" />
-          <span>{t("loading_nft_metadata")}</span>
+          <div className="loading-spinner">
+            <Sparkles size={20} strokeWidth={1.5} className="loading-icon" />
+          </div>
+          <span className="loading-text">{t("loading_nft_metadata")}</span>
         </div>
       </div>
     );
@@ -107,6 +126,9 @@ export const NFTDisplay: React.FC<NFTDisplayProps> = ({
     return (
       <div className={`nft-display nft-display--error ${className}`}>
         <div className="nft-display__error">
+          <div className="error-icon">
+            <FileText size={24} strokeWidth={1.5} />
+          </div>
           <span className="error-message">{error}</span>
           <button
             className="btn btn--secondary btn--small"
@@ -125,103 +147,196 @@ export const NFTDisplay: React.FC<NFTDisplayProps> = ({
 
   return (
     <div className={`nft-display ${className}`}>
+      {/* Header Section */}
       <div className="nft-display__header">
         <div className="nft-display__title">
-          <Sparkles size={20} />
+          <div className="title-icon">
+            <Sparkles size={16} strokeWidth={1.5} />
+          </div>
           <h3>{t("nft_certificate")}</h3>
         </div>
+
         <div className="nft-display__actions">
           <button
-            className="btn btn--icon btn--secondary"
+            className="action-btn action-btn--secondary"
             onClick={handleDownloadMetadata}
             title={t("download_metadata")}
           >
-            <Download size={16} />
+            <Download size={14} strokeWidth={1.5} />
+            <span className="action-label">{t("download")}</span>
           </button>
+
           <button
-            className="btn btn--icon btn--secondary"
+            className="action-btn action-btn--secondary"
             onClick={handleShare}
             title={t("share_nft")}
           >
-            <Share2 size={16} />
+            <Share2 size={14} strokeWidth={1.5} />
+            <span className="action-label">{t("share")}</span>
           </button>
+
           <button
-            className="btn btn--icon btn--secondary"
+            className="action-btn action-btn--secondary"
             onClick={handleCopyHash}
             title={t("copy_verification_hash")}
           >
-            <Copy size={16} />
+            {copiedField === "verification_hash" ? (
+              <Check size={14} strokeWidth={1.5} />
+            ) : (
+              <Copy size={14} strokeWidth={1.5} />
+            )}
+            <span className="action-label">
+              {copiedField === "verification_hash" ? t("copied") : t("copy")}
+            </span>
           </button>
+
           <a
             href={metadata.external_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn--icon btn--primary"
+            className="action-btn action-btn--primary"
             title={t("view_on_blockchain")}
           >
-            <ExternalLink size={16} />
+            <ExternalLink size={14} strokeWidth={1.5} />
+            <span className="action-label">{t("view")}</span>
           </a>
         </div>
       </div>
 
+      {/* Content Section */}
       <div className="nft-display__content">
-        <div className="nft-display__image">
-          <img
-            src={metadata.image}
-            alt={metadata.name}
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = "/placeholder-nft.png";
-            }}
-          />
-        </div>
+        {/* NFT Image Section */}
+        <div className="nft-display__image-section">
+          <div className="nft-image-container">
+            <img
+              src={metadata.image}
+              alt={metadata.name}
+              className="nft-image"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = "/placeholder-nft.png";
+              }}
+            />
+          </div>
 
-        <div className="nft-display__info">
-          <div className="nft-info__section">
-            <h4>{metadata.name}</h4>
+          <div className="nft-basic-info">
+            <h4 className="nft-title">{metadata.name}</h4>
             <p className="nft-description">{metadata.description}</p>
           </div>
+        </div>
 
-          <div className="nft-info__section">
-            <h5>{t("nft_attributes")}</h5>
-            <div className="nft-attributes">
-              {metadata.attributes.map((attr, index) => (
-                <div key={index} className="nft-attribute">
-                  <span className="attribute-label">{attr.trait_type}:</span>
-                  <span className="attribute-value">{attr.value}</span>
-                </div>
-              ))}
-            </div>
+        {/* NFT Attributes Section */}
+        <div className="nft-display__attributes-section">
+          <div className="section-header">
+            <h5 className="section-title">
+              <FileText size={14} strokeWidth={1.5} />
+              {t("nft_attributes")}
+            </h5>
           </div>
 
-          {nftData && (
-            <div className="nft-info__section">
-              <h5>{t("nft_details")}</h5>
-              <div className="nft-details">
-                <div className="detail-item">
-                  <span className="detail-label">{t("nft_id")}:</span>
-                  <span className="detail-value">{nftData.nft_id}</span>
+          <div className="nft-attributes-grid">
+            {metadata.attributes.map((attr, index) => (
+              <div key={index} className="nft-attribute-item">
+                <div className="attribute-icon">
+                  {getAttributeIcon(attr.trait_type)}
                 </div>
-                <div className="detail-item">
-                  <span className="detail-label">{t("token_uri")}:</span>
-                  <span className="detail-value">
-                    <a
-                      href={nftData.token_uri}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="token-uri-link"
-                    >
-                      {nftData.token_uri}
-                    </a>
+                <div className="attribute-content">
+                  <span className="attribute-label">
+                    {formatAttributeLabel(attr.trait_type)}
+                  </span>
+                  <span className="attribute-value">
+                    {formatAttributeValue(attr.value)}
                   </span>
                 </div>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
+
+        {/* NFT Details Section */}
+        {nftData && (
+          <div className="nft-display__details-section">
+            <div className="section-header">
+              <h5 className="section-title">
+                <Hash size={14} strokeWidth={1.5} />
+                {t("nft_details")}
+              </h5>
+            </div>
+
+            <div className="nft-details-grid">
+              <div className="detail-item">
+                <div className="detail-icon">
+                  <Hash size={14} strokeWidth={1.5} />
+                </div>
+                <div className="detail-content">
+                  <span className="detail-label">{t("nft_id")}</span>
+                  <span className="detail-value">{nftData.nft_id}</span>
+                </div>
+              </div>
+
+              <div className="detail-item">
+                <div className="detail-icon">
+                  <ExternalLink size={14} strokeWidth={1.5} />
+                </div>
+                <div className="detail-content">
+                  <span className="detail-label">{t("token_uri")}</span>
+                  <a
+                    href={nftData.token_uri}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="token-uri-link"
+                  >
+                    {nftData.token_uri}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
+};
+
+// Helper function to get appropriate icon for attribute type
+const getAttributeIcon = (traitType: string) => {
+  const type = traitType.toLowerCase();
+
+  if (type.includes("date") || type.includes("time")) {
+    return <Calendar size={14} strokeWidth={1.5} />;
+  } else if (
+    type.includes("user") ||
+    type.includes("artist") ||
+    type.includes("admin")
+  ) {
+    return <User size={14} strokeWidth={1.5} />;
+  } else if (
+    type.includes("image") ||
+    type.includes("photo") ||
+    type.includes("file")
+  ) {
+    return <ImageIcon size={14} strokeWidth={1.5} />;
+  } else if (type.includes("hash") || type.includes("id")) {
+    return <Hash size={14} strokeWidth={1.5} />;
+  } else {
+    return <FileText size={14} strokeWidth={1.5} />;
+  }
+};
+
+// Helper function to format attribute labels
+const formatAttributeLabel = (label: string): string => {
+  return label
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
+// Helper function to format attribute values
+const formatAttributeValue = (value: string | number): string => {
+  if (typeof value === "string" && value.startsWith("http")) {
+    return value.length > 50 ? value.substring(0, 50) + "..." : value;
+  }
+  return String(value);
 };
 
 export default NFTDisplay;

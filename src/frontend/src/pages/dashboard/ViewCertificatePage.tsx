@@ -580,21 +580,21 @@ const ViewCertificatePage: React.FC = () => {
             className={`tab ${activeTab === "overview" ? "tab--active" : ""}`}
             onClick={() => setActiveTab("overview")}
           >
-            <span className="tab-icon">📋</span>
+            <FileText size={16} strokeWidth={1.5} />
             <span className="tab-label">{t("view_certificate.overview")}</span>
           </button>
           <button
             className={`tab ${activeTab === "progress" ? "tab--active" : ""}`}
             onClick={() => setActiveTab("progress")}
           >
-            <span className="tab-icon">📈</span>
+            <Clock size={16} strokeWidth={1.5} />
             <span className="tab-label">{t("view_certificate.progress")}</span>
           </button>
           <button
             className={`tab ${activeTab === "nft" ? "tab--active" : ""}`}
             onClick={() => setActiveTab("nft")}
           >
-            <span className="tab-icon">🖼️</span>
+            <ImageIcon size={16} strokeWidth={1.5} />
             <span className="tab-label">{t("view_certificate.nft")}</span>
           </button>
         </div>
