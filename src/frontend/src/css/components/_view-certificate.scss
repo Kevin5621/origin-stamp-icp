@@ -192,8 +192,10 @@
       font-weight: var(--font-weight-medium);
       white-space: nowrap;
 
-      .tab-icon {
-        font-size: var(--text-lg);
+      svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 1.5px;
         flex-shrink: 0;
       }
 
