@@ -269,6 +269,31 @@ describe("CertificateService", () => {
   });
 
   describe("generateNFT", () => {
+    beforeEach(() => {
+      // Mock localStorage
+      const localStorageMock = {
+        getItem: vi.fn((key: string) => {
+          if (key === "originstamp_user_principal") {
+            return "2vxsx-fae"; // Mock principal
+          }
+          return null;
+        }),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn(),
+      };
+      
+      Object.defineProperty(global, "localStorage", {
+        value: localStorageMock,
+        writable: true,
+      });
+      
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+        writable: true,
+      });
+    });
+
     it("should generate NFT for certificate", async () => {
       const mockNFTResult = "NFT-CERT-123-456"; // Token ID as string
 
