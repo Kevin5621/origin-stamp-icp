@@ -105,3 +105,18 @@ pub fn remove_photo_from_session(session_id: String, photo_url: String) -> Resul
 pub fn get_session_count() -> usize {
     PHYSICAL_ART_SESSIONS.with(|sessions| sessions.borrow().len())
 }
+
+// Get recent sessions for dashboard
+#[ic_cdk::query]
+pub fn get_recent_sessions(limit: usize) -> Vec<PhysicalArtSession> {
+    PHYSICAL_ART_SESSIONS.with(|sessions| {
+        let mut sessions_vec: Vec<PhysicalArtSession> =
+            sessions.borrow().values().cloned().collect();
+
+        // Sort by creation date (newest first)
+        sessions_vec.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+
+        // Return limited number of sessions
+        sessions_vec.into_iter().take(limit).collect()
+    })
+}

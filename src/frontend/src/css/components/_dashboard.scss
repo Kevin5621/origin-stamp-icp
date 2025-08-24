@@ -12,7 +12,7 @@
   &__title {
     font-size: var(--text-3xl);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     margin-bottom: var(--space-2);
     letter-spacing: var(--tracking-tight);
   }
@@ -50,7 +50,7 @@
   &__section-title {
     font-size: var(--text-xl);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     margin-bottom: var(--space-4);
     letter-spacing: var(--tracking-tight);
   }
@@ -79,13 +79,13 @@
   &__title {
     font-size: var(--text-lg);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
   }
 
   &__icon {
     width: var(--icon-lg);
     height: var(--icon-lg);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
   }
 
   &__content {
@@ -98,7 +98,7 @@
     font-weight: var(--font-weight-bold);
     font-variant-numeric: var(--font-variant-numeric);
     font-feature-settings: var(--font-feature-numeric);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     margin-bottom: var(--space-2);
     letter-spacing: -0.02em;
   }
@@ -178,7 +178,7 @@
   &__title {
     font-size: var(--text-xl);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
   }
 
   &__controls {
@@ -199,13 +199,13 @@
 
     &:hover {
       border-color: var(--color-border-hover);
-      color: var(--color-text-primary);
+      color: var(--color-primary-text);
     }
 
     &--active {
       background: var(--color-accent);
       border-color: var(--color-accent);
-      color: var(--color-white);
+      color: var(--color-on-surface);
 
       &:hover {
         background: var(--color-accent-dark);
@@ -258,7 +258,7 @@
   &__title {
     font-size: var(--text-lg);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
   }
 
   &__content {
@@ -279,14 +279,14 @@
     text-align: left;
     font-size: var(--text-sm);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     border-bottom: 1px solid var(--color-border);
   }
 
   &__td {
     padding: var(--space-4) var(--space-6);
     font-size: var(--text-sm);
-    color: var(--color-text-primary);
+    color: var(--color-primary-text);
     border-bottom: 1px solid var(--color-border);
 
     &:last-child {
@@ -312,24 +312,25 @@
   justify-content: center;
   padding: var(--space-12);
   text-align: center;
-  color: var(--color-gray-500);
+  color: var(--color-text-secondary);
 
   &__icon {
     width: var(--icon-2xl);
     height: var(--icon-2xl);
     margin-bottom: var(--space-4);
-    color: var(--color-gray-300);
+    color: var(--color-text-tertiary);
   }
 
   &__title {
     font-size: var(--text-lg);
     font-weight: var(--font-weight-medium);
-    color: var(--color-gray-700);
+    color: var(--color-primary-text);
     margin-bottom: var(--space-2);
   }
 
   &__description {
     font-size: var(--text-sm);
+    color: var(--color-text-secondary);
     margin-bottom: var(--space-6);
   }
 }
@@ -341,15 +342,15 @@
   justify-content: center;
   min-height: 400px;
   padding: var(--space-8);
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
 
   &__spinner {
     width: var(--icon-xl);
     height: var(--icon-xl);
-    border: 2px solid var(--color-gray-200);
-    border-top: 2px solid var(--color-primary);
+    border: 2px solid var(--color-border);
+    border-top: 2px solid var(--color-accent);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: var(--space-4);
@@ -357,7 +358,7 @@
 
   &__message {
     font-size: var(--text-sm);
-    color: var(--color-gray-600);
+    color: var(--color-text-secondary);
     text-align: center;
   }
 }
