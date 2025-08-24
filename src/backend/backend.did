@@ -148,6 +148,7 @@ service : () -> {
   get_certificate_nft_metadata : (text) -> (opt text) query;
   get_dashboard_metrics : () -> (DashboardMetrics) query;
   get_nft_metadata : (text) -> (opt text) query;
+  get_recent_sessions : (nat64) -> (vec PhysicalArtSession) query;
   get_s3_config : () -> (opt S3Config) query;
   get_s3_config_status : () -> (bool) query;
   get_session_count : () -> (nat64) query;

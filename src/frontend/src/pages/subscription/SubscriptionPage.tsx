@@ -50,11 +50,11 @@ const SubscriptionPage: React.FC = () => {
   const [couponMessage, setCouponMessage] = useState<string>("");
 
   // Demo coupon codes for development/testing
-  const demoCoupons = [
-    "DEMO-ENTERPRISE-2025",
-    "DEMO-BASIC-2025",
-    "DEMO-PREMIUM-2025",
-  ];
+  // const demoCoupons = [
+  //   "DEMO-ENTERPRISE-2025",
+  //   "DEMO-BASIC-2025",
+  //   "DEMO-PREMIUM-2025",
+  // ];
 
   const handleRedeemCoupon = async () => {
     if (!couponCode.trim() || !user?.username) {
@@ -311,7 +311,7 @@ const SubscriptionPage: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Demo Coupon Codes */}
+                  {/* Demo Coupon Codes
                   <div className="subscription-demo-coupons">
                     <p className="subscription-demo-coupons__title">
                       Demo Coupons (for testing):
@@ -329,7 +329,7 @@ const SubscriptionPage: React.FC = () => {
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
