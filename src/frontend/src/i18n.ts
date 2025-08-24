@@ -65,8 +65,8 @@ i18n
         subscription: subscriptionId,
       },
     },
-    lng: "id", // default language
-    fallbackLng: "id", // fallback language if translation is not found
+    lng: "en", // default language
+    fallbackLng: "en", // fallback language if translation is not found
     interpolation: {
       escapeValue: false, // react already escapes by default
     },
