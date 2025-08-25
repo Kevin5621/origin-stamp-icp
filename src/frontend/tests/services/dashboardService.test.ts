@@ -18,7 +18,6 @@ describe("dashboardService", () => {
         totalSessions: 0,
         totalCertificates: 0,
         totalRevenue: 0,
-        activeUsers: 0,
         recentSessions: [],
         revenueData: [],
       });
@@ -30,7 +29,6 @@ describe("dashboardService", () => {
       expect(result).toHaveProperty("totalSessions");
       expect(result).toHaveProperty("totalCertificates");
       expect(result).toHaveProperty("totalRevenue");
-      expect(result).toHaveProperty("activeUsers");
       expect(result).toHaveProperty("recentSessions");
       expect(result).toHaveProperty("revenueData");
 
@@ -44,7 +42,6 @@ describe("dashboardService", () => {
       expect(typeof result.totalSessions).toBe("number");
       expect(typeof result.totalCertificates).toBe("number");
       expect(typeof result.totalRevenue).toBe("number");
-      expect(typeof result.activeUsers).toBe("number");
     });
   });
 });

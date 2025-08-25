@@ -14,6 +14,7 @@ import navigationEn from "./locales/en/navigation.json";
 import howItWorksEn from "./locales/en/how-it-works.json";
 import settingsEn from "./locales/en/settings.json";
 import marketplaceEn from "./locales/en/marketplace.json";
+import subscriptionEn from "./locales/en/subscription.json";
 
 import commonId from "./locales/id/common.json";
 import authId from "./locales/id/auth.json";
@@ -26,6 +27,7 @@ import navigationId from "./locales/id/navigation.json";
 import howItWorksId from "./locales/id/how-it-works.json";
 import settingsId from "./locales/id/settings.json";
 import marketplaceId from "./locales/id/marketplace.json";
+import subscriptionId from "./locales/id/subscription.json";
 
 // Initialize i18n dengan sistem modular
 i18n
@@ -45,6 +47,7 @@ i18n
         howitworks: howItWorksEn,
         settings: settingsEn,
         marketplace: marketplaceEn,
+        subscription: subscriptionEn,
       },
       id: {
         translation: loadAllTranslations("id"),
@@ -59,10 +62,11 @@ i18n
         howitworks: howItWorksId,
         settings: settingsId,
         marketplace: marketplaceId,
+        subscription: subscriptionId,
       },
     },
-    lng: "id", // default language
-    fallbackLng: "id", // fallback language if translation is not found
+    lng: "en", // default language
+    fallbackLng: "en", // fallback language if translation is not found
     interpolation: {
       escapeValue: false, // react already escapes by default
     },

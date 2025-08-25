@@ -1,0 +1,76 @@
+{
+  "subscription_plans": "Paket Berlangganan",
+  "subscription_subtitle": "Buka fitur lebih banyak dan kembangkan perjalanan kreatif Anda dengan OriginStamp",
+  "back_to_dashboard": "Kembali ke Dashboard",
+  "current_plan": "Paket Saat Ini",
+  "have_coupon_code": "Punya Kode Kupon?",
+  "enter_coupon_code": "Masukkan kode kupon",
+  "redeem": "Tukar",
+  "processing": "Memproses...",
+  "demo_coupons_title": "Kupon Demo (untuk testing):",
+  "choose_your_plan": "Pilih Paket Anda",
+  "most_popular": "Paling Populer",
+  "current_plan_badge": "Paket Saat Ini",
+  "billed_monthly": "Ditagih bulanan",
+  "upgrade_to": "Upgrade ke",
+  "downgrade_to_free": "Downgrade ke Free",
+  "upgrade_functionality_coming_soon": "Fitur upgrade akan segera hadir!",
+  "please_login_to_upgrade": "Silakan masuk untuk mengupgrade berlangganan Anda",
+  "coupon_redeemed_successfully": "Kupon berhasil ditukar! Berlangganan Anda telah diupgrade.",
+  "invalid_coupon_code": "Kode kupon tidak valid. Coba salah satu kode demo di atas.",
+  "failed_to_redeem_coupon": "Gagal menukar kupon. Silakan coba lagi.",
+  "please_enter_coupon_code": "Silakan masukkan kode kupon",
+  "enter_coupon_code_aria": "Masukkan kode kupon untuk mengupgrade berlangganan Anda",
+  "redeem_coupon_code_aria": "Tukar kode kupon",
+  "use_demo_coupon_code_aria": "Gunakan kode kupon demo: {{code}}",
+  "click_to_use": "Klik untuk menggunakan",
+
+  "tiers": {
+    "free": {
+      "name": "Free",
+      "description": "Sempurna untuk mencoba OriginStamp",
+      "features": [
+        "5 foto per sesi",
+        "Batas ukuran file 10MB",
+        "Dukungan komunitas",
+        "Verifikasi dasar"
+      ]
+    },
+    "basic": {
+      "name": "Basic",
+      "description": "Bagus untuk pembuat konten reguler",
+      "features": [
+        "20 foto per sesi",
+        "Batas ukuran file 25MB",
+        "Pembuatan NFT",
+        "Dukungan email",
+        "Analitik lanjutan"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Sempurna untuk pembuat konten profesional",
+      "features": [
+        "100 foto per sesi",
+        "Batas ukuran file 50MB",
+        "Pembuatan NFT",
+        "Dukungan prioritas",
+        "Fitur lanjutan",
+        "Branding kustom"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Untuk tim dan organisasi",
+      "features": [
+        "Foto tak terbatas",
+        "Batas ukuran file 100MB",
+        "Pembuatan NFT",
+        "Dukungan prioritas",
+        "Akses API",
+        "Solusi white label",
+        "Dukungan khusus"
+      ]
+    }
+  }
+}

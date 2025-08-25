@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Crown,
   Check,
@@ -10,12 +11,14 @@ import {
   Loader,
   ArrowRight,
   Info,
+  ArrowLeft,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToastContext } from "../../contexts/ToastContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 
-// Subscription tier types
-interface SubscriptionTier {
+// Subscription tier configuration
+interface SubscriptionTierConfig {
   id: string;
   name: string;
   price: number;
@@ -37,50 +40,58 @@ interface SubscriptionTier {
 
 const SubscriptionPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("subscription");
   const { user } = useAuth();
   const { addToast } = useToastContext();
+  const { currentTier, redeemCoupon, isLoading } = useSubscription();
 
-  const [currentTier, setCurrentTier] = useState<string>("Free");
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  // Local state for coupon input
+  const [couponCode, setCouponCode] = useState<string>("");
+  const [couponMessage, setCouponMessage] = useState<string>("");
 
-  // Load current subscription tier
-  useEffect(() => {
-    const loadCurrentTier = () => {
-      if (!user?.username) {
-        setCurrentTier("Free");
-        return;
-      }
+  // Demo coupon codes for development/testing
+  // const demoCoupons = [
+  //   "DEMO-ENTERPRISE-2025",
+  //   "DEMO-BASIC-2025",
+  //   "DEMO-PREMIUM-2025",
+  // ];
 
-      // Mock data based on username
-      if (user.username === "admin_user") {
-        setCurrentTier("Enterprise");
-      } else if (user.username === "test_user") {
-        setCurrentTier("Basic");
+  const handleRedeemCoupon = async () => {
+    if (!couponCode.trim() || !user?.username) {
+      setCouponMessage(t("please_enter_coupon_code"));
+      return;
+    }
+
+    setCouponMessage("");
+
+    try {
+      const success = await redeemCoupon(couponCode);
+
+      if (success) {
+        setCouponMessage(t("coupon_redeemed_successfully"));
+        addToast("success", t("coupon_redeemed_successfully"));
+        setCouponCode("");
       } else {
-        setCurrentTier("Free");
+        setCouponMessage(t("invalid_coupon_code"));
+        addToast("error", t("invalid_coupon_code"));
       }
-    };
-
-    loadCurrentTier();
-  }, [user?.username]);
+    } catch (error) {
+      setCouponMessage(t("failed_to_redeem_coupon"));
+      addToast("error", t("failed_to_redeem_coupon"));
+    }
+  };
 
   // Subscription tiers configuration
-  const subscriptionTiers: SubscriptionTier[] = [
+  const subscriptionTiers: SubscriptionTierConfig[] = [
     {
       id: "free",
-      name: "Free",
+      name: t("tiers.free.name"),
       price: 0,
       currency: "USD",
       period: "month",
-      description: "Perfect for trying out OriginStamp",
+      description: t("tiers.free.description"),
       icon: Users,
-      features: [
-        "5 photos per session",
-        "10MB file size limit",
-        "Community support",
-        "Basic verification",
-      ],
+      features: t("tiers.free.features", { returnObjects: true }) as string[],
       limits: {
         max_photos: 5,
         max_file_size_mb: 10,
@@ -92,20 +103,14 @@ const SubscriptionPage: React.FC = () => {
     },
     {
       id: "basic",
-      name: "Basic",
+      name: t("tiers.basic.name"),
       price: 9.99,
       currency: "USD",
       period: "month",
-      description: "Great for regular creators",
+      description: t("tiers.basic.description"),
       icon: Camera,
       popular: true,
-      features: [
-        "20 photos per session",
-        "25MB file size limit",
-        "NFT generation",
-        "Email support",
-        "Advanced analytics",
-      ],
+      features: t("tiers.basic.features", { returnObjects: true }) as string[],
       limits: {
         max_photos: 20,
         max_file_size_mb: 25,
@@ -117,20 +122,15 @@ const SubscriptionPage: React.FC = () => {
     },
     {
       id: "premium",
-      name: "Premium",
+      name: t("tiers.premium.name"),
       price: 29.99,
       currency: "USD",
       period: "month",
-      description: "Perfect for professional creators",
+      description: t("tiers.premium.description"),
       icon: Sparkles,
-      features: [
-        "100 photos per session",
-        "50MB file size limit",
-        "NFT generation",
-        "Priority support",
-        "Advanced features",
-        "Custom branding",
-      ],
+      features: t("tiers.premium.features", {
+        returnObjects: true,
+      }) as string[],
       limits: {
         max_photos: 100,
         max_file_size_mb: 50,
@@ -142,21 +142,15 @@ const SubscriptionPage: React.FC = () => {
     },
     {
       id: "enterprise",
-      name: "Enterprise",
+      name: t("tiers.enterprise.name"),
       price: 99.99,
       currency: "USD",
       period: "month",
-      description: "For teams and organizations",
+      description: t("tiers.enterprise.description"),
       icon: Crown,
-      features: [
-        "Unlimited photos",
-        "100MB file size limit",
-        "NFT generation",
-        "Priority support",
-        "API access",
-        "White label solution",
-        "Dedicated support",
-      ],
+      features: t("tiers.enterprise.features", {
+        returnObjects: true,
+      }) as string[],
       limits: {
         max_photos: 1000,
         max_file_size_mb: 100,
@@ -168,44 +162,29 @@ const SubscriptionPage: React.FC = () => {
     },
   ];
 
-  const handleUpgrade = async (tierName: string) => {
+  const handleUpgrade = async (_tierName: string) => {
     if (!user) {
-      addToast("error", "Please log in to upgrade your subscription");
+      addToast("error", t("please_login_to_upgrade"));
       navigate("/login");
       return;
     }
 
-    setIsLoading(true);
-    setSelectedTier(tierName);
-
-    try {
-      // Mock upgrade process
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // In production, this would call backend to upgrade tier
-      addToast("success", `Successfully upgraded to ${tierName} plan!`);
-      setCurrentTier(tierName);
-    } catch (error) {
-      addToast("error", "Failed to upgrade subscription. Please try again.");
-    } finally {
-      setIsLoading(false);
-      setSelectedTier(null);
-    }
+    addToast("info", t("upgrade_functionality_coming_soon"));
   };
 
-  const getTierButtonText = (tier: SubscriptionTier) => {
+  const getTierButtonText = (tier: SubscriptionTierConfig) => {
     if (currentTier === tier.name) {
-      return "Current Plan";
+      return t("current_plan_badge");
     }
 
-    if (tier.name === "Free") {
-      return "Downgrade to Free";
+    if (tier.name === t("tiers.free.name")) {
+      return t("downgrade_to_free");
     }
 
-    return `Upgrade to ${tier.name}`;
+    return `${t("upgrade_to")} ${tier.name}`;
   };
 
-  const getTierButtonVariant = (tier: SubscriptionTier) => {
+  const getTierButtonVariant = (tier: SubscriptionTierConfig) => {
     if (currentTier === tier.name) {
       return "current";
     }
@@ -218,126 +197,255 @@ const SubscriptionPage: React.FC = () => {
   };
 
   const isCurrentTier = (tierName: string) => currentTier === tierName;
-  const isLoadingTier = (tierName: string) =>
-    isLoading && selectedTier === tierName;
+  const isLoadingTier = (_tierName: string) => false; // Simplified for now
 
   return (
-    <div className="subscription-page">
-      <div className="subscription-container">
-        {/* Header Section */}
-        <div className="subscription-header">
-          <div className="subscription-header__content">
-            <h1 className="subscription-title">
-              <Crown className="subscription-title-icon" />
-              Choose Your Plan
-            </h1>
-            <p className="subscription-subtitle">
-              Unlock more features and grow your creative journey with
-              OriginStamp
-            </p>
-
-            {/* Current Plan Indicator */}
-            <div className="current-plan-indicator">
-              <Info className="current-plan-icon" />
-              <span className="current-plan-text">
-                Current Plan: <strong>{currentTier}</strong>
-              </span>
+    <div className="dashboard">
+      <div className="dashboard__content">
+        <div className="dashboard__main">
+          {/* Header Section */}
+          <div className="dashboard__section">
+            <div className="dashboard__header">
+              <button
+                className="subscription-back-btn"
+                onClick={() => navigate("/dashboard")}
+              >
+                <ArrowLeft size={20} />
+                {t("back_to_dashboard")}
+              </button>
+              <h1 className="dashboard__title">
+                <Crown size={32} className="subscription-crown-icon" />
+                {t("subscription_plans")}
+              </h1>
+              <p className="dashboard__subtitle">
+                {t("subscription_subtitle")}
+              </p>
             </div>
           </div>
-        </div>
 
-        {/* Pricing Cards */}
-        <div className="subscription-grid">
-          {subscriptionTiers.map((tier) => {
-            const IconComponent = tier.icon;
-            const isCurrent = isCurrentTier(tier.name);
-            const isLoading = isLoadingTier(tier.name);
-
-            return (
-              <div
-                key={tier.id}
-                className={`subscription-card ${tier.popular ? "subscription-card--popular" : ""} ${isCurrent ? "subscription-card--current" : ""}`}
-              >
-                {/* Popular Badge */}
-                {tier.popular && (
-                  <div className="subscription-badge">
-                    <Star className="subscription-badge-icon" />
-                    Most Popular
+          {/* Current Plan Status */}
+          <div className="dashboard__section">
+            <div className="dashboard-card">
+              <div className="dashboard-card__header">
+                <div className="subscription-current-plan">
+                  <div className="subscription-current-plan__info">
+                    <Info
+                      size={20}
+                      className="subscription-current-plan__icon"
+                    />
+                    <span className="subscription-current-plan__title">
+                      {t("current_plan")}: {currentTier}
+                    </span>
                   </div>
-                )}
-
-                {/* Current Plan Badge */}
-                {isCurrent && (
-                  <div className="subscription-current-badge">
-                    <Check className="subscription-current-icon" />
-                    Current Plan
-                  </div>
-                )}
-
-                {/* Card Header */}
-                <div className="subscription-card-header">
-                  <div
-                    className={`subscription-icon subscription-icon--${tier.color}`}
-                  >
-                    <IconComponent size={32} />
-                  </div>
-                  <h3 className="subscription-card-title">{tier.name}</h3>
-                  <p className="subscription-card-description">
-                    {tier.description}
-                  </p>
-                </div>
-
-                {/* Pricing */}
-                <div className="subscription-pricing">
-                  <div className="subscription-price">
-                    <span className="subscription-currency">$</span>
-                    <span className="subscription-amount">{tier.price}</span>
-                    <span className="subscription-period">/{tier.period}</span>
-                  </div>
-                  {tier.price > 0 && (
-                    <div className="subscription-billing">Billed monthly</div>
+                  {currentTier !== "Free" && (
+                    <span className="subscription-badge subscription-badge--premium">
+                      Premium
+                    </span>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
 
-                {/* Features List */}
-                <div className="subscription-features">
-                  <ul className="subscription-features-list">
-                    {tier.features.map((feature, index) => (
-                      <li key={index} className="subscription-feature">
-                        <Check className="subscription-feature-icon" />
-                        <span className="subscription-feature-text">
-                          {feature}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          {/* Coupon Section */}
+          <div className="dashboard__section">
+            <div className="dashboard-card">
+              <div className="dashboard-card__header">
+                <h2 className="dashboard-card__title">
+                  <Sparkles size={20} className="subscription-sparkles-icon" />
+                  {t("have_coupon_code")}
+                </h2>
+              </div>
+              <div className="dashboard-card__content">
+                <div className="subscription-coupon">
+                  <div className="subscription-coupon__input-group">
+                    <input
+                      type="text"
+                      placeholder={t("enter_coupon_code")}
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (
+                          e.key === "Enter" &&
+                          couponCode.trim() &&
+                          !isLoading
+                        ) {
+                          handleRedeemCoupon();
+                        }
+                      }}
+                      className="subscription-coupon__input"
+                      disabled={isLoading}
+                      aria-label={t("enter_coupon_code_aria")}
+                    />
+                    <button
+                      onClick={handleRedeemCoupon}
+                      disabled={!couponCode.trim() || isLoading}
+                      className="subscription-coupon__button"
+                      aria-label={t("redeem_coupon_code_aria")}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader
+                            size={16}
+                            className="subscription-coupon__loader"
+                          />
+                          {t("processing")}
+                        </>
+                      ) : (
+                        t("redeem")
+                      )}
+                    </button>
+                  </div>
 
-                {/* Action Button */}
-                <div className="subscription-action">
-                  <button
-                    className={`subscription-button subscription-button--${getTierButtonVariant(tier)}`}
-                    onClick={() => handleUpgrade(tier.name)}
-                    disabled={isCurrent || isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader className="subscription-button-icon animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        {!isCurrent && (
-                          <ArrowRight className="subscription-button-icon" />
-                        )}
-                        {getTierButtonText(tier)}
-                      </>
-                    )}
-                  </button>
+                  {couponMessage && (
+                    <div
+                      className={`subscription-coupon__message ${
+                        couponMessage.includes(
+                          t("coupon_redeemed_successfully").split("!")[0],
+                        )
+                          ? "subscription-coupon__message--success"
+                          : "subscription-coupon__message--error"
+                      }`}
+                    >
+                      {couponMessage}
+                    </div>
+                  )}
+
+                  {/* Demo Coupon Codes
+                  <div className="subscription-demo-coupons">
+                    <p className="subscription-demo-coupons__title">
+                      Demo Coupons (for testing):
+                    </p>
+                    <div className="subscription-demo-coupons__list">
+                      {demoCoupons.map((code) => (
+                        <button
+                          key={code}
+                          onClick={() => setCouponCode(code)}
+                          className="subscription-demo-coupon__code"
+                          title="Click to use"
+                          aria-label={`Use demo coupon code: ${code}`}
+                        >
+                          {code}
+                        </button>
+                      ))}
+                    </div>
+                  </div> */}
                 </div>
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          {/* Pricing Plans Grid */}
+          <div className="dashboard__section">
+            <div className="dashboard__section-title">
+              {t("choose_your_plan")}
+            </div>
+            <div className="subscription-grid">
+              {subscriptionTiers.map((tier) => {
+                const IconComponent = tier.icon;
+                const isCurrent = isCurrentTier(tier.name);
+                const isLoading = isLoadingTier(tier.name);
+
+                return (
+                  <div
+                    key={tier.id}
+                    className={`subscription-card ${tier.popular ? "subscription-card--popular" : ""} ${isCurrent ? "subscription-card--current" : ""}`}
+                  >
+                    {/* Popular Badge */}
+                    {tier.popular && (
+                      <div className="subscription-badge subscription-badge--popular">
+                        <Star size={14} />
+                        {t("most_popular")}
+                      </div>
+                    )}
+
+                    {/* Current Plan Badge */}
+                    {isCurrent && (
+                      <div className="subscription-badge subscription-badge--current">
+                        <Check size={14} />
+                        {t("current_plan_badge")}
+                      </div>
+                    )}
+
+                    {/* Card Header */}
+                    <div className="subscription-card__header">
+                      <div
+                        className={`subscription-card__icon subscription-card__icon--${tier.color}`}
+                      >
+                        <IconComponent size={32} />
+                      </div>
+                      <h3 className="subscription-card__title">{tier.name}</h3>
+                      <p className="subscription-card__description">
+                        {tier.description}
+                      </p>
+                    </div>
+
+                    {/* Pricing */}
+                    <div className="subscription-card__pricing">
+                      <div className="subscription-card__price">
+                        <span className="subscription-card__currency">$</span>
+                        <span className="subscription-card__amount">
+                          {tier.price}
+                        </span>
+                        <span className="subscription-card__period">
+                          /{tier.period}
+                        </span>
+                      </div>
+                      {tier.price > 0 && (
+                        <div className="subscription-card__billing">
+                          {t("billed_monthly")}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Features List */}
+                    <div className="subscription-card__features">
+                      <ul className="subscription-card__features-list">
+                        {tier.features.map((feature, index) => (
+                          <li
+                            key={index}
+                            className="subscription-card__feature"
+                          >
+                            <Check
+                              size={16}
+                              className="subscription-card__feature-icon"
+                            />
+                            <span className="subscription-card__feature-text">
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="subscription-card__action">
+                      <button
+                        className={`subscription-card__button subscription-card__button--${getTierButtonVariant(tier)}`}
+                        onClick={() => handleUpgrade(tier.name)}
+                        disabled={isCurrent || isLoading}
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader
+                              size={16}
+                              className="subscription-card__loader"
+                            />
+                            {t("processing")}
+                          </>
+                        ) : (
+                          <>
+                            {!isCurrent && <ArrowRight size={16} />}
+                            {getTierButtonText(tier)}
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>

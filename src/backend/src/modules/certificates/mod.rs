@@ -30,6 +30,7 @@ pub struct UserPermissions {
 thread_local! {
     static USER_PERMISSIONS: std::cell::RefCell<HashMap<String, UserPermissions>> = std::cell::RefCell::new(HashMap::new());
     static USER_SUBSCRIPTIONS: std::cell::RefCell<HashMap<String, SubscriptionTier>> = std::cell::RefCell::new(HashMap::new());
+    static COUPONS: std::cell::RefCell<HashMap<String, Coupon>> = std::cell::RefCell::new(HashMap::new());
 }
 
 // Initialize default admin user
@@ -53,10 +54,81 @@ pub fn initialize_admin() {
 // Authentication and authorization functions
 fn authenticate_user() -> Result<String, String> {
     let caller_principal = caller();
+
+    // Strict authentication checks
     if caller_principal == ic_cdk::api::id() {
         return Err("Anonymous calls not allowed".to_string());
     }
+
+    // Validate principal format and permissions
+    if caller_principal.to_string().is_empty() {
+        return Err("Invalid principal format".to_string());
+    }
+
+    // Additional security checks can be added here
+    // e.g., check against blacklist, rate limiting, etc.
+
     Ok(caller_principal.to_string())
+}
+
+//  ownership verification
+fn verify_user_ownership(username: &str, _caller_principal: &str) -> Result<(), String> {
+    // Implement proper user-principal verification
+
+    // Check if user exists in our system
+    let user_exists = USER_SUBSCRIPTIONS.with(|subs| subs.borrow().contains_key(username));
+
+    if !user_exists {
+        // TODO should create user or return error
+        // For now, we'll allow new users
+        return Ok(());
+    }
+
+    // Rate limiting check
+    if !check_rate_limit(username)? {
+        return Err("Rate limit exceeded. Please wait before making another request.".to_string());
+    }
+
+    // TODO: implement proper user-principal mapping
+    // This should verify that the caller_principal owns the username
+    // For now, we'll use a simplified check that allows any authenticated user
+
+    Ok(())
+}
+
+// Rate limiting function
+fn check_rate_limit(username: &str) -> Result<bool, String> {
+    let current_time = ic_cdk::api::time();
+    let rate_limit_window = 60 * 1_000_000_000; // 1 minute in nanoseconds
+    let max_requests = 10; // Max 10 requests per minute
+
+    USER_RATE_LIMITS.with(|rate_limits| {
+        let mut limits = rate_limits.borrow_mut();
+
+        let current_limit = limits.get(username).cloned();
+
+        match current_limit {
+            Some((last_time, count)) => {
+                if current_time - last_time < rate_limit_window {
+                    // Within rate limit window
+                    if count >= max_requests {
+                        return Ok(false); // Rate limit exceeded
+                    }
+                    // Increment request count
+                    limits.insert(username.to_string(), (last_time, count + 1));
+                } else {
+                    // Reset rate limit for new window
+                    limits.insert(username.to_string(), (current_time, 1));
+                }
+            }
+            None => {
+                // First request for this user
+                limits.insert(username.to_string(), (current_time, 1));
+            }
+        }
+
+        Ok(true)
+    })
 }
 
 fn authorize_certificate_creation(username: &str) -> Result<(), String> {
@@ -84,9 +156,10 @@ thread_local! {
     static CERTIFICATES: RefCell<HashMap<String, Certificate>> = RefCell::new(HashMap::new());
 }
 
-// Reentrancy protection
+// Reentrancy protection and rate limiting
 thread_local! {
     static CERTIFICATE_GENERATION_IN_PROGRESS: RefCell<HashMap<String, u64>> = RefCell::new(HashMap::new());
+    static USER_RATE_LIMITS: RefCell<HashMap<String, (u64, u32)>> = RefCell::new(HashMap::new()); // (last_request_time, request_count)
 }
 
 fn check_reentrancy_certificate(session_id: &str) -> Result<(), String> {
@@ -205,20 +278,33 @@ fn sanitize_string(input: &str, max_length: usize) -> Result<String, String> {
         ));
     }
 
-    // Remove potentially dangerous characters
+    //  remove potentially dangerous characters
     let sanitized = input
         .chars()
-        .filter(|c| c.is_alphanumeric() || c.is_whitespace() || ".,!?-()[]{}:;\"'".contains(*c))
+        .filter(|c| {
+            // Allow only safe characters for production
+            c.is_alphanumeric() || c.is_whitespace() || ".,!?-()[]{}:;\"'".contains(*c)
+        })
         .collect::<String>();
 
     if sanitized.is_empty() {
         return Err("String contains no valid characters after sanitization".to_string());
     }
 
+    // Additional security checks
+    if sanitized.contains("javascript:")
+        || sanitized.contains("data:")
+        || sanitized.contains("<script")
+        || sanitized.contains("onload=")
+        || sanitized.contains("onerror=")
+    {
+        return Err("String contains potentially dangerous content".to_string());
+    }
+
     Ok(sanitized)
 }
 
-// Enhanced secure random number generation
+//  random number generation
 fn generate_secure_random_id() -> String {
     use std::collections::hash_map::DefaultHasher;
     use std::hash::{Hash, Hasher};
@@ -242,12 +328,31 @@ fn generate_secure_random_id() -> String {
 }
 
 // BUSINESS MODEL - Photo Upload Limits
-#[derive(CandidType, Deserialize, Clone, PartialEq, Eq)]
+#[derive(CandidType, Deserialize, Clone, PartialEq, Eq, Debug)]
 pub enum SubscriptionTier {
     Free,
     Basic,
     Premium,
     Enterprise,
+}
+
+// Coupon system for subscription upgrades
+#[derive(CandidType, Deserialize, Clone, PartialEq, Eq)]
+pub enum CouponType {
+    Free,
+    Basic,
+    Premium,
+    Enterprise,
+}
+
+#[derive(CandidType, Deserialize, Clone)]
+pub struct Coupon {
+    pub code: String,
+    pub coupon_type: CouponType,
+    pub is_active: bool,
+    pub max_uses: u32,
+    pub current_uses: u32,
+    pub expires_at: u64, // Unix timestamp in nanoseconds
 }
 
 #[derive(CandidType, Deserialize, Clone)]
@@ -331,6 +436,10 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
         return Err("Session ownership mismatch".to_string());
     }
 
+    // Verify user ownership with caller principal
+    let caller_principal = caller();
+    verify_user_ownership(&sanitized_request.username, &caller_principal.to_string())?;
+
     // BUSINESS MODEL - Photo Upload Limit Validation
     let user_subscription = USER_SUBSCRIPTIONS.with(|subs| {
         subs.borrow()
@@ -388,7 +497,7 @@ pub fn generate_certificate(request: CreateCertificateRequest) -> Result<Certifi
         return Err("Photo count mismatch with uploaded photos".to_string());
     }
 
-    // 6. Generate certificate ID with enhanced randomness
+    // 6. Generate certificate ID with
     let certificate_id = format!(
         "CERT-{}-{}",
         sanitized_request.session_id.to_uppercase(),
@@ -644,11 +753,212 @@ pub fn get_subscription_limits(username: String) -> Option<SubscriptionLimits> {
     get_user_subscription(username).map(|tier| tier.get_limits())
 }
 
-// Initialize default subscriptions for testing
-pub fn initialize_default_subscriptions() {
+// Initialize new users with Free tier
+#[ic_cdk::update]
+pub fn initialize_user_subscription(username: String) -> Result<bool, String> {
     USER_SUBSCRIPTIONS.with(|subs| {
         let mut subscriptions = subs.borrow_mut();
-        subscriptions.insert("admin_user".to_string(), SubscriptionTier::Enterprise);
-        subscriptions.insert("test_user".to_string(), SubscriptionTier::Basic);
+
+        // Check if user already exists
+        if subscriptions.contains_key(&username) {
+            return Ok(false); // User already has subscription
+        }
+
+        // All new users start with Free tier
+        subscriptions.insert(username, SubscriptionTier::Free);
+        Ok(true)
+    })
+}
+
+// Update user subscription tier (for coupon redemption)
+#[ic_cdk::update]
+pub fn update_user_subscription(username: String, tier: SubscriptionTier) -> Result<bool, String> {
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let mut subscriptions = subs.borrow_mut();
+
+        // Update existing user or create new user
+        subscriptions.insert(username, tier);
+        Ok(true)
+    })
+}
+
+// Create new coupon (admin only)
+#[ic_cdk::update]
+pub fn create_coupon(
+    code: String,
+    coupon_type: CouponType,
+    max_uses: u32,
+    expires_at: u64,
+) -> Result<bool, String> {
+    // TODO, add proper admin authentication here
+    // For now, we'll allow coupon creation
+
+    let current_time = ic_cdk::api::time();
+
+    // Validate expiration date
+    if expires_at <= current_time {
+        return Err("Expiration date must be in the future".to_string());
+    }
+
+    COUPONS.with(|coupons| {
+        let mut coupon_map = coupons.borrow_mut();
+
+        // Check if coupon already exists
+        if coupon_map.contains_key(&code) {
+            return Err("Coupon code already exists".to_string());
+        }
+
+        coupon_map.insert(
+            code.clone(),
+            Coupon {
+                code: code.clone(),
+                coupon_type,
+                is_active: true,
+                max_uses,
+                current_uses: 0,
+                expires_at,
+            },
+        );
+
+        Ok(true)
+    })
+}
+
+// Initialize demo coupons for development/testing
+#[ic_cdk::update]
+pub fn initialize_demo_coupons() -> Result<bool, String> {
+    let current_time = ic_cdk::api::time();
+    let one_year = 365 * 24 * 60 * 60 * 1_000_000_000; // 1 year in nanoseconds
+
+    COUPONS.with(|coupons| {
+        let mut coupon_map = coupons.borrow_mut();
+
+        // Demo Enterprise coupon - unlimited uses, expires in 1 year
+        coupon_map.insert(
+            "DEMO-ENTERPRISE-2025".to_string(),
+            Coupon {
+                code: "DEMO-ENTERPRISE-2025".to_string(),
+                coupon_type: CouponType::Enterprise,
+                is_active: true,
+                max_uses: 999999, // Unlimited for demo
+                current_uses: 0,
+                expires_at: current_time + one_year,
+            },
+        );
+
+        // Demo Basic coupon - limited uses, expires in 1 year
+        coupon_map.insert(
+            "DEMO-BASIC-2025".to_string(),
+            Coupon {
+                code: "DEMO-BASIC-2025".to_string(),
+                coupon_type: CouponType::Basic,
+                is_active: true,
+                max_uses: 100,
+                current_uses: 0,
+                expires_at: current_time + one_year,
+            },
+        );
+
+        // Demo Premium coupon - limited uses, expires in 1 year
+        coupon_map.insert(
+            "DEMO-PREMIUM-2025".to_string(),
+            Coupon {
+                code: "DEMO-PREMIUM-2025".to_string(),
+                coupon_type: CouponType::Premium,
+                is_active: true,
+                max_uses: 50,
+                current_uses: 0,
+                expires_at: current_time + one_year,
+            },
+        );
+
+        Ok(true)
+    })
+}
+
+// Redeem coupon for subscription upgrade
+#[ic_cdk::update]
+pub fn redeem_coupon(username: String, coupon_code: String) -> Result<bool, String> {
+    // 1. Authentication
+    authenticate_user()?;
+
+    // 2. Check if coupon exists and is valid
+    let coupon = COUPONS.with(|coupons| {
+        let coupon_map = coupons.borrow();
+        coupon_map.get(&coupon_code).cloned()
     });
+
+    if coupon.is_none() {
+        return Err("Invalid coupon code".to_string());
+    }
+
+    let coupon = coupon.unwrap();
+
+    // 3. Validate coupon
+    if !coupon.is_active {
+        return Err("Coupon is not active".to_string());
+    }
+
+    let current_time = ic_cdk::api::time();
+    if current_time > coupon.expires_at {
+        return Err("Coupon has expired".to_string());
+    }
+
+    if coupon.current_uses >= coupon.max_uses {
+        return Err("Coupon usage limit exceeded".to_string());
+    }
+
+    // 4. Convert coupon type to subscription tier
+    let subscription_tier = match coupon.coupon_type {
+        CouponType::Free => SubscriptionTier::Free,
+        CouponType::Basic => SubscriptionTier::Basic,
+        CouponType::Premium => SubscriptionTier::Premium,
+        CouponType::Enterprise => SubscriptionTier::Enterprise,
+    };
+
+    // 5. Update user subscription
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let mut subscriptions = subs.borrow_mut();
+        subscriptions.insert(username.clone(), subscription_tier.clone());
+    });
+
+    // 6. Update coupon usage count
+    COUPONS.with(|coupons| {
+        let mut coupon_map = coupons.borrow_mut();
+        if let Some(coupon) = coupon_map.get_mut(&coupon_code) {
+            coupon.current_uses += 1;
+        }
+    });
+
+    Ok(true)
+}
+
+// Get available coupons (for admin/debug purposes)
+#[ic_cdk::query]
+pub fn get_available_coupons() -> Vec<Coupon> {
+    COUPONS.with(|coupons| {
+        let coupon_map = coupons.borrow();
+        coupon_map.values().cloned().collect()
+    })
+}
+
+// Debug function to check user subscription
+#[ic_cdk::query]
+pub fn get_user_subscription_debug(username: String) -> Option<SubscriptionTier> {
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let subscriptions = subs.borrow();
+        subscriptions.get(&username).cloned()
+    })
+}
+
+// Debug function to check all subscriptions
+#[ic_cdk::query]
+pub fn get_all_subscriptions_debug() -> Vec<(String, SubscriptionTier)> {
+    USER_SUBSCRIPTIONS.with(|subs| {
+        let subscriptions = subs.borrow();
+        subscriptions
+            .iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect()
+    })
 }

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { useToastContext } from "../contexts/ToastContext";
+import { useSubscription } from "../contexts/SubscriptionContext";
 import { backendService } from "../services/backendService";
 import {
   User,
@@ -18,6 +19,13 @@ import {
   Monitor,
   AlertTriangle,
   Edit3,
+  Crown,
+  Users,
+  Camera,
+  Sparkles,
+  CreditCard,
+  Gift,
+  ArrowRight,
 } from "lucide-react";
 
 interface User {
@@ -33,6 +41,12 @@ const SettingsPage: React.FC = () => {
   const { user, logout, updateUser } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { success, error, warning, info } = useToastContext();
+  const {
+    currentTier,
+    subscriptionLimits,
+    redeemCoupon,
+    isLoading: isRedeeming,
+  } = useSubscription();
 
   // Edit states
   const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -47,6 +61,10 @@ const SettingsPage: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // Coupon states
+  const [couponCode, setCouponCode] = useState<string>("");
+  const [couponMessage, setCouponMessage] = useState<string>("");
 
   const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -131,6 +149,59 @@ const SettingsPage: React.FC = () => {
         console.error("Failed to delete account:", err);
         error(t("account_deletion_failed"));
       }
+    }
+  };
+
+  const handleRedeemCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponMessage(t("subscription.enter_coupon"));
+      return;
+    }
+
+    setCouponMessage("");
+    try {
+      const success = await redeemCoupon(couponCode);
+      if (success) {
+        setCouponMessage(t("subscription.coupon_redeemed"));
+        setCouponCode("");
+        info(t("subscription.coupon_redeemed"));
+      } else {
+        setCouponMessage(t("subscription.invalid_coupon"));
+        warning(t("subscription.invalid_coupon"));
+      }
+    } catch (err) {
+      setCouponMessage(t("subscription.invalid_coupon"));
+      error(t("subscription.invalid_coupon"));
+    }
+  };
+
+  const getSubscriptionIcon = (tier: string) => {
+    switch (tier) {
+      case "Free":
+        return Users;
+      case "Basic":
+        return Camera;
+      case "Premium":
+        return Sparkles;
+      case "Enterprise":
+        return Crown;
+      default:
+        return Users;
+    }
+  };
+
+  const getSubscriptionColor = (tier: string) => {
+    switch (tier) {
+      case "Free":
+        return "var(--color-text-secondary)";
+      case "Basic":
+        return "var(--color-info)";
+      case "Premium":
+        return "var(--color-accent)";
+      case "Enterprise":
+        return "var(--color-warning)";
+      default:
+        return "var(--color-text-secondary)";
     }
   };
 
@@ -448,6 +519,159 @@ const SettingsPage: React.FC = () => {
                   >
                     <Globe size={16} />
                     <span>Bahasa Indonesia</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Subscription Section */}
+          <div className="dashboard__section">
+            <div className="settings-page__section">
+              <div className="settings-page__section-header">
+                <Crown className="settings-page__section-icon" />
+                <h2 className="settings-page__section-title">
+                  {t("subscription.title")}
+                </h2>
+              </div>
+              <p className="settings-page__section-description">
+                {t("subscription.description")}
+              </p>
+
+              {/* Current Plan Display */}
+              <div className="settings-page__field">
+                <div className="settings-page__field-header">
+                  <h3 className="settings-page__field-title">
+                    {t("subscription.current_plan")}
+                  </h3>
+                  <div className="settings-page__plan-badge">
+                    {(() => {
+                      const Icon = getSubscriptionIcon(currentTier);
+                      return (
+                        <Icon
+                          size={16}
+                          style={{ color: getSubscriptionColor(currentTier) }}
+                        />
+                      );
+                    })()}
+                    <span>{currentTier}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Plan Details */}
+              <div className="settings-page__field">
+                <div className="settings-page__field-header">
+                  <h3 className="settings-page__field-title">
+                    {t("subscription.plan_details")}
+                  </h3>
+                </div>
+                <div className="settings-page__plan-details">
+                  <div className="settings-page__plan-feature">
+                    <span className="settings-page__plan-feature-label">
+                      {t("subscription.max_photos")}:
+                    </span>
+                    <span className="settings-page__plan-feature-value">
+                      {subscriptionLimits.max_photos === 1000
+                        ? t("subscription.unlimited")
+                        : subscriptionLimits.max_photos}{" "}
+                      {t("subscription.photos_per_session")}
+                    </span>
+                  </div>
+                  <div className="settings-page__plan-feature">
+                    <span className="settings-page__plan-feature-label">
+                      {t("subscription.max_file_size")}:
+                    </span>
+                    <span className="settings-page__plan-feature-value">
+                      {subscriptionLimits.max_file_size_mb}{" "}
+                      {t("subscription.mb")} {t("subscription.file_size_limit")}
+                    </span>
+                  </div>
+                  <div className="settings-page__plan-feature">
+                    <span className="settings-page__plan-feature-label">
+                      {t("subscription.nft_generation")}:
+                    </span>
+                    <span className="settings-page__plan-feature-value">
+                      {subscriptionLimits.can_generate_nft
+                        ? t("subscription.available")
+                        : t("subscription.not_available")}
+                    </span>
+                  </div>
+                  <div className="settings-page__plan-feature">
+                    <span className="settings-page__plan-feature-label">
+                      {t("subscription.priority_support")}:
+                    </span>
+                    <span className="settings-page__plan-feature-value">
+                      {subscriptionLimits.priority_support
+                        ? t("subscription.available")
+                        : t("subscription.not_available")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Coupon Redemption */}
+              <div className="settings-page__field">
+                <div className="settings-page__field-header">
+                  <h3 className="settings-page__field-title">
+                    {t("subscription.redeem_coupon")}
+                  </h3>
+                </div>
+                <div className="settings-page__coupon-section">
+                  <div className="settings-page__input-group">
+                    <label className="settings-page__label">
+                      {t("subscription.coupon_code")}
+                    </label>
+                    <div className="settings-page__coupon-input-wrapper">
+                      <input
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                        className="settings-page__input"
+                        placeholder={t("subscription.enter_coupon")}
+                      />
+                      <button
+                        onClick={handleRedeemCoupon}
+                        disabled={!couponCode.trim() || isRedeeming}
+                        className="settings-page__button settings-page__button--primary"
+                      >
+                        <Gift size={16} />
+                        {isRedeeming
+                          ? t("subscription.redeeming")
+                          : t("subscription.redeem")}
+                      </button>
+                    </div>
+                    {couponMessage && (
+                      <div
+                        className={`settings-page__coupon-message ${
+                          couponMessage.includes("successfully")
+                            ? "settings-page__coupon-message--success"
+                            : "settings-page__coupon-message--error"
+                        }`}
+                      >
+                        {couponMessage}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Upgrade Plan Button */}
+              <div className="settings-page__field">
+                <div className="settings-page__button-group">
+                  <button
+                    onClick={() => navigate("/subscription")}
+                    className="settings-page__button settings-page__button--primary"
+                  >
+                    <ArrowRight size={16} />
+                    {t("subscription.upgrade_plan")}
+                  </button>
+                  <button
+                    onClick={() => navigate("/subscription")}
+                    className="settings-page__button settings-page__button--secondary"
+                  >
+                    <CreditCard size={16} />
+                    {t("subscription.manage_billing")}
                   </button>
                 </div>
               </div>
