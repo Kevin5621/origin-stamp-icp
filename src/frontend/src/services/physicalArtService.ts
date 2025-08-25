@@ -112,7 +112,7 @@ export class PhysicalArtService {
       const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
       const fileKey = `physical-art/${sessionId}/${timestamp}-${sanitizedFileName}`;
 
-      console.log(`[S3Upload] Generated file key: ${fileKey}`);
+      // Generated file key for S3 upload
 
       // Validate S3 configuration
       if (
@@ -158,13 +158,13 @@ export class PhysicalArtService {
           );
         }
       } else {
-        console.log(`[S3Upload] Using AWS S3 default endpoint`);
+        // Using AWS S3 default endpoint
       }
 
       const s3Client = new S3Client(clientConfig);
 
       // Convert file to ArrayBuffer for upload
-      console.log(`[S3Upload] Converting file to buffer...`);
+      // Converting file to buffer
       const fileBuffer = await file.arrayBuffer();
 
       // Create PutObject command
@@ -183,10 +183,10 @@ export class PhysicalArtService {
       });
 
       // Step 1: Upload to S3 first
-      console.log(`[S3Upload] Uploading to S3...`);
+      // Uploading to S3
       try {
         await s3Client.send(putCommand);
-        console.log(`[S3Upload] S3 upload successful`);
+        // S3 upload successful
       } catch (s3Error) {
         console.error(`[S3Upload] S3 upload failed:`, s3Error);
         throw new Error(
@@ -216,10 +216,10 @@ export class PhysicalArtService {
         fileUrl = `https://${s3Config.bucket_name}.s3.${s3Config.region}.amazonaws.com/${fileKey}`;
       }
 
-      console.log(`[S3Upload] Generated file URL: ${fileUrl}`);
+      // Generated file URL for backend record
 
       // Step 3: Record the uploaded file in the session (only after S3 upload success)
-      console.log(`[S3Upload] Recording upload in backend...`);
+      // Recording upload in backend
       try {
         const recordResult = await backend.upload_photo_to_session(
           sessionId,
@@ -227,7 +227,7 @@ export class PhysicalArtService {
         );
 
         if ("Ok" in recordResult && recordResult.Ok) {
-          console.log(`[S3Upload] Backend record successful`);
+          // Backend record successful
           return {
             success: true,
             message: "Photo uploaded successfully",
@@ -251,7 +251,7 @@ export class PhysicalArtService {
               Key: fileKey,
             });
             await s3Client.send(deleteCommand);
-            console.log(`[S3Upload] S3 cleanup successful`);
+            // S3 cleanup successful
           } catch (cleanupError) {
             console.error(`[S3Upload] S3 cleanup failed:`, cleanupError);
             // Don't throw here, just log the cleanup failure
@@ -503,7 +503,7 @@ export class PhysicalArtService {
       // Check if S3 is already configured
       const isConfigured = await this.isS3Configured();
       if (isConfigured) {
-        console.log("S3 is already configured");
+        // S3 is already configured
         return true;
       }
 
@@ -558,16 +558,16 @@ export class PhysicalArtService {
   private static async getS3ConfigFromBackend(): Promise<any | null> {
     try {
       const result = await backend.get_s3_config();
-      console.log("[S3Config] Raw result from backend:", result);
+      // Raw result from backend
 
       if (!result) {
-        console.log("[S3Config] No S3 configuration found");
+        // No S3 configuration found
         return null;
       }
 
       // Handle the optional structure from backend
       const config = result.length > 0 ? result[0] : result;
-      console.log("[S3Config] Parsed config:", config);
+      // Parsed S3 configuration
 
       return config;
     } catch (error) {

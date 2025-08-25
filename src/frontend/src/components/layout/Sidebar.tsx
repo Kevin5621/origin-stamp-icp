@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
   Settings,
-  BarChart3,
-  Award,
   ChevronLeft,
   ChevronRight,
   Grid,
@@ -13,9 +11,13 @@ import {
   Palette,
   Activity,
   Crown,
+  Users,
+  Camera,
+  Sparkles,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 
 interface SidebarProps {
   onSectionChange?: (section: string) => void;
@@ -34,30 +36,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
 
-  // Subscription state
-  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
+  const { currentTier } = useSubscription();
 
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
   const isCollapsed = externalIsCollapsed ?? internalIsCollapsed;
-
-  // Load user subscription data
-  useEffect(() => {
-    const loadSubscriptionData = () => {
-      if (!user?.username) return;
-
-      // TODO: Replace with real backend call when module resolution is fixed
-      // For now, use mock data based on username
-      if (user.username === "admin_user") {
-        setSubscriptionTier("Enterprise");
-      } else if (user.username === "test_user") {
-        setSubscriptionTier("Basic");
-      } else {
-        setSubscriptionTier("Free");
-      }
-    };
-
-    loadSubscriptionData();
-  }, [user?.username]);
 
   const handleToggleCollapse = () => {
     const newCollapsedState = !isCollapsed;
@@ -97,7 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: "stats",
-          icon: BarChart3,
+          icon: Activity,
           label: t("sidebar.stats"),
           path: "/marketplace/stats",
         },
@@ -116,18 +98,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         icon: Palette,
         label: t("sidebar.session"),
         path: "/session",
-      },
-      {
-        id: "certificates",
-        icon: Award,
-        label: t("sidebar.certificates"),
-        path: "/certificates",
-      },
-      {
-        id: "analytics",
-        icon: BarChart3,
-        label: t("sidebar.analytics"),
-        path: "/analytics",
       },
     ];
   };
@@ -216,6 +186,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return variant === "marketplace" ? "/marketplace" : "/";
   };
 
+  const getSubscriptionIcon = (tier: string) => {
+    switch (tier) {
+      case "Free":
+        return Users;
+      case "Basic":
+        return Camera;
+      case "Premium":
+        return Sparkles;
+      case "Enterprise":
+        return Crown;
+      default:
+        return Users;
+    }
+  };
+
+  const getSubscriptionColor = (tier: string) => {
+    switch (tier) {
+      case "Free":
+        return "var(--color-text-secondary)";
+      case "Basic":
+        return "var(--color-info)";
+      case "Premium":
+        return "var(--color-accent)";
+      case "Enterprise":
+        return "var(--color-warning)";
+      default:
+        return "var(--color-text-secondary)";
+    }
+  };
+
   return (
     <nav
       className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""} sidebar--${variant}`}
@@ -263,8 +263,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             {/* Subscription Tier Badge */}
             <div className="sidebar__tier-badge">
-              <Crown size={12} className="sidebar__tier-icon" />
-              <span className="sidebar__tier-text">{subscriptionTier}</span>
+              {(() => {
+                const Icon = getSubscriptionIcon(currentTier);
+                return (
+                  <Icon
+                    size={12}
+                    className="sidebar__tier-icon"
+                    style={{ color: getSubscriptionColor(currentTier) }}
+                  />
+                );
+              })()}
+              <span className="sidebar__tier-text">{currentTier}</span>
             </div>
           </div>
         )}

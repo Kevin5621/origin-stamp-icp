@@ -5,8 +5,7 @@ export { default as DashboardPage } from "./dashboard/DashboardPage";
 export { default as SessionPage } from "./dashboard/SessionPage";
 export { default as FinalizationPage } from "./dashboard/FinalizationPage";
 export { default as VerificationPage } from "./dashboard/VerificationPage";
-export { default as AnalyticsDetailPage } from "./dashboard/AnalyticsDetailPage";
-export { default as CertificateDetailPage } from "./dashboard/CertificateDetailPage";
+
 export { default as KaryaDetailPage } from "./dashboard/KaryaDetailPage";
 
 // Error pages

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
   Camera,
@@ -16,9 +16,13 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCcw,
+  Crown,
+  Star,
+  ArrowRight,
 } from "lucide-react";
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 import PhysicalArtService from "../../services/physicalArtService";
 import CertificateService from "../../services/certificateService";
 
@@ -53,6 +57,7 @@ interface SessionData {
 const SessionRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
+  const location = useLocation();
   const { addToast } = useToastContext();
   const { user } = useAuth();
   const { t } = useTranslation("session");
@@ -79,12 +84,12 @@ const SessionRecordPage: React.FC = () => {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<FileList | null>(null);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const cancelRef = useRef<boolean>(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
-  // Subscription state for upload limits
-  const [subscriptionTier, setSubscriptionTier] = useState<string>("Free");
-  const [subscriptionLimits, setSubscriptionLimits] = useState<any>(null);
+  // Subscription state from context
+  const { currentTier, subscriptionLimits } = useSubscription();
 
   // Reset progress states when selectedFiles changes
   useEffect(() => {
@@ -100,41 +105,6 @@ const SessionRecordPage: React.FC = () => {
   }, [selectedFiles]);
 
   // Load subscription data for upload limits
-  useEffect(() => {
-    const loadSubscriptionData = () => {
-      if (!user?.username) return;
-
-      // TODO: Replace with real backend call when module resolution is fixed
-      // For now, use mock data based on username
-      if (user.username === "admin_user") {
-        setSubscriptionTier("Enterprise");
-        setSubscriptionLimits({
-          max_photos: 100,
-          max_file_size_mb: 50,
-          can_generate_nft: true,
-          priority_support: true,
-        });
-      } else if (user.username === "test_user") {
-        setSubscriptionTier("Basic");
-        setSubscriptionLimits({
-          max_photos: 20,
-          max_file_size_mb: 25,
-          can_generate_nft: true,
-          priority_support: false,
-        });
-      } else {
-        setSubscriptionTier("Free");
-        setSubscriptionLimits({
-          max_photos: 5,
-          max_file_size_mb: 10,
-          can_generate_nft: false,
-          priority_support: false,
-        });
-      }
-    };
-
-    loadSubscriptionData();
-  }, [user?.username]);
 
   // Load session data from backend
   useEffect(() => {
@@ -290,6 +260,18 @@ const SessionRecordPage: React.FC = () => {
   }, [session, sessionId]);
 
   const handleFileSelect = (files: FileList) => {
+    // PRODUCTION: Input validation
+    if (!files || files.length === 0) {
+      addToast("error", "No files selected");
+      return;
+    }
+
+    // PRODUCTION: File count validation
+    if (files.length > 100) {
+      addToast("error", "Maximum 100 files allowed per upload");
+      return;
+    }
+
     // Reset progress states when new files are selected
     setUploadProgress(0);
     setUploadedFiles(0);
@@ -314,7 +296,7 @@ const SessionRecordPage: React.FC = () => {
             current: currentPhotoCount,
             limit: subscriptionLimits.max_photos,
             remaining: remainingSlots,
-            tier: subscriptionTier,
+            tier: currentTier,
           }),
         );
         return;
@@ -361,7 +343,7 @@ const SessionRecordPage: React.FC = () => {
             filename: file.name,
             current: (file.size / (1024 * 1024)).toFixed(1),
             limit: maxFileSizeMB,
-            tier: subscriptionTier,
+            tier: currentTier,
           }),
         );
         return false;
@@ -465,7 +447,6 @@ const SessionRecordPage: React.FC = () => {
 
     // Prevent multiple uploads
     if (isUploading || uploadInProgress) {
-      console.log("Upload already in progress, ignoring new request");
       addToast("warning", t("session.upload_already_in_progress_wait"));
       return;
     }
@@ -494,8 +475,7 @@ const SessionRecordPage: React.FC = () => {
 
     const filesArray = Array.from(filesToUpload);
 
-    console.log("Starting upload process...");
-    console.log("Files to upload:", filesArray.length);
+    // Starting upload process
 
     addToast(
       "info",
@@ -509,7 +489,6 @@ const SessionRecordPage: React.FC = () => {
       for (let i = 0; i < filesArray.length; i++) {
         // Check for cancellation before processing file
         if (cancelRef.current) {
-          console.log("Upload cancelled at file", i);
           addToast("warning", t("session.upload_cancelled_by_user_message"));
           return; // Exit immediately and discard all files
         }
@@ -531,7 +510,6 @@ const SessionRecordPage: React.FC = () => {
         }
 
         // Add file to photos array only if not cancelled
-        console.log(t("session.adding_file", { filename: file.name }));
         newPhotos.push({
           id: `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
           filename: file.name,
@@ -552,11 +530,7 @@ const SessionRecordPage: React.FC = () => {
 
       // Update session with new photos only if not cancelled
       if (!cancelRef.current && newPhotos.length > 0) {
-        console.log(
-          t("session.updating_session_with_photos", {
-            count: newPhotos.length,
-          }),
-        );
+        // Updating session with new photos
         setSession((prev) => {
           if (!prev) return null;
           return {
@@ -570,10 +544,10 @@ const SessionRecordPage: React.FC = () => {
           t("session.files_uploaded", { count: newPhotos.length }),
         );
       } else {
-        console.log(t("session.session_not_updated_cancelled"));
+        // Session not updated due to cancellation
       }
     } catch (error) {
-      console.log("Upload error:", error);
+      // Upload error occurred
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
       addToast("error", t("session.upload_error", { error: errorMessage }));
@@ -600,6 +574,14 @@ const SessionRecordPage: React.FC = () => {
 
   const handleCompleteSessionAndGenerateNFT = async () => {
     if (!session || !user) return;
+
+    // Check authentication status for debugging
+
+    // Check subscription tier for NFT generation
+    if (currentTier === "Free") {
+      setShowSubscriptionModal(true);
+      return;
+    }
 
     // Validate session data before proceeding
     if (!session.title || !session.description || session.photos.length === 0) {
@@ -696,12 +678,39 @@ const SessionRecordPage: React.FC = () => {
       console.error("Failed to generate certificate:", error);
       setIsGeneratingNFT(false);
 
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error occurred";
+      let errorMessage = "Unknown error occurred";
+      let shouldRedirectToLogin = false;
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        // Check if it's an authentication error
+        if (
+          error.name === "AuthenticationError" ||
+          error.message.includes("Authentication required") ||
+          error.message.includes("no valid principal")
+        ) {
+          shouldRedirectToLogin = true;
+          errorMessage = t("session.authentication_required_error");
+        }
+      }
+
       addToast(
         "error",
         `${t("session.certificate_generation_failed")}: ${errorMessage}`,
       );
+
+      // Redirect to login if authentication error
+      if (shouldRedirectToLogin) {
+        setTimeout(() => {
+          navigate("/login", {
+            state: {
+              from: location.pathname,
+              message: t("session.please_login_first"),
+            },
+          });
+        }, 2000); // Wait 2 seconds before redirecting
+      }
     }
   };
 
@@ -848,9 +857,9 @@ const SessionRecordPage: React.FC = () => {
                       {t("subscription.your_tier")}:
                     </span>
                     <span
-                      className={`tier-value tier-value--${subscriptionTier.toLowerCase()}`}
+                      className={`tier-value tier-value--${currentTier.toLowerCase()}`}
                     >
-                      {subscriptionTier}
+                      {currentTier}
                     </span>
                   </div>
                   <div className="subscription-limits">
@@ -863,7 +872,7 @@ const SessionRecordPage: React.FC = () => {
                       {subscriptionLimits.max_file_size_mb}MB
                     </span>
                   </div>
-                  {subscriptionTier === "Free" && (
+                  {currentTier === "Free" && (
                     <div className="upgrade-prompt">
                       <span className="upgrade-text">
                         {t("subscription.upgrade_for_more_photos")}
@@ -982,16 +991,7 @@ const SessionRecordPage: React.FC = () => {
                     <button
                       className="btn btn--secondary"
                       onClick={() => {
-                        console.log("Cancel button clicked");
-
                         if (isUploading || uploadInProgress) {
-                          console.log("Cancelling upload...");
-                          console.log(
-                            "Current state - isUploading:",
-                            isUploading,
-                            "uploadInProgress:",
-                            uploadInProgress,
-                          );
                           setShouldCancelUpload(true);
                           setIsCancelling(true);
                           cancelRef.current = true;
@@ -1317,6 +1317,85 @@ const SessionRecordPage: React.FC = () => {
               >
                 <Upload size={14} />
                 {t("session.upload_to_blockchain")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Subscription Upgrade Modal for Free Users */}
+      {showSubscriptionModal && (
+        <div
+          className="photo-modal-overlay"
+          onClick={() => setShowSubscriptionModal(false)}
+        >
+          <div
+            className="photo-modal-content subscription-upgrade-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>Upgrade Required</h2>
+              <button
+                className="modal-close-btn"
+                onClick={() => setShowSubscriptionModal(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="subscription-upgrade-content">
+                <div className="upgrade-icon">
+                  <Crown size={48} />
+                </div>
+                <div className="upgrade-text">
+                  <h3>NFT Generation Not Available</h3>
+                  <p>
+                    Your current Free tier doesn't include NFT generation.
+                    Upgrade to Basic tier or higher to unlock this feature and
+                    more!
+                  </p>
+
+                  <div className="tier-benefits">
+                    <div className="benefit-item">
+                      <Star size={16} />
+                      <span>
+                        Basic Tier: 20 photos, NFT generation, $9.99/month
+                      </span>
+                    </div>
+                    <div className="benefit-item">
+                      <Star size={16} />
+                      <span>
+                        Premium Tier: 100 photos, Priority support, $29.99/month
+                      </span>
+                    </div>
+                    <div className="benefit-item">
+                      <Star size={16} />
+                      <span>
+                        Enterprise Tier: Unlimited, All features, $99.99/month
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn btn--secondary"
+                onClick={() => setShowSubscriptionModal(false)}
+              >
+                Maybe Later
+              </button>
+              <button
+                className="btn btn--primary"
+                onClick={() => {
+                  setShowSubscriptionModal(false);
+                  navigate("/subscription");
+                }}
+              >
+                <ArrowRight size={14} />
+                Upgrade Now
               </button>
             </div>
           </div>

@@ -4,13 +4,15 @@ import DashboardStats from "./DashboardStats";
 import DashboardChart from "./DashboardChart";
 import DashboardTable from "./DashboardTable";
 import DashboardLoader from "./DashboardLoader";
-import { dashboardService } from "../../services/dashboardService";
+import {
+  dashboardService,
+  DashboardStatsData,
+} from "../../services/dashboardService";
 
 interface DashboardData {
   totalSessions: number;
   totalCertificates: number;
   totalRevenue: number;
-  activeUsers: number;
   recentSessions: Array<{
     id: string;
     title: string;
@@ -26,15 +28,25 @@ interface DashboardData {
 const Dashboard: React.FC = () => {
   const { t } = useTranslation("dashboard");
   const [data, setData] = useState<DashboardData | null>(null);
+  const [stats, setStats] = useState<DashboardStatsData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Initial data fetch
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const dashboardData = await dashboardService.getDashboardData();
+        setError(null);
+
+        // Fetch both dashboard data and stats
+        const [dashboardData, dashboardStats] = await Promise.all([
+          dashboardService.getDashboardData(),
+          dashboardService.getDashboardStats(),
+        ]);
+
         setData(dashboardData);
+        setStats(dashboardStats);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to load dashboard",
@@ -45,7 +57,35 @@ const Dashboard: React.FC = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, []); // Empty dependency array for initial fetch only
+
+  // Realtime polling for dashboard metrics (separate effect)
+  useEffect(() => {
+    if (!data) return; // Only start polling when we have initial data
+
+    const interval = setInterval(async () => {
+      try {
+        const realtimeMetrics = await dashboardService.getRealtimeMetrics();
+        const realtimeStats = await dashboardService.getDashboardStats();
+
+        setData((prevData) => {
+          if (!prevData) return prevData;
+          return {
+            ...prevData,
+            totalSessions: realtimeMetrics.totalSessions,
+            totalCertificates: realtimeMetrics.totalCertificates,
+          };
+        });
+
+        setStats(realtimeStats);
+      } catch (err) {
+        console.error("Error updating realtime metrics:", err);
+        // Don't show error to user for realtime updates
+      }
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [data]); // Only depend on data existence, not its values
 
   if (loading) {
     return <DashboardLoader />;
@@ -91,36 +131,16 @@ const Dashboard: React.FC = () => {
         <div className="dashboard__main">
           <div className="dashboard__section">
             <DashboardStats
-              stats={[
-                {
-                  title: t("total_sessions"),
-                  value: data.totalSessions,
-                  icon: "session",
-                  trend: "+12%",
-                  trendType: "positive" as const,
-                },
-                {
-                  title: t("total_certificates"),
-                  value: data.totalCertificates,
-                  icon: "certificate",
-                  trend: "+8%",
-                  trendType: "positive" as const,
-                },
-                {
-                  title: t("total_revenue"),
-                  value: `$${data.totalRevenue.toLocaleString()}`,
-                  icon: "revenue",
-                  trend: "+15%",
-                  trendType: "positive" as const,
-                },
-                {
-                  title: t("active_users"),
-                  value: data.activeUsers,
-                  icon: "users",
-                  trend: "+5%",
-                  trendType: "positive" as const,
-                },
-              ]}
+              stats={stats.map((stat) => ({
+                title: stat.title,
+                value: stat.value,
+                icon: stat.icon,
+                trend:
+                  stat.trend.percentage > 0
+                    ? `${stat.trend.type === "positive" ? "+" : "-"}${stat.trend.percentage}%`
+                    : undefined,
+                trendType: stat.trend.type,
+              }))}
             />
           </div>
 
