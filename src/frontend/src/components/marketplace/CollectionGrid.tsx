@@ -33,7 +33,7 @@ export const CollectionGrid: React.FC<CollectionGridProps> = ({
         title={t("no_collections_title")}
         description={t("no_collections_description")}
         icon={
-          <svg viewBox="0 0 24 24" fill="none">
+          <svg viewBox="0 0 24 24" fill="none" width="48" height="48">
             <path
               d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
               stroke="currentColor"
@@ -53,12 +53,17 @@ export const CollectionGrid: React.FC<CollectionGridProps> = ({
   }
 
   return (
-    <div className={`collection-grid ${className}`}>
-      {collections.map((collection) => (
+    <div
+      className={`collection-grid ${className}`}
+      role="grid"
+      aria-label="Koleksi NFT"
+    >
+      {collections.map((collection, index) => (
         <CollectionCard
           key={collection.id}
           collection={collection}
           onClick={onCollectionClick}
+          aria-label={`Koleksi ${index + 1}: ${collection.title}`}
         />
       ))}
     </div>

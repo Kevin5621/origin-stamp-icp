@@ -76,7 +76,11 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
       <div className="artwork-card-modern__image">
         {artwork.thumbnail ? (
           <>
-            <img src={artwork.thumbnail} alt={artwork.name} />
+            <img
+              src={artwork.thumbnail}
+              alt={artwork.name}
+              className="thumbnail"
+            />
             <div className="image-overlay"></div>
           </>
         ) : (

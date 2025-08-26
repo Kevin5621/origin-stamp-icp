@@ -83,7 +83,7 @@ export function GoogleLoginButton({
           `;
 
           customButton.innerHTML = `
-            <img src="/assets/google-logo.svg" alt="" class="auth-btn-icon" aria-hidden="true" />
+            <img src="/assets/google-logo.svg" alt="" className="auth-btn-icon" aria-hidden="true" />
             <span>Masuk dengan Google</span>
           `;
 

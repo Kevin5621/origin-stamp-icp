@@ -28,7 +28,7 @@ interface StatCard {
   change: number;
   period: string;
   icon: React.ReactNode;
-  color: string;
+  colorClass: string;
 }
 
 interface TopCollection {
@@ -78,9 +78,8 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "ICP",
       change: 12.3,
       period: t("stats.this_month", "this month"),
-      icon: <DollarSign className="h-6 w-6" />,
-      color:
-        "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400",
+      icon: <DollarSign size={14} />,
+      colorClass: "success",
     },
     {
       id: "sales",
@@ -89,8 +88,8 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "Items",
       change: 8.7,
       period: t("stats.this_month", "this month"),
-      icon: <ShoppingCart className="h-6 w-6" />,
-      color: "bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
+      icon: <ShoppingCart size={14} />,
+      colorClass: "info",
     },
     {
       id: "users",
@@ -99,9 +98,8 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "Users",
       change: 15.2,
       period: t("stats.this_month", "this month"),
-      icon: <Users className="h-6 w-6" />,
-      color:
-        "bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400",
+      icon: <Users size={14} />,
+      colorClass: "purple",
     },
     {
       id: "price",
@@ -110,9 +108,8 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "ICP",
       change: -3.1,
       period: t("stats.this_month", "this month"),
-      icon: <Target className="h-6 w-6" />,
-      color:
-        "bg-orange-100 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400",
+      icon: <Target size={14} />,
+      colorClass: "warning",
     },
     {
       id: "views",
@@ -121,9 +118,8 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "Views",
       change: 22.8,
       period: t("stats.this_month", "this month"),
-      icon: <Eye className="h-6 w-6" />,
-      color:
-        "bg-indigo-100 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400",
+      icon: <Eye size={14} />,
+      colorClass: "primary",
     },
     {
       id: "conversion",
@@ -132,9 +128,8 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "%",
       change: 5.4,
       period: t("stats.this_month", "this month"),
-      icon: <Zap className="h-6 w-6" />,
-      color:
-        "bg-yellow-100 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400",
+      icon: <Zap size={14} />,
+      colorClass: "accent",
     },
   ];
 
@@ -218,7 +213,7 @@ export const MarketplaceStatsPage: React.FC = () => {
   ];
 
   const getActivityIcon = (type: RecentActivity["type"]) => {
-    const iconProps = { size: 16, className: "text-current" };
+    const iconProps = { size: 12 };
 
     switch (type) {
       case "sale":
@@ -234,64 +229,39 @@ export const MarketplaceStatsPage: React.FC = () => {
     }
   };
 
-  const getActivityColor = (type: RecentActivity["type"]) => {
+  const getActivityColorClass = (type: RecentActivity["type"]) => {
     switch (type) {
       case "sale":
-        return "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400";
+        return "sale";
       case "listing":
-        return "bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400";
+        return "listing";
       case "user_joined":
-        return "bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400";
+        return "user-joined";
       case "bid":
-        return "bg-orange-100 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400";
+        return "bid";
       default:
-        return "bg-gray-100 text-gray-600 dark:bg-gray-900/20 dark:text-gray-400";
+        return "listing";
     }
   };
 
   if (loading) {
     return (
       <AppLayout variant="marketplace">
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <div className="animate-pulse">
-              <div className="mb-4 h-8 w-1/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-              <div className="mb-8 h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-              <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="marketplace-stats">
+          <div className="marketplace-stats__container">
+            <div className="marketplace-stats__loading">
+              <div className="skeleton skeleton-title"></div>
+              <div className="skeleton skeleton-subtitle"></div>
+
+              <div className="marketplace-stats__metrics-grid">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div
-                    key={i}
-                    className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
-                  >
-                    <div className="mb-4 h-4 w-1/2 rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="mb-2 h-8 w-3/4 rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="h-3 w-1/2 rounded bg-gray-200 dark:bg-gray-700"></div>
-                  </div>
+                  <div key={i} className="skeleton skeleton-card"></div>
                 ))}
               </div>
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-                  <div className="mb-4 h-6 w-1/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-                  <div className="space-y-4">
-                    {[1, 2, 3, 4, 5].map((j) => (
-                      <div
-                        key={j}
-                        className="h-4 rounded bg-gray-200 dark:bg-gray-700"
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-                <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-                  <div className="mb-4 h-6 w-1/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-                  <div className="space-y-4">
-                    {[1, 2, 3, 4, 5].map((j) => (
-                      <div
-                        key={j}
-                        className="h-4 rounded bg-gray-200 dark:bg-gray-700"
-                      ></div>
-                    ))}
-                  </div>
-                </div>
+
+              <div className="marketplace-stats__sections-grid">
+                <div className="skeleton skeleton-section"></div>
+                <div className="skeleton skeleton-section"></div>
               </div>
             </div>
           </div>
@@ -302,36 +272,30 @@ export const MarketplaceStatsPage: React.FC = () => {
 
   return (
     <AppLayout variant="marketplace">
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="marketplace-stats">
+        <div className="marketplace-stats__container">
           {/* Header */}
-          <div className="mb-6 lg:mb-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 shadow-lg">
-                  <BarChart3 className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl dark:text-white">
-                    {t("stats.title", "Marketplace Statistics")}
-                  </h1>
-                  <p className="mt-1 text-sm text-gray-600 sm:text-base lg:text-lg dark:text-gray-300">
-                    {t(
-                      "stats.subtitle",
-                      "Track marketplace performance and trends",
-                    )}
-                  </p>
-                </div>
+          <div className="marketplace-stats__header">
+            <div className="marketplace-stats__title-section">
+              <div className="marketplace-stats__title-icon">
+                <BarChart3 />
               </div>
-
-              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <div className="marketplace-stats__title-content">
+                <h1>{t("stats.title", "Marketplace Statistics")}</h1>
+                <p>
+                  {t(
+                    "stats.subtitle",
+                    "Track marketplace performance and trends",
+                  )}
+                </p>
+              </div>
+              <div className="marketplace-stats__controls">
                 {/* Time Frame Filter */}
-                <div className="flex items-center space-x-3">
-                  <Calendar className="h-5 w-5 flex-shrink-0 text-gray-500" />
+                <div className="marketplace-stats__timeframe-selector">
+                  <Calendar size={16} />
                   <select
                     value={timeFrame}
                     onChange={(e) => setTimeFrame(e.target.value as TimeFrame)}
-                    className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-gray-900 transition-all focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   >
                     <option value="24h">
                       {t("timeframe_24h", "Last 24 Hours")}
@@ -352,11 +316,9 @@ export const MarketplaceStatsPage: React.FC = () => {
                 <button
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="flex items-center space-x-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-white shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                  className="marketplace-stats__refresh-btn"
                 >
-                  <RefreshCw
-                    className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
-                  />
+                  <RefreshCw className={refreshing ? "spinning" : ""} />
                   <span>{t("refresh", "Refresh")}</span>
                 </button>
               </div>
@@ -364,110 +326,81 @@ export const MarketplaceStatsPage: React.FC = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mb-8 lg:grid-cols-3 lg:gap-6">
-            {statCards.map((stat, index) => (
-              <div
-                key={stat.id}
-                className={`rounded-xl border border-gray-200 bg-white p-4 transition-all duration-200 hover:scale-105 hover:shadow-lg lg:p-6 dark:border-gray-700 dark:bg-gray-800 ${
-                  index < 3 ? "lg:transform lg:hover:scale-105" : ""
-                }`}
-              >
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300">
+          <div className="marketplace-stats__metrics-grid">
+            {statCards.map((stat) => (
+              <div key={stat.id} className="marketplace-stats__metric-card">
+                <div className="marketplace-stats__metric-card-header">
+                  <h3 className="marketplace-stats__metric-card-title">
                     {stat.title}
                   </h3>
-                  <div className={`rounded-xl p-2.5 ${stat.color} shadow-sm`}>
+                  <div
+                    className={`marketplace-stats__metric-card-icon ${stat.colorClass}`}
+                  >
                     {stat.icon}
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-baseline space-x-2">
-                    <span className="text-2xl font-bold text-gray-900 lg:text-3xl dark:text-white">
-                      {stat.value}
-                    </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {stat.unit}
-                    </span>
-                  </div>
+                <div className="marketplace-stats__metric-card-value">
+                  <span className="value">{stat.value}</span>
+                  <span className="unit">{stat.unit}</span>
+                </div>
 
-                  <div className="flex items-center justify-between">
-                    <div
-                      className={`flex items-center space-x-1 text-sm ${
-                        stat.change >= 0
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-red-600 dark:text-red-400"
-                      }`}
-                    >
-                      {stat.change >= 0 ? (
-                        <ArrowUpRight className="h-4 w-4" />
-                      ) : (
-                        <ArrowDownRight className="h-4 w-4" />
-                      )}
-                      <span className="font-medium">
-                        {Math.abs(stat.change)}%
-                      </span>
-                    </div>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {stat.period}
-                    </span>
+                <div className="marketplace-stats__metric-card-change">
+                  <div
+                    className={`change-indicator ${
+                      stat.change >= 0 ? "positive" : "negative"
+                    }`}
+                  >
+                    {stat.change >= 0 ? (
+                      <ArrowUpRight size={16} />
+                    ) : (
+                      <ArrowDownRight size={16} />
+                    )}
+                    <span>{Math.abs(stat.change)}%</span>
                   </div>
+                  <span className="period">{stat.period}</span>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Additional Stats Sections */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="marketplace-stats__sections-grid">
             {/* Top Collections */}
-            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-              <div className="border-b border-gray-200 p-6 dark:border-gray-700">
-                <div className="flex items-center space-x-3">
-                  <Crown className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {t("stats.top_collections", "Top Collections")}
-                  </h2>
+            <div className="marketplace-stats__section-card">
+              <div className="marketplace-stats__section-card-header">
+                <div className="header-content">
+                  <Crown size={14} />
+                  <h2>{t("stats.top_collections", "Top Collections")}</h2>
                 </div>
               </div>
 
-              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              <div className="marketplace-stats__section-card-content">
                 {topCollections.map((collection) => (
-                  <div
-                    key={collection.id}
-                    className="p-4 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600">
-                          <span className="text-sm font-bold text-white">
-                            {collection.rank}
-                          </span>
+                  <div key={collection.id} className="item">
+                    <div className="item-content">
+                      <div className="item-left">
+                        <div className="rank-badge">
+                          <span>{collection.rank}</span>
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-white">
-                            {collection.name}
-                          </h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {collection.items} items
-                          </p>
+                        <div className="item-details">
+                          <h3>{collection.name}</h3>
+                          <p>{collection.items} items</p>
                         </div>
                       </div>
-
-                      <div className="text-right">
-                        <div className="font-semibold text-gray-900 dark:text-white">
+                      <div className="item-right">
+                        <div className="item-value">
                           {collection.volume.toFixed(2)} ICP
                         </div>
                         <div
-                          className={`flex items-center space-x-1 text-sm ${
-                            collection.change >= 0
-                              ? "text-green-600 dark:text-green-400"
-                              : "text-red-600 dark:text-red-400"
+                          className={`change-indicator ${
+                            collection.change >= 0 ? "positive" : "negative"
                           }`}
                         >
                           {collection.change >= 0 ? (
-                            <TrendingUp className="h-3 w-3" />
+                            <TrendingUp size={12} />
                           ) : (
-                            <TrendingDown className="h-3 w-3" />
+                            <TrendingDown size={12} />
                           )}
                           <span>{Math.abs(collection.change)}%</span>
                         </div>
@@ -479,45 +412,37 @@ export const MarketplaceStatsPage: React.FC = () => {
             </div>
 
             {/* Recent Activity */}
-            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-              <div className="border-b border-gray-200 p-6 dark:border-gray-700">
-                <div className="flex items-center space-x-3">
-                  <Activity className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {t("stats.recent_activity", "Recent Activity")}
-                  </h2>
+            <div className="marketplace-stats__section-card">
+              <div className="marketplace-stats__section-card-header">
+                <div className="header-content">
+                  <Activity size={14} />
+                  <h2>{t("stats.recent_activity", "Recent Activity")}</h2>
                 </div>
               </div>
 
-              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              <div className="marketplace-stats__section-card-content">
                 {recentActivities.map((activity) => (
-                  <div
-                    key={activity.id}
-                    className="p-4 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                  >
-                    <div className="flex items-start space-x-3">
-                      <div
-                        className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${getActivityColor(activity.type)}`}
-                      >
-                        {getActivityIcon(activity.type)}
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {activity.text}
-                          </p>
-                          {activity.value && (
-                            <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
-                              {activity.value}
-                            </span>
-                          )}
+                  <div key={activity.id} className="item">
+                    <div className="item-content">
+                      <div className="item-left">
+                        <div
+                          className={`activity-icon ${getActivityColorClass(activity.type)}`}
+                        >
+                          {getActivityIcon(activity.type)}
                         </div>
-                        <div className="mt-1 flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
-                          <Clock className="h-3 w-3" />
-                          <span>{activity.time}</span>
+                        <div className="item-details">
+                          <h3>{activity.text}</h3>
+                          <div className="item-time">
+                            <Clock size={12} />
+                            <span>{activity.time}</span>
+                          </div>
                         </div>
                       </div>
+                      {activity.value && (
+                        <div className="item-right">
+                          <div className="item-value">{activity.value}</div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}

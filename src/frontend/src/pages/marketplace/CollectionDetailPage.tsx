@@ -61,12 +61,20 @@ export const CollectionDetailPage: React.FC = () => {
           {/* Collection Banner */}
           <div className="collection-detail-banner">
             <div className="collection-detail-banner__image">
-              <img src={collection.bannerImage} alt={collection.name} />
+              <img
+                src={collection.bannerImage}
+                alt={collection.name}
+                className="hero-image"
+              />
             </div>
 
             <div className="collection-detail-banner__info">
               <div className="collection-detail-avatar">
-                <img src={collection.image} alt={collection.name} />
+                <img
+                  src={collection.image}
+                  alt={collection.name}
+                  className="responsive-image"
+                />
               </div>
 
               <div className="collection-detail-details">

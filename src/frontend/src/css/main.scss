@@ -11,6 +11,7 @@
 @use "elements/_forms.scss" as *;
 @use "elements/_canvas.scss" as *;
 @use "elements/_typography.scss" as *;
+@use "elements/_images.scss" as *;
 
 // ITCSS: Objects (layout, wrappers)
 @use "objects/_layout.scss" as *;
@@ -66,4 +67,8 @@
 
 // Marketplace Components
 @use "components/marketplace/_marketplace.scss" as *;
+@use "components/marketplace/_marketplace-stats.scss" as *;
+@use "components/marketplace/_collections.scss" as *;
+@use "components/marketplace/_activity.scss" as *;
+@use "components/marketplace/_rankings.scss" as *;
 @use "components/_nft-display.scss" as *;
