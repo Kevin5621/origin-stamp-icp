@@ -100,10 +100,11 @@ const SessionPage: React.FC = () => {
       }
 
       // Get certificate by session ID
-      const certificate = await CertificateService.getCertificateBySessionIdForUser(
-        sessionId,
-        user.username,
-      );
+      const certificate =
+        await CertificateService.getCertificateBySessionIdForUser(
+          sessionId,
+          user.username,
+        );
 
       if (certificate) {
         // Navigate to certificate page with correct certificate ID
