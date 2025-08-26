@@ -14,6 +14,7 @@ import {
   Users,
   Camera,
   Sparkles,
+  RefreshCw,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -36,7 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
 
-  const { currentTier } = useSubscription();
+  const { currentTier, refreshSubscription, isLoading } = useSubscription();
 
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
   const isCollapsed = externalIsCollapsed ?? internalIsCollapsed;
@@ -263,17 +264,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             {/* Subscription Tier Badge */}
             <div className="sidebar__tier-badge">
-              {(() => {
-                const Icon = getSubscriptionIcon(currentTier);
-                return (
-                  <Icon
-                    size={12}
-                    className="sidebar__tier-icon"
-                    style={{ color: getSubscriptionColor(currentTier) }}
-                  />
-                );
-              })()}
-              <span className="sidebar__tier-text">{currentTier}</span>
+              <div className="sidebar__tier-content">
+                {(() => {
+                  const Icon = getSubscriptionIcon(currentTier);
+                  return (
+                    <Icon
+                      size={12}
+                      className="sidebar__tier-icon"
+                      style={{ color: getSubscriptionColor(currentTier) }}
+                    />
+                  );
+                })()}
+                <span className="sidebar__tier-text">{currentTier}</span>
+              </div>
+              <button
+                className="sidebar__refresh-btn"
+                onClick={refreshSubscription}
+                title="Refresh subscription status"
+                disabled={isLoading}
+              >
+                <RefreshCw size={10} />
+              </button>
             </div>
           </div>
         )}
