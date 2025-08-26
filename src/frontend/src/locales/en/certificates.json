@@ -3,6 +3,7 @@
   "loading_certificate": "Loading certificate...",
   "certificate_not_found": "Certificate Not Found",
   "certificate_not_found_description": "The certificate you are looking for could not be found. It may have been deleted or the URL is incorrect.",
+  "back_to_sessions": "Back to Sessions",
   "back_to_dashboard": "Back to Dashboard",
   "certificate_details": "Certificate Details",
   "nft_information": "NFT Information",
