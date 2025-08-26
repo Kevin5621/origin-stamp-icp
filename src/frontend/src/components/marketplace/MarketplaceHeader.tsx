@@ -12,7 +12,7 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
   className = "",
   onSearch,
 }) => {
-  useTranslation("marketplace");
+  const { t } = useTranslation("marketplace");
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = React.useState("");
 
@@ -40,7 +40,9 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
                 color: "var(--color-text-primary)",
               }}
             >
-              Hello, {user?.username || "User"}
+              {t("greeting.hello", {
+                username: user?.username || t("greeting.user"),
+              })}
             </h2>
             <p
               className="marketplace-header__subtitle"
@@ -50,7 +52,7 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
                 color: "var(--color-text-secondary)",
               }}
             >
-              39.506M+ items in NFT market Place!
+              {t("greeting.items_count", { count: 39.506 })}
             </p>
           </div>
         </div>
@@ -76,7 +78,7 @@ export const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({
               <input
                 type="text"
                 className="marketplace-header__search-input"
-                placeholder="Search something..."
+                placeholder={t("search_something")}
                 value={searchQuery}
                 onChange={handleSearchChange}
                 style={{

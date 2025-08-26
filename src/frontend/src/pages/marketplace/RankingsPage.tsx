@@ -326,13 +326,8 @@ export const RankingsPage: React.FC = () => {
                 <Trophy />
               </div>
               <div className="rankings-page__title-content">
-                <h1>{t("rankings_title", "Marketplace Rankings")}</h1>
-                <p>
-                  {t(
-                    "rankings_subtitle",
-                    "Top performers in the marketplace ecosystem",
-                  )}
-                </p>
+                <h1>{t("rankings_title")}</h1>
+                <p>{t("rankings_subtitle")}</p>
               </div>
               <div className="rankings-page__controls">
                 {/* Category Tabs */}
@@ -362,14 +357,10 @@ export const RankingsPage: React.FC = () => {
                     value={timeFrame}
                     onChange={(e) => setTimeFrame(e.target.value as TimeFrame)}
                   >
-                    <option value="24h">
-                      {t("timeframe_24h", "24 Hours")}
-                    </option>
-                    <option value="7d">{t("timeframe_7d", "7 Days")}</option>
-                    <option value="30d">{t("timeframe_30d", "30 Days")}</option>
-                    <option value="all">
-                      {t("timeframe_all", "All Time")}
-                    </option>
+                    <option value="24h">{t("timeframe_24h")}</option>
+                    <option value="7d">{t("timeframe_7d")}</option>
+                    <option value="30d">{t("timeframe_30d")}</option>
+                    <option value="all">{t("timeframe_all")}</option>
                   </select>
                 </div>
 
@@ -378,7 +369,7 @@ export const RankingsPage: React.FC = () => {
                   <Search size={16} />
                   <input
                     type="text"
-                    placeholder={t("search_rankings", "Search rankings...")}
+                    placeholder={t("search_rankings")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -433,13 +424,17 @@ export const RankingsPage: React.FC = () => {
                             {activeCategory === "artists" && item.followers && (
                               <span>
                                 <Users size={12} />
-                                {item.followers.toLocaleString()} followers
+                                {t("rankings.followers_count", {
+                                  count: item.followers,
+                                })}
                               </span>
                             )}
                             {activeCategory === "collections" && item.items && (
                               <span>
                                 <Star size={12} />
-                                {item.items} items
+                                {t("rankings.items_count", {
+                                  count: item.items,
+                                })}
                               </span>
                             )}
                           </div>
@@ -481,7 +476,7 @@ export const RankingsPage: React.FC = () => {
                 <BarChart3 />
               </div>
               <h3 className="rankings-page__empty-title">
-                {t("rankings_empty_title", "No Rankings Found")}
+                {t("rankings_empty_title")}
               </h3>
               <p className="rankings-page__empty-description">
                 {searchTerm
@@ -499,7 +494,7 @@ export const RankingsPage: React.FC = () => {
                   onClick={() => setSearchTerm("")}
                   className="rankings-page__clear-search"
                 >
-                  {t("clear_search", "Clear Search")}
+                  {t("clear_search")}
                 </button>
               )}
             </div>

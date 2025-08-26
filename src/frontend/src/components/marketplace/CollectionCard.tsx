@@ -78,8 +78,12 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
               e.stopPropagation();
               // TODO: Implement like functionality
             }}
-            aria-label={`Sukai koleksi ${collection.title}`}
-            title={`Sukai koleksi ${collection.title}`}
+            aria-label={t("collection_card.like_collection", {
+              title: collection.title,
+            })}
+            title={t("collection_card.like_collection", {
+              title: collection.title,
+            })}
           >
             <Heart
               size={16}
@@ -101,13 +105,13 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
         <div className="collection-card__footer">
           <span className="collection-card__category">
             {collection.category === "physical-art"
-              ? "Seni Fisik"
+              ? t("collection_card.physical_art")
               : collection.category}
           </span>
           <span className="collection-card__price">
             {collection.price > 0
               ? t("price_format", { price: collection.price })
-              : "Gratis"}
+              : t("collection_card.free")}
           </span>
         </div>
       </div>

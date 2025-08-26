@@ -27,7 +27,7 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
   className = "",
   collections: propCollections,
 }) => {
-  useTranslation("marketplace");
+  const { t } = useTranslation("marketplace");
   useToastContext();
 
   const [collections, setCollections] = useState<Collection[]>([]);
@@ -55,7 +55,9 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
         }
       } catch (err) {
         const errorMessage =
-          err instanceof Error ? err.message : "Failed to load collections";
+          err instanceof Error
+            ? err.message
+            : t("error.failed_to_load_collections");
         setError(errorMessage);
         console.error("Failed to load collections:", err);
       } finally {
@@ -82,7 +84,7 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
         avatar: nft.creator.avatar,
       },
       isLiked: false, // Would need to be tracked separately
-      endTime: "Ongoing",
+      endTime: t("top_collection.ongoing"),
       highestBid: nft.price.amount + " " + nft.price.currency,
     }));
   };
@@ -97,9 +99,9 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
     return (
       <div className={`top-collection ${className}`}>
         <div className="top-collection__header">
-          <h3 className="top-collection__title">Top Collection</h3>
+          <h3 className="top-collection__title">{t("top_collection.title")}</h3>
           <button className="top-collection__view-all" disabled>
-            Loading...
+            {t("loading.collections")}
           </button>
         </div>
         <div
@@ -128,7 +130,7 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
               fontSize: "var(--text-sm)",
             }}
           >
-            Loading collections...
+            {t("loading.collections")}
           </p>
         </div>
       </div>
@@ -140,9 +142,9 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
     return (
       <div className={`top-collection ${className}`}>
         <div className="top-collection__header">
-          <h3 className="top-collection__title">Top Collection</h3>
+          <h3 className="top-collection__title">{t("top_collection.title")}</h3>
           <button className="top-collection__view-all" disabled>
-            Error
+            {t("error.failed_to_load_collections")}
           </button>
         </div>
         <div
@@ -177,9 +179,9 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
     return (
       <div className={`top-collection ${className}`}>
         <div className="top-collection__header">
-          <h3 className="top-collection__title">Top Collection</h3>
+          <h3 className="top-collection__title">{t("top_collection.title")}</h3>
           <button className="top-collection__view-all" disabled>
-            No Collections
+            {t("empty_state.no_collections_available")}
           </button>
         </div>
         <div
@@ -231,7 +233,7 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
               fontSize: "var(--text-sm)",
             }}
           >
-            No collections available
+            {t("empty_state.no_collections_available")}
           </p>
         </div>
       </div>
@@ -241,8 +243,10 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
   return (
     <div className={`top-collection ${className}`}>
       <div className="top-collection__header">
-        <h3 className="top-collection__title">Top Collection</h3>
-        <button className="top-collection__view-all">View All</button>
+        <h3 className="top-collection__title">{t("top_collection.title")}</h3>
+        <button className="top-collection__view-all">
+          {t("top_collection.view_all")}
+        </button>
       </div>
 
       <div className="top-collection__grid">
@@ -297,7 +301,7 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
               />
               <div className="top-collection__card-overlay">
                 <button className="top-collection__bid-button">
-                  Place a Bid
+                  {t("top_collection.place_bid")}
                 </button>
               </div>
             </div>
@@ -306,10 +310,12 @@ export const TopCollection: React.FC<TopCollectionProps> = ({
               <h4 className="top-collection__card-title">{collection.title}</h4>
               <div className="top-collection__card-details">
                 <span className="top-collection__end-time">
-                  Ending in {collection.endTime}
+                  {t("top_collection.ending_in", { time: collection.endTime })}
                 </span>
                 <span className="top-collection__highest-bid">
-                  Highest bid {collection.highestBid}
+                  {t("top_collection.highest_bid", {
+                    amount: collection.highestBid,
+                  })}
                 </span>
               </div>
             </div>

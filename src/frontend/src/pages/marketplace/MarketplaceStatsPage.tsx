@@ -73,61 +73,61 @@ export const MarketplaceStatsPage: React.FC = () => {
   const statCards: StatCard[] = [
     {
       id: "volume",
-      title: t("stats.total_volume", "Total Volume"),
+      title: t("stats.total_volume"),
       value: "1,234.56",
       unit: "ICP",
       change: 12.3,
-      period: t("stats.this_month", "this month"),
+      period: t("stats.this_month"),
       icon: <DollarSign size={14} />,
       colorClass: "success",
     },
     {
       id: "sales",
-      title: t("stats.total_sales", "Total Sales"),
+      title: t("stats.total_sales"),
       value: "892",
-      unit: "Items",
+      unit: t("stats.items"),
       change: 8.7,
-      period: t("stats.this_month", "this month"),
+      period: t("stats.this_month"),
       icon: <ShoppingCart size={14} />,
       colorClass: "info",
     },
     {
       id: "users",
-      title: t("stats.active_users", "Active Users"),
+      title: t("stats.active_users"),
       value: "2,456",
       unit: "Users",
       change: 15.2,
-      period: t("stats.this_month", "this month"),
+      period: t("stats.this_month"),
       icon: <Users size={14} />,
       colorClass: "purple",
     },
     {
       id: "price",
-      title: t("stats.average_price", "Average Price"),
+      title: t("stats.average_price"),
       value: "1.38",
       unit: "ICP",
       change: -3.1,
-      period: t("stats.this_month", "this month"),
+      period: t("stats.this_month"),
       icon: <Target size={14} />,
       colorClass: "warning",
     },
     {
       id: "views",
-      title: t("stats.total_views", "Total Views"),
+      title: t("stats.total_views"),
       value: "45.2K",
       unit: "Views",
       change: 22.8,
-      period: t("stats.this_month", "this month"),
+      period: t("stats.this_month"),
       icon: <Eye size={14} />,
       colorClass: "primary",
     },
     {
       id: "conversion",
-      title: t("stats.conversion_rate", "Conversion Rate"),
+      title: t("stats.conversion_rate"),
       value: "3.2",
       unit: "%",
       change: 5.4,
-      period: t("stats.this_month", "this month"),
+      period: t("stats.this_month"),
       icon: <Zap size={14} />,
       colorClass: "accent",
     },
@@ -180,33 +180,33 @@ export const MarketplaceStatsPage: React.FC = () => {
     {
       id: "1",
       type: "sale",
-      text: 'Sale completed: "Ocean Waves"',
+      text: t("activity.sale_completed", { title: "Ocean Waves" }),
       time: "2 mins ago",
       value: "2.5 ICP",
     },
     {
       id: "2",
       type: "listing",
-      text: 'New artwork listed: "Sunset Dreams"',
+      text: t("activity.new_artwork_listed", { title: "Sunset Dreams" }),
       time: "5 mins ago",
     },
     {
       id: "3",
       type: "bid",
-      text: 'New bid placed on "Mountain Peak"',
+      text: t("activity.new_bid_placed", { title: "Mountain Peak" }),
       time: "8 mins ago",
       value: "1.8 ICP",
     },
     {
       id: "4",
       type: "user_joined",
-      text: "New user joined the marketplace",
+      text: t("activity.new_user_joined"),
       time: "12 mins ago",
     },
     {
       id: "5",
       type: "sale",
-      text: 'Sale completed: "Abstract Mind"',
+      text: t("activity.sale_completed", { title: "Abstract Mind" }),
       time: "15 mins ago",
       value: "3.2 ICP",
     },
@@ -281,13 +281,8 @@ export const MarketplaceStatsPage: React.FC = () => {
                 <BarChart3 />
               </div>
               <div className="marketplace-stats__title-content">
-                <h1>{t("stats.title", "Marketplace Statistics")}</h1>
-                <p>
-                  {t(
-                    "stats.subtitle",
-                    "Track marketplace performance and trends",
-                  )}
-                </p>
+                <h1>{t("stats.title")}</h1>
+                <p>{t("stats.subtitle")}</p>
               </div>
               <div className="marketplace-stats__controls">
                 {/* Time Frame Filter */}
@@ -297,18 +292,10 @@ export const MarketplaceStatsPage: React.FC = () => {
                     value={timeFrame}
                     onChange={(e) => setTimeFrame(e.target.value as TimeFrame)}
                   >
-                    <option value="24h">
-                      {t("timeframe_24h", "Last 24 Hours")}
-                    </option>
-                    <option value="7d">
-                      {t("timeframe_7d", "Last 7 Days")}
-                    </option>
-                    <option value="30d">
-                      {t("timeframe_30d", "Last 30 Days")}
-                    </option>
-                    <option value="all">
-                      {t("timeframe_all", "All Time")}
-                    </option>
+                    <option value="24h">{t("timeframe_24h")}</option>
+                    <option value="7d">{t("timeframe_7d")}</option>
+                    <option value="30d">{t("timeframe_30d")}</option>
+                    <option value="all">{t("timeframe_all")}</option>
                   </select>
                 </div>
 
@@ -319,7 +306,7 @@ export const MarketplaceStatsPage: React.FC = () => {
                   className="marketplace-stats__refresh-btn"
                 >
                   <RefreshCw className={refreshing ? "spinning" : ""} />
-                  <span>{t("refresh", "Refresh")}</span>
+                  <span>{t("refresh")}</span>
                 </button>
               </div>
             </div>
@@ -385,7 +372,11 @@ export const MarketplaceStatsPage: React.FC = () => {
                         </div>
                         <div className="item-details">
                           <h3>{collection.name}</h3>
-                          <p>{collection.items} items</p>
+                          <p>
+                            {t("stats.items_count", {
+                              count: collection.items,
+                            })}
+                          </p>
                         </div>
                       </div>
                       <div className="item-right">
