@@ -49,6 +49,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "1",
       name: "Digital Artist Pro",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       value: 125000,
       change: 15.2,
       rank: 1,
@@ -58,6 +60,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "2",
       name: "Abstract Master",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
       value: 98500,
       change: 8.7,
       rank: 2,
@@ -67,6 +71,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "3",
       name: "Modern Creator",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       value: 87200,
       change: -2.1,
       rank: 3,
@@ -76,6 +82,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "4",
       name: "Pixel Virtuoso",
+      avatar:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
       value: 76500,
       change: 12.8,
       rank: 4,
@@ -85,6 +93,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "5",
       name: "Color Symphony",
+      avatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       value: 65300,
       change: 5.4,
       rank: 5,
@@ -97,6 +107,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "1",
       name: "Digital Dreams Collection",
+      avatar:
+        "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=150&h=150&fit=crop",
       value: 250000,
       change: 22.4,
       rank: 1,
@@ -106,6 +118,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "2",
       name: "Abstract Visions",
+      avatar:
+        "https://images.unsplash.com/photo-1549887534-1541e9326642?w=150&h=150&fit=crop",
       value: 180000,
       change: 12.8,
       rank: 2,
@@ -115,6 +129,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "3",
       name: "Future Art Series",
+      avatar:
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=150&fit=crop",
       value: 165000,
       change: 5.3,
       rank: 3,
@@ -124,6 +140,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "4",
       name: "Minimalist Masterpieces",
+      avatar:
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=150&h=150&fit=crop",
       value: 142000,
       change: -1.8,
       rank: 4,
@@ -133,6 +151,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "5",
       name: "Nature's Digital Echo",
+      avatar:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=150&h=150&fit=crop",
       value: 128000,
       change: 18.9,
       rank: 5,
@@ -145,6 +165,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "1",
       name: "Art Collector 001",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       value: 45,
       change: 8,
       rank: 1,
@@ -153,6 +175,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "2",
       name: "NFT Enthusiast",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
       value: 32,
       change: 5,
       rank: 2,
@@ -161,6 +185,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "3",
       name: "Digital Patron",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       value: 28,
       change: 3,
       rank: 3,
@@ -169,6 +195,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "4",
       name: "Modern Collector",
+      avatar:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
       value: 24,
       change: -2,
       rank: 4,
@@ -177,6 +205,8 @@ export const RankingsPage: React.FC = () => {
     {
       id: "5",
       name: "Art Investment Pro",
+      avatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       value: 21,
       change: 12,
       rank: 5,
@@ -209,19 +239,13 @@ export const RankingsPage: React.FC = () => {
 
     switch (rank) {
       case 1:
-        return <Crown {...iconProps} className="text-yellow-500" />;
+        return <Crown {...iconProps} />;
       case 2:
-        return <Medal {...iconProps} className="text-gray-400" />;
+        return <Medal {...iconProps} />;
       case 3:
-        return <Award {...iconProps} className="text-amber-600" />;
+        return <Award {...iconProps} />;
       default:
-        return (
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
-            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-              {rank}
-            </span>
-          </div>
-        );
+        return null;
     }
   };
 
@@ -268,32 +292,26 @@ export const RankingsPage: React.FC = () => {
   if (loading) {
     return (
       <AppLayout variant="marketplace">
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-          <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-            <div className="animate-pulse">
-              <div className="mb-4 h-8 w-1/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-              <div className="mb-8 h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700"></div>
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
-                  >
-                    <div className="mb-4 h-6 w-1/2 rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="space-y-4">
-                      {[1, 2, 3, 4, 5].map((j) => (
-                        <div key={j} className="flex items-center space-x-4">
-                          <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                          <div className="flex-1">
-                            <div className="mb-2 h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700"></div>
-                            <div className="h-3 w-1/2 rounded bg-gray-200 dark:bg-gray-700"></div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+        <div className="rankings-page">
+          <div className="rankings-page__container">
+            <div className="rankings-page__loading-header">
+              <div className="skeleton"></div>
+              <div
+                className="skeleton"
+                style={{ width: "300px", height: "32px" }}
+              ></div>
+            </div>
+            <div className="rankings-page__list">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="rankings-page__loading-item">
+                  <div className="skeleton skeleton--avatar"></div>
+                  <div className="flex-1 space-y-2">
+                    <div className="skeleton skeleton--title"></div>
+                    <div className="skeleton skeleton--description"></div>
                   </div>
-                ))}
-              </div>
+                  <div className="skeleton skeleton--value"></div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -303,20 +321,18 @@ export const RankingsPage: React.FC = () => {
 
   return (
     <AppLayout variant="marketplace">
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="rankings-page">
+        <div className="rankings-page__container">
           {/* Header */}
-          <div className="mb-6 lg:mb-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 p-2.5 shadow-lg">
-                  <Trophy className="h-6 w-6 text-white" />
+          <div className="rankings-page__header">
+            <div className="rankings-page__header-content">
+              <div className="rankings-page__title-section">
+                <div className="rankings-page__title-section-icon">
+                  <Trophy />
                 </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl dark:text-white">
-                    {t("rankings_title", "Marketplace Rankings")}
-                  </h1>
-                  <p className="mt-1 text-sm text-gray-600 sm:text-base lg:text-lg dark:text-gray-300">
+                <div className="rankings-page__title-section-text">
+                  <h1>{t("rankings_title", "Marketplace Rankings")}</h1>
+                  <p>
                     {t(
                       "rankings_subtitle",
                       "Top performers in the marketplace ecosystem",
@@ -326,40 +342,36 @@ export const RankingsPage: React.FC = () => {
               </div>
 
               {/* Quick Stats */}
-              <div className="flex items-center space-x-4 text-sm">
-                <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-center dark:border-gray-700 dark:bg-gray-800">
-                  <div className="font-semibold text-gray-900 dark:text-white">
+              <div className="rankings-page__stats">
+                <div className="rankings-page__stat-card">
+                  <div className="rankings-page__stat-card-value">
                     {filteredData.length}
                   </div>
-                  <div className="text-gray-500 dark:text-gray-400">Listed</div>
+                  <div className="rankings-page__stat-card-label">Listed</div>
                 </div>
-                <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-center dark:border-gray-700 dark:bg-gray-800">
-                  <div className="font-semibold text-indigo-600 dark:text-indigo-400">
-                    Live
-                  </div>
-                  <div className="text-gray-500 dark:text-gray-400">
-                    Rankings
-                  </div>
+                <div className="rankings-page__stat-card rankings-page__stat-card--highlight">
+                  <div className="rankings-page__stat-card-value">Live</div>
+                  <div className="rankings-page__stat-card-label">Rankings</div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Controls */}
-          <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-            <div className="flex flex-col space-y-4 xl:flex-row xl:space-y-0 xl:space-x-6">
+          <div className="rankings-page__controls">
+            <div className="rankings-page__controls-content">
               {/* Category Tabs */}
-              <div className="flex space-x-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
+              <div className="rankings-page__tabs">
                 {(
                   ["artists", "collections", "buyers"] as RankingCategory[]
                 ).map((category) => (
                   <button
                     key={category}
                     onClick={() => setActiveCategory(category)}
-                    className={`flex items-center space-x-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                    className={`rankings-page__tab ${
                       activeCategory === category
-                        ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-white"
-                        : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                        ? "rankings-page__tab--active"
+                        : ""
                     }`}
                   >
                     {getCategoryIcon(category)}
@@ -368,35 +380,38 @@ export const RankingsPage: React.FC = () => {
                 ))}
               </div>
 
-              {/* Time Frame */}
-              <div className="flex items-center space-x-3">
-                <Calendar className="h-5 w-5 text-gray-500" />
-                <select
-                  value={timeFrame}
-                  onChange={(e) => setTimeFrame(e.target.value as TimeFrame)}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="24h">
-                    {t("timeframe_24h", "Last 24 Hours")}
-                  </option>
-                  <option value="7d">{t("timeframe_7d", "Last 7 Days")}</option>
-                  <option value="30d">
-                    {t("timeframe_30d", "Last 30 Days")}
-                  </option>
-                  <option value="all">{t("timeframe_all", "All Time")}</option>
-                </select>
-              </div>
+              {/* Filters */}
+              <div className="rankings-page__filters">
+                {/* Time Frame */}
+                <div className="rankings-page__time-filter">
+                  <Calendar />
+                  <select
+                    value={timeFrame}
+                    onChange={(e) => setTimeFrame(e.target.value as TimeFrame)}
+                  >
+                    <option value="24h">
+                      {t("timeframe_24h", "Last 24 Hours")}
+                    </option>
+                    <option value="7d">
+                      {t("timeframe_7d", "Last 7 Days")}
+                    </option>
+                    <option value="30d">
+                      {t("timeframe_30d", "Last 30 Days")}
+                    </option>
+                    <option value="all">
+                      {t("timeframe_all", "All Time")}
+                    </option>
+                  </select>
+                </div>
 
-              {/* Search */}
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
+                {/* Search */}
+                <div className="rankings-page__search">
+                  <Search />
                   <input
                     type="text"
                     placeholder={t("search_rankings", "Search rankings...")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 bg-white py-2 pr-4 pl-10 text-gray-900 placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                   />
                 </div>
               </div>
@@ -405,72 +420,82 @@ export const RankingsPage: React.FC = () => {
 
           {/* Rankings List */}
           {filteredData.length > 0 ? (
-            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-              <div className="border-b border-gray-200 p-6 dark:border-gray-700">
-                <div className="flex items-center space-x-3">
-                  {getCategoryIcon(activeCategory)}
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {getCategoryTitle(activeCategory)}
-                  </h2>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    ({timeFrame})
-                  </span>
-                </div>
+            <div className="rankings-page__list">
+              <div className="rankings-page__list-header">
+                {getCategoryIcon(activeCategory)}
+                <h2>{getCategoryTitle(activeCategory)}</h2>
+                <span>({timeFrame})</span>
               </div>
 
-              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              <div className="rankings-page__list-content">
                 {filteredData.map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-6 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex-shrink-0">
-                          {getRankIcon(item.rank)}
+                  <div key={item.id} className="rankings-page__item">
+                    <div className="rankings-page__item-content">
+                      <div className="rankings-page__item-left">
+                        <div
+                          className={`rankings-page__rank-icon ${
+                            item.rank === 1
+                              ? "rankings-page__rank-icon--gold"
+                              : item.rank === 2
+                                ? "rankings-page__rank-icon--silver"
+                                : item.rank === 3
+                                  ? "rankings-page__rank-icon--bronze"
+                                  : "rankings-page__rank-icon--default"
+                          }`}
+                        >
+                          {item.rank <= 3 ? getRankIcon(item.rank) : item.rank}
                         </div>
 
-                        <div className="min-w-0 flex-1">
-                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
-                            {item.name}
-                          </h3>
-                          {item.description && (
-                            <p className="mb-2 text-sm text-gray-600 dark:text-gray-300">
-                              {item.description}
-                            </p>
+                        {/* Avatar with object-fit: contain */}
+                        <div className="rankings-page__avatar">
+                          {item.avatar ? (
+                            <img src={item.avatar} alt={item.name} />
+                          ) : (
+                            <div className="rankings-page__avatar--fallback">
+                              {item.name.charAt(0).toUpperCase()}
+                            </div>
                           )}
-                          <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                        </div>
+
+                        <div className="rankings-page__item-info">
+                          <h3>{item.name}</h3>
+                          {item.description && <p>{item.description}</p>}
+                          <div className="rankings-page__item-meta">
                             {activeCategory === "artists" && item.followers && (
                               <span>
+                                <Users size={14} />
                                 {item.followers.toLocaleString()} followers
                               </span>
                             )}
                             {activeCategory === "collections" && item.items && (
-                              <span>{item.items} items</span>
+                              <span>
+                                <Star size={14} />
+                                {item.items} items
+                              </span>
                             )}
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center space-x-6">
-                        <div className="text-right">
-                          <div className="text-xl font-bold text-gray-900 dark:text-white">
+                      <div className="rankings-page__item-right">
+                        <div className="rankings-page__item-value">
+                          <div className="rankings-page__item-value-amount">
                             {formatValue(
                               item.value,
                               getValueType(activeCategory),
                             )}
                           </div>
                           <div
-                            className={`flex items-center space-x-1 text-sm ${
+                            className={`rankings-page__item-value-change ${
                               item.change >= 0
-                                ? "text-green-600 dark:text-green-400"
-                                : "text-red-600 dark:text-red-400"
+                                ? "rankings-page__item-value-change--positive"
+                                : "rankings-page__item-value-change--negative"
                             }`}
                           >
                             {item.change >= 0 ? (
-                              <TrendingUp className="h-4 w-4" />
+                              <TrendingUp />
                             ) : (
-                              <TrendingDown className="h-4 w-4" />
+                              <TrendingDown />
                             )}
                             <span>{Math.abs(item.change)}%</span>
                           </div>
@@ -482,14 +507,14 @@ export const RankingsPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="rounded-lg border border-gray-200 bg-white p-12 text-center dark:border-gray-700 dark:bg-gray-800">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
-                <BarChart3 className="h-8 w-8 text-gray-400" />
+            <div className="rankings-page__empty">
+              <div className="rankings-page__empty-icon">
+                <BarChart3 />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="rankings-page__empty-title">
                 {t("rankings_empty_title", "No Rankings Found")}
               </h3>
-              <p className="mx-auto max-w-md text-gray-600 dark:text-gray-300">
+              <p className="rankings-page__empty-description">
                 {searchTerm
                   ? t(
                       "rankings_no_results",
@@ -503,7 +528,7 @@ export const RankingsPage: React.FC = () => {
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700"
+                  className="rankings-page__empty-button"
                 >
                   {t("clear_search", "Clear Search")}
                 </button>
