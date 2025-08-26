@@ -3,6 +3,7 @@
   "subtitle": "Jelajahi karya seni digital terverifikasi",
   "search": "Cari",
   "search_placeholder": "Cari karya seni, seniman, atau kategori...",
+  "search_something": "Cari sesuatu...",
   "filters": "Filter",
   "all_categories": "Semua Kategori",
   "categories": "Kategori",
@@ -19,12 +20,12 @@
   "activity_subtitle": "Transaksi terbaru dan acara marketplace",
   "activity_empty_title": "Belum Ada Aktivitas",
   "activity_empty_description": "Aktivitas marketplace akan muncul di sini setelah transaksi dimulai.",
-  "rankings_title": "Peringkat",
-  "rankings_subtitle": "Seniman dan koleksi teratas di marketplace",
+  "rankings_title": "Peringkat Marketplace",
+  "rankings_subtitle": "Performa teratas dalam ekosistem marketplace",
   "top_artists": "Seniman Teratas",
   "top_collections": "Koleksi Teratas",
   "top_buyers": "Pembeli Teratas",
-  "rankings_empty_title": "Tidak Ada Peringkat",
+  "rankings_empty_title": "Tidak Ada Peringkat Ditemukan",
   "rankings_empty_description": "Peringkat akan muncul di sini seiring meningkatnya aktivitas marketplace.",
   "category_types": {
     "abstract": "Abstrak",
@@ -32,5 +33,154 @@
     "traditional": "Tradisional",
     "sculpture": "Patung"
   },
-  "price_format": "Rp {{price}}"
+  "price_format": "Rp {{price}}",
+  "greeting": {
+    "hello": "Halo, {{username}}",
+    "user": "Pengguna",
+    "items_count": "{{count}}M+ item di NFT market Place!"
+  },
+  "loading": {
+    "marketplace": "Memuat marketplace...",
+    "nfts": "Memuat NFT dari blockchain...",
+    "collections": "Memuat koleksi..."
+  },
+  "error": {
+    "marketplace_unavailable": "Marketplace tidak tersedia",
+    "failed_to_load": "Gagal memuat marketplace",
+    "failed_to_load_nfts": "Gagal memuat NFT",
+    "failed_to_load_collections": "Gagal memuat koleksi",
+    "try_again": "Coba Lagi"
+  },
+  "empty_state": {
+    "no_nfts_title": "Tidak Ada NFT Tersedia",
+    "no_nfts_description": "Jadilah yang pertama membuat NFT melalui sesi seni fisik kami!",
+    "no_collections_available": "Tidak ada koleksi tersedia"
+  },
+  "featured_nft": {
+    "current_bid": "Tawaran Saat Ini",
+    "place_bid": "Ajukan Tawaran",
+    "date": "Tanggal",
+    "metadata": "Metadata",
+    "blockchain": "Blockchain",
+    "creator": "Pembuat",
+    "instant_price": "Harga Instan",
+    "verified": "Terverifikasi",
+    "pending": "Menunggu",
+    "internet_computer": "Internet Computer",
+    "ethereum": "Ethereum",
+    "frozen": "Beku"
+  },
+  "top_collection": {
+    "title": "Koleksi Teratas",
+    "view_all": "Lihat Semua",
+    "ending_in": "Berakhir dalam {{time}}",
+    "highest_bid": "Tawaran tertinggi {{amount}}",
+    "place_bid": "Ajukan Tawaran",
+    "ongoing": "Sedang Berlangsung"
+  },
+  "nft_details": {
+    "nfts_in_marketplace": "{{count}} NFT di marketplace"
+  },
+  "toast": {
+    "no_nfts_found": "Tidak ada NFT ditemukan di marketplace"
+  },
+  "collections": {
+    "title": "Koleksi NFT",
+    "subtitle": "Jelajahi koleksi karya seni digital terverifikasi dari berbagai seniman",
+    "loading": "Memuat koleksi...",
+    "error_message": "Gagal memuat koleksi. Silakan coba lagi.",
+    "try_again": "Coba Lagi",
+    "no_collections": "Tidak ada koleksi tersedia",
+    "collections_count": "{{count}} koleksi tersedia"
+  },
+  "collection_card": {
+    "like_collection": "Sukai koleksi {{title}}",
+    "physical_art": "Seni Fisik",
+    "free": "Gratis"
+  },
+  "stats": {
+    "title": "Statistik Marketplace",
+    "subtitle": "Lacak performa dan tren marketplace",
+    "total_volume": "Total Volume",
+    "total_sales": "Total Penjualan",
+    "active_users": "Pengguna Aktif",
+    "average_price": "Harga Rata-rata",
+    "total_views": "Total Tampilan",
+    "conversion_rate": "Tingkat Konversi",
+    "this_month": "bulan ini",
+    "top_collections": "Koleksi Teratas",
+    "recent_activity": "Aktivitas Terbaru",
+    "items": "Item",
+    "items_count": "{{count}} item"
+  },
+  "timeframe_24h": "24 Jam",
+  "timeframe_7d": "7 Hari",
+  "timeframe_30d": "30 Hari",
+  "timeframe_all": "Semua Waktu",
+  "refresh": "Segarkan",
+  "search_rankings": "Cari peringkat...",
+  "clear_search": "Hapus Pencarian",
+  "activity": {
+    "sale_completed": "Penjualan selesai: \"{{title}}\"",
+    "new_artwork_listed": "Karya seni baru ditampilkan: \"{{title}}\"",
+    "new_bid_placed": "Tawaran baru untuk \"{{title}}\"",
+    "new_user_joined": "Pengguna baru bergabung dengan marketplace"
+  },
+  "activity_page": {
+    "filter_all": "Semua Aktivitas",
+    "filter_collections": "Koleksi",
+    "filter_certificates": "Sertifikat",
+    "filter_trading": "Perdagangan",
+    "filter_artists": "Seniman",
+    "filter_featured": "Unggulan",
+    "search_activities": "Cari aktivitas...",
+    "activity_feed": "Feed Aktivitas",
+    "activities_count": "{{count}} aktivitas",
+    "activity_empty_title": "Tidak Ada Aktivitas Ditemukan",
+    "activity_no_results": "Tidak ada aktivitas yang cocok dengan filter Anda. Coba sesuaikan pencarian atau pengaturan filter.",
+    "activity_empty_description": "Aktivitas marketplace akan muncul di sini setelah transaksi dimulai.",
+    "clear_filters": "Hapus Filter",
+    "latest": "Terbaru",
+    "mock_activities": {
+      "collection_created": {
+        "title": "Koleksi Seni Digital Dibuat",
+        "description": "Koleksi baru \"{{name}}\" ditambahkan ke marketplace"
+      },
+      "certificate_verified": {
+        "title": "Sertifikat Diverifikasi",
+        "description": "Sertifikat karya seni \"{{name}}\" telah diverifikasi"
+      },
+      "high_volume": {
+        "title": "Perdagangan Volume Tinggi",
+        "description": "Peningkatan aktivitas di kategori \"{{category}}\""
+      },
+      "artist_joined": {
+        "title": "Seniman Baru Bergabung",
+        "description": "Seniman \"{{name}}\" bergabung dengan marketplace"
+      },
+      "featured": {
+        "title": "Koleksi Unggulan",
+        "description": "\"{{name}}\" telah ditampilkan di halaman utama"
+      }
+    },
+    "time_ago": {
+      "hours": "{{count}} jam yang lalu",
+      "days": "{{count}} hari yang lalu"
+    }
+  },
+  "collection_detail": {
+    "item_title": "Item #{{number}}",
+    "item_description": "Karya seni digital dari koleksi {{name}}",
+    "by_creator": "oleh {{creator}}",
+    "floor_price": "Harga Lantai",
+    "items": "Item",
+    "total_volume": "Total Volume",
+    "owners": "Pemilik",
+    "items_in_collection": "Item dalam koleksi ini",
+    "items_count": "{{count}} item"
+  },
+  "rankings": {
+    "followers_count": "{{count}} pengikut",
+    "items_count": "{{count}} item"
+  }
 }

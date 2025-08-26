@@ -37,42 +37,55 @@ export const ActivityPage: React.FC = () => {
     {
       id: "1",
       type: "collection_created",
-      title: "Digital Art Collection Created",
-      description: 'New collection "Modern Abstracts" added to marketplace',
+      title: t("activity_page.mock_activities.collection_created.title"),
+      description: t(
+        "activity_page.mock_activities.collection_created.description",
+        { name: "Modern Abstracts" },
+      ),
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      relativeTime: "2 hours ago",
+      relativeTime: t("activity_page.time_ago.hours", { count: 2 }),
     },
     {
       id: "2",
       type: "certificate_verified",
-      title: "Certificate Verified",
-      description: 'Artwork "Sunset Canvas" certificate has been verified',
+      title: t("activity_page.mock_activities.certificate_verified.title"),
+      description: t(
+        "activity_page.mock_activities.certificate_verified.description",
+        { name: "Sunset Canvas" },
+      ),
       timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-      relativeTime: "5 hours ago",
+      relativeTime: t("activity_page.time_ago.hours", { count: 5 }),
     },
     {
       id: "3",
       type: "high_volume",
-      title: "High Volume Trading",
-      description: 'Increased activity in "Contemporary Art" category',
+      title: t("activity_page.mock_activities.high_volume.title"),
+      description: t("activity_page.mock_activities.high_volume.description", {
+        category: "Contemporary Art",
+      }),
       timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      relativeTime: "1 day ago",
+      relativeTime: t("activity_page.time_ago.days", { count: 1 }),
     },
     {
       id: "4",
       type: "artist_joined",
-      title: "New Artist Joined",
-      description: 'Artist "Marina K." joined the marketplace',
+      title: t("activity_page.mock_activities.artist_joined.title"),
+      description: t(
+        "activity_page.mock_activities.artist_joined.description",
+        { name: "Marina K." },
+      ),
       timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      relativeTime: "2 days ago",
+      relativeTime: t("activity_page.time_ago.days", { count: 2 }),
     },
     {
       id: "5",
       type: "featured",
-      title: "Featured Collection",
-      description: '"Urban Landscapes" has been featured on homepage',
+      title: t("activity_page.mock_activities.featured.title"),
+      description: t("activity_page.mock_activities.featured.description", {
+        name: "Urban Landscapes",
+      }),
       timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-      relativeTime: "3 days ago",
+      relativeTime: t("activity_page.time_ago.days", { count: 3 }),
     },
   ]);
 
@@ -194,32 +207,32 @@ export const ActivityPage: React.FC = () => {
                   {[
                     {
                       key: "all",
-                      label: t("filter_all", "All Activities"),
+                      label: t("activity_page.filter_all"),
                       icon: Activity,
                     },
                     {
                       key: "collection_created",
-                      label: t("filter_collections", "Collections"),
+                      label: t("activity_page.filter_collections"),
                       icon: Sparkles,
                     },
                     {
                       key: "certificate_verified",
-                      label: t("filter_certificates", "Certificates"),
+                      label: t("activity_page.filter_certificates"),
                       icon: CheckCircle,
                     },
                     {
                       key: "high_volume",
-                      label: t("filter_trading", "Trading"),
+                      label: t("activity_page.filter_trading"),
                       icon: TrendingUp,
                     },
                     {
                       key: "artist_joined",
-                      label: t("filter_artists", "Artists"),
+                      label: t("activity_page.filter_artists"),
                       icon: UserPlus,
                     },
                     {
                       key: "featured",
-                      label: t("filter_featured", "Featured"),
+                      label: t("activity_page.filter_featured"),
                       icon: Star,
                     },
                   ].map(({ key, label, icon: Icon }) => (
@@ -243,7 +256,7 @@ export const ActivityPage: React.FC = () => {
                   <Search size={16} />
                   <input
                     type="text"
-                    placeholder={t("search_activities", "Search activities...")}
+                    placeholder={t("activity_page.search_activities")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -257,8 +270,14 @@ export const ActivityPage: React.FC = () => {
             <div className="marketplace-activity__activity-list">
               <div className="marketplace-activity__list-header">
                 <Activity size={18} />
-                <h2>{t("activity_feed", "Activity Feed")}</h2>
-                <span>({filteredActivities.length} activities)</span>
+                <h2>{t("activity_page.activity_feed")}</h2>
+                <span>
+                  (
+                  {t("activity_page.activities_count", {
+                    count: filteredActivities.length,
+                  })}
+                  )
+                </span>
               </div>
 
               <div className="marketplace-activity__list-content">
@@ -299,7 +318,7 @@ export const ActivityPage: React.FC = () => {
                             <span>{activity.relativeTime}</span>
                             {index === 0 && (
                               <span className="marketplace-activity__latest-badge">
-                                Latest
+                                {t("activity_page.latest")}
                               </span>
                             )}
                           </div>
@@ -316,18 +335,12 @@ export const ActivityPage: React.FC = () => {
                 <Activity />
               </div>
               <h3 className="marketplace-activity__empty-title">
-                {t("activity_empty_title", "No Activity Found")}
+                {t("activity_page.activity_empty_title")}
               </h3>
               <p className="marketplace-activity__empty-description">
                 {searchTerm || filter !== "all"
-                  ? t(
-                      "activity_no_results",
-                      "No activities match your current filters. Try adjusting your search or filter settings.",
-                    )
-                  : t(
-                      "activity_empty_description",
-                      "Marketplace activity will appear here once transactions begin.",
-                    )}
+                  ? t("activity_page.activity_no_results")
+                  : t("activity_page.activity_empty_description")}
               </p>
               {(searchTerm || filter !== "all") && (
                 <button
@@ -337,7 +350,7 @@ export const ActivityPage: React.FC = () => {
                   }}
                   className="marketplace-activity__clear-filters"
                 >
-                  {t("clear_filters", "Clear Filters")}
+                  {t("activity_page.clear_filters")}
                 </button>
               )}
             </div>

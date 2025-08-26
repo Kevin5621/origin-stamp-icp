@@ -3,6 +3,7 @@
   "subtitle": "Explore verified digital artwork",
   "search": "Search",
   "search_placeholder": "Search artwork, artists, or categories...",
+  "search_something": "Search something...",
   "filters": "Filters",
   "all_categories": "All Categories",
   "categories": "Categories",
@@ -19,12 +20,12 @@
   "activity_subtitle": "Recent transactions and marketplace events",
   "activity_empty_title": "No Activity Yet",
   "activity_empty_description": "Marketplace activity will appear here once transactions begin.",
-  "rankings_title": "Rankings",
-  "rankings_subtitle": "Top artists and collections in the marketplace",
+  "rankings_title": "Marketplace Rankings",
+  "rankings_subtitle": "Top performers in the marketplace ecosystem",
   "top_artists": "Top Artists",
   "top_collections": "Top Collections",
   "top_buyers": "Top Buyers",
-  "rankings_empty_title": "No Rankings Available",
+  "rankings_empty_title": "No Rankings Found",
   "rankings_empty_description": "Rankings will appear here as marketplace activity increases.",
   "category_types": {
     "abstract": "Abstract",
@@ -32,5 +33,154 @@
     "traditional": "Traditional",
     "sculpture": "Sculpture"
   },
-  "price_format": "${{price}}"
+  "price_format": "${{price}}",
+  "greeting": {
+    "hello": "Hello, {{username}}",
+    "user": "User",
+    "items_count": "{{count}}M+ items in NFT market Place!"
+  },
+  "loading": {
+    "marketplace": "Loading marketplace...",
+    "nfts": "Loading NFTs from blockchain...",
+    "collections": "Loading collections..."
+  },
+  "error": {
+    "marketplace_unavailable": "Marketplace unavailable",
+    "failed_to_load": "Failed to load marketplace",
+    "failed_to_load_nfts": "Failed to load NFTs",
+    "failed_to_load_collections": "Failed to load collections",
+    "try_again": "Try Again"
+  },
+  "empty_state": {
+    "no_nfts_title": "No NFTs Available",
+    "no_nfts_description": "Be the first to create an NFT through our physical art sessions!",
+    "no_collections_available": "No collections available"
+  },
+  "featured_nft": {
+    "current_bid": "Current Bid",
+    "place_bid": "Place a Bid",
+    "date": "Date",
+    "metadata": "Metadata",
+    "blockchain": "Blockchain",
+    "creator": "Creator",
+    "instant_price": "Instant Price",
+    "verified": "Verified",
+    "pending": "Pending",
+    "internet_computer": "Internet Computer",
+    "ethereum": "Ethereum",
+    "frozen": "Frozen"
+  },
+  "top_collection": {
+    "title": "Top Collection",
+    "view_all": "View All",
+    "ending_in": "Ending in {{time}}",
+    "highest_bid": "Highest bid {{amount}}",
+    "place_bid": "Place a Bid",
+    "ongoing": "Ongoing"
+  },
+  "nft_details": {
+    "nfts_in_marketplace": "{{count}} NFT{{plural}} in marketplace"
+  },
+  "toast": {
+    "no_nfts_found": "No NFTs found in marketplace"
+  },
+  "collections": {
+    "title": "NFT Collections",
+    "subtitle": "Explore verified digital art collections from various artists",
+    "loading": "Loading collections...",
+    "error_message": "Failed to load collections. Please try again.",
+    "try_again": "Try Again",
+    "no_collections": "No collections available",
+    "collections_count": "{{count}} collections available"
+  },
+  "collection_card": {
+    "like_collection": "Like collection {{title}}",
+    "physical_art": "Physical Art",
+    "free": "Free"
+  },
+  "stats": {
+    "title": "Marketplace Statistics",
+    "subtitle": "Track marketplace performance and trends",
+    "total_volume": "Total Volume",
+    "total_sales": "Total Sales",
+    "active_users": "Active Users",
+    "average_price": "Average Price",
+    "total_views": "Total Views",
+    "conversion_rate": "Conversion Rate",
+    "this_month": "this month",
+    "top_collections": "Top Collections",
+    "recent_activity": "Recent Activity",
+    "items": "Items",
+    "items_count": "{{count}} items"
+  },
+  "timeframe_24h": "24 Hours",
+  "timeframe_7d": "7 Days",
+  "timeframe_30d": "30 Days",
+  "timeframe_all": "All Time",
+  "refresh": "Refresh",
+  "search_rankings": "Search rankings...",
+  "clear_search": "Clear Search",
+  "activity": {
+    "sale_completed": "Sale completed: \"{{title}}\"",
+    "new_artwork_listed": "New artwork listed: \"{{title}}\"",
+    "new_bid_placed": "New bid placed on \"{{title}}\"",
+    "new_user_joined": "New user joined the marketplace"
+  },
+  "activity_page": {
+    "filter_all": "All Activities",
+    "filter_collections": "Collections",
+    "filter_certificates": "Certificates",
+    "filter_trading": "Trading",
+    "filter_artists": "Artists",
+    "filter_featured": "Featured",
+    "search_activities": "Search activities...",
+    "activity_feed": "Activity Feed",
+    "activities_count": "{{count}} activities",
+    "activity_empty_title": "No Activity Found",
+    "activity_no_results": "No activities match your current filters. Try adjusting your search or filter settings.",
+    "activity_empty_description": "Marketplace activity will appear here once transactions begin.",
+    "clear_filters": "Clear Filters",
+    "latest": "Latest",
+    "mock_activities": {
+      "collection_created": {
+        "title": "Digital Art Collection Created",
+        "description": "New collection \"{{name}}\" added to marketplace"
+      },
+      "certificate_verified": {
+        "title": "Certificate Verified",
+        "description": "Artwork \"{{name}}\" certificate has been verified"
+      },
+      "high_volume": {
+        "title": "High Volume Trading",
+        "description": "Increased activity in \"{{category}}\" category"
+      },
+      "artist_joined": {
+        "title": "New Artist Joined",
+        "description": "Artist \"{{name}}\" joined the marketplace"
+      },
+      "featured": {
+        "title": "Featured Collection",
+        "description": "\"{{name}}\" has been featured on homepage"
+      }
+    },
+    "time_ago": {
+      "hours": "{{count}} hours ago",
+      "days": "{{count}} days ago"
+    }
+  },
+  "collection_detail": {
+    "item_title": "Item #{{number}}",
+    "item_description": "Digital artwork from {{name}} collection",
+    "by_creator": "by {{creator}}",
+    "floor_price": "Floor Price",
+    "items": "Items",
+    "total_volume": "Total Volume",
+    "owners": "Owners",
+    "items_in_collection": "Items in this collection",
+    "items_count": "{{count}} items"
+  },
+  "rankings": {
+    "followers_count": "{{count}} followers",
+    "items_count": "{{count}} items"
+  }
 }

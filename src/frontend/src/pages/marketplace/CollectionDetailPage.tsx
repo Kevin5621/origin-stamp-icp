@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { AppLayout } from "../../components/layout/AppLayout";
 import { MarketplaceHeader } from "../../components/marketplace/MarketplaceHeader";
@@ -16,6 +17,7 @@ interface CollectionItem {
 }
 
 export const CollectionDetailPage: React.FC = () => {
+  const { t } = useTranslation("marketplace");
   const { collectionId } = useParams<{ collectionId: string }>();
 
   const collection = {
@@ -38,8 +40,10 @@ export const CollectionDetailPage: React.FC = () => {
     { length: 12 },
     (_, i) => ({
       id: `${i + 1}`,
-      title: `Item #${i + 1}`,
-      description: `Digital artwork from ${collection.name} collection`,
+      title: t("collection_detail.item_title", { number: i + 1 }),
+      description: t("collection_detail.item_description", {
+        name: collection.name,
+      }),
       image: `/api/placeholder/300/400`,
       price: 0.5,
       artist: collection.creator,
@@ -85,7 +89,9 @@ export const CollectionDetailPage: React.FC = () => {
                   )}
                 </h1>
                 <p className="collection-detail-creator">
-                  by {collection.creator}
+                  {t("collection_detail.by_creator", {
+                    creator: collection.creator,
+                  })}
                 </p>
                 <p className="collection-detail-description">
                   {collection.description}
@@ -98,28 +104,32 @@ export const CollectionDetailPage: React.FC = () => {
                     {collection.floorPrice} {collection.currency}
                   </span>
                   <span className="collection-detail-stat-label">
-                    Floor Price
+                    {t("collection_detail.floor_price")}
                   </span>
                 </div>
                 <div className="collection-detail-stat">
                   <span className="collection-detail-stat-value">
                     {collection.items.toLocaleString()}
                   </span>
-                  <span className="collection-detail-stat-label">Items</span>
+                  <span className="collection-detail-stat-label">
+                    {t("collection_detail.items")}
+                  </span>
                 </div>
                 <div className="collection-detail-stat">
                   <span className="collection-detail-stat-value">
                     {collection.totalVolume} {collection.currency}
                   </span>
                   <span className="collection-detail-stat-label">
-                    Total Volume
+                    {t("collection_detail.total_volume")}
                   </span>
                 </div>
                 <div className="collection-detail-stat">
                   <span className="collection-detail-stat-value">
                     {collection.owners.toLocaleString()}
                   </span>
-                  <span className="collection-detail-stat-label">Owners</span>
+                  <span className="collection-detail-stat-label">
+                    {t("collection_detail.owners")}
+                  </span>
                 </div>
               </div>
             </div>
@@ -129,10 +139,12 @@ export const CollectionDetailPage: React.FC = () => {
           <div className="collection-detail-items">
             <div className="collection-detail-items__header">
               <h2 className="collection-detail-items__title">
-                Items in this collection
+                {t("collection_detail.items_in_collection")}
               </h2>
               <p className="collection-detail-items__count">
-                {collectionItems.length} items
+                {t("collection_detail.items_count", {
+                  count: collectionItems.length,
+                })}
               </p>
             </div>
 

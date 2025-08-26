@@ -56,14 +56,14 @@ export const CollectionGrid: React.FC<CollectionGridProps> = ({
     <div
       className={`collection-grid ${className}`}
       role="grid"
-      aria-label="Koleksi NFT"
+      aria-label={t("collections.title")}
     >
       {collections.map((collection, index) => (
         <CollectionCard
           key={collection.id}
           collection={collection}
           onClick={onCollectionClick}
-          aria-label={`Koleksi ${index + 1}: ${collection.title}`}
+          aria-label={`${t("collections.title")} ${index + 1}: ${collection.title}`}
         />
       ))}
     </div>
