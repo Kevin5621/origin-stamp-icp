@@ -235,7 +235,7 @@ export const RankingsPage: React.FC = () => {
   );
 
   const getRankIcon = (rank: number) => {
-    const iconProps = { size: 24 };
+    const iconProps = { size: 20 };
 
     switch (rank) {
       case 1:
@@ -262,7 +262,7 @@ export const RankingsPage: React.FC = () => {
   };
 
   const getCategoryIcon = (category: RankingCategory) => {
-    const iconProps = { size: 20, className: "text-current" };
+    const iconProps = { size: 18, className: "text-current" };
 
     switch (category) {
       case "artists":
@@ -463,13 +463,13 @@ export const RankingsPage: React.FC = () => {
                           <div className="rankings-page__item-meta">
                             {activeCategory === "artists" && item.followers && (
                               <span>
-                                <Users size={14} />
+                                <Users size={12} />
                                 {item.followers.toLocaleString()} followers
                               </span>
                             )}
                             {activeCategory === "collections" && item.items && (
                               <span>
-                                <Star size={14} />
+                                <Star size={12} />
                                 {item.items} items
                               </span>
                             )}
@@ -493,9 +493,9 @@ export const RankingsPage: React.FC = () => {
                             }`}
                           >
                             {item.change >= 0 ? (
-                              <TrendingUp />
+                              <TrendingUp size={12} />
                             ) : (
-                              <TrendingDown />
+                              <TrendingDown size={12} />
                             )}
                             <span>{Math.abs(item.change)}%</span>
                           </div>

@@ -83,7 +83,7 @@ export const ActivityPage: React.FC = () => {
   }, []);
 
   const getActivityIcon = (type: ActivityItem["type"]) => {
-    const iconProps = { size: 24, className: "text-current" };
+    const iconProps = { size: 18, className: "text-current" };
 
     switch (type) {
       case "collection_created":

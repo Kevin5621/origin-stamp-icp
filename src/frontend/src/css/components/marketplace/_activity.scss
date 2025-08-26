@@ -45,8 +45,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: var(--icon-4xl);
+    height: var(--icon-4xl);
     background: linear-gradient(
       135deg,
       var(--color-accent),
@@ -62,8 +62,8 @@
     }
 
     svg {
-      width: 28px;
-      height: 28px;
+      width: var(--icon-xl);
+      height: var(--icon-xl);
       color: var(--color-surface);
     }
   }
@@ -307,15 +307,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
+    width: var(--icon-3xl);
+    height: var(--icon-3xl);
     border-radius: var(--radius-xl);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     transition: var(--transition-normal);
 
     svg {
-      width: 24px;
-      height: 24px;
+      width: var(--icon-xl);
+      height: var(--icon-xl);
     }
 
     &--collection {
@@ -391,8 +391,8 @@
     color: var(--color-text-tertiary);
 
     svg {
-      width: 16px;
-      height: 16px;
+      width: var(--icon-md);
+      height: var(--icon-md);
     }
   }
 
@@ -575,12 +575,12 @@
     }
 
     &__activity-icon {
-      width: 48px;
-      height: 48px;
+      width: var(--icon-2xl);
+      height: var(--icon-2xl);
 
       svg {
-        width: 20px;
-        height: 20px;
+        width: var(--icon-lg);
+        height: var(--icon-lg);
       }
     }
 
