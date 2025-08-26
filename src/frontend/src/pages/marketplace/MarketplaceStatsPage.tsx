@@ -78,7 +78,7 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "ICP",
       change: 12.3,
       period: t("stats.this_month", "this month"),
-      icon: <DollarSign size={20} />,
+      icon: <DollarSign size={14} />,
       colorClass: "success",
     },
     {
@@ -88,7 +88,7 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "Items",
       change: 8.7,
       period: t("stats.this_month", "this month"),
-      icon: <ShoppingCart size={20} />,
+      icon: <ShoppingCart size={14} />,
       colorClass: "info",
     },
     {
@@ -98,7 +98,7 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "Users",
       change: 15.2,
       period: t("stats.this_month", "this month"),
-      icon: <Users size={20} />,
+      icon: <Users size={14} />,
       colorClass: "purple",
     },
     {
@@ -108,7 +108,7 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "ICP",
       change: -3.1,
       period: t("stats.this_month", "this month"),
-      icon: <Target size={20} />,
+      icon: <Target size={14} />,
       colorClass: "warning",
     },
     {
@@ -118,7 +118,7 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "Views",
       change: 22.8,
       period: t("stats.this_month", "this month"),
-      icon: <Eye size={20} />,
+      icon: <Eye size={14} />,
       colorClass: "primary",
     },
     {
@@ -128,7 +128,7 @@ export const MarketplaceStatsPage: React.FC = () => {
       unit: "%",
       change: 5.4,
       period: t("stats.this_month", "this month"),
-      icon: <Zap size={20} />,
+      icon: <Zap size={14} />,
       colorClass: "accent",
     },
   ];
@@ -213,7 +213,7 @@ export const MarketplaceStatsPage: React.FC = () => {
   ];
 
   const getActivityIcon = (type: RecentActivity["type"]) => {
-    const iconProps = { size: 16 };
+    const iconProps = { size: 12 };
 
     switch (type) {
       case "sale":
@@ -370,7 +370,7 @@ export const MarketplaceStatsPage: React.FC = () => {
             <div className="marketplace-stats__section-card">
               <div className="marketplace-stats__section-card-header">
                 <div className="header-content">
-                  <Crown size={20} />
+                  <Crown size={14} />
                   <h2>{t("stats.top_collections", "Top Collections")}</h2>
                 </div>
               </div>
@@ -415,7 +415,7 @@ export const MarketplaceStatsPage: React.FC = () => {
             <div className="marketplace-stats__section-card">
               <div className="marketplace-stats__section-card-header">
                 <div className="header-content">
-                  <Activity size={20} />
+                  <Activity size={14} />
                   <h2>{t("stats.recent_activity", "Recent Activity")}</h2>
                 </div>
               </div>
