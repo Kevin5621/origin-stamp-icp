@@ -146,63 +146,22 @@ export const ActivityPage: React.FC = () => {
   if (loading) {
     return (
       <AppLayout variant="marketplace">
-        <div className="marketplace-activity marketplace-activity__loading">
+        <div className="marketplace-activity">
           <div className="marketplace-activity__container">
-            <div className="marketplace-activity__header">
-              <div className="marketplace-activity__header-content">
-                <div className="marketplace-activity__title-section">
-                  <div className="marketplace-activity__title-icon">
-                    <Activity />
-                  </div>
-                  <div className="marketplace-activity__title-content">
-                    <h1>{t("activity_title", "Marketplace Activity")}</h1>
-                    <p>
-                      {t(
-                        "activity_subtitle",
-                        "Recent transactions and marketplace events",
-                      )}
-                    </p>
-                  </div>
-                </div>
-                <div className="marketplace-activity__stats">
-                  <div className="marketplace-activity__stat-card">
-                    <div className="marketplace-activity__stat-card-value">
-                      5
-                    </div>
-                    <div className="marketplace-activity__stat-card-label">
-                      Total
-                    </div>
-                  </div>
-                  <div className="marketplace-activity__stat-card marketplace-activity__stat-card--live">
-                    <div className="marketplace-activity__stat-card-value">
-                      Live
-                    </div>
-                    <div className="marketplace-activity__stat-card-label">
-                      Status
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className="marketplace-activity__loading">
+              <div className="skeleton skeleton-title"></div>
+              <div className="skeleton skeleton-subtitle"></div>
 
-            <div className="marketplace-activity__feed">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="marketplace-activity__activity-card">
-                  <div className="marketplace-activity__activity-content">
-                    <div className="marketplace-activity__activity-icon"></div>
-                    <div className="marketplace-activity__activity-details">
-                      <div className="marketplace-activity__activity-header">
-                        <h3 className="marketplace-activity__activity-title"></h3>
-                        <span className="marketplace-activity__activity-badge"></span>
-                      </div>
-                      <p className="marketplace-activity__activity-description"></p>
-                      <div className="marketplace-activity__activity-meta">
-                        <div className="marketplace-activity__activity-time"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <div className="marketplace-activity__loading-filters">
+                <div className="skeleton skeleton-search"></div>
+                <div className="skeleton skeleton-filters"></div>
+              </div>
+
+              <div className="marketplace-activity__loading-list">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="skeleton skeleton-item"></div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -216,166 +175,143 @@ export const ActivityPage: React.FC = () => {
         <div className="marketplace-activity__container">
           {/* Header */}
           <div className="marketplace-activity__header">
-            <div className="marketplace-activity__header-content">
-              <div className="marketplace-activity__title-section">
-                <div className="marketplace-activity__title-icon">
-                  <Activity />
-                </div>
-                <div className="marketplace-activity__title-content">
-                  <h1>{t("activity_title", "Marketplace Activity")}</h1>
-                  <p>
-                    {t(
-                      "activity_subtitle",
-                      "Recent transactions and marketplace events",
-                    )}
-                  </p>
-                </div>
+            <div className="marketplace-activity__title-section">
+              <div className="marketplace-activity__title-icon">
+                <Activity />
               </div>
-
-              {/* Activity Stats */}
-              <div className="marketplace-activity__stats">
-                <div className="marketplace-activity__stat-card">
-                  <div className="marketplace-activity__stat-card-value">
-                    {filteredActivities.length}
-                  </div>
-                  <div className="marketplace-activity__stat-card-label">
-                    Total
-                  </div>
-                </div>
-                <div className="marketplace-activity__stat-card marketplace-activity__stat-card--live">
-                  <div className="marketplace-activity__stat-card-value">
-                    Live
-                  </div>
-                  <div className="marketplace-activity__stat-card-label">
-                    Status
-                  </div>
-                </div>
+              <div className="marketplace-activity__title-content">
+                <h1>{t("activity_title", "Marketplace Activity")}</h1>
+                <p>
+                  {t(
+                    "activity_subtitle",
+                    "Recent transactions and marketplace events",
+                  )}
+                </p>
               </div>
-            </div>
-          </div>
+              <div className="marketplace-activity__controls">
+                {/* Filter Buttons */}
+                <div className="marketplace-activity__filter-buttons">
+                  {[
+                    {
+                      key: "all",
+                      label: t("filter_all", "All Activities"),
+                      icon: Activity,
+                    },
+                    {
+                      key: "collection_created",
+                      label: t("filter_collections", "Collections"),
+                      icon: Sparkles,
+                    },
+                    {
+                      key: "certificate_verified",
+                      label: t("filter_certificates", "Certificates"),
+                      icon: CheckCircle,
+                    },
+                    {
+                      key: "high_volume",
+                      label: t("filter_trading", "Trading"),
+                      icon: TrendingUp,
+                    },
+                    {
+                      key: "artist_joined",
+                      label: t("filter_artists", "Artists"),
+                      icon: UserPlus,
+                    },
+                    {
+                      key: "featured",
+                      label: t("filter_featured", "Featured"),
+                      icon: Star,
+                    },
+                  ].map(({ key, label, icon: Icon }) => (
+                    <button
+                      key={key}
+                      onClick={() => setFilter(key)}
+                      className={`marketplace-activity__filter-btn ${
+                        filter === key
+                          ? "marketplace-activity__filter-btn--active"
+                          : ""
+                      }`}
+                    >
+                      <Icon size={16} />
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
 
-          {/* Filters and Search */}
-          <div className="marketplace-activity__filters">
-            <div className="marketplace-activity__filters-content">
-              {/* Search */}
-              <div className="marketplace-activity__search">
-                <Search />
-                <input
-                  type="text"
-                  placeholder={t("search_activities", "Search activities...")}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-
-              {/* Filter Buttons */}
-              <div className="marketplace-activity__filter-buttons">
-                {[
-                  {
-                    key: "all",
-                    label: t("filter_all", "All Activities"),
-                    icon: Activity,
-                  },
-                  {
-                    key: "collection_created",
-                    label: t("filter_collections", "Collections"),
-                    icon: Sparkles,
-                  },
-                  {
-                    key: "certificate_verified",
-                    label: t("filter_certificates", "Certificates"),
-                    icon: CheckCircle,
-                  },
-                  {
-                    key: "high_volume",
-                    label: t("filter_trading", "Trading"),
-                    icon: TrendingUp,
-                  },
-                  {
-                    key: "artist_joined",
-                    label: t("filter_artists", "Artists"),
-                    icon: UserPlus,
-                  },
-                  {
-                    key: "featured",
-                    label: t("filter_featured", "Featured"),
-                    icon: Star,
-                  },
-                ].map(({ key, label, icon: Icon }) => (
-                  <button
-                    key={key}
-                    onClick={() => setFilter(key)}
-                    className={`marketplace-activity__filter-btn ${
-                      filter === key
-                        ? "marketplace-activity__filter-btn--active"
-                        : ""
-                    }`}
-                  >
-                    <Icon />
-                    <span className="hidden sm:inline">{label}</span>
-                  </button>
-                ))}
+                {/* Search */}
+                <div className="marketplace-activity__search">
+                  <Search size={16} />
+                  <input
+                    type="text"
+                    placeholder={t("search_activities", "Search activities...")}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Activity Feed */}
           {filteredActivities.length > 0 ? (
-            <div className="marketplace-activity__feed">
-              {filteredActivities.map((activity, index) => (
-                <div
-                  key={activity.id}
-                  className={`marketplace-activity__activity-card ${
-                    index === 0
-                      ? "marketplace-activity__activity-card--latest"
-                      : ""
-                  }`}
-                >
-                  <div className="marketplace-activity__activity-content">
-                    <div
-                      className={`marketplace-activity__activity-icon ${getActivityIconClass(activity.type)}`}
-                    >
-                      {getActivityIcon(activity.type)}
-                    </div>
-                    <div className="marketplace-activity__activity-details">
-                      <div className="marketplace-activity__activity-header">
-                        <h3 className="marketplace-activity__activity-title">
-                          {activity.title}
-                        </h3>
-                        <span
-                          className={`marketplace-activity__activity-badge ${getActivityBadgeClass(activity.type)}`}
-                        >
-                          {activity.type
-                            .replace("_", " ")
-                            .replace(/\b\w/g, (l) => l.toUpperCase())}
-                        </span>
+            <div className="marketplace-activity__activity-list">
+              <div className="marketplace-activity__list-header">
+                <Activity size={18} />
+                <h2>{t("activity_feed", "Activity Feed")}</h2>
+                <span>({filteredActivities.length} activities)</span>
+              </div>
+
+              <div className="marketplace-activity__list-content">
+                {filteredActivities.map((activity, index) => (
+                  <div
+                    key={activity.id}
+                    className={`marketplace-activity__activity-item ${
+                      index === 0
+                        ? "marketplace-activity__activity-item--latest"
+                        : ""
+                    }`}
+                  >
+                    <div className="marketplace-activity__activity-content">
+                      <div
+                        className={`marketplace-activity__activity-icon ${getActivityIconClass(activity.type)}`}
+                      >
+                        {getActivityIcon(activity.type)}
                       </div>
-                      <p className="marketplace-activity__activity-description">
-                        {activity.description}
-                      </p>
-                      <div className="marketplace-activity__activity-meta">
-                        <div className="marketplace-activity__activity-time">
-                          <Clock />
-                          <span>{activity.relativeTime}</span>
-                          {index === 0 && (
-                            <span className="marketplace-activity__latest-badge">
-                              Latest
-                            </span>
-                          )}
+                      <div className="marketplace-activity__activity-details">
+                        <div className="marketplace-activity__activity-header">
+                          <h3 className="marketplace-activity__activity-title">
+                            {activity.title}
+                          </h3>
+                          <span
+                            className={`marketplace-activity__activity-badge ${getActivityBadgeClass(activity.type)}`}
+                          >
+                            {activity.type
+                              .replace("_", " ")
+                              .replace(/\b\w/g, (l) => l.toUpperCase())}
+                          </span>
+                        </div>
+                        <p className="marketplace-activity__activity-description">
+                          {activity.description}
+                        </p>
+                        <div className="marketplace-activity__activity-meta">
+                          <div className="marketplace-activity__activity-time">
+                            <Clock size={14} />
+                            <span>{activity.relativeTime}</span>
+                            {index === 0 && (
+                              <span className="marketplace-activity__latest-badge">
+                                Latest
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-
-              {/* Load More Button */}
-              <div className="marketplace-activity__load-more">
-                <button>{t("load_more", "Load More Activities")}</button>
+                ))}
               </div>
             </div>
           ) : (
-            <div className="marketplace-activity__empty-state">
+            <div className="marketplace-activity__empty">
               <div className="marketplace-activity__empty-icon">
                 <Activity />
               </div>

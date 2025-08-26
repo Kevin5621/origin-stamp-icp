@@ -294,24 +294,20 @@ export const RankingsPage: React.FC = () => {
       <AppLayout variant="marketplace">
         <div className="rankings-page">
           <div className="rankings-page__container">
-            <div className="rankings-page__loading-header">
-              <div className="skeleton"></div>
-              <div
-                className="skeleton"
-                style={{ width: "300px", height: "32px" }}
-              ></div>
-            </div>
-            <div className="rankings-page__list">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="rankings-page__loading-item">
-                  <div className="skeleton skeleton--avatar"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="skeleton skeleton--title"></div>
-                    <div className="skeleton skeleton--description"></div>
-                  </div>
-                  <div className="skeleton skeleton--value"></div>
-                </div>
-              ))}
+            <div className="rankings-page__loading">
+              <div className="skeleton skeleton-title"></div>
+              <div className="skeleton skeleton-subtitle"></div>
+
+              <div className="rankings-page__loading-filters">
+                <div className="skeleton skeleton-search"></div>
+                <div className="skeleton skeleton-timeframe"></div>
+              </div>
+
+              <div className="rankings-page__loading-list">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="skeleton skeleton-item"></div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -325,79 +321,52 @@ export const RankingsPage: React.FC = () => {
         <div className="rankings-page__container">
           {/* Header */}
           <div className="rankings-page__header">
-            <div className="rankings-page__header-content">
-              <div className="rankings-page__title-section">
-                <div className="rankings-page__title-section-icon">
-                  <Trophy />
-                </div>
-                <div className="rankings-page__title-section-text">
-                  <h1>{t("rankings_title", "Marketplace Rankings")}</h1>
-                  <p>
-                    {t(
-                      "rankings_subtitle",
-                      "Top performers in the marketplace ecosystem",
-                    )}
-                  </p>
-                </div>
+            <div className="rankings-page__title-section">
+              <div className="rankings-page__title-icon">
+                <Trophy />
               </div>
-
-              {/* Quick Stats */}
-              <div className="rankings-page__stats">
-                <div className="rankings-page__stat-card">
-                  <div className="rankings-page__stat-card-value">
-                    {filteredData.length}
-                  </div>
-                  <div className="rankings-page__stat-card-label">Listed</div>
-                </div>
-                <div className="rankings-page__stat-card rankings-page__stat-card--highlight">
-                  <div className="rankings-page__stat-card-value">Live</div>
-                  <div className="rankings-page__stat-card-label">Rankings</div>
-                </div>
+              <div className="rankings-page__title-content">
+                <h1>{t("rankings_title", "Marketplace Rankings")}</h1>
+                <p>
+                  {t(
+                    "rankings_subtitle",
+                    "Top performers in the marketplace ecosystem",
+                  )}
+                </p>
               </div>
-            </div>
-          </div>
+              <div className="rankings-page__controls">
+                {/* Category Tabs */}
+                <div className="rankings-page__category-tabs">
+                  {(
+                    ["artists", "collections", "buyers"] as RankingCategory[]
+                  ).map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => setActiveCategory(category)}
+                      className={`rankings-page__category-tab ${
+                        activeCategory === category
+                          ? "rankings-page__category-tab--active"
+                          : ""
+                      }`}
+                    >
+                      {getCategoryIcon(category)}
+                      <span>{getCategoryTitle(category)}</span>
+                    </button>
+                  ))}
+                </div>
 
-          {/* Controls */}
-          <div className="rankings-page__controls">
-            <div className="rankings-page__controls-content">
-              {/* Category Tabs */}
-              <div className="rankings-page__tabs">
-                {(
-                  ["artists", "collections", "buyers"] as RankingCategory[]
-                ).map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setActiveCategory(category)}
-                    className={`rankings-page__tab ${
-                      activeCategory === category
-                        ? "rankings-page__tab--active"
-                        : ""
-                    }`}
-                  >
-                    {getCategoryIcon(category)}
-                    <span>{getCategoryTitle(category)}</span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Filters */}
-              <div className="rankings-page__filters">
-                {/* Time Frame */}
-                <div className="rankings-page__time-filter">
-                  <Calendar />
+                {/* Time Frame Filter */}
+                <div className="rankings-page__timeframe-selector">
+                  <Calendar size={16} />
                   <select
                     value={timeFrame}
                     onChange={(e) => setTimeFrame(e.target.value as TimeFrame)}
                   >
                     <option value="24h">
-                      {t("timeframe_24h", "Last 24 Hours")}
+                      {t("timeframe_24h", "24 Hours")}
                     </option>
-                    <option value="7d">
-                      {t("timeframe_7d", "Last 7 Days")}
-                    </option>
-                    <option value="30d">
-                      {t("timeframe_30d", "Last 30 Days")}
-                    </option>
+                    <option value="7d">{t("timeframe_7d", "7 Days")}</option>
+                    <option value="30d">{t("timeframe_30d", "30 Days")}</option>
                     <option value="all">
                       {t("timeframe_all", "All Time")}
                     </option>
@@ -406,7 +375,7 @@ export const RankingsPage: React.FC = () => {
 
                 {/* Search */}
                 <div className="rankings-page__search">
-                  <Search />
+                  <Search size={16} />
                   <input
                     type="text"
                     placeholder={t("search_rankings", "Search rankings...")}
@@ -420,7 +389,7 @@ export const RankingsPage: React.FC = () => {
 
           {/* Rankings List */}
           {filteredData.length > 0 ? (
-            <div className="rankings-page__list">
+            <div className="rankings-page__rankings-list">
               <div className="rankings-page__list-header">
                 {getCategoryIcon(activeCategory)}
                 <h2>{getCategoryTitle(activeCategory)}</h2>
@@ -429,18 +398,18 @@ export const RankingsPage: React.FC = () => {
 
               <div className="rankings-page__list-content">
                 {filteredData.map((item) => (
-                  <div key={item.id} className="rankings-page__item">
-                    <div className="rankings-page__item-content">
-                      <div className="rankings-page__item-left">
+                  <div key={item.id} className="rankings-page__ranking-item">
+                    <div className="rankings-page__ranking-content">
+                      <div className="rankings-page__ranking-left">
                         <div
-                          className={`rankings-page__rank-icon ${
+                          className={`rankings-page__rank-badge ${
                             item.rank === 1
-                              ? "rankings-page__rank-icon--gold"
+                              ? "rankings-page__rank-badge--gold"
                               : item.rank === 2
-                                ? "rankings-page__rank-icon--silver"
+                                ? "rankings-page__rank-badge--silver"
                                 : item.rank === 3
-                                  ? "rankings-page__rank-icon--bronze"
-                                  : "rankings-page__rank-icon--default"
+                                  ? "rankings-page__rank-badge--bronze"
+                                  : "rankings-page__rank-badge--default"
                           }`}
                         >
                           {item.rank <= 3 ? getRankIcon(item.rank) : item.rank}
@@ -477,19 +446,19 @@ export const RankingsPage: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="rankings-page__item-right">
-                        <div className="rankings-page__item-value">
-                          <div className="rankings-page__item-value-amount">
+                      <div className="rankings-page__ranking-right">
+                        <div className="rankings-page__ranking-value">
+                          <div className="rankings-page__ranking-amount">
                             {formatValue(
                               item.value,
                               getValueType(activeCategory),
                             )}
                           </div>
                           <div
-                            className={`rankings-page__item-value-change ${
+                            className={`rankings-page__ranking-change ${
                               item.change >= 0
-                                ? "rankings-page__item-value-change--positive"
-                                : "rankings-page__item-value-change--negative"
+                                ? "rankings-page__ranking-change--positive"
+                                : "rankings-page__ranking-change--negative"
                             }`}
                           >
                             {item.change >= 0 ? (
@@ -528,7 +497,7 @@ export const RankingsPage: React.FC = () => {
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="rankings-page__empty-button"
+                  className="rankings-page__clear-search"
                 >
                   {t("clear_search", "Clear Search")}
                 </button>
