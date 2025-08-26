@@ -3,6 +3,7 @@
   "loading_certificate": "Memuat sertifikat...",
   "certificate_not_found": "Sertifikat Tidak Ditemukan",
   "certificate_not_found_description": "Sertifikat yang Anda cari tidak dapat ditemukan. Mungkin telah dihapus atau URL tidak benar.",
+  "back_to_sessions": "Kembali ke Sesi",
   "back_to_dashboard": "Kembali ke Dashboard",
   "certificate_details": "Detail Sertifikat",
   "nft_information": "Informasi NFT",

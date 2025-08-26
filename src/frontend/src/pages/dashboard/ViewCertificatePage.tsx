@@ -85,47 +85,45 @@ const ViewCertificatePage: React.FC = () => {
     const loadCertificate = async () => {
       if (certificateId) {
         try {
+          setIsLoading(true);
+          
           // Check if data is passed from navigation
           if (location.state) {
             setCertificateData(location.state as CertificateDetailData);
             setIsLoading(false);
+            return;
+          }
+
+          // Load from backend if not in state
+          const backendCertificate = await CertificateService.getCertificateById(certificateId);
+          
+          if (backendCertificate) {
+            // Transform backend data to match expected format
+            const transformedData: CertificateDetailData = {
+              certificate: backendCertificate,
+              nftData: {
+                nft_id: backendCertificate.nft_id || "N/A",
+                token_uri: backendCertificate.token_uri || "N/A",
+              },
+              sessionData: {
+                id: backendCertificate.session_id,
+                title: backendCertificate.art_title,
+                description: backendCertificate.description,
+                status: "completed",
+                createdAt: backendCertificate.issue_date,
+                photos: [], // Will be loaded separately if needed
+              },
+              photos: [], // Will be loaded separately if needed
+            };
+            setCertificateData(transformedData);
           } else {
-            // Load from backend if not in state
-            try {
-              const backendCertificate =
-                await CertificateService.getCertificateById(certificateId);
-              if (backendCertificate) {
-                // Transform backend data to match expected format
-                const transformedData: CertificateDetailData = {
-                  certificate: backendCertificate,
-                  nftData: {
-                    nft_id: backendCertificate.nft_id || "N/A",
-                    token_uri: backendCertificate.token_uri || "N/A",
-                  },
-                  sessionData: {
-                    id: backendCertificate.session_id,
-                    title: backendCertificate.art_title,
-                    description: backendCertificate.description,
-                    status: "completed",
-                    createdAt: backendCertificate.issue_date,
-                    photos: [], // Will be loaded separately if needed
-                  },
-                  photos: [], // Will be loaded separately if needed
-                };
-                setCertificateData(transformedData);
-              } else {
-                setCertificateData(null);
-              }
-            } catch (error) {
-              console.error("Failed to load certificate from backend:", error);
-              setCertificateData(null);
-            }
-            setIsLoading(false);
+            setCertificateData(null);
           }
         } catch (error) {
           console.error("Failed to load certificate:", error);
-          setIsLoading(false);
           setCertificateData(null);
+        } finally {
+          setIsLoading(false);
         }
       }
     };
@@ -216,13 +214,25 @@ const ViewCertificatePage: React.FC = () => {
       <div className="view-certificate">
         <div className="view-certificate__error">
           <h2>{t("certificate_not_found")}</h2>
-          <p>{t("certificate_not_found_description")}</p>
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="btn btn--primary"
-          >
-            {t("back_to_dashboard")}
-          </button>
+          <p>
+            {t("certificate_not_found_description")}
+            <br />
+            <small>Certificate ID: {certificateId}</small>
+          </p>
+          <div className="error-actions">
+            <button
+              onClick={() => navigate("/session")}
+              className="btn btn--secondary"
+            >
+              {t("back_to_sessions")}
+            </button>
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="btn btn--primary"
+            >
+              {t("back_to_dashboard")}
+            </button>
+          </div>
         </div>
       </div>
     );
