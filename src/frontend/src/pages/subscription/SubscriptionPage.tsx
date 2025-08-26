@@ -49,13 +49,6 @@ const SubscriptionPage: React.FC = () => {
   const [couponCode, setCouponCode] = useState<string>("");
   const [couponMessage, setCouponMessage] = useState<string>("");
 
-  // Demo coupon codes for development/testing
-  const demoCoupons = [
-    "DEMO-ENTERPRISE-2025",
-    "DEMO-BASIC-2025",
-    "DEMO-PREMIUM-2025",
-  ];
-
   const handleRedeemCoupon = async () => {
     if (!couponCode.trim() || !user?.username) {
       setCouponMessage(t("please_enter_coupon_code"));
@@ -259,6 +252,24 @@ const SubscriptionPage: React.FC = () => {
                         generate NFTs for your art certificates, you need to
                         upgrade to Basic tier or higher.
                       </p>
+                      <div className="subscription-nft-warning__demo">
+                        <strong>Demo Codes:</strong> Try these codes to test
+                        different tiers:
+                        <ul>
+                          <li>
+                            <code>DEMO-BASIC-2025</code> - Basic tier (NFT
+                            generation enabled)
+                          </li>
+                          <li>
+                            <code>DEMO-PREMIUM-2025</code> - Premium tier (All
+                            features)
+                          </li>
+                          <li>
+                            <code>DEMO-ENTERPRISE-2025</code> - Enterprise tier
+                            (Unlimited)
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -329,26 +340,6 @@ const SubscriptionPage: React.FC = () => {
                       {couponMessage}
                     </div>
                   )}
-
-                  {/* Demo Coupon Codes */}
-                  <div className="subscription-demo-coupons">
-                    <p className="subscription-demo-coupons__title">
-                      Demo Coupons (for testing):
-                    </p>
-                    <div className="subscription-demo-coupons__list">
-                      {demoCoupons.map((code) => (
-                        <button
-                          key={code}
-                          onClick={() => setCouponCode(code)}
-                          className="subscription-demo-coupon__code"
-                          title="Click to use"
-                          aria-label={`Use demo coupon code: ${code}`}
-                        >
-                          {code}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
