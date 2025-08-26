@@ -343,7 +343,7 @@ export const MarketplaceMain: React.FC = () => {
                             border: "1px solid var(--color-border)",
                           }}
                         >
-                          <User size={20} color="var(--color-text-secondary)" />
+                          <User size={18} color="var(--color-text-secondary)" />
                         </div>
                       )}
                     </div>
@@ -417,7 +417,7 @@ export const MarketplaceMain: React.FC = () => {
                           border: "1px solid var(--color-border)",
                         }}
                       >
-                        <User size={16} color="var(--color-text-secondary)" />
+                        <User size={14} color="var(--color-text-secondary)" />
                       </div>
                     )}
                     <span className="top-collection__owner-name">

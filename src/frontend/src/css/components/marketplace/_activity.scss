@@ -139,6 +139,18 @@
     }
   }
 
+  // Controls Section
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    flex: 1;
+
+    @media (max-width: 768px) {
+      gap: var(--spacing-lg);
+    }
+  }
+
   // Search and Filters Section
   &__filters {
     background: var(--color-surface);
@@ -161,39 +173,41 @@
   }
 
   &__search {
-    flex: 1;
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: var(--transition-normal);
+
+    &:hover {
+      border-color: var(--color-border-hover);
+    }
+
+    &:focus-within {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.1);
+    }
+
+    svg {
+      color: var(--color-text-secondary);
+      flex-shrink: 0;
+    }
 
     input {
-      width: 100%;
-      padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-lg) 48px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      background: var(--color-surface);
+      background: transparent;
+      border: none;
+      font-size: var(--text-sm);
       color: var(--color-text-primary);
-      font-size: var(--text-base);
-      transition: var(--transition-normal);
+      outline: none;
+      flex: 1;
+      min-width: 0;
 
       &::placeholder {
         color: var(--color-text-tertiary);
       }
-
-      &:focus {
-        outline: none;
-        border-color: var(--color-accent);
-        box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.1);
-      }
-    }
-
-    svg {
-      position: absolute;
-      left: var(--spacing-lg);
-      top: 50%;
-      transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
-      color: var(--color-text-tertiary);
-      pointer-events: none;
     }
   }
 
@@ -247,10 +261,85 @@
   }
 
   // Activity Feed Section
+  &__activity-list {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  &__list-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+    background: var(--color-hover-overlay);
+    border-bottom: 1px solid var(--color-border);
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      margin: 0;
+    }
+
+    span {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+
+    svg {
+      color: var(--color-accent);
+    }
+  }
+
+  &__list-content {
+    padding: var(--spacing-lg);
+  }
+
   &__feed {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-lg);
+  }
+
+  &__activity-item {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border);
+    transition: var(--transition-normal);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: var(--color-hover-overlay);
+    }
+
+    &--latest {
+      border-color: var(--color-accent);
+      background: linear-gradient(
+        135deg,
+        rgba(var(--color-accent-rgb), 0.02),
+        rgba(var(--color-accent-rgb), 0.05)
+      );
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--color-accent),
+          var(--color-accent-secondary)
+        );
+      }
+    }
   }
 
   &__activity-card {
@@ -547,6 +636,60 @@
     }
     50% {
       opacity: 0.5;
+    }
+  }
+
+  // Loading skeleton animation
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+
+  .marketplace-activity__loading {
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        var(--color-surface-disabled) 25%,
+        var(--color-border) 50%,
+        var(--color-surface-disabled) 75%
+      );
+      background-size: 200px 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-md);
+    }
+
+    .skeleton-title {
+      height: 32px;
+      width: 300px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .skeleton-subtitle {
+      height: 20px;
+      width: 400px;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .skeleton-search {
+      height: 40px;
+      width: 250px;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .skeleton-filters {
+      height: 40px;
+      width: 100%;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .skeleton-item {
+      height: 100px;
+      border-radius: var(--radius-2xl);
+      margin-bottom: var(--spacing-lg);
     }
   }
 
