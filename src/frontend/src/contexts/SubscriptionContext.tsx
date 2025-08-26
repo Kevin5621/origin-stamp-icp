@@ -29,6 +29,12 @@ interface SubscriptionContextType {
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
   undefined,
 );
+// Demo coupon codes for development/testing
+const DEMO_COUPONS: Record<string, SubscriptionTier> = {
+  "DEMO-ENTERPRISE-2025": "Enterprise",
+  "DEMO-BASIC-2025": "Basic",
+  "DEMO-PREMIUM-2025": "Premium",
+};
 
 // coupon service with backend integration
 const CouponService = {
@@ -37,6 +43,36 @@ const CouponService = {
     couponCode: string,
   ): Promise<{ success: boolean; tier?: SubscriptionTier; message: string }> {
     try {
+      // Check demo coupons first (for development/testing)
+      const upperCode = couponCode.toUpperCase();
+      if (DEMO_COUPONS[upperCode]) {
+        // For demo coupons, also call backend to update subscription
+        try {
+          const { backend } = await import("../../../declarations/backend");
+          const backendTier = { [DEMO_COUPONS[upperCode]]: null } as any;
+
+          const result = await backend.set_user_subscription(
+            username,
+            backendTier,
+          );
+          if ("Ok" in result && result.Ok) {
+            return {
+              success: true,
+              tier: DEMO_COUPONS[upperCode],
+              message: `Demo coupon redeemed successfully! Upgraded to ${DEMO_COUPONS[upperCode]} tier.`,
+            };
+          }
+        } catch (backendError) {
+          console.error("Backend update failed for demo coupon:", backendError);
+        }
+
+        return {
+          success: true,
+          tier: DEMO_COUPONS[upperCode],
+          message: `Demo coupon redeemed successfully! Upgraded to ${DEMO_COUPONS[upperCode]} tier.`,
+        };
+      }
+
       // Call backend coupon redemption for production coupons
       try {
         const { backend } = await import("../../../declarations/backend");
