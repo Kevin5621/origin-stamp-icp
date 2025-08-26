@@ -226,11 +226,12 @@ const SessionRecordPage: React.FC = () => {
           // Check if session is completed and redirect to certificate
           if (sessionWithPhotos.status === "completed" && user?.username) {
             try {
-              const certificate = await CertificateService.getCertificateBySessionIdForUser(
-                sessionId,
-                user.username,
-              );
-              
+              const certificate =
+                await CertificateService.getCertificateBySessionIdForUser(
+                  sessionId,
+                  user.username,
+                );
+
               if (certificate) {
                 // Silent redirect without toast to avoid spam
                 navigate(`/certificate/${certificate.certificate_id}`);

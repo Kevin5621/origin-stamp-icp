@@ -86,7 +86,7 @@ const ViewCertificatePage: React.FC = () => {
       if (certificateId) {
         try {
           setIsLoading(true);
-          
+
           // Check if data is passed from navigation
           if (location.state) {
             setCertificateData(location.state as CertificateDetailData);
@@ -95,8 +95,9 @@ const ViewCertificatePage: React.FC = () => {
           }
 
           // Load from backend if not in state
-          const backendCertificate = await CertificateService.getCertificateById(certificateId);
-          
+          const backendCertificate =
+            await CertificateService.getCertificateById(certificateId);
+
           if (backendCertificate) {
             // Transform backend data to match expected format
             const transformedData: CertificateDetailData = {

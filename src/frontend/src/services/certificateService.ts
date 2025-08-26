@@ -89,7 +89,7 @@ export class CertificateService {
   ): Promise<CertificateData | null> {
     try {
       const result = await backend.get_certificate_by_id(certificateId);
-      
+
       // Handle array response from backend
       let certificateData = null;
       if (Array.isArray(result) && result.length > 0) {
@@ -97,7 +97,7 @@ export class CertificateService {
       } else if (result && !Array.isArray(result)) {
         certificateData = result;
       }
-      
+
       if (certificateData) {
         return this.transformCertificateData(certificateData);
       } else {
@@ -412,22 +412,20 @@ export class CertificateService {
   private static transformCertificateData(backendCert: any): CertificateData {
     // Handle undefined metadata with defaults
     const metadata = backendCert.metadata || {};
-    
+
     // Ensure creation_tools is always a string array
     const creationTools = Array.isArray(metadata.creation_tools)
-      ? metadata.creation_tools.filter(
-          (tool: any) => typeof tool === "string",
-        )
+      ? metadata.creation_tools.filter((tool: any) => typeof tool === "string")
       : [];
 
     // Handle NFT fields - they might be arrays or single values
     let nftId = backendCert.nft_id;
     let tokenUri = backendCert.token_uri;
-    
+
     if (Array.isArray(nftId) && nftId.length > 0) {
       nftId = nftId[0];
     }
-    
+
     if (Array.isArray(tokenUri) && tokenUri.length > 0) {
       tokenUri = tokenUri[0];
     }
