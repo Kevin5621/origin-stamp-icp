@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { AppLayout } from "../../components/layout/AppLayout";
 import { CollectionGrid } from "../../components/marketplace/CollectionGrid";
 import { MarketplaceService } from "../../services/marketplaceService";
@@ -23,6 +24,7 @@ interface Collection {
 }
 
 export const MarketplaceCollectionsPage: React.FC = () => {
+  const { t } = useTranslation("marketplace");
   const { addToast } = useToastContext();
   const { user, isAuthenticated } = useAuth();
   const [collections, setCollections] = useState<Collection[]>([]);
@@ -135,7 +137,7 @@ export const MarketplaceCollectionsPage: React.FC = () => {
       setCollections(adaptedCollections);
     } catch (error) {
       console.error("Failed to load collections:", error);
-      const errorMessage = "Gagal memuat koleksi. Silakan coba lagi.";
+      const errorMessage = t("collections.error_message");
       addToast("error", errorMessage);
       setError(errorMessage);
       setCollections([]);
@@ -154,17 +156,18 @@ export const MarketplaceCollectionsPage: React.FC = () => {
       <div className="marketplace-collections">
         <div className="marketplace-collections__content">
           <div className="marketplace-collections__header">
-            <h1 className="marketplace-collections__title">Koleksi NFT</h1>
+            <h1 className="marketplace-collections__title">
+              {t("collections.title")}
+            </h1>
             <p className="marketplace-collections__subtitle">
-              Jelajahi koleksi karya seni digital terverifikasi dari berbagai
-              seniman
+              {t("collections.subtitle")}
             </p>
           </div>
 
           {loading ? (
             <div className="marketplace-collections__loading">
               <Loader size={32} className="animate-spin" />
-              <span>Memuat koleksi...</span>
+              <span>{t("collections.loading")}</span>
             </div>
           ) : error ? (
             <div className="marketplace-collections__loading">
@@ -183,17 +186,21 @@ export const MarketplaceCollectionsPage: React.FC = () => {
                   fontWeight: "var(--font-weight-medium)",
                 }}
               >
-                Coba Lagi
+                {t("collections.try_again")}
               </button>
             </div>
           ) : collections.length === 0 ? (
             <div className="marketplace-collections__loading">
-              <span>Tidak ada koleksi tersedia</span>
+              <span>{t("collections.no_collections")}</span>
             </div>
           ) : (
             <>
               <div className="marketplace-collections__count">
-                <span>{collections.length} koleksi tersedia</span>
+                <span>
+                  {t("collections.collections_count", {
+                    count: collections.length,
+                  })}
+                </span>
               </div>
 
               <div className="marketplace-collections__grid">

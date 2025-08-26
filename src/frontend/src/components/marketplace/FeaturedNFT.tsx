@@ -21,7 +21,7 @@ export const FeaturedNFT: React.FC<FeaturedNFTProps> = ({
   className = "",
   nft,
 }) => {
-  useTranslation("marketplace");
+  const { t } = useTranslation("marketplace");
 
   // Default featured NFT data
   const defaultNFT = {
@@ -133,7 +133,7 @@ export const FeaturedNFT: React.FC<FeaturedNFTProps> = ({
                 className="featured-nft__bid-label"
                 style={{ fontSize: "0.875rem", color: "#6b7280" }}
               >
-                Current Bid
+                {t("featured_nft.current_bid")}
               </span>
               <span
                 className="featured-nft__bid-amount"
@@ -172,7 +172,7 @@ export const FeaturedNFT: React.FC<FeaturedNFTProps> = ({
                   "0 4px 12px rgba(0, 0, 0, 0.1)";
               }}
             >
-              Place a Bid
+              {t("featured_nft.place_bid")}
             </button>
           </div>
 
@@ -202,7 +202,7 @@ export const FeaturedNFT: React.FC<FeaturedNFTProps> = ({
                   minWidth: "80px",
                 }}
               >
-                Date:
+                {t("featured_nft.date")}:
               </span>
               <span
                 className="featured-nft__info-value"
@@ -237,7 +237,7 @@ export const FeaturedNFT: React.FC<FeaturedNFTProps> = ({
                   minWidth: "80px",
                 }}
               >
-                Metadata:
+                {t("featured_nft.metadata")}:
               </span>
               <span
                 className="featured-nft__info-value"
@@ -272,7 +272,7 @@ export const FeaturedNFT: React.FC<FeaturedNFTProps> = ({
                   minWidth: "80px",
                 }}
               >
-                Blockchain:
+                {t("featured_nft.blockchain")}:
               </span>
               <span
                 className="featured-nft__info-value"
@@ -329,7 +329,7 @@ export const FeaturedNFT: React.FC<FeaturedNFTProps> = ({
                   className="featured-nft__creator-role"
                   style={{ fontSize: "0.75rem", color: "#6b7280" }}
                 >
-                  Creator
+                  {t("featured_nft.creator")}
                 </span>
               </div>
             </div>
@@ -377,7 +377,7 @@ export const FeaturedNFT: React.FC<FeaturedNFTProps> = ({
                 className="featured-nft__price-label"
                 style={{ fontSize: "0.75rem", color: "#6b7280" }}
               >
-                Instant Price
+                {t("featured_nft.instant_price")}
               </span>
             </div>
           </div>

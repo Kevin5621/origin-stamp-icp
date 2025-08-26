@@ -24,7 +24,7 @@ interface NFTItem {
 }
 
 export const MarketplaceMain: React.FC = () => {
-  useTranslation("marketplace");
+  const { t } = useTranslation("marketplace");
   const { user } = useAuth();
   const { addToast } = useToastContext();
 
@@ -42,7 +42,7 @@ export const MarketplaceMain: React.FC = () => {
         setNfts(backendNfts);
 
         if (backendNfts.length === 0) {
-          addToast("info", "No NFTs found in marketplace");
+          addToast("info", t("toast.no_nfts_found"));
         }
       } catch (err) {
         const errorMessage =
@@ -89,8 +89,12 @@ export const MarketplaceMain: React.FC = () => {
         <div className="marketplace__container">
           <div className="marketplace__header">
             <div className="marketplace__greeting">
-              <h1>Hello, {user?.username || "User"}</h1>
-              <p>Loading marketplace...</p>
+              <h1>
+                {t("greeting.hello", {
+                  username: user?.username || t("greeting.user"),
+                })}
+              </h1>
+              <p>{t("loading.marketplace")}</p>
             </div>
           </div>
           <div className="marketplace__featured">
@@ -115,7 +119,7 @@ export const MarketplaceMain: React.FC = () => {
                 }}
               ></div>
               <p style={{ color: "var(--color-text-secondary)" }}>
-                Loading NFTs from blockchain...
+                {t("loading.nfts")}
               </p>
             </div>
           </div>
@@ -131,8 +135,12 @@ export const MarketplaceMain: React.FC = () => {
         <div className="marketplace__container">
           <div className="marketplace__header">
             <div className="marketplace__greeting">
-              <h1>Hello, {user?.username || "User"}</h1>
-              <p>Marketplace unavailable</p>
+              <h1>
+                {t("greeting.hello", {
+                  username: user?.username || t("greeting.user"),
+                })}
+              </h1>
+              <p>{t("error.marketplace_unavailable")}</p>
             </div>
           </div>
           <div className="marketplace__featured">
@@ -156,7 +164,7 @@ export const MarketplaceMain: React.FC = () => {
                 ⚠️
               </div>
               <h3 style={{ color: "var(--color-text-primary)", margin: 0 }}>
-                Failed to load marketplace
+                {t("error.failed_to_load")}
               </h3>
               <p style={{ color: "var(--color-text-secondary)", margin: 0 }}>
                 {error}
@@ -174,7 +182,7 @@ export const MarketplaceMain: React.FC = () => {
                   fontWeight: "var(--font-weight-semibold)",
                 }}
               >
-                Try Again
+                {t("error.try_again")}
               </button>
             </div>
           </div>
@@ -190,8 +198,12 @@ export const MarketplaceMain: React.FC = () => {
         <div className="marketplace__container">
           <div className="marketplace__header">
             <div className="marketplace__greeting">
-              <h1>Hello, {user?.username || "User"}</h1>
-              <p>No NFTs in marketplace yet</p>
+              <h1>
+                {t("greeting.hello", {
+                  username: user?.username || t("greeting.user"),
+                })}
+              </h1>
+              <p>{t("empty_state.no_nfts_title")}</p>
             </div>
           </div>
           <div className="marketplace__featured">
@@ -239,10 +251,10 @@ export const MarketplaceMain: React.FC = () => {
 ───────────█████▒▒▒▒▒▒▒▒▒██████─────────
 ───────────────████████████─────────────`}</pre>
               <h3 style={{ color: "var(--color-text-primary)", margin: 0 }}>
-                No NFTs Available
+                {t("empty_state.no_nfts_title")}
               </h3>
               <p style={{ color: "var(--color-text-secondary)", margin: 0 }}>
-                Be the first to create an NFT through our physical art sessions!
+                {t("empty_state.no_nfts_description")}
               </p>
             </div>
           </div>
@@ -257,9 +269,16 @@ export const MarketplaceMain: React.FC = () => {
         {/* Header Section */}
         <div className="marketplace__header">
           <div className="marketplace__greeting">
-            <h1>Hello, {user?.username || "User"}</h1>
+            <h1>
+              {t("greeting.hello", {
+                username: user?.username || t("greeting.user"),
+              })}
+            </h1>
             <p>
-              {nfts.length} NFT{nfts.length !== 1 ? "s" : ""} in marketplace
+              {t("nft_details.nfts_in_marketplace", {
+                count: nfts.length,
+                plural: nfts.length !== 1 ? "s" : "",
+              })}
             </p>
           </div>
         </div>
@@ -289,10 +308,12 @@ export const MarketplaceMain: React.FC = () => {
                 {/* Current Bid */}
                 <div className="marketplace__bid-section">
                   <div className="marketplace__bid-info">
-                    <p>Current Bid</p>
+                    <p>{t("featured_nft.current_bid")}</p>
                     <p>{featuredNFT.currentBid}</p>
                   </div>
-                  <button className="marketplace__bid-btn">Place a Bid</button>
+                  <button className="marketplace__bid-btn">
+                    {t("featured_nft.place_bid")}
+                  </button>
                 </div>
 
                 {/* NFT Details */}
@@ -302,21 +323,27 @@ export const MarketplaceMain: React.FC = () => {
                       className="marketplace__meta-item-dot"
                       style={{ backgroundColor: "var(--color-info)" }}
                     ></div>
-                    <span>Date: {featuredNFT.date}</span>
+                    <span>
+                      {t("featured_nft.date")}: {featuredNFT.date}
+                    </span>
                   </div>
                   <div className="marketplace__meta-item">
                     <div
                       className="marketplace__meta-item-dot"
                       style={{ backgroundColor: "var(--color-primary)" }}
                     ></div>
-                    <span>Metadata: {featuredNFT.metadata}</span>
+                    <span>
+                      {t("featured_nft.metadata")}: {featuredNFT.metadata}
+                    </span>
                   </div>
                   <div className="marketplace__meta-item">
                     <div
                       className="marketplace__meta-item-dot"
                       style={{ backgroundColor: "var(--color-accent)" }}
                     ></div>
-                    <span>Blockchain: {featuredNFT.blockchain}</span>
+                    <span>
+                      {t("featured_nft.blockchain")}: {featuredNFT.blockchain}
+                    </span>
                   </div>
                 </div>
 
@@ -349,7 +376,7 @@ export const MarketplaceMain: React.FC = () => {
                     </div>
                     <div className="marketplace__creator-details">
                       <p>{featuredNFT.creator.name}</p>
-                      <p>Creator</p>
+                      <p>{t("featured_nft.creator")}</p>
                     </div>
                   </div>
                   <div className="marketplace__instant-price">
@@ -361,7 +388,7 @@ export const MarketplaceMain: React.FC = () => {
                       }}
                     />
                     <span>{featuredNFT.instantPrice}</span>
-                    <span>Instant Price</span>
+                    <span>{t("featured_nft.instant_price")}</span>
                   </div>
                 </div>
               </div>
@@ -372,9 +399,11 @@ export const MarketplaceMain: React.FC = () => {
         {/* Top Collection Section */}
         <div className="top-collection">
           <div className="top-collection__header">
-            <h3 className="top-collection__title">Top Collection</h3>
+            <h3 className="top-collection__title">
+              {t("top_collection.title")}
+            </h3>
             <a href="#" className="top-collection__view-all">
-              View All
+              {t("top_collection.view_all")}
             </a>
           </div>
           <div className="top-collection__grid">
@@ -391,7 +420,7 @@ export const MarketplaceMain: React.FC = () => {
                   {/* Overlay with Bid Button */}
                   <div className="top-collection__card-overlay">
                     <button className="top-collection__bid-button">
-                      Place a Bid
+                      {t("top_collection.place_bid")}
                     </button>
                   </div>
                 </div>
@@ -431,10 +460,12 @@ export const MarketplaceMain: React.FC = () => {
                   {/* NFT Details */}
                   <div className="top-collection__card-details">
                     <span className="top-collection__end-time">
-                      Ending in {nft.endingTime}
+                      {t("top_collection.ending_in", { time: nft.endingTime })}
                     </span>
                     <span className="top-collection__highest-bid">
-                      Highest bid {nft.currentBid}
+                      {t("top_collection.highest_bid", {
+                        amount: nft.currentBid,
+                      })}
                     </span>
                   </div>
                 </div>
