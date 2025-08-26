@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Heart } from "lucide-react";
 
@@ -17,25 +17,70 @@ interface CollectionCardProps {
   collection: Collection;
   onClick?: (collection: Collection) => void;
   className?: string;
+  "aria-label"?: string;
 }
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({
   collection,
   onClick,
   className = "",
+  "aria-label": ariaLabel,
 }) => {
   const { t } = useTranslation("marketplace");
+  const [imageLoading, setImageLoading] = useState(true);
 
   const handleClick = () => {
     onClick?.(collection);
   };
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    setImageLoading(false);
+    const target = e.target as HTMLImageElement;
+    target.src = `https://via.placeholder.com/300x400/4A5568/ffffff?text=${encodeURIComponent(collection.title)}`;
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
+
   return (
-    <div className={`collection-card ${className}`} onClick={handleClick}>
-      <div className="collection-card__image">
-        <img src={collection.image} alt={collection.title} />
+    <div
+      className={`collection-card ${className}`}
+      onClick={handleClick}
+      role="gridcell"
+      tabIndex={0}
+      aria-label={ariaLabel}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+    >
+      <div
+        className={`collection-card__image ${imageLoading ? "loading" : ""}`}
+      >
+        <img
+          src={collection.image}
+          alt={collection.title}
+          loading="lazy"
+          onError={handleImageError}
+          onLoad={handleImageLoad}
+          style={{
+            opacity: imageLoading ? 0 : 1,
+            transition: "opacity 0.3s ease",
+          }}
+        />
         <div className="collection-card__overlay">
-          <button className="collection-card__like-btn">
+          <button
+            className="collection-card__like-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              // TODO: Implement like functionality
+            }}
+            aria-label={`Sukai koleksi ${collection.title}`}
+            title={`Sukai koleksi ${collection.title}`}
+          >
             <Heart
               size={16}
               fill="none"
@@ -45,7 +90,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                 height: "16px",
               }}
             />
-            {collection.likes}
+            <span>{collection.likes}</span>
           </button>
         </div>
       </div>
@@ -55,10 +100,14 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
         <p className="collection-card__description">{collection.description}</p>
         <div className="collection-card__footer">
           <span className="collection-card__category">
-            {collection.category}
+            {collection.category === "physical-art"
+              ? "Seni Fisik"
+              : collection.category}
           </span>
           <span className="collection-card__price">
-            {t("price_format", { price: collection.price })}
+            {collection.price > 0
+              ? t("price_format", { price: collection.price })
+              : "Gratis"}
           </span>
         </div>
       </div>
