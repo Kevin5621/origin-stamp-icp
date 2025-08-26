@@ -27,6 +27,7 @@ export const MarketplaceCollectionsPage: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadCollections();
@@ -35,6 +36,7 @@ export const MarketplaceCollectionsPage: React.FC = () => {
   const loadCollections = async () => {
     try {
       setLoading(true);
+      setError(null);
       console.log("Loading collections...");
 
       // Try to get sessions data directly to debug
@@ -133,7 +135,9 @@ export const MarketplaceCollectionsPage: React.FC = () => {
       setCollections(adaptedCollections);
     } catch (error) {
       console.error("Failed to load collections:", error);
-      addToast("error", "Failed to load collections");
+      const errorMessage = "Gagal memuat koleksi. Silakan coba lagi.";
+      addToast("error", errorMessage);
+      setError(errorMessage);
       setCollections([]);
     } finally {
       setLoading(false);
@@ -159,8 +163,32 @@ export const MarketplaceCollectionsPage: React.FC = () => {
 
           {loading ? (
             <div className="marketplace-collections__loading">
-              <Loader size={24} className="animate-spin" />
+              <Loader size={32} className="animate-spin" />
               <span>Memuat koleksi...</span>
+            </div>
+          ) : error ? (
+            <div className="marketplace-collections__loading">
+              <span>{error}</span>
+              <button
+                onClick={loadCollections}
+                style={{
+                  marginTop: "var(--spacing-md)",
+                  padding: "var(--spacing-sm) var(--spacing-md)",
+                  background: "var(--color-accent)",
+                  color: "var(--color-surface)",
+                  border: "none",
+                  borderRadius: "var(--radius-md)",
+                  cursor: "pointer",
+                  fontSize: "var(--text-sm)",
+                  fontWeight: "var(--font-weight-medium)",
+                }}
+              >
+                Coba Lagi
+              </button>
+            </div>
+          ) : collections.length === 0 ? (
+            <div className="marketplace-collections__loading">
+              <span>Tidak ada koleksi tersedia</span>
             </div>
           ) : (
             <>
