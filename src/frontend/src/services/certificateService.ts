@@ -89,7 +89,20 @@ export class CertificateService {
   ): Promise<CertificateData | null> {
     try {
       const result = await backend.get_certificate_by_id(certificateId);
-      return result ? this.transformCertificateData(result) : null;
+      
+      // Handle array response from backend
+      let certificateData = null;
+      if (Array.isArray(result) && result.length > 0) {
+        certificateData = result[0];
+      } else if (result && !Array.isArray(result)) {
+        certificateData = result;
+      }
+      
+      if (certificateData) {
+        return this.transformCertificateData(certificateData);
+      } else {
+        return null;
+      }
     } catch (error) {
       return null;
     }
@@ -106,6 +119,44 @@ export class CertificateService {
       return result.map((cert) => this.transformCertificateData(cert));
     } catch (error) {
       return [];
+    }
+  }
+
+  /**
+   * Get certificate by session ID
+   */
+  static async getCertificateBySessionId(
+    sessionId: string,
+  ): Promise<CertificateData | null> {
+    try {
+      // Get all user certificates and find the one matching session ID
+      const userCertificates = await this.getUserCertificates(""); // We'll need to get username from context
+      const certificate = userCertificates.find(
+        (cert) => cert.session_id === sessionId,
+      );
+      return certificate || null;
+    } catch (error) {
+      console.error("Failed to get certificate by session ID:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Get certificate by session ID for specific user
+   */
+  static async getCertificateBySessionIdForUser(
+    sessionId: string,
+    username: string,
+  ): Promise<CertificateData | null> {
+    try {
+      const userCertificates = await this.getUserCertificates(username);
+      const certificate = userCertificates.find(
+        (cert) => cert.session_id === sessionId,
+      );
+      return certificate || null;
+    } catch (error) {
+      console.error("Failed to get certificate by session ID:", error);
+      return null;
     }
   }
 
@@ -359,12 +410,27 @@ export class CertificateService {
    * Transform backend certificate data to frontend format
    */
   private static transformCertificateData(backendCert: any): CertificateData {
+    // Handle undefined metadata with defaults
+    const metadata = backendCert.metadata || {};
+    
     // Ensure creation_tools is always a string array
-    const creationTools = Array.isArray(backendCert.metadata?.creation_tools)
-      ? backendCert.metadata.creation_tools.filter(
+    const creationTools = Array.isArray(metadata.creation_tools)
+      ? metadata.creation_tools.filter(
           (tool: any) => typeof tool === "string",
         )
       : [];
+
+    // Handle NFT fields - they might be arrays or single values
+    let nftId = backendCert.nft_id;
+    let tokenUri = backendCert.token_uri;
+    
+    if (Array.isArray(nftId) && nftId.length > 0) {
+      nftId = nftId[0];
+    }
+    
+    if (Array.isArray(tokenUri) && tokenUri.length > 0) {
+      tokenUri = tokenUri[0];
+    }
 
     return {
       certificate_id: backendCert.certificate_id,
@@ -388,16 +454,16 @@ export class CertificateService {
       blockchain: backendCert.blockchain,
       token_standard: backendCert.token_standard,
       metadata: {
-        creation_duration: backendCert.metadata.creation_duration,
-        total_actions: Number(backendCert.metadata.total_actions),
-        file_size: backendCert.metadata.file_size,
-        file_format: backendCert.metadata.file_format,
+        creation_duration: metadata.creation_duration || "0 hours 0 minutes",
+        total_actions: Number(metadata.total_actions) || 0,
+        file_size: metadata.file_size || "0.00 MB",
+        file_format: metadata.file_format || "Unknown",
         creation_tools: creationTools,
       },
       // NFT fields
-      nft_generated: backendCert.nft_generated,
-      nft_id: backendCert.nft_id,
-      token_uri: backendCert.token_uri,
+      nft_generated: backendCert.nft_generated || false,
+      nft_id: nftId,
+      token_uri: tokenUri,
     };
   }
 }

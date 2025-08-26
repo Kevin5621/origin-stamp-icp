@@ -13,6 +13,7 @@ import {
   Camera,
 } from "lucide-react";
 import PhysicalArtService from "../../services/physicalArtService";
+import { CertificateService } from "../../services/certificateService";
 import { useToastContext } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -91,8 +92,29 @@ const SessionPage: React.FC = () => {
     navigate(`/sessions/${sessionId}`);
   };
 
-  const handleViewCertificate = (sessionId: string) => {
-    navigate(`/certificate/${sessionId}`);
+  const handleViewCertificate = async (sessionId: string) => {
+    try {
+      if (!user?.username) {
+        addToast("error", t("please_login_first"));
+        return;
+      }
+
+      // Get certificate by session ID
+      const certificate = await CertificateService.getCertificateBySessionIdForUser(
+        sessionId,
+        user.username,
+      );
+
+      if (certificate) {
+        // Navigate to certificate page with correct certificate ID
+        navigate(`/certificate/${certificate.certificate_id}`);
+      } else {
+        // Show error only if certificate really doesn't exist
+        addToast("error", t("certificate_not_found"));
+      }
+    } catch (error) {
+      // Don't show error toast for network issues, just log
+    }
   };
 
   const handleCreateNewSession = () => {

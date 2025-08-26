@@ -222,6 +222,24 @@ const SessionRecordPage: React.FC = () => {
             `session_${sessionId}`,
             JSON.stringify(sessionWithPhotos),
           );
+
+          // Check if session is completed and redirect to certificate
+          if (sessionWithPhotos.status === "completed" && user?.username) {
+            try {
+              const certificate = await CertificateService.getCertificateBySessionIdForUser(
+                sessionId,
+                user.username,
+              );
+              
+              if (certificate) {
+                // Silent redirect without toast to avoid spam
+                navigate(`/certificate/${certificate.certificate_id}`);
+                return;
+              }
+            } catch (error) {
+              // Continue with normal flow if certificate not found
+            }
+          }
         } else {
           addToast("error", t("session.session_not_found"));
           navigate("/session");
