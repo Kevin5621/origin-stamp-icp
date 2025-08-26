@@ -496,5 +496,10 @@
   "nft_metadata_not_found": "Metadata NFT tidak ditemukan",
   "certificate_not_found": "Sertifikat tidak ditemukan",
   "failed_to_load_certificate": "Gagal memuat sertifikat",
-  "redirecting_to_certificate": "Mengalihkan ke halaman sertifikat..."
+  "redirecting_to_certificate": "Mengalihkan ke halaman sertifikat...",
+  "search_sessions": "Cari sesi...",
+  "all": "Semua",
+  "active": "Aktif",
+  "completed": "Selesai",
+  "your_sessions": "Sesi Anda"
 }
