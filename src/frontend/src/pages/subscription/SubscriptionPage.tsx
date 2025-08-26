@@ -50,11 +50,11 @@ const SubscriptionPage: React.FC = () => {
   const [couponMessage, setCouponMessage] = useState<string>("");
 
   // Demo coupon codes for development/testing
-  // const demoCoupons = [
-  //   "DEMO-ENTERPRISE-2025",
-  //   "DEMO-BASIC-2025",
-  //   "DEMO-PREMIUM-2025",
-  // ];
+  const demoCoupons = [
+    "DEMO-ENTERPRISE-2025",
+    "DEMO-BASIC-2025",
+    "DEMO-PREMIUM-2025",
+  ];
 
   const handleRedeemCoupon = async () => {
     if (!couponCode.trim() || !user?.username) {
@@ -244,6 +244,25 @@ const SubscriptionPage: React.FC = () => {
                   )}
                 </div>
               </div>
+
+              {/* NFT Generation Warning for Free Users */}
+              {currentTier === "Free" && (
+                <div className="subscription-nft-warning">
+                  <div className="subscription-nft-warning__content">
+                    <div className="subscription-nft-warning__icon">
+                      <Info size={20} />
+                    </div>
+                    <div className="subscription-nft-warning__text">
+                      <h4>NFT Generation Not Available</h4>
+                      <p>
+                        Your Free tier doesn't include NFT generation. To
+                        generate NFTs for your art certificates, you need to
+                        upgrade to Basic tier or higher.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -311,7 +330,7 @@ const SubscriptionPage: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Demo Coupon Codes
+                  {/* Demo Coupon Codes */}
                   <div className="subscription-demo-coupons">
                     <p className="subscription-demo-coupons__title">
                       Demo Coupons (for testing):
@@ -329,7 +348,7 @@ const SubscriptionPage: React.FC = () => {
                         </button>
                       ))}
                     </div>
-                  </div> */}
+                  </div>
                 </div>
               </div>
             </div>
