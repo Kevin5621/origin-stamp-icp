@@ -23,42 +23,57 @@ interface SubscriptionContextType {
   isLoading: boolean;
   updateSubscriptionTier: (tier: SubscriptionTier) => void;
   redeemCoupon: (couponCode: string) => Promise<boolean>;
+  refreshSubscription: () => Promise<void>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
   undefined,
 );
 
-// Demo coupon codes for development/testing
-const DEMO_COUPONS: Record<string, SubscriptionTier> = {
-  "DEMO-ENTERPRISE-2025": "Enterprise",
-  "DEMO-BASIC-2025": "Basic",
-  "DEMO-PREMIUM-2025": "Premium",
-};
-
-// coupon service with demo support
+// coupon service with backend integration
 const CouponService = {
   async redeemCoupon(
-    _username: string,
+    username: string,
     couponCode: string,
   ): Promise<{ success: boolean; tier?: SubscriptionTier; message: string }> {
     try {
-      // Check demo coupons first (for development/testing)
-      const upperCode = couponCode.toUpperCase();
-      if (DEMO_COUPONS[upperCode]) {
-        return {
-          success: true,
-          tier: DEMO_COUPONS[upperCode],
-          message: `Demo coupon redeemed successfully! Upgraded to ${DEMO_COUPONS[upperCode]} tier.`,
-        };
+      // Call backend coupon redemption for production coupons
+      try {
+        const { backend } = await import("../../../declarations/backend");
+        const result = await backend.redeem_coupon(username, couponCode);
+
+        if ("Ok" in result && result.Ok) {
+          // Get updated subscription from backend
+          const subscriptionResult =
+            await backend.get_user_subscription(username);
+          if (subscriptionResult && "Ok" in subscriptionResult) {
+            const tier = subscriptionResult.Ok as any;
+            let frontendTier: SubscriptionTier = "Free";
+
+            if ("Free" in tier) frontendTier = "Free";
+            else if ("Basic" in tier) frontendTier = "Basic";
+            else if ("Premium" in tier) frontendTier = "Premium";
+            else if ("Enterprise" in tier) frontendTier = "Enterprise";
+
+            return {
+              success: true,
+              tier: frontendTier,
+              message: `Coupon redeemed successfully! Upgraded to ${frontendTier} tier.`,
+            };
+          }
+        } else {
+          return {
+            success: false,
+            message: (result as any).Err || "Failed to redeem coupon",
+          };
+        }
+      } catch (backendError) {
+        console.error("Backend coupon redemption failed:", backendError);
       }
 
-      // TODO: Call backend coupon redemption for production coupons
-      // const result = await backend.redeem_coupon(username, couponCode);
       return {
         success: false,
-        message:
-          "Invalid coupon code. Try demo codes: DEMO-ENTERPRISE-2025, DEMO-BASIC-2025, DEMO-PREMIUM-2025",
+        message: "Invalid coupon code. Please check your coupon and try again.",
       };
     } catch (error) {
       return {
@@ -104,28 +119,56 @@ export const SubscriptionProvider: React.FC<{ children: ReactNode }> = ({
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>("Free");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load current subscription tier from localStorage or default
+  // Load current subscription tier from backend
   useEffect(() => {
-    const loadSubscriptionTier = () => {
+    const loadSubscriptionTier = async () => {
       if (!user?.username) {
         setCurrentTier("Free");
         return;
       }
 
-      // Try to load from localStorage first
-      const savedTier = localStorage.getItem(`subscription_${user.username}`);
+      setIsLoading(true);
+      try {
+        const { backend } = await import("../../../declarations/backend");
 
-      if (savedTier && Object.keys(SUBSCRIPTION_LIMITS).includes(savedTier)) {
-        setCurrentTier(savedTier as SubscriptionTier);
-        return;
+        // Get subscription from backend
+        const backendTier = await backend.get_user_subscription(user.username);
+
+        if (backendTier && "Ok" in backendTier) {
+          const tier = backendTier.Ok as any;
+          // Convert backend tier to frontend tier
+          let frontendTier: SubscriptionTier = "Free";
+
+          if ("Free" in tier) frontendTier = "Free";
+          else if ("Basic" in tier) frontendTier = "Basic";
+          else if ("Premium" in tier) frontendTier = "Premium";
+          else if ("Enterprise" in tier) frontendTier = "Enterprise";
+
+          setCurrentTier(frontendTier);
+          localStorage.setItem(`subscription_${user.username}`, frontendTier);
+        } else {
+          // Initialize user with Free tier if not found
+          const initResult = await backend.initialize_user_subscription(
+            user.username,
+          );
+          if ("Ok" in initResult && initResult.Ok) {
+            setCurrentTier("Free");
+            localStorage.setItem(`subscription_${user.username}`, "Free");
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load subscription from backend:", error);
+        // Fallback to localStorage
+        const savedTier = localStorage.getItem(`subscription_${user.username}`);
+        if (savedTier && Object.keys(SUBSCRIPTION_LIMITS).includes(savedTier)) {
+          setCurrentTier(savedTier as SubscriptionTier);
+        } else {
+          setCurrentTier("Free");
+          localStorage.setItem(`subscription_${user.username}`, "Free");
+        }
+      } finally {
+        setIsLoading(false);
       }
-
-      // All new users start with Free tier
-      setCurrentTier("Free");
-      localStorage.setItem(`subscription_${user.username}`, "Free");
-
-      // TODO: Call backend to initialize user subscription
-      // await backend.initialize_user_subscription(user.username);
     };
 
     loadSubscriptionTier();
@@ -161,6 +204,37 @@ export const SubscriptionProvider: React.FC<{ children: ReactNode }> = ({
         // Log failed update for monitoring
         console.warn("Backend update failed, will retry on next sync");
       }
+    }
+  };
+
+  // Refresh subscription from backend
+  const refreshSubscription = async (): Promise<void> => {
+    if (!user?.username) return;
+
+    setIsLoading(true);
+    try {
+      const { backend } = await import("../../../declarations/backend");
+
+      // Get subscription from backend
+      const backendTier = await backend.get_user_subscription(user.username);
+
+      if (backendTier && "Ok" in backendTier) {
+        const tier = backendTier.Ok as any;
+        // Convert backend tier to frontend tier
+        let frontendTier: SubscriptionTier = "Free";
+
+        if ("Free" in tier) frontendTier = "Free";
+        else if ("Basic" in tier) frontendTier = "Basic";
+        else if ("Premium" in tier) frontendTier = "Premium";
+        else if ("Enterprise" in tier) frontendTier = "Enterprise";
+
+        setCurrentTier(frontendTier);
+        localStorage.setItem(`subscription_${user.username}`, frontendTier);
+      }
+    } catch (error) {
+      console.error("Failed to refresh subscription from backend:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -222,6 +296,7 @@ export const SubscriptionProvider: React.FC<{ children: ReactNode }> = ({
     isLoading,
     updateSubscriptionTier,
     redeemCoupon,
+    refreshSubscription,
   };
 
   return (
