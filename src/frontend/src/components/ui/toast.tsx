@@ -15,15 +15,15 @@ const Toast: React.FC<ToastProps> = ({ id, type, message, onRemove }) => {
   const getToastStyles = () => {
     switch (type) {
       case "success":
-        return "bg-green-500 text-white border-green-600";
+        return "bg-primary text-primary-foreground border-primary";
       case "error":
-        return "bg-red-500 text-white border-red-600";
+        return "bg-destructive text-destructive-foreground border-destructive";
       case "warning":
-        return "bg-yellow-500 text-white border-yellow-600";
+        return "bg-secondary text-secondary-foreground border-secondary";
       case "info":
-        return "bg-blue-500 text-white border-blue-600";
+        return "bg-accent text-accent-foreground border-accent";
       default:
-        return "bg-gray-500 text-white border-gray-600";
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
@@ -55,7 +55,7 @@ const Toast: React.FC<ToastProps> = ({ id, type, message, onRemove }) => {
       </div>
       <button
         onClick={() => onRemove(id)}
-        className="ml-4 text-white transition-colors hover:text-gray-200"
+        className="text-foreground hover:text-muted-foreground ml-4 transition-colors"
       >
         <X className="h-4 w-4" />
       </button>
