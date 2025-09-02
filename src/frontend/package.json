@@ -11,6 +11,9 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.850.0",
+    "@dfinity/auth-client": "^0.15.0",
+    "@dfinity/principal": "^0.15.0",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -23,16 +26,20 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "crypto-js": "^4.2.0",
+    "i18next": "^25.3.2",
     "lucide-react": "^0.542.0",
     "next": "15.5.2",
     "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-i18next": "^15.6.0",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -1,3 +1,22 @@
+// UI Components
+export * from "./ui/button";
+export * from "./ui/card";
+export * from "./ui/badge";
+export * from "./ui/avatar";
+export * from "./ui/input";
+export * from "./ui/dropdown-menu";
+export * from "./ui/navigation-menu";
+export * from "./ui/separator";
+export * from "./ui/sheet";
+export * from "./ui/tabs";
+export * from "./ui/dialog";
+export * from "./ui/tooltip";
+export * from "./ui/hover-card";
+export * from "./ui/aspect-ratio";
+export * from "./ui/theme-toggle";
+export * from "./ui/toast";
+export * from "./ui/toast-container";
+
 // Layout Components
 export { Footer } from "./layout/Footer";
 
@@ -9,60 +28,6 @@ export { HeroSection } from "./sections/HeroSection";
 export { CreatorsSection } from "./sections/CreatorsSection";
 export { FeaturesSection } from "./sections/FeaturesSection";
 
-// UI Components (re-export shadcn components)
-export { Button } from "./ui/button";
-export { ThemeToggle } from "./ui/theme-toggle";
-export {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-export { Badge } from "./ui/badge";
-export { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-export { Input } from "./ui/input";
-export { Separator } from "./ui/separator";
-export {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-export {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
-export {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-export {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "./ui/navigation-menu";
-export { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-export {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
-export { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
-export { AspectRatio } from "./ui/aspect-ratio";
+// Auth Components
+export { LoginForm } from "./auth/LoginForm";
+export { LoginModal } from "./auth/LoginModal";
