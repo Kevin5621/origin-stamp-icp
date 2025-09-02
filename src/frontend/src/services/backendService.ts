@@ -124,10 +124,7 @@ export const backendService = {
    * @returns canister ID string or undefined
    */
   getCanisterId(): string | undefined {
-    return (
-      process.env.NEXT_PUBLIC_CANISTER_ID_BACKEND ||
-      "bkyz2-fmaaa-aaaaa-qaaaq-cai"
-    );
+    return process.env.NEXT_PUBLIC_CANISTER_ID_BACKEND;
   },
 
   /**

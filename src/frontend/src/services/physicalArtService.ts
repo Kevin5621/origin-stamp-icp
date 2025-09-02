@@ -12,11 +12,7 @@ interface S3ClientConfig {
 }
 
 export class PhysicalArtService {
-  static async createSession(
-    _username: string,
-    _artTitle: string,
-    _description: string,
-  ): Promise<string> {
+  static async createSession(): Promise<string> {
     try {
       const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       return sessionId;
@@ -191,9 +187,7 @@ export class PhysicalArtService {
     return Promise.all(uploadPromises);
   }
 
-  static async getSessionDetails(
-    _sessionId: string,
-  ): Promise<PhysicalArtSession | null> {
+  static async getSessionDetails(): Promise<PhysicalArtSession | null> {
     try {
       return null;
     } catch (error) {
@@ -202,9 +196,7 @@ export class PhysicalArtService {
     }
   }
 
-  static async getUserSessions(
-    _username: string,
-  ): Promise<PhysicalArtSession[]> {
+  static async getUserSessions(): Promise<PhysicalArtSession[]> {
     try {
       return [];
     } catch (error) {
@@ -213,10 +205,7 @@ export class PhysicalArtService {
     }
   }
 
-  static async updateSessionStatus(
-    _sessionId: string,
-    _status: string,
-  ): Promise<boolean> {
+  static async updateSessionStatus(): Promise<boolean> {
     try {
       return true;
     } catch (error) {
@@ -225,10 +214,7 @@ export class PhysicalArtService {
     }
   }
 
-  static async removePhotoFromSession(
-    _sessionId: string,
-    _fileUrl: string,
-  ): Promise<boolean> {
+  static async removePhotoFromSession(): Promise<boolean> {
     try {
       return true;
     } catch (error) {

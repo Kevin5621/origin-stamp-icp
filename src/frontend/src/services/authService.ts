@@ -97,7 +97,7 @@ export class AuthService {
     if (googleUser) {
       try {
         return JSON.parse(googleUser);
-      } catch (error) {
+      } catch {
         return null;
       }
     }
@@ -106,7 +106,7 @@ export class AuthService {
     if (localGoogleUser) {
       try {
         return JSON.parse(localGoogleUser);
-      } catch (error) {
+      } catch {
         return null;
       }
     }
@@ -123,7 +123,7 @@ export class AuthService {
       if (userData) {
         try {
           return JSON.parse(userData);
-        } catch (error) {
+        } catch {
           continue;
         }
       }
@@ -221,7 +221,7 @@ export class AuthService {
       if (userData) {
         try {
           return JSON.parse(userData);
-        } catch (error) {
+        } catch {
           continue;
         }
       }
@@ -252,7 +252,7 @@ export class AuthService {
       this.isAuthenticated = true;
       localStorage.setItem("originstamp_user_principal", principal.toString());
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

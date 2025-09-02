@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.850.0",
+    "@dfinity/agent": "^0.15.0",
     "@dfinity/auth-client": "^0.15.0",
+    "@dfinity/candid": "^0.15.0",
     "@dfinity/principal": "^0.15.0",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
     "@radix-ui/react-avatar": "^1.1.10",
