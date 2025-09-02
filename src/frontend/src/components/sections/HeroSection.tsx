@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 import Image from "next/image";
 import {
-  BackendService,
+  backendService,
   type NFTMarketplaceStats,
 } from "@/services/backendService";
 
@@ -18,7 +18,7 @@ export function HeroSection() {
   });
 
   useEffect(() => {
-    BackendService.getMarketplaceStats().then(setStats);
+    backendService.getMarketplaceStats().then(setStats);
   }, []);
 
   return (

@@ -1,6 +1,7 @@
-// Note: Backend import will be available after dfx generates declarations
-// import { backend } from "../../declarations/backend";
+import { backend } from "../../../declarations/backend";
+import type { LoginResult } from "../../../declarations/backend/backend.did";
 
+// Types for marketplace components
 export interface NFTMarketplaceStats {
   totalArtworks: string;
   totalCreators: string;
@@ -15,43 +16,168 @@ export interface CreatorStats {
   subscriptionType?: string;
 }
 
-export class BackendService {
-  static async getMarketplaceStats(): Promise<NFTMarketplaceStats> {
-    // Uncomment when backend declarations are available
-    // try {
-    //   const [certificateCount, userCount, sessionCount] = await Promise.all([
-    //     backend.get_certificate_count(),
-    //     backend.get_user_count(),
-    //     backend.get_session_count()
-    //   ]);
-    //   return {
-    //     totalArtworks: `${certificateCount}+`,
-    //     totalCreators: `${userCount}+`,
-    //     totalSessions: `${sessionCount}+`
-    //   };
-    // } catch (error) {
-    //   console.error("Failed to fetch marketplace stats:", error);
-    //   return {
-    //     totalArtworks: "0+",
-    //     totalCreators: "0+",
-    //     totalSessions: "0+"
-    //   };
-    // }
+/**
+ * Service for handling all backend canister API calls
+ */
+export const backendService = {
+  /**
+   * Registers a new user
+   * @param username Username for the new user
+   * @param password Password for the new user
+   * @returns Promise with the registration result
+   */
+  async registerUser(username: string, password: string): Promise<LoginResult> {
+    if (!backend) {
+      throw new Error(
+        "Backend canister not initialized. Please check your environment configuration.",
+      );
+    }
+    return await backend.register_user(username, password);
+  },
 
-    // Mock data for now until backend is connected
-    return {
-      totalArtworks: "235k+",
-      totalCreators: "87k+",
-      totalSessions: "74k+",
-    };
-  }
+  /**
+   * Logs in a user
+   * @param username User's username
+   * @param password User's password
+   * @returns Promise with the login result
+   */
+  async login(username: string, password: string): Promise<LoginResult> {
+    if (!backend) {
+      throw new Error(
+        "Backend canister not initialized. Please check your environment configuration.",
+      );
+    }
+    return await backend.login(username, password);
+  },
 
-  static async getTopCreators(): Promise<CreatorStats[]> {
+  /**
+   * Gets all registered usernames
+   * @returns Promise with array of usernames
+   */
+  async getAllUsers(): Promise<string[]> {
+    if (!backend) {
+      throw new Error(
+        "Backend canister not initialized. Please check your environment configuration.",
+      );
+    }
+    return await backend.get_all_users();
+  },
+
+  /**
+   * Gets user information by username
+   * @param username Username to lookup
+   * @returns Promise with user info (username, created_at) or undefined if not found
+   */
+  async getUserInfo(username: string): Promise<[string, bigint] | undefined> {
+    if (!backend) {
+      throw new Error(
+        "Backend canister not initialized. Please check your environment configuration.",
+      );
+    }
+    const result = await backend.get_user_info(username);
+    return result.length > 0 ? result[0] : undefined;
+  },
+
+  /**
+   * Gets total number of registered users
+   * @returns Promise with user count
+   */
+  async getUserCount(): Promise<bigint> {
+    if (!backend) {
+      throw new Error(
+        "Backend canister not initialized. Please check your environment configuration.",
+      );
+    }
+    return await backend.get_user_count();
+  },
+
+  /**
+   * Updates user username
+   * @param oldUsername Current username
+   * @param newUsername New username
+   * @param password User's password for verification
+   * @returns Promise with the update result
+   */
+  async updateUsername(
+    oldUsername: string,
+    newUsername: string,
+    password: string,
+  ): Promise<LoginResult> {
+    if (!backend) {
+      throw new Error(
+        "Backend canister not initialized. Please check your environment configuration.",
+      );
+    }
+    return await backend.update_username(oldUsername, newUsername, password);
+  },
+
+  /**
+   * Checks if backend is available
+   * @returns boolean indicating if backend is initialized
+   */
+  isAvailable(): boolean {
+    return !!backend;
+  },
+
+  /**
+   * Gets backend canister ID
+   * @returns canister ID string or undefined
+   */
+  getCanisterId(): string | undefined {
+    return (
+      process.env.NEXT_PUBLIC_CANISTER_ID_BACKEND ||
+      "bkyz2-fmaaa-aaaaa-qaaaq-cai"
+    );
+  },
+
+  /**
+   * Gets marketplace statistics
+   * @returns Promise with marketplace stats
+   */
+  async getMarketplaceStats(): Promise<NFTMarketplaceStats> {
     try {
-      // Uncomment when backend declarations are available
-      // const users = await backend.get_all_users();
+      if (!backend) {
+        return {
+          totalArtworks: "0+",
+          totalCreators: "0+",
+          totalSessions: "0+",
+        };
+      }
 
-      // Mock data for now
+      const [certificateCount, userCount, sessionCount] = await Promise.all([
+        backend.get_certificate_count(),
+        backend.get_user_count(),
+        backend.get_session_count(),
+      ]);
+
+      return {
+        totalArtworks: `${certificateCount}+`,
+        totalCreators: `${userCount}+`,
+        totalSessions: `${sessionCount}+`,
+      };
+    } catch (error) {
+      console.error("Failed to fetch marketplace stats:", error);
+      return {
+        totalArtworks: "0+",
+        totalCreators: "0+",
+        totalSessions: "0+",
+      };
+    }
+  },
+
+  /**
+   * Gets top creators
+   * @returns Promise with creator stats array
+   */
+  async getTopCreators(): Promise<CreatorStats[]> {
+    try {
+      if (!backend) {
+        return [];
+      }
+
+      const users = await backend.get_all_users();
+
+      // Mock data for now until we have more backend methods
       const mockCreators: CreatorStats[] = [
         {
           username: "Kerafuru",
@@ -73,96 +199,12 @@ export class BackendService {
           sessionCount: 15,
           hasSubscription: false,
         },
-        {
-          username: "Qwertifly",
-          certificateCount: 25,
-          sessionCount: 12,
-          hasSubscription: true,
-          subscriptionType: "Enterprise",
-        },
-        {
-          username: "HappyAle",
-          certificateCount: 22,
-          sessionCount: 14,
-          hasSubscription: true,
-          subscriptionType: "Premium",
-        },
-        {
-          username: "Zinxaio",
-          certificateCount: 18,
-          sessionCount: 9,
-          hasSubscription: false,
-        },
-        {
-          username: "ArtMaster",
-          certificateCount: 16,
-          sessionCount: 8,
-          hasSubscription: true,
-          subscriptionType: "Basic",
-        },
-        {
-          username: "DigitalPro",
-          certificateCount: 14,
-          sessionCount: 7,
-          hasSubscription: false,
-        },
       ];
 
-      // Sort by certificate count descending using toSorted
-      const sortedCreators = mockCreators.toSorted(
-        (a, b) => b.certificateCount - a.certificateCount,
-      );
-      return sortedCreators.slice(0, 8);
+      return mockCreators.slice(0, 8);
     } catch (error) {
       console.error("Failed to fetch top creators:", error);
       return [];
     }
-  }
-
-  static async getDashboardMetrics() {
-    try {
-      // Uncomment when backend declarations are available
-      // return await backend.get_dashboard_metrics();
-
-      // Mock data for now
-      return {
-        total_certificates: BigInt(2350),
-        total_users: BigInt(870),
-        total_sessions: BigInt(740),
-      };
-    } catch (error) {
-      console.error("Failed to fetch dashboard metrics:", error);
-      return {
-        total_certificates: BigInt(0),
-        total_users: BigInt(0),
-        total_sessions: BigInt(0),
-      };
-    }
-  }
-
-  static async getUserInfo(username: string) {
-    try {
-      // Uncomment when backend declarations are available
-      // return await backend.get_user_info(username);
-
-      // Mock data for now
-      return [username, BigInt(Date.now())];
-    } catch (error) {
-      console.error(`Failed to get user info for ${username}:`, error);
-      return null;
-    }
-  }
-
-  static async getRecentSessions() {
-    // Uncomment when backend declarations are available
-    // try {
-    //   return await backend.get_recent_sessions(BigInt(10));
-    // } catch (error) {
-    //   console.error("Failed to fetch recent sessions:", error);
-    //   return [];
-    // }
-
-    // Mock data for now
-    return [];
-  }
-}
+  },
+};

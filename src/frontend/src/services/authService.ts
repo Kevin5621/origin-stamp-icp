@@ -1,4 +1,5 @@
 import { Principal } from "@dfinity/principal";
+import { backendService } from "./backendService";
 
 declare global {
   interface Window {
@@ -10,6 +11,12 @@ declare global {
       };
     };
   }
+}
+
+export interface BackendAuthResponse {
+  success: boolean;
+  message: string;
+  username?: string;
 }
 
 export class AuthService {
@@ -80,7 +87,12 @@ export class AuthService {
     return null;
   }
 
-  private static getGoogleOAuthUser(): any {
+  private static getGoogleOAuthUser(): {
+    id: string;
+    name: string;
+    email: string;
+    picture: string;
+  } | null {
     const googleUser = sessionStorage.getItem("google_oauth_user");
     if (googleUser) {
       try {
@@ -120,9 +132,10 @@ export class AuthService {
     return null;
   }
 
-  private static async generatePrincipalFromGoogleUser(
-    googleUser: any,
-  ): Promise<Principal> {
+  private static async generatePrincipalFromGoogleUser(googleUser: {
+    id: string;
+    email: string;
+  }): Promise<Principal> {
     try {
       const userId = googleUser.id || googleUser.email || "google_user";
       const salt = this.getOrCreateSalt();
@@ -192,7 +205,10 @@ export class AuthService {
     );
   }
 
-  private static getUsernamePasswordUser(): any {
+  private static getUsernamePasswordUser(): {
+    username: string;
+    email?: string;
+  } | null {
     const possibleKeys = [
       "originstamp_user",
       "username_auth",
@@ -214,9 +230,10 @@ export class AuthService {
     return null;
   }
 
-  private static async generatePrincipalFromUsername(
-    userData: any,
-  ): Promise<Principal> {
+  private static async generatePrincipalFromUsername(userData: {
+    username: string;
+    email?: string;
+  }): Promise<Principal> {
     try {
       const username = userData.username || userData.email || "username_user";
       const salt = this.getOrCreateSalt();
@@ -237,6 +254,70 @@ export class AuthService {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  static async registerUser(
+    username: string,
+    password: string,
+  ): Promise<BackendAuthResponse> {
+    try {
+      if (!backendService.isAvailable()) {
+        return {
+          success: false,
+          message:
+            "Backend service not available. Please check your environment configuration.",
+        };
+      }
+
+      const result = await backendService.registerUser(username, password);
+
+      return {
+        success: result.success,
+        message: result.message,
+        username: result.username?.[0],
+      };
+    } catch (error) {
+      console.error("Backend registration error:", error);
+      return {
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to connect to backend. Please try again.",
+      };
+    }
+  }
+
+  static async loginUser(
+    username: string,
+    password: string,
+  ): Promise<BackendAuthResponse> {
+    try {
+      if (!backendService.isAvailable()) {
+        return {
+          success: false,
+          message:
+            "Backend service not available. Please check your environment configuration.",
+        };
+      }
+
+      const result = await backendService.login(username, password);
+
+      return {
+        success: result.success,
+        message: result.message,
+        username: result.username?.[0],
+      };
+    } catch (error) {
+      console.error("Backend login error:", error);
+      return {
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to connect to backend. Please try again.",
+      };
     }
   }
 

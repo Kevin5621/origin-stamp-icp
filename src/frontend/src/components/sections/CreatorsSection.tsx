@@ -5,14 +5,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BackendService, type CreatorStats } from "@/services/backendService";
+import { backendService, type CreatorStats } from "@/services/backendService";
 
 export function CreatorsSection() {
   const [creators, setCreators] = useState<CreatorStats[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    BackendService.getTopCreators()
+    backendService.getTopCreators()
       .then(setCreators)
       .finally(() => setLoading(false));
   }, []);
