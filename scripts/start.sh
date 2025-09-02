@@ -31,6 +31,12 @@ pushd src/frontend/ > /dev/null
 npm install
 popd > /dev/null
 
+# Build frontend for DFX
+echo "🔨 Building frontend for DFX..."
+pushd src/frontend/ > /dev/null
+npm run build:dfx
+popd > /dev/null
+
 # Cleanup old dfx local network state
 echo "🧹 Cleaning up old DFX network state..."
 rm -rf /app/.dfx/network/local/pid

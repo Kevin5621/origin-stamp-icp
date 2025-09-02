@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "build:dfx": "next build --turbopack && mkdir -p dist && cp -r .next/static dist/static && cp -r .next/server dist/server && cp -r public dist/",
     "start": "next dev --turbopack",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
