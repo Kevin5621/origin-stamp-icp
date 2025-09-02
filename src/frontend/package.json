@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next dev --turbopack",
+    "lint": "eslint",
+    "type-check": "tsc --noEmit",
+    "test": "echo \"No tests yet\""
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
