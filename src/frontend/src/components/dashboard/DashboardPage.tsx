@@ -6,7 +6,6 @@ import {
   TrendingUp,
   Activity,
   CheckCircle,
-  Loader2,
 } from "lucide-react";
 import {
   Card,
@@ -19,7 +18,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { useDashboard } from "@/hooks/useDashboard";
 import type {
   DashboardCard,
   DashboardMetrics,

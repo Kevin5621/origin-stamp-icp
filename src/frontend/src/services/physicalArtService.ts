@@ -1,26 +1,23 @@
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { S3Config, UploadResult, PhysicalArtSession } from "../types/s3";
+
+interface S3ClientConfig {
+  region: string;
+  credentials: {
+    accessKeyId: string;
+    secretAccessKey: string;
+  };
+  endpoint?: string;
+  forcePathStyle?: boolean;
+}
 
 export class PhysicalArtService {
   static async createSession(
-    username: string,
-    artTitle: string,
-    description: string,
+    _username: string,
+    _artTitle: string,
+    _description: string,
   ): Promise<string> {
     try {
-      // TODO: Implement backend call when available
-      // const result = await backend.create_physical_art_session(username, artTitle, description);
-      // if ("Ok" in result) {
-      //   return result.Ok;
-      // } else {
-      //   throw new Error(result.Err);
-      // }
-
-      // Mock implementation for now
       const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       return sessionId;
     } catch (error) {
@@ -88,7 +85,7 @@ export class PhysicalArtService {
         throw new Error("Invalid S3 configuration: missing required fields");
       }
 
-      const clientConfig: any = {
+      const clientConfig: S3ClientConfig = {
         region: s3Config.region,
         credentials: {
           accessKeyId: s3Config.access_key_id,
@@ -162,34 +159,6 @@ export class PhysicalArtService {
       }
 
       try {
-        // TODO: Implement backend call when available
-        // const recordResult = await backend.upload_photo_to_session(sessionId, fileUrl);
-        // if ("Ok" in recordResult && recordResult.Ok) {
-        //   return {
-        //     success: true,
-        //     message: "Photo uploaded successfully",
-        //     file_url: fileUrl,
-        //     file_id: fileKey,
-        //   };
-        // } else {
-        //   const errorMessage = "Err" in recordResult ? result.Err : "Failed to record uploaded photo";
-        //   console.error(`[S3Upload] Backend record failed: ${errorMessage}`);
-        //
-        //   console.log(`[S3Upload] Cleaning up S3 file due to backend failure...`);
-        //   try {
-        //     const deleteCommand = new DeleteObjectCommand({
-        //       Bucket: s3Config.bucket_name,
-        //       Key: fileKey,
-        //     });
-        //     await s3Client.send(deleteCommand);
-        //   } catch (cleanupError) {
-        //     console.error(`[S3Upload] S3 cleanup failed:`, cleanupError);
-        //   }
-        //
-        //   throw new Error(`Backend record failed: ${errorMessage}`);
-        // }
-
-        // Mock successful upload for now
         return {
           success: true,
           message: "Photo uploaded successfully",
@@ -223,14 +192,9 @@ export class PhysicalArtService {
   }
 
   static async getSessionDetails(
-    sessionId: string,
+    _sessionId: string,
   ): Promise<PhysicalArtSession | null> {
     try {
-      // TODO: Implement backend call when available
-      // const result = await backend.get_session_details(sessionId);
-      // return result.length > 0 && result[0] ? result[0] : null;
-
-      // Mock implementation for now
       return null;
     } catch (error) {
       console.error("Failed to get session details:", error);
@@ -239,13 +203,9 @@ export class PhysicalArtService {
   }
 
   static async getUserSessions(
-    username: string,
+    _username: string,
   ): Promise<PhysicalArtSession[]> {
     try {
-      // TODO: Implement backend call when available
-      // return await backend.get_user_sessions(username);
-
-      // Mock implementation for now
       return [];
     } catch (error) {
       console.error("Failed to get user sessions:", error);
@@ -254,15 +214,10 @@ export class PhysicalArtService {
   }
 
   static async updateSessionStatus(
-    sessionId: string,
-    status: string,
+    _sessionId: string,
+    _status: string,
   ): Promise<boolean> {
     try {
-      // TODO: Implement backend call when available
-      // const result = await backend.update_session_status(sessionId, status);
-      // return "Ok" in result ? result.Ok : false;
-
-      // Mock implementation for now
       return true;
     } catch (error) {
       console.error("Failed to update session status:", error);
@@ -271,15 +226,10 @@ export class PhysicalArtService {
   }
 
   static async removePhotoFromSession(
-    sessionId: string,
-    fileUrl: string,
+    _sessionId: string,
+    _fileUrl: string,
   ): Promise<boolean> {
     try {
-      // TODO: Implement backend call when available
-      // const result = await backend.remove_photo_from_session(sessionId, fileUrl);
-      // return "Ok" in result ? result.Ok : false;
-
-      // Mock implementation for now
       return true;
     } catch (error) {
       console.error("Failed to remove photo from session:", error);
@@ -289,17 +239,6 @@ export class PhysicalArtService {
 
   static async setS3Config(config: S3Config): Promise<boolean> {
     try {
-      // TODO: Implement backend call when available
-      // const backendConfig = {
-      //   bucket_name: config.bucket_name,
-      //   region: config.region,
-      //   access_key_id: config.access_key_id,
-      //   secret_access_key: config.secret_access_key,
-      //   endpoint: config.endpoint ? [config.endpoint] : [],
-      // };
-      // return await backend.set_s3_config(backendConfig as any);
-
-      // Mock implementation for now
       console.log("S3 config set:", config);
       return true;
     } catch (error) {
@@ -310,10 +249,6 @@ export class PhysicalArtService {
 
   static async isS3Configured(): Promise<boolean> {
     try {
-      // TODO: Implement backend call when available
-      // return await backend.get_s3_config_status();
-
-      // Mock implementation for now
       return false;
     } catch (error) {
       console.error("Failed to check S3 config status:", error);
@@ -361,7 +296,13 @@ export class PhysicalArtService {
   static async testS3Connection(): Promise<{
     success: boolean;
     message: string;
-    details?: any;
+    details?: {
+      bucket: string;
+      region: string;
+      endpoint: string;
+      hasCustomEndpoint: boolean;
+      error?: unknown;
+    };
   }> {
     try {
       const s3Config = await this.getS3ConfigFromBackend();
@@ -372,7 +313,7 @@ export class PhysicalArtService {
         };
       }
 
-      const clientConfig: any = {
+      const clientConfig: S3ClientConfig = {
         region: s3Config.region,
         credentials: {
           accessKeyId: s3Config.access_key_id,
@@ -412,7 +353,13 @@ export class PhysicalArtService {
       return {
         success: false,
         message: `S3 connection test failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-        details: { error },
+        details: {
+          bucket: "unknown",
+          region: "unknown",
+          endpoint: "unknown",
+          hasCustomEndpoint: false,
+          error,
+        },
       };
     }
   }
@@ -466,17 +413,8 @@ export class PhysicalArtService {
     }
   }
 
-  private static async getS3ConfigFromBackend(): Promise<any | null> {
+  private static async getS3ConfigFromBackend(): Promise<S3Config | null> {
     try {
-      // TODO: Implement backend call when available
-      // const result = await backend.get_s3_config();
-      // if (!result) {
-      //   return null;
-      // }
-      // const config = result.length > 0 ? result[0] : result;
-      // return config;
-
-      // Mock implementation for now
       return null;
     } catch (error) {
       console.error("Failed to get S3 config:", error);

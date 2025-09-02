@@ -21,7 +21,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isCollapsed,
   onToggleCollapse,
   onSectionChange,
-  variant = "dashboard",
 }) => {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },

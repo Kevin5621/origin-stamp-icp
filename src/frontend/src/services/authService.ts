@@ -66,7 +66,7 @@ export class AuthService {
         this.currentUserPrincipal = principal;
         this.isAuthenticated = true;
         return principal;
-      } catch (error) {
+      } catch {
         try {
           const validPrincipalText =
             await this.convertHashToValidPrincipal(cachedPrincipal);

@@ -154,7 +154,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
         if (result.success) {
           success(`Account created successfully! Welcome, ${result.username}!`);
-          // Auto-login after successful registration
           login(result.username || username);
           handleClose();
         } else {

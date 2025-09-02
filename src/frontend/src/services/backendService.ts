@@ -175,8 +175,6 @@ export const backendService = {
         return [];
       }
 
-      const users = await backend.get_all_users();
-
       // Mock data for now until we have more backend methods
       const mockCreators: CreatorStats[] = [
         {
