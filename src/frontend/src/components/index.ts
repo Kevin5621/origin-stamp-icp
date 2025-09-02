@@ -19,6 +19,7 @@ export * from "./ui/toast-container";
 
 // Layout Components
 export { Footer } from "./layout/Footer";
+export { Sidebar } from "./layout/Sidebar";
 
 // Navigation Components
 export { NavigationHeader } from "./navigation/NavigationHeader";
@@ -27,6 +28,10 @@ export { NavigationHeader } from "./navigation/NavigationHeader";
 export { HeroSection } from "./sections/HeroSection";
 export { CreatorsSection } from "./sections/CreatorsSection";
 export { FeaturesSection } from "./sections/FeaturesSection";
+
+// Dashboard Components
+export { DashboardPage } from "./dashboard/DashboardPage";
+export { DashboardLayout } from "./dashboard/DashboardLayout";
 
 // Auth Components
 export { LoginForm } from "./auth/LoginForm";

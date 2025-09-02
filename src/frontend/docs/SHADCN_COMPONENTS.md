@@ -64,12 +64,12 @@
 - **Includes**: Sheet, SheetContent, SheetTrigger
 - **Theme Integration**: Menggunakan `--color-popover`, `--color-border`
 
-### 10. **Tabs** (`src/components/ui/tabs.tsx`) ⏳ BELUM DIGUNAKAN
+### 11. **Tabs** (`src/components/ui/tabs.tsx`) ✅ DIGUNAKAN
 
 - **Fungsi**: Komponen tab untuk switching konten
-- **Status**: Terinstall tapi belum digunakan
+- **Digunakan di**: DashboardPage (Analytics Overview section)
 - **Includes**: Tabs, TabsContent, TabsList, TabsTrigger
-- **Potential Use**: Bisa digunakan untuk switching antara different NFT categories
+- **Theme Integration**: Menggunakan `--color-muted`, `--color-accent`
 
 ### 11. **Dialog** (`src/components/ui/dialog.tsx`) ⏳ BELUM DIGUNAKAN
 

@@ -12,7 +12,8 @@ export function CreatorsSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    backendService.getTopCreators()
+    backendService
+      .getTopCreators()
       .then(setCreators)
       .finally(() => setLoading(false));
   }, []);
