@@ -133,13 +133,29 @@
 - **Features**: Auto-dismiss, smooth animations, responsive design
 - **Theme Integration**: Menggunakan semantic color variables dari globals.css
 
-### 19. **ToastContainer** (`src/components/ui/toast-container.tsx`) ✅ DIGUNAKAN
+### 20. **Sidebar** (`src/components/ui/sidebar.tsx`) ✅ DIGUNAKAN
 
-- **Fungsi**: Container untuk menampilkan multiple toast notifications
-- **Positioning**: Fixed positioning dengan proper header spacing (top-20)
-- **Z-index**: z-50 untuk memastikan toast di atas semua elemen
-- **Spacing**: space-y-2 untuk jarak antar toast
-- **Header Clearance**: 80px dari atas untuk menghindari overlap dengan header
+- **Fungsi**: Komponen sidebar navigasi dengan layout modern dan responsive
+- **Digunakan di**: DashboardSidebar untuk navigasi utama dashboard
+- **Includes**: Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarFooter, SidebarProvider, SidebarInset
+- **Features**: Collapsible navigation, grouped menu items, active state management
+- **Theme Integration**: Menggunakan semantic color variables dari globals.css
+- **Responsive**: Built-in mobile responsiveness dengan use-mobile hook
+
+### 21. **Switch** (`src/components/ui/switch.tsx`) ✅ DIGUNAKAN
+
+- **Fungsi**: Komponen toggle switch untuk pengaturan boolean
+- **Digunakan di**: SettingsPage untuk berbagai pengaturan user
+- **Features**: Controlled/uncontrolled modes, accessibility support
+- **Theme Integration**: Menggunakan `--color-primary`, `--color-muted`
+- **Accessibility**: ARIA labels dan keyboard navigation support
+
+### 22. **Skeleton** (`src/components/ui/skeleton.tsx`) ✅ TERINSTALL
+
+- **Fungsi**: Loading placeholder dengan animasi shimmer
+- **Status**: Terinstall otomatis dengan sidebar component
+- **Potential Use**: Loading states untuk dashboard content, user profiles
+- **Animation**: Built-in pulse animation untuk loading feedback
 
 ## Theme Integration & Best Practices
 

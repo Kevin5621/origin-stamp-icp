@@ -149,18 +149,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
   };
 
   return (
-    <div className={`space-y-6 p-6 ${className || ""}`}>
-      {/* Header */}
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-foreground text-3xl font-bold tracking-tight">
-          Dashboard
-        </h1>
-        <p className="text-muted-foreground">
-          Welcome back! Here&apos;s what&apos;s happening with your OriginStamp
-          platform.
-        </p>
-      </div>
-
+    <div className={`space-y-6 ${className || ""}`}>
       {/* Metrics Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {dashboardCards.map((card) => {
