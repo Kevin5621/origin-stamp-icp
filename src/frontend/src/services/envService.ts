@@ -99,18 +99,10 @@ export class EnvironmentService {
           "https://identity.ic0.app",
       },
       s3: {
-        accessKey:
-          this.getEnvVar("S3_ACCESS_KEY", "NEXT_PUBLIC_S3_ACCESS_KEY") ||
-          "REDACTED_AWS_ACCESS_KEY",
-        secretKey:
-          this.getEnvVar("S3_SECRET_KEY", "NEXT_PUBLIC_S3_SECRET_KEY") ||
-          "REDACTED_AWS_SECRET_KEY",
-        region:
-          this.getEnvVar("S3_REGION", "NEXT_PUBLIC_S3_REGION") ||
-          "ap-southeast-1",
-        bucketName:
-          this.getEnvVar("S3_BUCKET_NAME", "NEXT_PUBLIC_S3_BUCKET_NAME") ||
-          "originstamp",
+        accessKey: this.getEnvVar("S3_ACCESS_KEY", "NEXT_PUBLIC_S3_ACCESS_KEY") || "",
+        secretKey: this.getEnvVar("S3_SECRET_KEY", "NEXT_PUBLIC_S3_SECRET_KEY") || "",
+        region: this.getEnvVar("S3_REGION", "NEXT_PUBLIC_S3_REGION") || "ap-southeast-1",
+        bucketName: this.getEnvVar("S3_BUCKET_NAME", "NEXT_PUBLIC_S3_BUCKET_NAME") || "originstamp",
       },
       app: {
         env: this.getEnvVar("NODE_ENV", "NEXT_PUBLIC_APP_ENV") || "development",
