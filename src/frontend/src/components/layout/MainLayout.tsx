@@ -51,17 +51,19 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
   return (
     <SidebarProvider>
-      <div className={`bg-background flex min-h-screen ${className || ""}`}>
+      <div
+        className={`bg-background flex min-h-screen w-full ${className || ""}`}
+      >
         <CustomerSidebar activeSection={pathname} />
 
-        <SidebarInset className="flex-1">
+        <SidebarInset className="min-w-0 flex-1">
           <CustomerHeader
             title={getSectionTitle(pathname)}
             subtitle={getSectionSubtitle(pathname)}
           />
 
-          <main className="flex-1 overflow-auto">
-            <div className="container mx-auto p-6">{children}</div>
+          <main className="w-full flex-1 overflow-auto">
+            <div className="h-full w-full max-w-none px-6 py-6">{children}</div>
           </main>
         </SidebarInset>
       </div>

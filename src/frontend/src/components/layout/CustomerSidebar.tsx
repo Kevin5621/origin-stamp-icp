@@ -46,7 +46,10 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
   ];
 
   return (
-    <Sidebar variant="inset" className="border-border border-r">
+    <Sidebar
+      variant="inset"
+      className="border-border w-64 flex-shrink-0 border-r"
+    >
       <SidebarHeader className="border-border border-b">
         <div className="flex items-center gap-2 px-4 py-2">
           <Avatar className="bg-primary h-8 w-8">
