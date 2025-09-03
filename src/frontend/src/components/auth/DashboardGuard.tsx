@@ -22,7 +22,7 @@ export const DashboardGuard: React.FC<DashboardGuardProps> = ({ children }) => {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <LoadingSpinner size="lg" />
+        <LoadingSpinner size="lg" variant="infinite" />
       </div>
     );
   }

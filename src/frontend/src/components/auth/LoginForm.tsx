@@ -13,6 +13,7 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import { useToastContext } from "../../contexts/ToastContext";
 import { ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 interface LoginFormProps {
   onBack: () => void;
@@ -156,11 +157,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             </div>
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading
-              ? "Loading..."
-              : isRegistering
-                ? "Create Account"
-                : "Sign In"}
+            {loading ? (
+              <div className="flex items-center space-x-2">
+                <LoadingSpinner size="sm" variant="infinite" />
+                <span>Loading...</span>
+              </div>
+            ) : isRegistering ? (
+              "Create Account"
+            ) : (
+              "Sign In"
+            )}
           </Button>
         </form>
 

@@ -15,14 +15,8 @@ import { useToastContext } from "../../contexts/ToastContext";
 import { AuthClient } from "@dfinity/auth-client";
 import { googleAuthService } from "../../services/googleAuth";
 import { AuthService } from "../../services/authService";
-import {
-  User,
-  Eye,
-  EyeOff,
-  ArrowLeft,
-  Loader2,
-  CheckCircle,
-} from "lucide-react";
+import { User, Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -262,7 +256,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 className="bg-primary text-primary-foreground hover:bg-primary/90 h-11 flex-1"
               >
                 {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <LoadingSpinner
+                    size={16}
+                    variant="infinite"
+                    className="mr-2"
+                  />
                 ) : (
                   <CheckCircle className="mr-2 h-4 w-4" />
                 )}
@@ -311,7 +309,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           >
             <div className="flex items-center space-x-3">
               {isLoading && authMethod === "icp" ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <LoadingSpinner size={20} variant="infinite" />
               ) : (
                 <img src="/ii-logo.svg" alt="ICP" className="h-5 w-5" />
               )}
@@ -326,7 +324,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           >
             <div className="flex items-center space-x-3">
               {isLoading && authMethod === "google" ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <LoadingSpinner size={20} variant="infinite" />
               ) : (
                 <img src="/google-logo.svg" alt="Google" className="h-5 w-5" />
               )}
@@ -341,7 +339,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           >
             <div className="flex items-center space-x-3">
               {isLoading && authMethod === "username" ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <LoadingSpinner size={20} variant="infinite" />
               ) : (
                 <User className="h-5 w-5" />
               )}
@@ -352,7 +350,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
         {isLoading && (
           <div className="text-muted-foreground flex items-center justify-center space-x-2 text-center">
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <LoadingSpinner size={16} variant="infinite" />
             <span>Connecting...</span>
           </div>
         )}
