@@ -3,6 +3,7 @@ import {
   GoogleAuthConfig,
   CredentialResponse,
 } from "../types/auth";
+import { envService } from "./envService";
 
 declare global {
   interface Window {
@@ -42,7 +43,7 @@ declare global {
 
 export class GoogleAuthService {
   private static instance: GoogleAuthService;
-  private config: GoogleAuthConfig;
+  private readonly config: GoogleAuthConfig;
   private initialized = false;
 
   constructor(config: GoogleAuthConfig) {
@@ -57,19 +58,15 @@ export class GoogleAuthService {
   }
 
   async initialize(): Promise<void> {
-    console.log("GoogleAuth: Initializing...");
     return new Promise((resolve) => {
       if (this.initialized) {
-        console.log("GoogleAuth: Already initialized");
         resolve();
         return;
       }
 
       if (!window.google) {
-        console.log("GoogleAuth: Waiting for Google library to load...");
         const checkGoogle = () => {
           if (window.google) {
-            console.log("GoogleAuth: Google library loaded, initializing...");
             this.initializeGoogleAuth();
             resolve();
           } else {
@@ -78,9 +75,6 @@ export class GoogleAuthService {
         };
         checkGoogle();
       } else {
-        console.log(
-          "GoogleAuth: Google library already available, initializing...",
-        );
         this.initializeGoogleAuth();
         resolve();
       }
@@ -88,10 +82,6 @@ export class GoogleAuthService {
   }
 
   private initializeGoogleAuth(): void {
-    console.log(
-      "GoogleAuth: Initializing Google accounts with clientId:",
-      this.config.clientId,
-    );
     try {
       window.google!.accounts!.id!.initialize({
         client_id: this.config.clientId,
@@ -100,7 +90,6 @@ export class GoogleAuthService {
         cancel_on_tap_outside: true,
       });
       this.initialized = true;
-      console.log("GoogleAuth: Initialization successful");
     } catch (error) {
       console.error("GoogleAuth: Initialization failed:", error);
     }
@@ -302,5 +291,5 @@ export class GoogleAuthService {
 }
 
 export const googleAuthService = GoogleAuthService.getInstance({
-  clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "your-google-client-id",
+  clientId: envService.getGoogleClientId(),
 });

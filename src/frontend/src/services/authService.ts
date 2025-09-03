@@ -1,5 +1,6 @@
 import { Principal } from "@dfinity/principal";
-import { backendService } from "./backendService";
+import { envService } from "./envService";
+import { credentialAuthService } from "./credentialAuthService";
 
 declare global {
   interface Window {
@@ -74,11 +75,7 @@ export class AuthService {
           this.currentUserPrincipal = principal;
           this.isAuthenticated = true;
           return principal;
-        } catch (fallbackError) {
-          console.error(
-            "Failed to create valid principal from hash:",
-            fallbackError,
-          );
+        } catch {
           localStorage.removeItem("originstamp_user_principal");
         }
       }
@@ -150,7 +147,7 @@ export class AuthService {
 
   private static async generateSecureHash(input: string): Promise<number> {
     try {
-      if (window.crypto && window.crypto.subtle) {
+      if (window.crypto?.subtle) {
         const encoder = new TextEncoder();
         const data = encoder.encode(input);
         const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
@@ -193,7 +190,7 @@ export class AuthService {
 
   private static generateSecureSalt(): string {
     const array = new Uint8Array(16);
-    if (window.crypto && window.crypto.getRandomValues) {
+    if (window.crypto?.getRandomValues) {
       window.crypto.getRandomValues(array);
     } else {
       for (let i = 0; i < array.length; i++) {
@@ -262,30 +259,33 @@ export class AuthService {
     password: string,
   ): Promise<BackendAuthResponse> {
     try {
-      if (!backendService.isAvailable()) {
+      if (!credentialAuthService.isConfigured()) {
+        const validation = credentialAuthService.validateConfiguration();
         return {
           success: false,
-          message:
-            "Backend service not available. Please check your environment configuration.",
+          message: `Service not configured: ${validation.errors.join(", ")}`,
         };
       }
 
-      const result = await backendService.registerUser(username, password);
+      const result = await credentialAuthService.registerUser(
+        username,
+        password,
+      );
 
       return {
         success: result.success,
         message: result.message,
-        username: result.username?.[0],
+        username: result.username,
       };
     } catch (error) {
-      console.error("Backend registration error:", error);
-      return {
+      const response = {
         success: false,
         message:
           error instanceof Error
             ? error.message
-            : "Failed to connect to backend. Please try again.",
+            : "Failed to register user. Please try again.",
       };
+      return response;
     }
   }
 
@@ -294,30 +294,30 @@ export class AuthService {
     password: string,
   ): Promise<BackendAuthResponse> {
     try {
-      if (!backendService.isAvailable()) {
+      if (!credentialAuthService.isConfigured()) {
+        const validation = credentialAuthService.validateConfiguration();
         return {
           success: false,
-          message:
-            "Backend service not available. Please check your environment configuration.",
+          message: `Service not configured: ${validation.errors.join(", ")}`,
         };
       }
 
-      const result = await backendService.login(username, password);
+      const result = await credentialAuthService.loginUser(username, password);
 
       return {
         success: result.success,
         message: result.message,
-        username: result.username?.[0],
+        username: result.username,
       };
     } catch (error) {
-      console.error("Backend login error:", error);
-      return {
+      const response = {
         success: false,
         message:
           error instanceof Error
             ? error.message
-            : "Failed to connect to backend. Please try again.",
+            : "Failed to login. Please try again.",
       };
+      return response;
     }
   }
 

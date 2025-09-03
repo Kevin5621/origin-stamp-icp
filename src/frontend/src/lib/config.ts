@@ -1,20 +1,31 @@
+import { envService } from "../services/envService";
+
+const envConfig = envService.getConfig();
+
 export const config = {
   app: {
-    env: process.env.NEXT_PUBLIC_APP_ENV || "development",
-    url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+    env: envConfig.app.env,
+    url: envConfig.app.url,
   },
   backend: {
-    canisterId: process.env.NEXT_PUBLIC_BACKEND_CANISTER_ID || "",
+    canisterId: envConfig.canisters.backend,
+    frontendCanisterId: envConfig.canisters.frontend,
+    network: envConfig.dfx.network,
+    version: envConfig.dfx.version,
   },
   auth: {
-    internetIdentityUrl:
-      process.env.NEXT_PUBLIC_INTERNET_IDENTITY_URL ||
-      "https://identity.ic0.app",
-    googleClientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+    internetIdentityUrl: envConfig.auth.internetIdentityUrl,
+    googleClientId: envConfig.auth.googleClientId,
+  },
+  s3: {
+    accessKey: envConfig.s3.accessKey,
+    secretKey: envConfig.s3.secretKey,
+    region: envConfig.s3.region,
+    bucketName: envConfig.s3.bucketName,
   },
   security: {
     cookieMaxAge: 86400,
-    cookieSecure: process.env.NODE_ENV === "production",
+    cookieSecure: envConfig.app.isProduction,
     cookieSameSite: "strict" as const,
   },
 };

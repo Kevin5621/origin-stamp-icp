@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { S3Config, UploadResult, PhysicalArtSession } from "../types/s3";
+import { envService } from "./envService";
 
 interface S3ClientConfig {
   region: string;
@@ -26,27 +27,17 @@ export class PhysicalArtService {
     sessionId: string,
     file: File,
   ): Promise<UploadResult> {
-    console.log(
-      `[S3Upload] Starting upload for session: ${sessionId}, file: ${file.name}`,
-    );
-
     try {
       const s3Config = await this.getS3ConfigFromBackend();
 
       if (!s3Config) {
-        console.error("[S3Upload] S3 configuration not found");
         return {
           success: false,
           message: "S3 configuration not found",
         };
       }
 
-      console.log(
-        `[S3Upload] S3 config loaded: bucket=${s3Config.bucket_name}, region=${s3Config.region}`,
-      );
-
       if (!this.validateFileType(file)) {
-        console.error(`[S3Upload] Invalid file type: ${file.type}`);
         return {
           success: false,
           message:
@@ -55,7 +46,6 @@ export class PhysicalArtService {
       }
 
       if (!this.validateFileSize(file)) {
-        console.error(`[S3Upload] File too large: ${file.size} bytes`);
         return {
           success: false,
           message: "File size too large. Maximum size is 10MB.",
@@ -72,12 +62,6 @@ export class PhysicalArtService {
         !s3Config.access_key_id ||
         !s3Config.secret_access_key
       ) {
-        console.error("[S3Upload] Invalid S3 configuration:", {
-          region: s3Config.region,
-          bucket: s3Config.bucket_name,
-          hasAccessKey: !!s3Config.access_key_id,
-          hasSecretKey: !!s3Config.secret_access_key,
-        });
         throw new Error("Invalid S3 configuration: missing required fields");
       }
 
@@ -102,9 +86,6 @@ export class PhysicalArtService {
             ? endpoint
             : `https://${endpoint}`;
           clientConfig.forcePathStyle = true;
-          console.log(
-            `[S3Upload] Using custom endpoint: ${clientConfig.endpoint}`,
-          );
         }
       }
 
@@ -127,7 +108,6 @@ export class PhysicalArtService {
       try {
         await s3Client.send(putCommand);
       } catch (s3Error) {
-        console.error(`[S3Upload] S3 upload failed:`, s3Error);
         throw new Error(
           `S3 upload failed: ${s3Error instanceof Error ? s3Error.message : "Unknown S3 error"}`,
         );
@@ -162,13 +142,11 @@ export class PhysicalArtService {
           file_id: fileKey,
         };
       } catch (backendError) {
-        console.error(`[S3Upload] Backend record error:`, backendError);
         throw new Error(
           `Backend record failed: ${backendError instanceof Error ? backendError.message : "Unknown backend error"}`,
         );
       }
     } catch (error) {
-      console.error("[S3Upload] Upload process failed:", error);
       return {
         success: false,
         message: error instanceof Error ? error.message : "Upload failed",
@@ -190,8 +168,7 @@ export class PhysicalArtService {
   static async getSessionDetails(): Promise<PhysicalArtSession | null> {
     try {
       return null;
-    } catch (error) {
-      console.error("Failed to get session details:", error);
+    } catch {
       return null;
     }
   }
@@ -199,8 +176,7 @@ export class PhysicalArtService {
   static async getUserSessions(): Promise<PhysicalArtSession[]> {
     try {
       return [];
-    } catch (error) {
-      console.error("Failed to get user sessions:", error);
+    } catch {
       return [];
     }
   }
@@ -208,8 +184,7 @@ export class PhysicalArtService {
   static async updateSessionStatus(): Promise<boolean> {
     try {
       return true;
-    } catch (error) {
-      console.error("Failed to update session status:", error);
+    } catch {
       return false;
     }
   }
@@ -217,18 +192,15 @@ export class PhysicalArtService {
   static async removePhotoFromSession(): Promise<boolean> {
     try {
       return true;
-    } catch (error) {
-      console.error("Failed to remove photo from session:", error);
+    } catch {
       return false;
     }
   }
 
-  static async setS3Config(config: S3Config): Promise<boolean> {
+  static async setS3Config(): Promise<boolean> {
     try {
-      console.log("S3 config set:", config);
       return true;
-    } catch (error) {
-      console.error("Failed to set S3 config:", error);
+    } catch {
       return false;
     }
   }
@@ -236,8 +208,7 @@ export class PhysicalArtService {
   static async isS3Configured(): Promise<boolean> {
     try {
       return false;
-    } catch (error) {
-      console.error("Failed to check S3 config status:", error);
+    } catch {
       return false;
     }
   }
@@ -357,12 +328,13 @@ export class PhysicalArtService {
         return true;
       }
 
+      const s3EnvConfig = envService.getS3Config();
       const s3Config = {
-        bucket_name: process.env.NEXT_PUBLIC_S3_BUCKET_NAME || "",
-        region: process.env.NEXT_PUBLIC_S3_REGION || "",
-        access_key_id: process.env.NEXT_PUBLIC_S3_ACCESS_KEY || "",
-        secret_access_key: process.env.NEXT_PUBLIC_S3_SECRET_KEY || "",
-        endpoint: process.env.NEXT_PUBLIC_S3_ENDPOINT || undefined,
+        bucket_name: s3EnvConfig.bucketName,
+        region: s3EnvConfig.region,
+        access_key_id: s3EnvConfig.accessKey,
+        secret_access_key: s3EnvConfig.secretKey,
+        endpoint: undefined,
       };
 
       if (
@@ -371,30 +343,16 @@ export class PhysicalArtService {
         !s3Config.access_key_id ||
         !s3Config.secret_access_key
       ) {
-        console.warn(
-          "S3 environment variables not fully configured. Missing:",
-          {
-            bucket_name: !s3Config.bucket_name,
-            region: !s3Config.region,
-            access_key_id: !s3Config.access_key_id,
-            secret_access_key: !s3Config.secret_access_key,
-          },
-        );
         return false;
       }
 
-      const success = await this.setS3Config(s3Config);
+      const success = await this.setS3Config();
       if (success) {
-        console.log(
-          "S3 configuration initialized successfully from environment variables",
-        );
+        return success;
       } else {
-        console.error("Failed to initialize S3 configuration");
+        return false;
       }
-
-      return success;
-    } catch (error) {
-      console.error("Failed to initialize S3 from environment:", error);
+    } catch {
       return false;
     }
   }
@@ -402,8 +360,7 @@ export class PhysicalArtService {
   private static async getS3ConfigFromBackend(): Promise<S3Config | null> {
     try {
       return null;
-    } catch (error) {
-      console.error("Failed to get S3 config:", error);
+    } catch {
       return null;
     }
   }

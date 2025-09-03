@@ -1,5 +1,25 @@
 import { backend } from "../../../declarations/backend";
+import { idlFactory } from "../../../declarations/backend/backend.did.js";
 import type { LoginResult } from "../../../declarations/backend/backend.did";
+import { Actor } from "@dfinity/agent";
+import { envService } from "./envService";
+import { icpAgentService } from "./icpAgentService";
+
+// Type for backend actor with common methods
+interface BackendActor {
+  register_user: (username: string, password: string) => Promise<LoginResult>;
+  login: (username: string, password: string) => Promise<LoginResult>;
+  get_certificate_count: () => Promise<bigint>;
+  get_user_count: () => Promise<bigint>;
+  get_session_count: () => Promise<bigint>;
+}
+
+// Initialize ICP agent for proper connection (only on client-side)
+if (typeof window !== "undefined") {
+  icpAgentService.initialize().catch((error) => {
+    console.error("❌ ICP Agent initialization failed:", error);
+  });
+}
 
 // Types for marketplace components
 export interface NFTMarketplaceStats {
@@ -17,6 +37,37 @@ export interface CreatorStats {
 }
 
 /**
+ * Get a properly configured backend actor using the ICP agent service
+ */
+async function getBackendActor(): Promise<BackendActor | null> {
+  try {
+    // Always use ICP agent service to create actor with proper environment
+    const canisterId = envService.getBackendCanisterId();
+    if (!canisterId) {
+      throw new Error("Backend canister ID not found in environment");
+    }
+
+    const agent = await icpAgentService.getAgent();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const backendActor = Actor.createActor(idlFactory as any, {
+      agent,
+      canisterId,
+    });
+
+    return backendActor as unknown as BackendActor;
+  } catch (error) {
+    console.error("❌ Failed to create backend actor:", error);
+
+    // Only fallback to imported backend if it exists
+    if (backend) {
+      return backend as BackendActor;
+    }
+
+    return null;
+  }
+}
+
+/**
  * Service for handling all backend canister API calls
  */
 export const backendService = {
@@ -27,12 +78,25 @@ export const backendService = {
    * @returns Promise with the registration result
    */
   async registerUser(username: string, password: string): Promise<LoginResult> {
-    if (!backend) {
+    // Ensure ICP agent is initialized before making calls
+    await icpAgentService.initialize();
+
+    // Get a properly configured backend actor
+    const backendActor = await getBackendActor();
+
+    if (!backendActor) {
       throw new Error(
         "Backend canister not initialized. Please check your environment configuration.",
       );
     }
-    return await backend.register_user(username, password);
+
+    try {
+      const result = await backendActor.register_user(username, password);
+      return result;
+    } catch (error) {
+      console.error("💥 Error calling backend.register_user:", error);
+      throw error;
+    }
   },
 
   /**
@@ -42,12 +106,25 @@ export const backendService = {
    * @returns Promise with the login result
    */
   async login(username: string, password: string): Promise<LoginResult> {
-    if (!backend) {
+    // Ensure ICP agent is initialized before making calls
+    await icpAgentService.initialize();
+
+    // Get a properly configured backend actor
+    const backendActor = await getBackendActor();
+
+    if (!backendActor) {
       throw new Error(
         "Backend canister not initialized. Please check your environment configuration.",
       );
     }
-    return await backend.login(username, password);
+
+    try {
+      const result = await backendActor.login(username, password);
+      return result;
+    } catch (error) {
+      console.error("💥 Error calling backend.login:", error);
+      throw error;
+    }
   },
 
   /**
@@ -116,7 +193,9 @@ export const backendService = {
    * @returns boolean indicating if backend is initialized
    */
   isAvailable(): boolean {
-    return !!backend;
+    // Check if we can get the backend canister ID from environment
+    const canisterId = envService.getBackendCanisterId();
+    return !!canisterId;
   },
 
   /**
@@ -124,7 +203,7 @@ export const backendService = {
    * @returns canister ID string or undefined
    */
   getCanisterId(): string | undefined {
-    return process.env.NEXT_PUBLIC_CANISTER_ID_BACKEND;
+    return envService.getBackendCanisterId();
   },
 
   /**
@@ -133,7 +212,13 @@ export const backendService = {
    */
   async getMarketplaceStats(): Promise<NFTMarketplaceStats> {
     try {
-      if (!backend) {
+      // Ensure ICP agent is initialized before making calls
+      await icpAgentService.initialize();
+
+      // Get a properly configured backend actor
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
         return {
           totalArtworks: "0+",
           totalCreators: "0+",
@@ -142,9 +227,9 @@ export const backendService = {
       }
 
       const [certificateCount, userCount, sessionCount] = await Promise.all([
-        backend.get_certificate_count(),
-        backend.get_user_count(),
-        backend.get_session_count(),
+        backendActor.get_certificate_count(),
+        backendActor.get_user_count(),
+        backendActor.get_session_count(),
       ]);
 
       return {
