@@ -41,6 +41,10 @@ const LoginPage: React.FC = () => {
     }
   }, [isAuthenticated, user, router]);
 
+  useEffect(() => {
+    document.title = "Login - OriginStamp";
+  }, []);
+
   const handleInternetIdentityLogin = async () => {
     setIsLoading(true);
     setAuthMethod("icp");

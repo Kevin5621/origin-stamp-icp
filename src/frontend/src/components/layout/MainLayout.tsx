@@ -49,6 +49,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
     }
   };
 
+  React.useEffect(() => {
+    const title = getSectionTitle(pathname);
+    document.title = `${title} - OriginStamp`;
+  }, [pathname]);
+
   return (
     <SidebarProvider>
       <div
