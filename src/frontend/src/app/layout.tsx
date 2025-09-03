@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import ToastContainer from "@/components/ui/toast-container";
+import { CookieSync } from "../components/auth/CookieSync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <ToastProvider>
+              <CookieSync />
               {children}
               <ToastContainer />
             </ToastProvider>

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "build:dfx": "next build --turbopack && mkdir -p dist && cp -r .next/static dist/static && cp -r .next/server dist/server && cp -r public dist/",
     "start": "next dev --turbopack",
     "lint": "eslint",
@@ -48,7 +48,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
-    "tailwindcss": "^4",
     "tw-animate-css": "^1.3.7",
     "typescript": "^5"
   }

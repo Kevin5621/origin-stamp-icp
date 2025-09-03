@@ -25,7 +25,10 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/dashboard");
+      const redirectTo =
+        new URLSearchParams(window.location.search).get("redirect") ||
+        "/dashboard";
+      router.push(redirectTo);
     }
   }, [isAuthenticated, router]);
 

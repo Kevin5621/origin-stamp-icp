@@ -1,39 +1,41 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: "/home/kevin/Documents/origin-stamp-icp",
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=()",
+          },
+          {
+            key: "X-DNS-Prefetch-Control",
+            value: "on",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
+        ],
+      },
+    ];
+  },
   env: {
-    CANISTER_ID_BACKEND:
-      process.env.CANISTER_ID_BACKEND || "bkyz2-fmaaa-aaaaa-qaaaq-cai",
-    CANISTER_ID_FRONTEND:
-      process.env.CANISTER_ID_FRONTEND || "bd3sg-teaaa-aaaaa-qaaba-cai",
-    DFX_NETWORK: process.env.DFX_NETWORK || "local",
-    NEXT_PUBLIC_CANISTER_ID_BACKEND:
-      process.env.NEXT_PUBLIC_CANISTER_ID_BACKEND ||
-      "bkyz2-fmaaa-aaaaa-qaaaq-cai",
-    NEXT_PUBLIC_DFX_NETWORK: process.env.NEXT_PUBLIC_DFX_NETWORK || "local",
-  },
-  experimental: {
-    esmExternals: true,
-  },
-  async rewrites() {
-    // Only apply rewrites for local development
-    if (
-      process.env.DFX_NETWORK === "local" ||
-      process.env.NODE_ENV === "development"
-    ) {
-      return [
-        {
-          source: "/api/v2/:path*",
-          destination: "http://127.0.0.1:4943/api/v2/:path*",
-        },
-        {
-          source: "/api/v3/:path*",
-          destination: "http://127.0.0.1:4943/api/v3/:path*",
-        },
-      ];
-    }
-    return [];
+    CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 };
 

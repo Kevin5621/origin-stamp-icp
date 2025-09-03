@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { AuthClient } from "@dfinity/auth-client";
 import { User } from "../types/auth";
+import { config } from "../lib/config";
 
 interface AuthContextType {
   user: User | null;
@@ -107,8 +108,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         setUser(userData);
         localStorage.setItem("auth-user", JSON.stringify(userData));
-
         localStorage.setItem("originstamp_user_principal", principal);
+
+        document.cookie = `auth-user=${JSON.stringify(userData)}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
+        document.cookie = `originstamp_user_principal=${principal}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
       } else {
         console.error("Failed to generate principal for username:", username);
       }
@@ -124,8 +127,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
     setUser(userData);
     localStorage.setItem("auth-user", JSON.stringify(userData));
-
     localStorage.setItem("originstamp_user_principal", principal);
+
+    document.cookie = `auth-user=${JSON.stringify(userData)}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
+    document.cookie = `originstamp_user_principal=${principal}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
   };
 
   const loginWithGoogle = (userInfo: {
@@ -167,8 +172,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         setUser(userData);
         localStorage.setItem("auth-user", JSON.stringify(userData));
-
         localStorage.setItem("originstamp_user_principal", principal);
+
+        document.cookie = `auth-user=${JSON.stringify(userData)}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
+        document.cookie = `originstamp_user_principal=${principal}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
       } else {
         console.error(
           "Failed to generate principal for Google user:",
@@ -184,8 +191,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
     setUser(null);
     localStorage.removeItem("auth-user");
-
     localStorage.removeItem("originstamp_user_principal");
+
+    document.cookie =
+      "auth-user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie =
+      "originstamp_user_principal=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
   };
 
   const regeneratePrincipalForExistingUser = (username: string) => {
