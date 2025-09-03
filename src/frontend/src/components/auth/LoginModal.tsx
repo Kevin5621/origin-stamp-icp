@@ -257,7 +257,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               >
                 {isLoading ? (
                   <LoadingSpinner
-                    size={16}
+                    size="sm"
                     variant="infinite"
                     className="mr-2"
                   />
@@ -309,7 +309,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           >
             <div className="flex items-center space-x-3">
               {isLoading && authMethod === "icp" ? (
-                <LoadingSpinner size={20} variant="infinite" />
+                <LoadingSpinner size="md" variant="infinite" />
               ) : (
                 <img src="/ii-logo.svg" alt="ICP" className="h-5 w-5" />
               )}
@@ -324,7 +324,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           >
             <div className="flex items-center space-x-3">
               {isLoading && authMethod === "google" ? (
-                <LoadingSpinner size={20} variant="infinite" />
+                <LoadingSpinner size="md" variant="infinite" />
               ) : (
                 <img src="/google-logo.svg" alt="Google" className="h-5 w-5" />
               )}
@@ -339,7 +339,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           >
             <div className="flex items-center space-x-3">
               {isLoading && authMethod === "username" ? (
-                <LoadingSpinner size={20} variant="infinite" />
+                <LoadingSpinner size="md" variant="infinite" />
               ) : (
                 <User className="h-5 w-5" />
               )}
@@ -350,7 +350,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
         {isLoading && (
           <div className="text-muted-foreground flex items-center justify-center space-x-2 text-center">
-            <LoadingSpinner size={16} variant="infinite" />
+            <LoadingSpinner size="sm" variant="infinite" />
             <span>Connecting...</span>
           </div>
         )}

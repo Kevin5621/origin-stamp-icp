@@ -7,6 +7,8 @@ export function middleware(request: NextRequest) {
     request.cookies.has("auth-user") ||
     request.cookies.has("originstamp_user_principal");
 
+  console.log("Middleware check:", { pathname, isAuthenticated });
+
   const protectedRoutes = ["/dashboard", "/profile", "/settings"];
   const authRoutes = ["/auth/login", "/auth/register"];
 
@@ -16,12 +18,14 @@ export function middleware(request: NextRequest) {
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
   if (isProtectedRoute && !isAuthenticated) {
+    console.log("Redirecting to login from protected route:", pathname);
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   if (isAuthRoute && isAuthenticated) {
+    console.log("Redirecting to dashboard from auth route:", pathname);
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
