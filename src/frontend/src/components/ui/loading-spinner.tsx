@@ -1,23 +1,31 @@
-import React from "react";
+import { Spinner } from "./spinner";
 
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
   className?: string;
+  variant?:
+    | "default"
+    | "circle"
+    | "pinwheel"
+    | "circle-filled"
+    | "ellipsis"
+    | "ring"
+    | "bars"
+    | "infinite";
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = "md",
   className = "",
+  variant = "infinite",
 }) => {
-  const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-6 h-6",
-    lg: "w-8 h-8",
+  const sizeMap = {
+    sm: 16,
+    md: 24,
+    lg: 32,
   };
 
   return (
-    <div
-      className={`animate-spin rounded-full border-2 border-gray-300 border-t-blue-600 ${sizeClasses[size]} ${className}`}
-    />
+    <Spinner variant={variant} size={sizeMap[size]} className={className} />
   );
 };
