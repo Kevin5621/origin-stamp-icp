@@ -9,36 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Customer-Focused Dashboard Refactoring**: Complete restructuring from admin to customer experience
+  - **New Modular Page Structure**: Moved from `/components/dashboard/` to `/components/pages/` with clean architecture
+    - `pages/dashboard/` - Customer dashboard with personal stats and portfolio overview
+    - `pages/sessions/` - Art session management for customers to upload and track their artwork
+    - `pages/marketplace/` - NFT marketplace for browsing and purchasing artworks
+    - `pages/collection/` - Personal NFT collection with portfolio value tracking
+    - `pages/profile/` - Customer profile and account settings management
+  - **Customer-Focused Content**: Redesigned all content for customer/artist experience
+    - Personal art journey tracking instead of admin metrics
+    - Portfolio value and collection management
+    - Artwork creation and certification workflow
+    - Marketplace browsing and purchasing experience
+  - **Enhanced Customer Sidebar**: Modern navigation with customer-relevant sections
+    - Main navigation: Dashboard, Marketplace, My Art Sessions, My Collection
+    - Account section: My Profile with personalized welcome message
+    - Footer actions: Connect Wallet, Support
+  - **Customer Header**: Tailored for artist/customer workflow
+    - Artwork and artist search functionality
+    - Personal notifications and user menu
+    - Quick access to profile and collection
+  - **Modern UI Components**: Professional design with shadcn/ui integration
+    - Art session cards with upload status and thumbnail previews
+    - NFT collection grid with gain/loss tracking and rarity badges
+    - Marketplace with filters, categories, and detailed artwork information
+    - Profile management with privacy settings and activity history
+  - **Portfolio Features**: Comprehensive collection and value tracking
+    - Real-time portfolio value calculation with gain/loss indicators
+    - NFT collection with purchase prices and current market values
+    - Art session tracking with certificate generation status
+    - Personal artwork creation and listing management
 - **Professional Dashboard Layout**: Complete dashboard redesign with modern shadcn/ui components
-  - **Modern Sidebar**: Replaced old sidebar with shadcn/ui sidebar component
-    - Professional navigation with grouped menu items (Main & Management)
-    - Collapsible sidebar with proper header and footer sections
-    - Active state management for better navigation feedback
-    - Clean design with proper spacing and visual hierarchy
-  - **Enhanced Dashboard Header**: New professional header component
-    - User profile dropdown with avatar and user info
-    - Search functionality with proper input styling
-    - Notification center with badge indicators
-    - Responsive design with proper spacing from content
-  - **Comprehensive Page System**: Complete set of dashboard pages
-    - Art Sessions page with statistics and session management
-    - Marketplace page with NFT listings and sales metrics
-    - Analytics page with tabbed content and chart placeholders
-    - User Management page with user directory and role management
-    - Subscription page with plan management and billing overview
-    - Reports page with report generation and download functionality
-    - Settings page with categorized preferences and system status
-  - **Professional Layout Structure**: Modern dashboard architecture
-    - SidebarProvider integration for proper state management
-    - SidebarInset for content area with proper spacing
-    - Container-based content with responsive padding
-    - Consistent spacing and typography throughout all pages
-  - **Enhanced UI Components**: Added missing shadcn/ui components
-    - Switch component for settings toggles
-    - Skeleton component for loading states
-    - Enhanced sidebar component with proper variants
-    - Updated button, tooltip, and input components
-- **Dashboard Interface**: Complete dashboard page with shadcn UI components
   - Dashboard page with metrics cards showing platform statistics
   - Sidebar navigation with collapsible functionality
   - Recent activity feed with dynamic status badges

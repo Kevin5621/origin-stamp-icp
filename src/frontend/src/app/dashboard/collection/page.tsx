@@ -2,14 +2,14 @@
 
 import React from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { DashboardPage } from "@/components/pages/dashboard/DashboardPage";
+import { CollectionPage } from "@/components/pages/collection/CollectionPage";
 import { DashboardGuard } from "@/components/auth/DashboardGuard";
 
-export default function Dashboard() {
+export default function Collection() {
   return (
     <DashboardGuard>
       <MainLayout>
-        <DashboardPage />
+        <CollectionPage />
       </MainLayout>
     </DashboardGuard>
   );

@@ -1,13 +1,13 @@
 import React from "react";
+import Link from "next/link";
 import {
   LayoutDashboard,
   Palette,
-  CreditCard,
   Store,
-  Settings,
-  Users,
-  BarChart3,
-  FileText,
+  Package,
+  User,
+  Heart,
+  Wallet,
 } from "lucide-react";
 import {
   Sidebar,
@@ -23,28 +23,26 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
 
-interface DashboardSidebarProps {
-  onSectionChange: (sectionId: string) => void;
+interface CustomerSidebarProps {
   activeSection: string;
 }
 
-export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
-  onSectionChange,
+export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
   activeSection,
 }) => {
+  const { user } = useAuth();
+
   const mainMenuItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "sessions", label: "Art Sessions", icon: Palette },
-    { id: "marketplace", label: "Marketplace", icon: Store },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
+    { id: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "/dashboard/marketplace", label: "Marketplace", icon: Store },
+    { id: "/dashboard/sessions", label: "My Art Sessions", icon: Palette },
+    { id: "/dashboard/collection", label: "My Collection", icon: Package },
   ];
 
-  const managementItems = [
-    { id: "users", label: "Users", icon: Users },
-    { id: "subscription", label: "Subscription", icon: CreditCard },
-    { id: "reports", label: "Reports", icon: FileText },
-    { id: "settings", label: "Settings", icon: Settings },
+  const accountItems = [
+    { id: "/dashboard/profile", label: "My Profile", icon: User },
   ];
 
   return (
@@ -60,7 +58,9 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <h2 className="text-foreground text-sm font-semibold">
               OriginStamp
             </h2>
-            <p className="text-muted-foreground text-xs">Admin Panel</p>
+            <p className="text-muted-foreground text-xs">
+              Welcome, {user?.username || "Artist"}
+            </p>
           </div>
         </div>
       </SidebarHeader>
@@ -68,7 +68,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       <SidebarContent>
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel>Main</SidebarGroupLabel>
+          <SidebarGroupLabel>Navigate</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {mainMenuItems.map((item) => {
@@ -76,12 +76,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 return (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton
-                      onClick={() => onSectionChange(item.id)}
+                      asChild
                       isActive={activeSection === item.id}
                       className="w-full"
                     >
-                      <Icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <Link href={item.id}>
+                        <Icon className="h-4 w-4" />
+                        <span>{item.label}</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -90,22 +92,24 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Management */}
+        {/* Account */}
         <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
+          <SidebarGroupLabel>Account</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {managementItems.map((item) => {
+              {accountItems.map((item) => {
                 const Icon = item.icon;
                 return (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton
-                      onClick={() => onSectionChange(item.id)}
+                      asChild
                       isActive={activeSection === item.id}
                       className="w-full"
                     >
-                      <Icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <Link href={item.id}>
+                        <Icon className="h-4 w-4" />
+                        <span>{item.label}</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -116,10 +120,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       </SidebarContent>
 
       <SidebarFooter className="border-border border-t">
-        <div className="p-4">
+        <div className="space-y-2 p-4">
           <Button variant="outline" size="sm" className="w-full justify-start">
-            <Settings className="mr-2 h-4 w-4" />
-            Preferences
+            <Wallet className="mr-2 h-4 w-4" />
+            Connect Wallet
+          </Button>
+          <Button variant="ghost" size="sm" className="w-full justify-start">
+            <Heart className="mr-2 h-4 w-4" />
+            Support
           </Button>
         </div>
       </SidebarFooter>

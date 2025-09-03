@@ -1,11 +1,12 @@
 import React from "react";
 import {
-  Users,
+  Palette,
   Award,
-  Camera,
   TrendingUp,
   Activity,
   CheckCircle,
+  Store,
+  Package,
 } from "lucide-react";
 import {
   Card,
@@ -18,52 +19,42 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import type {
-  DashboardCard,
-  DashboardMetrics,
-  RecentActivity,
-} from "@/types/dashboard";
+import type { DashboardCard, RecentActivity } from "@/types/dashboard";
 
 interface DashboardPageProps {
   className?: string;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
-  // Data akan didapat dari service/backend
-  const metrics: DashboardMetrics = {
-    total_users: 1250,
-    total_sessions: 3840,
-    total_certificates: 896,
-  };
-
+  // Customer-focused metrics
   const dashboardCards: DashboardCard[] = [
     {
-      title: "Total Users",
-      value: metrics.total_users.toLocaleString(),
-      description: "+12% from last month",
-      trend: { value: 12, isPositive: true },
-      icon: Users,
+      title: "My Art Sessions",
+      value: "12",
+      description: "3 active sessions",
+      trend: { value: 2, isPositive: true },
+      icon: Palette,
     },
     {
-      title: "Art Sessions",
-      value: metrics.total_sessions.toLocaleString(),
-      description: "+23% from last month",
-      trend: { value: 23, isPositive: true },
-      icon: Camera,
-    },
-    {
-      title: "Certificates",
-      value: metrics.total_certificates.toLocaleString(),
-      description: "+8% from last month",
-      trend: { value: 8, isPositive: true },
+      title: "My Certificates",
+      value: "8",
+      description: "All verified",
+      trend: { value: 1, isPositive: true },
       icon: Award,
     },
     {
-      title: "Verification Rate",
-      value: "94.2%",
-      description: "+2.1% from last month",
-      trend: { value: 2.1, isPositive: true },
-      icon: CheckCircle,
+      title: "NFTs Owned",
+      value: "24",
+      description: "+3 this month",
+      trend: { value: 3, isPositive: true },
+      icon: Package,
+    },
+    {
+      title: "Portfolio Value",
+      value: "45.8 ICP",
+      description: "+12.5% this month",
+      trend: { value: 12.5, isPositive: true },
+      icon: TrendingUp,
     },
   ];
 
@@ -71,8 +62,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
     {
       id: "1",
       type: "certificate",
-      title: "Digital Art Certificate Created",
-      description: "Certificate #896 for 'Abstract Digital Painting'",
+      title: "Certificate #896 Created",
+      description: "Your 'Abstract Digital Painting' has been certified",
       timestamp: "2 minutes ago",
       status: "completed",
       metadata: { certificate_id: "cert_896", verification_score: 98 },
@@ -81,28 +72,28 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
       id: "2",
       type: "session",
       title: "New Art Session Started",
-      description: "Physical art session by @artist_john",
+      description: "Upload photos for 'Modern Landscape Series'",
       timestamp: "15 minutes ago",
       status: "pending",
       metadata: { session_id: "session_3841", file_count: 5 },
     },
     {
       id: "3",
-      type: "verification",
-      title: "Certificate Verified",
-      description: "Certificate #895 verification completed",
+      type: "purchase",
+      title: "NFT Purchased",
+      description: "Added 'Digital Abstract #123' to your collection",
       timestamp: "1 hour ago",
       status: "completed",
-      metadata: { certificate_id: "cert_895", verification_score: 95 },
+      metadata: { nft_id: "nft_123", price: "2.5 ICP" },
     },
     {
       id: "4",
       type: "upload",
-      title: "Files Uploaded",
-      description: "12 photos uploaded to session #3840",
+      title: "Photos Uploaded",
+      description: "5 new photos added to session #3840",
       timestamp: "2 hours ago",
       status: "completed",
-      metadata: { session_id: "session_3840", file_count: 12 },
+      metadata: { session_id: "session_3840", file_count: 5 },
     },
   ];
 
@@ -111,7 +102,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
       case "certificate":
         return Award;
       case "session":
-        return Camera;
+        return Palette;
+      case "purchase":
+        return Store;
       case "verification":
         return CheckCircle;
       case "upload":
@@ -150,6 +143,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
 
   return (
     <div className={`space-y-6 ${className || ""}`}>
+      {/* Welcome Message */}
+      <div className="from-primary/10 to-secondary/10 rounded-lg bg-gradient-to-r p-6">
+        <h2 className="text-foreground mb-2 text-2xl font-bold">
+          Welcome back, Artist! 🎨
+        </h2>
+        <p className="text-muted-foreground">
+          Ready to create and certify your next masterpiece? Start a new art
+          session or explore the marketplace.
+        </p>
+      </div>
+
       {/* Metrics Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {dashboardCards.map((card) => {
@@ -177,7 +181,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
                     >
                       <TrendingUp className="mr-1 h-3 w-3" />
                       {card.trend.isPositive ? "+" : ""}
-                      {card.trend.value}%
+                      {card.trend.value}
                     </span>
                   )}{" "}
                   {card.description}
@@ -197,7 +201,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
               Recent Activity
             </CardTitle>
             <CardDescription>
-              Latest activities and updates from your platform
+              Your latest art sessions and marketplace activities
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -239,102 +243,92 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
             <CardTitle className="text-card-foreground">
               Quick Actions
             </CardTitle>
-            <CardDescription>Common tasks and shortcuts</CardDescription>
+            <CardDescription>Start creating or exploring</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90 w-full justify-start">
-              <Camera className="mr-2 h-4 w-4" />
+              <Palette className="mr-2 h-4 w-4" />
               Start New Session
             </Button>
             <Button
               variant="outline"
               className="border-border text-foreground hover:bg-accent w-full justify-start"
             >
-              <Award className="mr-2 h-4 w-4" />
-              Generate Certificate
+              <Store className="mr-2 h-4 w-4" />
+              Browse Marketplace
             </Button>
             <Button
               variant="outline"
               className="border-border text-foreground hover:bg-accent w-full justify-start"
             >
-              <Activity className="mr-2 h-4 w-4" />
-              View Analytics
+              <Package className="mr-2 h-4 w-4" />
+              View My Collection
             </Button>
             <Button
               variant="outline"
               className="border-border text-foreground hover:bg-accent w-full justify-start"
             >
-              <Users className="mr-2 h-4 w-4" />
-              Manage Users
+              <CheckCircle className="mr-2 h-4 w-4" />
+              Check Certificates
             </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* Analytics Tab Section */}
+      {/* Portfolio Overview */}
       <Card className="border-border bg-card border">
         <CardHeader>
           <CardTitle className="text-card-foreground">
-            Analytics Overview
+            Portfolio Overview
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="bg-muted grid w-full grid-cols-4">
+            <TabsList className="bg-muted grid w-full grid-cols-3">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="users">Users</TabsTrigger>
               <TabsTrigger value="sessions">Sessions</TabsTrigger>
-              <TabsTrigger value="certificates">Certificates</TabsTrigger>
+              <TabsTrigger value="collection">Collection</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="mt-6 space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <h4 className="text-card-foreground text-sm font-medium">
-                    Platform Growth
+                    Total Art Value
                   </h4>
                   <p className="text-card-foreground text-2xl font-bold">
-                    +24.5%
+                    45.8 ICP
                   </p>
                   <p className="text-muted-foreground text-xs">
-                    Compared to last month
+                    +12.5% from last month
                   </p>
                 </div>
                 <div className="space-y-2">
                   <h4 className="text-card-foreground text-sm font-medium">
-                    Active Users
+                    Active Sessions
                   </h4>
-                  <p className="text-card-foreground text-2xl font-bold">892</p>
+                  <p className="text-card-foreground text-2xl font-bold">3</p>
                   <p className="text-muted-foreground text-xs">
-                    Users active this week
+                    2 ready for certification
                   </p>
                 </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="users" className="mt-6">
-              <div className="py-8 text-center">
-                <Users className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-                <p className="text-muted-foreground">
-                  User analytics will be displayed here
-                </p>
               </div>
             </TabsContent>
 
             <TabsContent value="sessions" className="mt-6">
               <div className="py-8 text-center">
-                <Camera className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+                <Palette className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
                 <p className="text-muted-foreground">
-                  Session analytics will be displayed here
+                  Your art sessions activity will be displayed here
                 </p>
               </div>
             </TabsContent>
 
-            <TabsContent value="certificates" className="mt-6">
+            <TabsContent value="collection" className="mt-6">
               <div className="py-8 text-center">
-                <Award className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+                <Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
                 <p className="text-muted-foreground">
-                  Certificate analytics will be displayed here
+                  Your NFT collection overview will be displayed here
                 </p>
               </div>
             </TabsContent>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Bell, Search, User } from "lucide-react";
+import { Bell, Search, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,12 +13,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 
-interface DashboardHeaderProps {
+interface CustomerHeaderProps {
   title: string;
   subtitle?: string;
 }
 
-export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
+export const CustomerHeader: React.FC<CustomerHeaderProps> = ({
   title,
   subtitle,
 }) => {
@@ -39,7 +39,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         <div className="relative hidden w-64 md:block">
           <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <Input
-            placeholder="Search..."
+            placeholder="Search artworks, artists..."
             className="bg-muted/50 border-0 pl-10 focus-visible:ring-1"
           />
         </div>
@@ -53,7 +53,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               variant="destructive"
               className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
             >
-              3
+              2
             </Badge>
           </Button>
 
@@ -84,13 +84,17 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
+                <span>My Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <span>My Collection</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <span>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>
+                <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

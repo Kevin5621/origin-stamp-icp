@@ -31,7 +31,7 @@ export interface DashboardCard {
 
 export interface RecentActivity {
   id: string;
-  type: "certificate" | "session" | "upload" | "verification";
+  type: "certificate" | "session" | "upload" | "verification" | "purchase";
   title: string;
   description: string;
   timestamp: string;
@@ -41,5 +41,7 @@ export interface RecentActivity {
     certificate_id?: string;
     file_count?: number;
     verification_score?: number;
+    nft_id?: string;
+    price?: string;
   };
 }
