@@ -142,7 +142,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
   };
 
   return (
-    <div className={`space-y-6 ${className || ""}`}>
+    <div className="container mx-auto space-y-6 py-6">
       {/* Welcome Message */}
       <div className="from-primary/10 to-secondary/10 rounded-lg bg-gradient-to-r p-6">
         <h2 className="text-foreground mb-2 text-2xl font-bold">

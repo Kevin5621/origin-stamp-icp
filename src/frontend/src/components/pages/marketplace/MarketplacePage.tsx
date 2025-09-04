@@ -130,7 +130,7 @@ export const MarketplacePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto space-y-6 py-6">
       {/* Header */}
       <div className="flex flex-col space-y-4">
         <div className="flex items-start justify-between">
