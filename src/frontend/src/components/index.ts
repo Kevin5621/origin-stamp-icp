@@ -28,9 +28,13 @@ export { NavigationHeader } from "./navigation/NavigationHeader";
 export { HeroSection } from "./sections/HeroSection";
 export { CreatorsSection } from "./sections/CreatorsSection";
 export { FeaturesSection } from "./sections/FeaturesSection";
+export { SubscriptionSection } from "./sections/SubscriptionSection";
 
 // Dashboard Components
 export { DashboardPage } from "./pages/dashboard/DashboardPage";
+
+// Subscription Components
+export { SubscriptionPage } from "./pages/subscription/SubscriptionPage";
 
 // Auth Components
 export { LoginForm } from "./auth/LoginForm";

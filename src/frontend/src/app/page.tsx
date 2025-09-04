@@ -2,6 +2,7 @@ import { NavigationHeader } from "@/components/navigation/NavigationHeader";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { CreatorsSection } from "@/components/sections/CreatorsSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
+import { SubscriptionSection } from "@/components/sections/SubscriptionSection";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata = {
@@ -17,6 +18,7 @@ export default function Home() {
         <HeroSection />
         <CreatorsSection />
         <FeaturesSection />
+        <SubscriptionSection />
       </main>
       <Footer />
     </div>

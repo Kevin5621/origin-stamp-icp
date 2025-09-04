@@ -3,13 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import { Menu, Wallet, User, Settings, LogOut } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,160 +12,182 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { LoginModal } from "@/components/auth/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
+import { LoginModal } from "@/components/auth/LoginModal";
+import { Menu, User, LogOut, Settings, Wallet } from "lucide-react";
 
-interface NavigationHeaderProps {
-  readonly className?: string;
-}
-
-export function NavigationHeader({ className }: NavigationHeaderProps) {
-  const { user, isAuthenticated, logout } = useAuth();
+export function NavigationHeader() {
+  const { user, logout } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const navigationItems = [
-    { title: "Discover", href: "/discover" },
-    { title: "Marketplace", href: "/marketplace" },
-    { title: "Creators", href: "/creators" },
-    { title: "Stats", href: "/stats" },
-    { title: "Support", href: "/support" },
-  ];
-
-  const handleConnectWallet = () => {
-    setIsLoginModalOpen(true);
-  };
-
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout();
   };
 
   return (
-    <>
-      <header
-        className={cn(
-          "border-border bg-background sticky top-0 z-50 w-full border-b shadow-sm",
-          className,
-        )}
-      >
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <header className="bg-background/80 border-border sticky top-0 z-50 border-b backdrop-blur-md">
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-              <span className="text-primary-foreground text-sm font-medium">
-                ⚡
-              </span>
+            <div className="bg-primary rounded-lg p-2">
+              <Wallet className="text-primary-foreground h-6 w-6" />
             </div>
             <span className="text-foreground text-xl font-medium">
               OriginStamp
             </span>
           </Link>
 
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList className="space-x-6">
-              {navigationItems.map((item) => (
-                <NavigationMenuItem key={item.title}>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:block">
+            <NavigationMenu>
+              <NavigationMenuList className="space-x-6">
+                <NavigationMenuItem>
                   <Link
-                    href={item.href}
-                    className="text-muted-foreground hover:text-foreground font-medium transition-colors"
+                    href="/dashboard/marketplace"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    {item.title}
+                    Marketplace
                   </Link>
                 </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+                <NavigationMenuItem>
+                  <Link
+                    href="/dashboard/subscription"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Pricing
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link
+                    href="/about"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    About
+                  </Link>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </nav>
 
+          {/* Right Side */}
           <div className="flex items-center space-x-4">
             {/* Theme Toggle */}
             <ThemeToggle />
 
-            {isAuthenticated && user ? (
+            {/* User Menu / Connect Wallet */}
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="hover:bg-muted flex items-center space-x-2"
+                    className="relative h-8 w-8 rounded-full"
                   >
-                    <Avatar className="h-8 w-8 border">
-                      <AvatarImage src={user.picture} />
-                      <AvatarFallback className="bg-muted text-foreground">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="" alt={user.username} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
                         {user.username.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-foreground hidden font-medium md:block">
-                      {user.username}
-                    </span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="bg-background w-56 border shadow-lg"
-                >
-                  <DropdownMenuItem className="text-foreground hover:text-foreground hover:bg-muted">
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      <p className="text-foreground font-medium">
+                        {user.username}
+                      </p>
+                      <p className="text-muted-foreground text-xs">
+                        Connected to Internet Computer
+                      </p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="text-foreground hover:text-foreground hover:bg-muted">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/dashboard/subscription"
+                      className="cursor-pointer"
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      Subscription
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    className="text-foreground hover:text-foreground hover:bg-muted"
                     onClick={handleLogout}
+                    className="cursor-pointer"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    Disconnect
+                    Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button
-                onClick={handleConnectWallet}
-                className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
-              >
-                <Wallet className="mr-2 h-4 w-4" />
+              <Button onClick={() => setIsLoginModalOpen(true)}>
                 Connect Wallet
               </Button>
             )}
 
+            {/* Mobile Menu */}
             <Sheet>
-              <SheetTrigger asChild className="md:hidden">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground hover:bg-muted"
-                >
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="bg-background border shadow-lg"
-              >
+              <SheetContent side="right">
                 <div className="mt-8 flex flex-col space-y-4">
-                  {navigationItems.map((item) => (
-                    <Link
-                      key={item.title}
-                      href={item.href}
-                      className="text-foreground hover:text-foreground py-2 font-medium transition-colors"
+                  <Link
+                    href="/dashboard/marketplace"
+                    className="text-foreground hover:text-primary transition-colors"
+                  >
+                    Marketplace
+                  </Link>
+                  <Link
+                    href="/dashboard/subscription"
+                    className="text-foreground hover:text-primary transition-colors"
+                  >
+                    Pricing
+                  </Link>
+                  <Link
+                    href="/about"
+                    className="text-foreground hover:text-primary transition-colors"
+                  >
+                    About
+                  </Link>
+                  {!user && (
+                    <Button
+                      onClick={() => setIsLoginModalOpen(true)}
+                      className="mt-4"
                     >
-                      {item.title}
-                    </Link>
-                  ))}
+                      Connect Wallet
+                    </Button>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
-      </header>
+      </div>
 
+      {/* Login Modal */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
       />
-    </>
+    </header>
   );
 }

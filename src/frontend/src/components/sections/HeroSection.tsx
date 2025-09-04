@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   backendService,
   type NFTMarketplaceStats,
 } from "@/services/backendService";
 
 export function HeroSection() {
+  const router = useRouter();
   const [stats, setStats] = useState<NFTMarketplaceStats>({
     totalArtworks: "0+",
     totalCreators: "0+",
@@ -20,6 +22,18 @@ export function HeroSection() {
   useEffect(() => {
     backendService.getMarketplaceStats().then(setStats);
   }, []);
+
+  const handleDiscoverNow = () => {
+    router.push("/dashboard/marketplace");
+  };
+
+  const handleLearnMore = () => {
+    // Scroll to features section
+    const featuresSection = document.getElementById("features");
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <section className="bg-background relative min-h-screen overflow-hidden">
@@ -43,10 +57,19 @@ export function HeroSection() {
             </div>
 
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Button size="lg" className="px-8 py-6 text-lg font-medium">
+              <Button
+                size="lg"
+                className="px-8 py-6 text-lg font-medium"
+                onClick={handleDiscoverNow}
+              >
                 Discover Now
               </Button>
-              <Button variant="outline" size="lg" className="px-8 py-6 text-lg">
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-8 py-6 text-lg"
+                onClick={handleLearnMore}
+              >
                 Learn More
               </Button>
             </div>

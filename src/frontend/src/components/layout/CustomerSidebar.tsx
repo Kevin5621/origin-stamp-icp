@@ -8,6 +8,7 @@ import {
   User,
   Heart,
   Wallet,
+  CreditCard,
 } from "lucide-react";
 import {
   Sidebar,
@@ -43,6 +44,7 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
 
   const accountItems = [
     { id: "/dashboard/profile", label: "My Profile", icon: User },
+    { id: "/dashboard/subscription", label: "Subscription", icon: CreditCard },
   ];
 
   return (
@@ -123,14 +125,10 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
       </SidebarContent>
 
       <SidebarFooter className="border-border border-t">
-        <div className="space-y-2 p-4">
-          <Button variant="outline" size="sm" className="w-full justify-start">
+        <div className="p-4">
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 w-full">
             <Wallet className="mr-2 h-4 w-4" />
             Connect Wallet
-          </Button>
-          <Button variant="ghost" size="sm" className="w-full justify-start">
-            <Heart className="mr-2 h-4 w-4" />
-            Support
           </Button>
         </div>
       </SidebarFooter>

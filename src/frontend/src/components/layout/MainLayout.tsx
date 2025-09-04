@@ -27,6 +27,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         return "My Collection";
       case "/dashboard/profile":
         return "My Profile";
+      case "/dashboard/subscription":
+        return "Subscription Management";
       default:
         return "Dashboard";
     }
@@ -44,6 +46,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         return "View your collected NFTs and certificates.";
       case "/dashboard/profile":
         return "Manage your account and preferences.";
+      case "/dashboard/subscription":
+        return "Upgrade your plan to unlock more features and increase your art authentication capabilities.";
       default:
         return "";
     }
