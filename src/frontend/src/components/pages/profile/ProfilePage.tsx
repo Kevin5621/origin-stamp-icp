@@ -1,411 +1,348 @@
-import React from "react";
-import { User, Shield, Bell, Palette, Camera, Edit } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToastContext } from "@/contexts/ToastContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { PhysicalArtService } from "@/services/physicalArtService";
+import {
+  ProfileHeader,
+  ProfileSettings,
+  NotificationSettingsCard,
+  PrivacySettingsCard,
+  ActivityFeedCard,
+} from "./components";
+
+// Backend integration types
+interface UserProfile {
+  username: string;
+  email?: string;
+  bio?: string;
+  phone?: string;
+  location?: string;
+  profile_picture?: string;
+  created_at?: bigint;
+  updated_at?: bigint;
+}
+
+interface UserStats {
+  art_sessions: number;
+  nfts_owned: number;
+  certificates: number;
+  days_active: number;
+}
+
+interface NotificationSettings {
+  session_notifications: boolean;
+  marketplace_updates: boolean;
+  collection_alerts: boolean;
+  email_digest: boolean;
+}
+
+interface PrivacySettings {
+  public_profile: boolean;
+  show_collection: boolean;
+  activity_status: boolean;
+  session_history: boolean;
+}
+
+interface ActivityItem {
+  id: string;
+  type: "session" | "nft" | "achievement" | "collection";
+  title: string;
+  description: string;
+  timestamp: string;
+  metadata?: {
+    session_id?: string;
+    nft_id?: string;
+    achievement_type?: string;
+  };
+}
+
+// Utility functions are included in the component implementation below
 
 export const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const { success, error } = useToastContext();
 
-  const profileStats = [
-    { label: "Art Sessions", value: "12", icon: Camera },
-    { label: "NFTs Owned", value: "24", icon: Palette },
-    { label: "Certificates", value: "8", icon: Shield },
-    { label: "Days Active", value: "89", icon: User },
-  ];
+  // State management
+  const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userStats, setUserStats] = useState<UserStats>({
+    art_sessions: 0,
+    nfts_owned: 0,
+    certificates: 0,
+    days_active: 0,
+  });
+  const [notificationSettings, setNotificationSettings] =
+    useState<NotificationSettings>({
+      session_notifications: true,
+      marketplace_updates: true,
+      collection_alerts: false,
+      email_digest: true,
+    });
+  const [privacySettings, setPrivacySettings] = useState<PrivacySettings>({
+    public_profile: true,
+    show_collection: true,
+    activity_status: false,
+    session_history: true,
+  });
+  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
 
-  const notificationSettings = [
-    {
-      title: "Session Notifications",
-      description:
-        "Get notified when your art sessions are ready for certification",
-      enabled: true,
-    },
-    {
-      title: "Marketplace Updates",
-      description: "Receive updates about new artworks and price changes",
-      enabled: false,
-    },
-    {
-      title: "Collection Alerts",
-      description: "Notifications about your NFT collection performance",
-      enabled: true,
-    },
-    {
-      title: "Email Digest",
-      description: "Weekly summary of your OriginStamp activity",
-      enabled: false,
-    },
-  ];
+  // Load user profile from backend
+  const loadUserProfile = useCallback(async () => {
+    if (!user?.username) return;
 
-  const privacySettings = [
-    {
-      title: "Public Profile",
-      description: "Make your profile visible to other users",
-      enabled: true,
-    },
-    {
-      title: "Show Collection",
-      description: "Display your NFT collection publicly",
-      enabled: false,
-    },
-    {
-      title: "Activity Status",
-      description: "Show when you're online and active",
-      enabled: false,
-    },
-    {
-      title: "Session History",
-      description: "Make your art session history public",
-      enabled: true,
-    },
-  ];
+    try {
+      // For now using mock data - will implement backend call when ready
+      const mockProfile: UserProfile = {
+        username: user.username,
+        email: user.email || "",
+        bio: "Passionate digital artist exploring the intersection of technology and creativity.",
+        phone: "+1 (555) 123-4567",
+        location: "San Francisco, CA",
+        profile_picture: user.picture || "",
+        created_at: BigInt(Date.now() * 1000000),
+        updated_at: BigInt(Date.now() * 1000000),
+      };
 
-  const recentActivity = [
-    {
-      id: "1",
-      type: "session",
-      title: "Started new art session",
-      description: "Modern Landscape Series",
-      timestamp: "2 hours ago",
-    },
-    {
-      id: "2",
-      type: "certificate",
-      title: "Certificate generated",
-      description: "Abstract Digital Painting #896",
-      timestamp: "1 day ago",
-    },
-    {
-      id: "3",
-      type: "purchase",
-      title: "NFT purchased",
-      description: "Urban Street Art #123",
-      timestamp: "3 days ago",
-    },
-  ];
+      setUserProfile(mockProfile);
+    } catch (err) {
+      console.error("Failed to load user profile:", err);
+      error("Failed to load profile data");
+    }
+  }, [user?.username, user?.email, user?.picture, error]);
+
+  // Load user statistics
+  const loadUserStats = useCallback(async () => {
+    if (!user?.username) return;
+
+    try {
+      // Using mock data for now - backend integration ready for implementation
+      const mockStats: UserStats = {
+        art_sessions: 12,
+        nfts_owned: 5,
+        certificates: 8,
+        days_active: 45,
+      };
+
+      setUserStats(mockStats);
+    } catch (err) {
+      console.error("Failed to load user stats:", err);
+      setUserStats({
+        art_sessions: 0,
+        nfts_owned: 0,
+        certificates: 0,
+        days_active: 0,
+      });
+    }
+  }, [user?.username]);
+
+  // Load recent activity
+  const loadRecentActivity = useCallback(async () => {
+    if (!user?.username) return;
+
+    try {
+      // Using mock data for now - backend integration ready for implementation
+      const mockActivities: ActivityItem[] = [
+        {
+          id: "session-1",
+          type: "session",
+          title: "Started new art session",
+          description:
+            "Digital Portrait Series - exploring new techniques with digital brushes and color theory",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+          metadata: { session_id: "sess_123" },
+        },
+        {
+          id: "nft-1",
+          type: "nft",
+          title: "NFT Certificate Generated",
+          description:
+            "Abstract Digital Painting #123 - your artwork has been verified and minted as an NFT",
+          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+          metadata: { nft_id: "nft_456" },
+        },
+        {
+          id: "achievement-1",
+          type: "achievement",
+          title: "First Week Complete!",
+          description:
+            "Congratulations on completing your first week of consistent art creation",
+          timestamp: new Date(
+            Date.now() - 7 * 24 * 60 * 60 * 1000,
+          ).toISOString(), // 1 week ago
+          metadata: { achievement_type: "weekly_streak" },
+        },
+      ];
+
+      setRecentActivity(mockActivities);
+    } catch (err) {
+      console.error("Failed to load recent activity:", err);
+      setRecentActivity([]);
+    }
+  }, [user?.username]);
+
+  // Load all data on component mount
+  useEffect(() => {
+    const loadAllData = async () => {
+      if (user?.username) {
+        setLoading(true);
+        await Promise.all([
+          loadUserProfile(),
+          loadUserStats(),
+          loadRecentActivity(),
+        ]);
+        setLoading(false);
+      }
+    };
+
+    loadAllData();
+  }, [user?.username, loadUserProfile, loadUserStats, loadRecentActivity]);
+
+  // Handle photo upload
+  const handlePhotoUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file || !user?.username) return;
+
+    // Validate file type
+    if (!PhysicalArtService.validateFileType(file)) {
+      error("Please select a valid image file (JPEG, PNG, WebP, or GIF)");
+      return;
+    }
+
+    // Validate file size (max 5MB for profile photos)
+    if (!PhysicalArtService.validateFileSize(file, 5)) {
+      error("File size too large. Maximum size is 5MB for profile photos");
+      return;
+    }
+
+    try {
+      // Create a special session for profile photos
+      const profileSessionId = `profile_${user.username}_${Date.now()}`;
+
+      // Upload to S3
+      const uploadResult = await PhysicalArtService.uploadPhoto(
+        profileSessionId,
+        file,
+      );
+
+      if (uploadResult.success && uploadResult.file_url) {
+        // Update local state
+        if (userProfile) {
+          const updatedProfile = {
+            ...userProfile,
+            profile_picture: uploadResult.file_url,
+          };
+          setUserProfile(updatedProfile);
+        }
+
+        // Update auth context with new picture
+        updateUser({ ...user, picture: uploadResult.file_url });
+
+        success("Profile photo updated successfully!");
+      } else {
+        error(uploadResult.message || "Failed to upload profile photo");
+      }
+    } catch (err) {
+      console.error("Photo upload error:", err);
+      error("Failed to upload profile photo");
+    }
+  };
+
+  // Handle notification settings change
+  const handleNotificationChange = (setting: keyof NotificationSettings) => {
+    setNotificationSettings((prev) => ({
+      ...prev,
+      [setting]: !prev[setting],
+    }));
+
+    // Backend integration ready for implementation
+    // When backend is ready: backend.update_notification_settings(user.username, { [setting]: !notificationSettings[setting] });
+
+    success("Notification preferences updated");
+  };
+
+  // Handle privacy settings change
+  const handlePrivacyChange = (setting: keyof PrivacySettings) => {
+    setPrivacySettings((prev) => ({
+      ...prev,
+      [setting]: !prev[setting],
+    }));
+
+    // Backend integration ready for implementation
+    // When backend is ready: backend.update_privacy_settings(user.username, { [setting]: !privacySettings[setting] });
+
+    success("Privacy settings updated");
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  if (!userProfile) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <p className="text-muted-foreground">Failed to load profile data</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Profile Header */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex items-start gap-6">
-            <div className="relative">
-              <Avatar className="h-24 w-24">
-                <AvatarImage
-                  src="/placeholder-avatar.jpg"
-                  alt={user?.username}
-                />
-                <AvatarFallback className="bg-primary/10 text-primary text-xl">
-                  {user?.username?.charAt(0).toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
-              <Button
-                size="icon"
-                variant="outline"
-                className="absolute -right-2 -bottom-2 h-8 w-8 rounded-full"
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="flex-1 space-y-4">
-              <div>
-                <h2 className="text-foreground text-2xl font-bold">
-                  {user?.username || "Your Name"}
-                </h2>
-                <p className="text-muted-foreground">
-                  {user?.email || "your.email@example.com"}
-                </p>
-                <Badge variant="secondary" className="mt-2">
-                  Digital Artist
-                </Badge>
-              </div>
-
-              <div className="grid grid-cols-4 gap-4">
-                {profileStats.map((stat) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div key={stat.label} className="text-center">
-                      <div className="mb-2 flex items-center justify-center">
-                        <Icon className="text-muted-foreground h-5 w-5" />
-                      </div>
-                      <div className="text-foreground text-2xl font-bold">
-                        {stat.value}
-                      </div>
-                      <div className="text-muted-foreground text-xs">
-                        {stat.label}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Profile Tabs */}
-      <Tabs defaultValue="settings" className="w-full">
+    <div className="container mx-auto space-y-6 py-6">
+      <Tabs defaultValue="profile" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="settings">Account Settings</TabsTrigger>
+          <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="privacy">Privacy</TabsTrigger>
-          <TabsTrigger value="activity">Recent Activity</TabsTrigger>
+          <TabsTrigger value="activity">Activity</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="settings" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Personal Information
-              </CardTitle>
-              <CardDescription>
-                Update your personal details and profile information
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-foreground text-sm font-medium">
-                    Display Name
-                  </label>
-                  <div className="border-border flex items-center justify-between rounded-md border p-3">
-                    <span className="text-foreground">
-                      {user?.username || "Your Name"}
-                    </span>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-foreground text-sm font-medium">
-                    Email Address
-                  </label>
-                  <div className="border-border flex items-center justify-between rounded-md border p-3">
-                    <span className="text-foreground">
-                      {user?.email || "your.email@example.com"}
-                    </span>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-2">
-                <label className="text-foreground text-sm font-medium">
-                  Bio
-                </label>
-                <div className="border-border bg-muted/50 rounded-md border p-3">
-                  <p className="text-muted-foreground text-sm">
-                    Tell others about yourself, your art style, and what
-                    inspires you...
-                  </p>
-                  <Button variant="ghost" size="sm" className="mt-2">
-                    <Edit className="mr-2 h-4 w-4" />
-                    Add Bio
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Security
-              </CardTitle>
-              <CardDescription>
-                Manage your account security settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-foreground text-sm font-medium">
-                    Two-Factor Authentication
-                  </h4>
-                  <p className="text-muted-foreground text-sm">
-                    Add an extra layer of security to your account
-                  </p>
-                </div>
-                <Button variant="outline">Enable</Button>
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-foreground text-sm font-medium">
-                    Change Password
-                  </h4>
-                  <p className="text-muted-foreground text-sm">
-                    Update your account password
-                  </p>
-                </div>
-                <Button variant="outline">Change</Button>
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-foreground text-sm font-medium">
-                    Connected Wallets
-                  </h4>
-                  <p className="text-muted-foreground text-sm">
-                    Manage your connected cryptocurrency wallets
-                  </p>
-                </div>
-                <Button variant="outline">Manage</Button>
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="profile" className="space-y-6">
+          <ProfileHeader
+            user={user}
+            userProfile={userProfile}
+            userStats={userStats}
+            uploadingPhoto={false}
+            onPhotoUpload={handlePhotoUpload}
+          />
+          <ProfileSettings
+            userProfile={userProfile}
+            profileForm={{
+              email: userProfile?.email || "",
+              bio: userProfile?.bio || "",
+              phone: userProfile?.phone || "",
+              location: userProfile?.location || "",
+            }}
+            editingProfile={false}
+            loading={false}
+            onProfileFormChange={() => {}}
+            onEditToggle={() => {}}
+            onSave={() => {}}
+          />
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                Notification Preferences
-              </CardTitle>
-              <CardDescription>
-                Choose what notifications you want to receive
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {notificationSettings.map((setting) => (
-                  <div key={setting.title}>
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <h4 className="text-foreground text-sm font-medium">
-                          {setting.title}
-                        </h4>
-                        <p className="text-muted-foreground text-sm">
-                          {setting.description}
-                        </p>
-                      </div>
-                      <Switch
-                        checked={setting.enabled}
-                        aria-label={`Toggle ${setting.title}`}
-                      />
-                    </div>
-                    {notificationSettings.indexOf(setting) <
-                      notificationSettings.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <NotificationSettingsCard
+            settings={notificationSettings}
+            onSettingChange={handleNotificationChange}
+          />
         </TabsContent>
 
         <TabsContent value="privacy" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Privacy Settings
-              </CardTitle>
-              <CardDescription>
-                Control who can see your profile and activity
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {privacySettings.map((setting) => (
-                  <div key={setting.title}>
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <h4 className="text-foreground text-sm font-medium">
-                          {setting.title}
-                        </h4>
-                        <p className="text-muted-foreground text-sm">
-                          {setting.description}
-                        </p>
-                      </div>
-                      <Switch
-                        checked={setting.enabled}
-                        aria-label={`Toggle ${setting.title}`}
-                      />
-                    </div>
-                    {privacySettings.indexOf(setting) <
-                      privacySettings.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <PrivacySettingsCard
+            settings={privacySettings}
+            onSettingChange={handlePrivacyChange}
+          />
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>
-                Your latest actions and interactions on OriginStamp
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div key={activity.id}>
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-secondary flex h-10 w-10 items-center justify-center rounded-full">
-                        {activity.type === "session" && (
-                          <Camera className="h-5 w-5" />
-                        )}
-                        {activity.type === "certificate" && (
-                          <Shield className="h-5 w-5" />
-                        )}
-                        {activity.type === "purchase" && (
-                          <Palette className="h-5 w-5" />
-                        )}
-                      </div>
-                      <div className="flex-1 space-y-1">
-                        <p className="text-foreground text-sm font-medium">
-                          {activity.title}
-                        </p>
-                        <p className="text-muted-foreground text-sm">
-                          {activity.description}
-                        </p>
-                        <p className="text-muted-foreground text-xs">
-                          {activity.timestamp}
-                        </p>
-                      </div>
-                    </div>
-                    {index < recentActivity.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <ActivityFeedCard activities={recentActivity} isLoading={loading} />
         </TabsContent>
       </Tabs>
     </div>
