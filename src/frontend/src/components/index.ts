@@ -39,3 +39,9 @@ export { SubscriptionPage } from "./pages/subscription/SubscriptionPage";
 // Auth Components
 export { LoginForm } from "./auth/LoginForm";
 export { LoginModal } from "./auth/LoginModal";
+
+// Contexts
+export {
+  SubscriptionProvider,
+  useSubscription,
+} from "@/contexts/SubscriptionContext";

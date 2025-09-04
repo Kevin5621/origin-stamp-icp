@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ToastProvider } from "@/contexts/ToastContext";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import ToastContainer from "@/components/ui/toast-container";
 import { CookieSync } from "../components/auth/CookieSync";
 
@@ -39,11 +40,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <ToastProvider>
-              <CookieSync />
-              {children}
-              <ToastContainer />
-            </ToastProvider>
+            <SubscriptionProvider>
+              <ToastProvider>
+                <CookieSync />
+                {children}
+                <ToastContainer />
+              </ToastProvider>
+            </SubscriptionProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

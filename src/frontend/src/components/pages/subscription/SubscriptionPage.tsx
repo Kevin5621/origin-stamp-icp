@@ -24,28 +24,29 @@ import {
   Wallet,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
   subscriptionService,
   type SubscriptionPlan,
-  type SubscriptionLimits,
 } from "@/services/subscriptionService";
 
 export const SubscriptionPage: React.FC = () => {
   const searchParams = useSearchParams();
   const { user } = useAuth();
   const { success: showSuccess, error: showError } = useToastContext();
+  const {
+    currentSubscription,
+    currentPlan,
+    isLoading,
+    isUpgrading,
+    isRedeeming,
+    upgradeSubscription,
+    redeemCoupon,
+  } = useSubscription();
 
   const [selectedPlan, setSelectedPlan] = useState<string>("");
-  const [currentSubscription, setCurrentSubscription] = useState<string | null>(
-    null,
-  );
-  const [subscriptionLimits, setSubscriptionLimits] =
-    useState<SubscriptionLimits | null>(null);
   const [couponCode, setCouponCode] = useState("");
-  const [isRedeeming, setIsRedeeming] = useState(false);
-  const [isUpgrading, setIsUpgrading] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState<"icp" | "usd">("icp");
 
   const plans = subscriptionService.getSubscriptionPlans();
@@ -55,28 +56,7 @@ export const SubscriptionPage: React.FC = () => {
     if (planParam) {
       setSelectedPlan(planParam);
     }
-
-    const loadUserSubscription = async () => {
-      if (user?.username) {
-        try {
-          const subscription = await subscriptionService.getUserSubscription(
-            user.username,
-          );
-          const limits = await subscriptionService.getUserSubscriptionLimits(
-            user.username,
-          );
-
-          setCurrentSubscription(subscription);
-          setSubscriptionLimits(limits);
-        } catch (error) {
-          console.error("Failed to load user subscription:", error);
-        }
-      }
-      setIsLoading(false);
-    };
-
-    loadUserSubscription();
-  }, [searchParams, user?.username]);
+  }, [searchParams]);
 
   const handleRedeemCoupon = async () => {
     if (!user?.username || !couponCode.trim()) {
@@ -84,32 +64,17 @@ export const SubscriptionPage: React.FC = () => {
       return;
     }
 
-    setIsRedeeming(true);
     try {
-      const success = await subscriptionService.redeemCoupon(
-        user.username,
-        couponCode.trim(),
-      );
+      const success = await redeemCoupon(couponCode.trim());
 
       if (success) {
         showSuccess("Coupon redeemed successfully!");
         setCouponCode("");
-
-        const subscription = await subscriptionService.getUserSubscription(
-          user.username,
-        );
-        const limits = await subscriptionService.getUserSubscriptionLimits(
-          user.username,
-        );
-        setCurrentSubscription(subscription);
-        setSubscriptionLimits(limits);
       } else {
         showError("Invalid or expired coupon code");
       }
-    } catch (err) {
+    } catch (error) {
       showError("Failed to redeem coupon. Please try again.");
-    } finally {
-      setIsRedeeming(false);
     }
   };
 
@@ -119,33 +84,18 @@ export const SubscriptionPage: React.FC = () => {
       return;
     }
 
-    setIsUpgrading(true);
     try {
-      const success = await subscriptionService.updateUserSubscription(
-        user.username,
-        plan.tier,
-      );
+      const success = await upgradeSubscription(plan.tier);
 
       if (success) {
         showSuccess(`Successfully upgraded to ${plan.name} plan!`);
-        setCurrentSubscription(plan.tier);
-        setSubscriptionLimits(plan.limits);
       } else {
         showError("Failed to upgrade subscription. Please try again.");
       }
-    } catch (err) {
+    } catch (error) {
       showError("Failed to upgrade subscription. Please try again.");
-    } finally {
-      setIsUpgrading(false);
     }
   };
-
-  const getCurrentPlan = () => {
-    if (!currentSubscription) return null;
-    return plans.find((plan) => plan.tier === currentSubscription) || null;
-  };
-
-  const currentPlan = getCurrentPlan();
 
   const getPlanPrice = (plan: SubscriptionPlan) => {
     if (plan.tier === "Free") return "Free";
@@ -211,8 +161,7 @@ export const SubscriptionPage: React.FC = () => {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div className="bg-background rounded-lg p-4">
                 <div className="text-foreground mb-1 text-2xl font-light">
-                  {subscriptionLimits?.max_photos ||
-                    currentPlan.limits.max_photos}
+                  {currentPlan.limits.max_photos}
                 </div>
                 <div className="text-muted-foreground text-sm">
                   Photos per session
@@ -220,9 +169,7 @@ export const SubscriptionPage: React.FC = () => {
               </div>
               <div className="bg-background rounded-lg p-4">
                 <div className="text-foreground mb-1 text-2xl font-light">
-                  {subscriptionLimits?.max_file_size_mb ||
-                    currentPlan.limits.max_file_size_mb}
-                  MB
+                  {currentPlan.limits.max_file_size_mb}MB
                 </div>
                 <div className="text-muted-foreground text-sm">
                   File size limit
@@ -230,10 +177,7 @@ export const SubscriptionPage: React.FC = () => {
               </div>
               <div className="bg-background rounded-lg p-4">
                 <div className="text-foreground mb-1 text-2xl font-light">
-                  {subscriptionLimits?.can_generate_nft ||
-                  currentPlan.limits.can_generate_nft
-                    ? "✓"
-                    : "✗"}
+                  {currentPlan.limits.can_generate_nft ? "✓" : "✗"}
                 </div>
                 <div className="text-muted-foreground text-sm">
                   NFT generation

@@ -1,7 +1,6 @@
 import React from "react";
-import { Bell, Search, User, LogOut } from "lucide-react";
+import { Bell, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface CustomerHeaderProps {
@@ -35,17 +35,11 @@ export const CustomerHeader: React.FC<CustomerHeaderProps> = ({
           )}
         </div>
 
-        {/* Search Bar */}
-        <div className="relative hidden w-64 md:block">
-          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-          <Input
-            placeholder="Search artworks, artists..."
-            className="bg-muted/50 border-0 pl-10 focus-visible:ring-1"
-          />
-        </div>
-
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {/* Notifications */}
           <Button variant="ghost" size="icon" className="relative h-9 w-9">
             <Bell className="h-4 w-4" />
