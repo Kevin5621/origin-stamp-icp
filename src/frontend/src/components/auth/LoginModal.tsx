@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import {
@@ -311,7 +312,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               {isLoading && authMethod === "icp" ? (
                 <LoadingSpinner size="md" variant="infinite" />
               ) : (
-                <img src="/ii-logo.svg" alt="ICP" className="h-5 w-5" />
+                <Image
+                  src="/ii-logo.svg"
+                  alt="ICP"
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
               )}
               <span>Continue with Internet Identity</span>
             </div>
@@ -326,7 +333,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               {isLoading && authMethod === "google" ? (
                 <LoadingSpinner size="md" variant="infinite" />
               ) : (
-                <img src="/google-logo.svg" alt="Google" className="h-5 w-5" />
+                <Image
+                  src="/google-logo.svg"
+                  alt="Google"
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
               )}
               <span>Continue with Google</span>
             </div>

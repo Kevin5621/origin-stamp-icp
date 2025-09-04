@@ -30,8 +30,7 @@ export { CreatorsSection } from "./sections/CreatorsSection";
 export { FeaturesSection } from "./sections/FeaturesSection";
 
 // Dashboard Components
-export { DashboardPage } from "./dashboard/DashboardPage";
-export { DashboardLayout } from "./dashboard/DashboardLayout";
+export { DashboardPage } from "./pages/dashboard/DashboardPage";
 
 // Auth Components
 export { LoginForm } from "./auth/LoginForm";

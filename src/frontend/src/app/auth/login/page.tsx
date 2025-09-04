@@ -11,6 +11,7 @@ import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { User, Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
 import { LoadingSpinner } from "../../../components/ui/loading-spinner";
+import Image from "next/image";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -330,7 +331,13 @@ const LoginPage: React.FC = () => {
               {isLoading && authMethod === "icp" ? (
                 <LoadingSpinner size="md" variant="infinite" />
               ) : (
-                <img src="/ii-logo.svg" alt="ICP" className="h-5 w-5" />
+                <Image
+                  src="/ii-logo.svg"
+                  alt="ICP"
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
               )}
               <span>Continue with Internet Identity</span>
             </div>
@@ -345,7 +352,13 @@ const LoginPage: React.FC = () => {
               {isLoading && authMethod === "google" ? (
                 <LoadingSpinner size="md" variant="infinite" />
               ) : (
-                <img src="/google-logo.svg" alt="Google" className="h-5 w-5" />
+                <Image
+                  src="/google-logo.svg"
+                  alt="Google"
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
               )}
               <span>Continue with Google</span>
             </div>

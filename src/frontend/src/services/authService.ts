@@ -1,5 +1,4 @@
 import { Principal } from "@dfinity/principal";
-import { envService } from "./envService";
 import { credentialAuthService } from "./credentialAuthService";
 
 declare global {
