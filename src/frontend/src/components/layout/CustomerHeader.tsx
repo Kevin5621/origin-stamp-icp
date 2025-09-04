@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProfilePicture } from "@/hooks/useProfilePicture";
 
 interface CustomerHeaderProps {
   title: string;
@@ -23,6 +24,7 @@ export const CustomerHeader: React.FC<CustomerHeaderProps> = ({
   subtitle,
 }) => {
   const { user, logout } = useAuth();
+  const { profilePicture } = useProfilePicture();
 
   return (
     <header className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b backdrop-blur">
@@ -57,7 +59,7 @@ export const CustomerHeader: React.FC<CustomerHeaderProps> = ({
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                 <Avatar className="h-9 w-9">
                   <AvatarImage
-                    src="/placeholder-avatar.jpg"
+                    src={profilePicture}
                     alt={user?.username || "User"}
                   />
                   <AvatarFallback className="bg-primary/10 text-primary">

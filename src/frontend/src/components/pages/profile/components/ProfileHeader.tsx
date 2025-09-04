@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useProfilePicture } from "@/hooks/useProfilePicture";
 
 interface UserProfile {
   username: string;
@@ -47,6 +48,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onPhotoUpload,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { profilePicture } = useProfilePicture();
 
   const getLoginMethodLabel = (method?: string) => {
     switch (method) {
@@ -93,7 +95,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <div className="relative">
             <Avatar className="h-24 w-24">
               <AvatarImage
-                src={userProfile?.profile_picture || user?.picture}
+                src={userProfile?.profile_picture || profilePicture}
                 alt={user?.username}
               />
               <AvatarFallback className="bg-primary/10 text-primary text-xl">

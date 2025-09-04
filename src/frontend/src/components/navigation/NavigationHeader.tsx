@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -21,10 +20,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoginModal } from "@/components/auth/LoginModal";
+import { useProfilePicture } from "@/hooks/useProfilePicture";
 import { Menu, User, LogOut, Settings, Wallet } from "lucide-react";
 
 export function NavigationHeader() {
   const { user, logout } = useAuth();
+  const { profilePicture } = useProfilePicture();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const handleLogout = () => {
@@ -91,7 +92,7 @@ export function NavigationHeader() {
                     className="relative h-8 w-8 rounded-full"
                   >
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="" alt={user.username} />
+                      <AvatarImage src={profilePicture} alt={user.username} />
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         {user.username.charAt(0).toUpperCase()}
                       </AvatarFallback>

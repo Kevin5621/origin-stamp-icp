@@ -4,6 +4,7 @@ import { useToastContext } from "@/contexts/ToastContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PhysicalArtService } from "@/services/physicalArtService";
+import { useProfilePicture } from "@/hooks/useProfilePicture";
 import {
   ProfileHeader,
   ProfileSettings,
@@ -63,6 +64,7 @@ interface ActivityItem {
 export const ProfilePage: React.FC = () => {
   const { user, updateUser } = useAuth();
   const { success, error } = useToastContext();
+  const { updateProfilePicture } = useProfilePicture();
 
   // State management
   const [loading, setLoading] = useState(true);
@@ -238,8 +240,8 @@ export const ProfilePage: React.FC = () => {
           setUserProfile(updatedProfile);
         }
 
-        // Update auth context with new picture
-        updateUser({ ...user, picture: uploadResult.file_url });
+        // Update profile picture using hook
+        updateProfilePicture(uploadResult.file_url);
 
         success("Profile photo updated successfully!");
       } else {
