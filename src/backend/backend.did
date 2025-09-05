@@ -156,6 +156,7 @@ service : () -> {
   get_session_nfts : (text) -> (vec Token) query;
   get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   get_token_details : (nat64) -> (opt Token) query;
+  get_user_avatar : (text) -> (opt text) query;
   get_user_certificates : (text) -> (vec Certificate) query;
   get_user_count : () -> (nat64) query;
   get_user_info : (text) -> (opt record { text; nat64 }) query;
@@ -191,6 +192,7 @@ service : () -> {
       Result,
     );
   update_session_status : (text, text) -> (Result);
+  update_user_avatar : (text, text) -> (Result);
   update_user_subscription : (text, CouponType) -> (Result);
   update_username : (text, text, text) -> (LoginResult);
   upload_photo_to_session : (text, text) -> (Result);

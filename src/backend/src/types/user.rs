@@ -5,6 +5,7 @@ pub struct User {
     pub username: String,
     pub password_hash: String,
     pub created_at: u64,
+    pub avatar_url: Option<String>,
 }
 
 #[derive(Clone, Debug, CandidType)]

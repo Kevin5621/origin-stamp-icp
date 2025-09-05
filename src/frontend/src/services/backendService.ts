@@ -11,11 +11,16 @@ interface BackendActor {
   login: (username: string, password: string) => Promise<LoginResult>;
   get_certificate_count: () => Promise<bigint>;
   get_user_count: () => Promise<bigint>;
+  get_user_avatar: (username: string) => Promise<[] | [string]>;
   get_session_count: () => Promise<bigint>;
   get_s3_config: () => Promise<
     [] | [import("../../../declarations/backend/backend.did").S3Config]
   >;
   get_s3_config_status: () => Promise<boolean>;
+  update_user_avatar: (
+    username: string,
+    avatar_url: string,
+  ) => Promise<import("../../../declarations/backend/backend.did").Result>;
   create_physical_art_session: (
     username: string,
     art_title: string,
@@ -198,6 +203,54 @@ export const backendService = {
       );
     }
     return await backend.get_user_count();
+  },
+
+  /**
+   * Gets user avatar URL
+   * @param username Username to lookup
+   * @returns Promise with avatar URL or null
+   */
+  async getUserAvatar(username: string): Promise<string | null> {
+    try {
+      await icpAgentService.initialize();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      const result = await backendActor.get_user_avatar(username);
+      return result.length > 0 ? result[0]! : null;
+    } catch (error) {
+      console.error("Failed to get user avatar:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Updates user avatar URL
+   * @param username Username
+   * @param avatarUrl New avatar URL
+   * @returns Promise with boolean success
+   */
+  async updateUserAvatar(
+    username: string,
+    avatarUrl: string,
+  ): Promise<boolean> {
+    try {
+      await icpAgentService.initialize();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      const result = await backendActor.update_user_avatar(username, avatarUrl);
+      return "Ok" in result ? Boolean(result.Ok) : false;
+    } catch (error) {
+      console.error("Failed to update user avatar:", error);
+      return false;
+    }
   },
 
   /**

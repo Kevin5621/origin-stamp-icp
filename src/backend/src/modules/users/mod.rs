@@ -11,6 +11,16 @@ fn simple_hash(password: &str) -> String {
     format!("{:x}", (password.len() as u32) * 42 + char_sum)
 }
 
+fn generate_avatar_url(username: &str) -> String {
+    let colors = ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"];
+    let color_index = username.len() % colors.len();
+    let selected_color = colors[color_index];
+
+    format!(
+        "https://api.dicebear.com/7.x/lorelei/svg?seed={username}&backgroundColor={selected_color}&radius=50&scale=80&size=128"
+    )
+}
+
 #[ic_cdk::update]
 pub fn register_user(username: String, password: String) -> LoginResult {
     if username.is_empty() || password.is_empty() {
@@ -31,10 +41,12 @@ pub fn register_user(username: String, password: String) -> LoginResult {
                 username: None,
             }
         } else {
+            let avatar_url = generate_avatar_url(&username);
             let user = User {
                 username: username.clone(),
                 password_hash: simple_hash(&password),
                 created_at: ic_cdk::api::time(),
+                avatar_url: Some(avatar_url),
             };
 
             users_map.insert(username.clone(), user);
@@ -106,6 +118,30 @@ pub fn get_user_info(username: String) -> Option<(String, u64)> {
 #[ic_cdk::query]
 pub fn get_user_count() -> usize {
     USERS.with(|users| users.borrow().len())
+}
+
+#[ic_cdk::update]
+pub fn update_user_avatar(username: String, avatar_url: String) -> Result<bool, String> {
+    USERS.with(|users| {
+        let mut users_map = users.borrow_mut();
+        match users_map.get_mut(&username) {
+            Some(user) => {
+                user.avatar_url = Some(avatar_url);
+                Ok(true)
+            }
+            None => Err("User not found".to_string()),
+        }
+    })
+}
+
+#[ic_cdk::query]
+pub fn get_user_avatar(username: String) -> Option<String> {
+    USERS.with(|users| {
+        users
+            .borrow()
+            .get(&username)
+            .and_then(|user| user.avatar_url.clone())
+    })
 }
 
 #[ic_cdk::update]
