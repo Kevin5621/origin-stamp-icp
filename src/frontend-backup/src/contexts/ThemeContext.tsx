@@ -9,7 +9,7 @@ interface ThemeContextType {
 
 // Create a context with default values
 const ThemeContext = createContext<ThemeContextType>({
-  theme: "light",
+  theme: "dark",
   toggleTheme: () => {},
 });
 
@@ -21,7 +21,7 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  // Try to get the theme from localStorage, default to "light"
+  // Try to get the theme from localStorage, default to "dark"
   const [theme, setTheme] = useState<Theme>(() => {
     // Check if we're in the browser and localStorage is available
     if (typeof window !== "undefined") {
@@ -32,16 +32,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       try {
         if (
           window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches
+          window.matchMedia("(prefers-color-scheme: light)").matches
         ) {
-          return "dark";
+          return "light";
         }
       } catch (error) {
-        // Fallback to light theme if matchMedia fails
+        // Fallback to dark theme if matchMedia fails
         console.warn("Failed to detect system theme preference:", error);
       }
     }
-    return "light";
+    return "dark";
   });
 
   // Effect to update the data-theme attribute on the document and save to localStorage
