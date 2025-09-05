@@ -176,32 +176,33 @@ export const MarketplacePage: React.FC = () => {
   };
 
   // Map backend NFTs to card shape (reuse existing fields with safe defaults)
-  const mappedBackend: MarketplaceCardNFT[] = fetched.map<MarketplaceCardNFT>(
-    (nft): MarketplaceCardNFT => ({
-      id: nft.id,
-      title: nft.title,
-      artist: nft.creator.username,
-      artistAvatar:
-        nft.creator.avatar || nft.creator.username.slice(0, 2).toUpperCase(),
-      price: `${nft.price.amount} ${nft.price.currency}`,
-      originalPrice: null as string | null,
-      status:
-        nft.status === "for_sale"
-          ? "available"
-          : nft.status === "auction"
-            ? "auction"
-            : "sold",
-      views: nft.views,
-      likes: nft.likes,
-      category: nft.tags[0]?.split(":")[0] || "General",
-      rarity: nft.tags.includes("rarity:Ultra Rare")
+  const mappedBackend: MarketplaceCardNFT[] = (fetched || [])
+    .filter((n): n is NFT => !!n && typeof n === "object")
+    .map<MarketplaceCardNFT>((nft): MarketplaceCardNFT => {
+      // Defensive fallbacks for possibly null / undefined fields
+      const tags = Array.isArray(nft.tags) ? nft.tags : [];
+      const rarity = tags.includes("rarity:Ultra Rare")
         ? "Ultra Rare"
-        : nft.tags.includes("rarity:Rare")
+        : tags.includes("rarity:Rare")
           ? "Rare"
-          : "Common",
-      thumbnailUrl: nft.imageUrl,
-    }),
-  );
+          : "Common";
+      const artistUsername = nft?.creator?.username || "Unknown";
+      const artistAvatarRaw = (nft?.creator?.avatar || artistUsername.slice(0, 2) || "??").toString();
+      return {
+        id: nft?.id?.toString() || `temp-${Math.random().toString(36).slice(2, 10)}`,
+        title: nft?.title || "Untitled Artwork",
+        artist: artistUsername,
+        artistAvatar: artistAvatarRaw.toUpperCase(),
+        price: nft?.price ? `${nft.price.amount ?? "0"} ${nft.price.currency ?? "ICP"}` : "0 ICP",
+        originalPrice: null,
+        status: nft?.status === "for_sale" ? "available" : nft?.status === "auction" ? "auction" : "sold",
+        views: nft?.views ?? 0,
+        likes: nft?.likes ?? 0,
+        category: tags[0]?.split(":")[0] || "General",
+        rarity,
+        thumbnailUrl: nft?.imageUrl || "/placeholder.svg",
+      };
+    });
 
   // Currently we only show fetched NFTs (fallback demo list removed/commented). Add fallback here if desired.
   const displayNFTs: MarketplaceCardNFT[] = mappedBackend;
@@ -334,8 +335,24 @@ export const MarketplacePage: React.FC = () => {
         </TabsList>
 
         <TabsContent value="featured" className="space-y-4">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {displayNFTs.map((nft: MarketplaceCardNFT) => (
+          {loading && (
+            <div className="py-10 text-center text-sm text-muted-foreground">
+              Loading NFTs...
+            </div>
+          )}
+          {!loading && error && (
+            <div className="py-10 text-center text-sm text-red-500">
+              Failed to load NFTs: {error}
+            </div>
+          )}
+          {!loading && !error && displayNFTs.length === 0 && (
+            <div className="py-10 text-center text-sm text-muted-foreground">
+              No NFTs found.
+            </div>
+          )}
+          {!loading && !error && displayNFTs.length > 0 && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {displayNFTs.map((nft: MarketplaceCardNFT) => (
               <Card
                 key={nft.id}
                 className="group overflow-hidden transition-all duration-200 hover:shadow-lg"
@@ -426,7 +443,8 @@ export const MarketplacePage: React.FC = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="recent" className="space-y-4">

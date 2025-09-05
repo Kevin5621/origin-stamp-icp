@@ -1,9 +1,15 @@
-import { backendService, getBackendActor } from "./backendService";
-// Direct generated canister (for fallback / SSR-safe queries)
-// NOTE: path requires going up three levels to reach root src directory
+import { icpAgentService } from "./icpAgentService";
+import { envService } from "./envService";
+// Generated fallback actor
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { backend } from "../../../declarations/backend";
+import { idlFactory } from "../../../declarations/backend/backend.did.js";
+import type {
+  _SERVICE as BackendActor,
+  Token,
+} from "../../../declarations/backend/backend.did";
+import { Actor } from "@dfinity/agent";
 import type { NFT, Collection } from "@/types/nft";
 
 // Reusable helper types
@@ -12,12 +18,11 @@ interface FilterOptions {
   creator?: string;
 }
 
+// (Reserved for future create operation)
 interface CreateNFTData {
-  title: string;
-  description: string;
-  image: string;
+  title: string; description: string; image: string;
   attributes?: Array<{ trait_type: string; value: string }>;
-}
+} // eslint-disable-line @typescript-eslint/no-unused-vars
 
 export interface SearchResult {
   nfts: NFT[];
@@ -27,94 +32,67 @@ export interface SearchResult {
   hasMore: boolean;
 }
 
-// Minimal subset of backend Token type (mirrors candid) for local mapping
-interface BackendTokenMetadataAttribute {
-  trait_type: string;
-  value: string;
-}
-interface BackendTokenMetadata {
-  name: string;
-  description: string | string[];
-  image: string | string[];
-  attributes: BackendTokenMetadataAttribute[];
-}
-interface BackendTokenOwner {
-  owner: { owner: unknown };
-}
-interface BackendToken {
-  id: bigint;
-  metadata: BackendTokenMetadata;
-  owner: BackendTokenOwner;
-  created_at: bigint; // nanoseconds
-  session_id: [] | [string];
+type BackendToken = Token;
+
+async function createBackendActor(): Promise<BackendActor> {
+  if (typeof window !== "undefined") {
+    try {
+      const canisterId = envService.getBackendCanisterId();
+      const agent = await icpAgentService.getAgent();
+      return Actor.createActor(idlFactory as never, {
+        agent,
+        canisterId,
+      }) as unknown as BackendActor;
+    } catch (err) {
+      console.warn("[MarketplaceService] Dynamic actor creation failed, using fallback", err);
+    }
+  }
+  return backend as unknown as BackendActor;
 }
 
 export class MarketplaceService {
   /**
    * Fetch all NFTs from backend canister (paginated internally if needed)
    */
-  static async getNFTs(_filters: Partial<FilterOptions> = {}): Promise<NFT[]> {
+  static async getNFTs(filters: Partial<FilterOptions> = {}): Promise<NFT[]> {
+    // Currently unused filters placeholder
+    void filters; // eslint-disable-line @typescript-eslint/no-unused-expressions
+    if (typeof window === "undefined") return [];
     try {
-      // Avoid running during SSR
-      if (typeof window === "undefined") return [];
-
-      const backendActor = await getBackendActor().catch((e) => {
-        console.warn("getBackendActor failed, falling back to static actor", e);
-        return null;
-      });
-      // Prefer dynamic actor, fallback to static imported one
-      const actor = backendActor || (backend as unknown);
-      if (!actor) return [];
-
-      // Pull first page (could iterate if large). Using null pagination = all small sets.
-      // candid: icrc7_tokens(opt prev, opt take)
-      // We'll request first 100 for now.
-      const tokenIds: bigint[] = await (actor as any).icrc7_tokens(
-        [],
-        [BigInt(100)],
+      const actor = await createBackendActor();
+      const rawIds = await actor.icrc7_tokens([], [BigInt(100)]);
+      const tokenIds: bigint[] = Array.isArray(rawIds)
+        ? Array.from(rawIds as unknown as bigint[])
+        : [];
+      if (!tokenIds.length) return [];
+      const detailed = await Promise.all(
+        tokenIds.map(async (id) => {
+          try {
+            const details = await actor.get_token_details(id);
+            if (!details.length) return null;
+            return this.convertTokenToNFT(details[0]!);
+          } catch (err) {
+            console.warn("[MarketplaceService] token fetch failed", id.toString(), err);
+            return null;
+          }
+        }),
       );
-      console.debug(
-        "[MarketplaceService] Fetched token IDs",
-        tokenIds.map((t) => t.toString()),
-      );
-      if (!tokenIds || tokenIds.length === 0) return [];
-
-      const nftPromises = tokenIds.map(async (tokenId) => {
-        try {
-          const details = await (actor as any).get_token_details(tokenId);
-          if (!details || details.length === 0) return null;
-          const token = details[0] as unknown as BackendToken;
-          console.debug(
-            "[MarketplaceService] Token detail loaded",
-            tokenId.toString(),
-          );
-          return this.convertTokenToNFT(token);
-        } catch (e) {
-          console.warn("Failed token detail", tokenId.toString(), e);
-          return null;
-        }
-      });
-
-      const tokens = await Promise.all(nftPromises);
-      return tokens.filter((t): t is NFT => !!t);
-    } catch (error) {
-      console.error("Failed to load NFTs", error);
+      return detailed.filter((n): n is NFT => n !== null);
+    } catch (err) {
+      console.error("[MarketplaceService] getNFTs failed", err);
       return [];
     }
   }
 
   private static convertTokenToNFT(token: BackendToken): NFT {
     const description = Array.isArray(token.metadata.description)
-      ? token.metadata.description[0] || ""
-      : token.metadata.description || "";
+      ? (token.metadata.description[0] || "")
+      : (token.metadata.description as string) || "";
     const imageUrl = Array.isArray(token.metadata.image)
-      ? token.metadata.image[0] || ""
-      : token.metadata.image || "";
+      ? (token.metadata.image[0] || "")
+      : (token.metadata.image as string) || "";
     const createdMs = Number(token.created_at) / 1_000_000; // ns -> ms
-    const sessionId: string =
-      (token.session_id && token.session_id.length > 0
-        ? token.session_id[0]
-        : "") || "";
+    const sessionId: string = token.session_id.length ? token.session_id[0]! : "";
 
     return {
       id: token.id.toString(),
@@ -124,11 +102,7 @@ export class MarketplaceService {
         imageUrl ||
         `https://via.placeholder.com/600x600?text=NFT+${token.id.toString()}`,
       creator: {
-        username:
-          String((token.owner as any)?.owner?.toString?.() || "unknown").slice(
-            0,
-            10,
-          ) + "...",
+  username: token.owner.owner.toString().slice(0, 10) + "...",
         avatar: "",
         verified: true,
       },
@@ -142,9 +116,7 @@ export class MarketplaceService {
       likes: 0,
       views: 0,
       createdAt: new Date(createdMs).toISOString(),
-      tags:
-        token.metadata.attributes?.map((a) => `${a.trait_type}:${a.value}`) ||
-        [],
+  tags: token.metadata.attributes?.map((a) => `${a.trait_type}:${a.value}`) || [],
       collection: sessionId ? `Session ${sessionId}` : undefined,
     };
   }
@@ -153,7 +125,8 @@ export class MarketplaceService {
   static async getCollections(): Promise<Collection[]> {
     return [];
   }
-  static async searchNFTs(_q: string): Promise<SearchResult> {
+  static async searchNFTs(q: string): Promise<SearchResult> {
+    void q; // placeholder
     return { nfts: [], collections: [], users: [], total: 0, hasMore: false };
   }
 }
