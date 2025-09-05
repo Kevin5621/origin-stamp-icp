@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check, Crown, Sparkles, Zap } from "lucide-react";
+import Image from "next/image";
 import {
   subscriptionService,
   type SubscriptionPlan,
@@ -20,6 +21,13 @@ import {
 export function SubscriptionSection() {
   const [isLoading, setIsLoading] = useState(false);
   const plans = subscriptionService.getSubscriptionPlans();
+
+  const planImages = {
+    Free: "/landing/free.webp",
+    Basic: "/landing/basic.webp",
+    Premium: "/landing/premium.webp",
+    Enterprise: "/landing/enterprise.webp",
+  };
 
   const handleGetStarted = (plan: SubscriptionPlan) => {
     setIsLoading(true);
@@ -59,14 +67,25 @@ export function SubscriptionSection() {
           {plans.map((plan) => (
             <Card
               key={plan.tier}
-              className={`relative transition-all duration-300 hover:shadow-lg ${
+              className={`group relative overflow-hidden transition-all duration-300 hover:shadow-lg ${
                 plan.popular
                   ? "border-primary scale-105 shadow-lg"
                   : "border-border hover:border-primary/50"
               }`}
             >
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <Image
+                  src={planImages[plan.tier as keyof typeof planImages]}
+                  alt={`${plan.name} plan`}
+                  fill
+                  className="object-cover opacity-30 transition-opacity duration-300 group-hover:opacity-70"
+                />
+                <div className="bg-background/80 group-hover:bg-background/60 absolute inset-0 transition-colors duration-300" />
+              </div>
+
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 transform">
+                <div className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 transform">
                   <Badge className="bg-primary text-primary-foreground px-3 py-1">
                     <Crown className="mr-1 h-3 w-3" />
                     Most Popular
@@ -74,81 +93,84 @@ export function SubscriptionSection() {
                 </div>
               )}
 
-              <CardHeader className="pb-4 text-center">
-                <CardTitle className="text-foreground text-2xl font-medium">
-                  {plan.name}
-                </CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  {plan.description}
-                </CardDescription>
-                <div className="mt-4">
-                  <span className="text-foreground text-3xl font-light">
-                    {plan.price}
-                  </span>
-                  {plan.tier !== "Free" && (
-                    <span className="text-muted-foreground text-sm">
-                      /month
+              {/* Content */}
+              <div className="relative z-10">
+                <CardHeader className="pb-4 text-center">
+                  <CardTitle className="text-foreground text-2xl font-medium">
+                    {plan.name}
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground">
+                    {plan.description}
+                  </CardDescription>
+                  <div className="mt-4">
+                    <span className="text-foreground text-3xl font-light">
+                      {plan.price}
                     </span>
-                  )}
-                </div>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  {plan.features.map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <div className="bg-primary/10 rounded-full p-1">
-                        <Check className="text-primary h-3 w-3" />
-                      </div>
+                    {plan.tier !== "Free" && (
                       <span className="text-muted-foreground text-sm">
-                        {feature}
+                        /month
+                      </span>
+                    )}
+                  </div>
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    {plan.features.map((feature, index) => (
+                      <div key={index} className="flex items-center space-x-3">
+                        <div className="bg-primary/10 rounded-full p-1">
+                          <Check className="text-primary h-3 w-3" />
+                        </div>
+                        <span className="text-muted-foreground text-sm">
+                          {feature}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-muted/50 space-y-2 rounded-lg p-4">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        Photos per session:
+                      </span>
+                      <span className="text-foreground font-medium">
+                        {plan.limits.max_photos}
                       </span>
                     </div>
-                  ))}
-                </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        File size limit:
+                      </span>
+                      <span className="text-foreground font-medium">
+                        {plan.limits.max_file_size_mb}MB
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        NFT generation:
+                      </span>
+                      <span className="text-foreground font-medium">
+                        {plan.limits.can_generate_nft ? "✓" : "✗"}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
 
-                <div className="bg-muted/50 space-y-2 rounded-lg p-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      Photos per session:
-                    </span>
-                    <span className="text-foreground font-medium">
-                      {plan.limits.max_photos}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      File size limit:
-                    </span>
-                    <span className="text-foreground font-medium">
-                      {plan.limits.max_file_size_mb}MB
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      NFT generation:
-                    </span>
-                    <span className="text-foreground font-medium">
-                      {plan.limits.can_generate_nft ? "✓" : "✗"}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-
-              <CardFooter className="pt-4">
-                <Button
-                  className="w-full"
-                  variant={plan.popular ? "default" : "outline"}
-                  onClick={() =>
-                    plan.tier === "Free"
-                      ? handleGetStarted(plan)
-                      : handleUpgrade(plan)
-                  }
-                  disabled={isLoading}
-                >
-                  {plan.tier === "Free" ? "Get Started" : "Upgrade Now"}
-                </Button>
-              </CardFooter>
+                <CardFooter className="pt-4">
+                  <Button
+                    className="w-full"
+                    variant={plan.popular ? "default" : "outline"}
+                    onClick={() =>
+                      plan.tier === "Free"
+                        ? handleGetStarted(plan)
+                        : handleUpgrade(plan)
+                    }
+                    disabled={isLoading}
+                  >
+                    {plan.tier === "Free" ? "Get Started" : "Upgrade Now"}
+                  </Button>
+                </CardFooter>
+              </div>
             </Card>
           ))}
         </div>

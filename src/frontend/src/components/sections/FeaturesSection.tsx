@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Shield, Zap, Globe, Users, Lock, BarChart3 } from "lucide-react";
+import Image from "next/image";
 
 const features = [
   {
@@ -18,6 +19,7 @@ const features = [
     description:
       "Immutable proof of authenticity using Internet Computer blockchain technology",
     badge: "Security",
+    image: "/landing/blockchain-authenticatio.webp",
   },
   {
     icon: Zap,
@@ -25,6 +27,7 @@ const features = [
     description:
       "Real-time verification of artwork authenticity with cryptographic proofs",
     badge: "Speed",
+    image: "/landing/instant-verification.webp",
   },
   {
     icon: Globe,
@@ -32,12 +35,14 @@ const features = [
     description:
       "Access your authenticated artworks from anywhere in the world",
     badge: "Accessibility",
+    image: "/landing/global-access.webp",
   },
   {
     icon: Users,
     title: "Creator Community",
     description: "Join a thriving community of artists and collectors",
     badge: "Community",
+    image: "/landing/creator-comunity.webp",
   },
   {
     icon: Lock,
@@ -45,12 +50,14 @@ const features = [
     description:
       "Military-grade encryption for all your artwork data and metadata",
     badge: "Privacy",
+    image: "/landing/secure-storage.webp",
   },
   {
     icon: BarChart3,
     title: "Analytics Dashboard",
     description: "Track your artwork performance and market insights",
     badge: "Analytics",
+    image: "/landing/analytics-dashboard.webp",
   },
 ];
 
@@ -79,26 +86,40 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="border-border hover:border-primary/50 transition-all duration-300"
+              className="group border-border hover:border-primary/50 relative overflow-hidden transition-all duration-300"
             >
-              <CardHeader>
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="bg-primary/10 rounded-lg p-3">
-                    <feature.icon className="text-primary h-6 w-6" />
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <Image
+                  src={feature.image}
+                  alt={feature.title}
+                  fill
+                  className="object-cover opacity-30 transition-opacity duration-300 group-hover:opacity-70"
+                />
+                <div className="bg-background/80 group-hover:bg-background/60 absolute inset-0 transition-colors duration-300" />
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10">
+                <CardHeader>
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="bg-primary/10 rounded-lg p-3">
+                      <feature.icon className="text-primary h-6 w-6" />
+                    </div>
+                    <Badge variant="secondary" className="text-xs">
+                      {feature.badge}
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {feature.badge}
-                  </Badge>
-                </div>
-                <CardTitle className="text-foreground text-xl font-medium">
-                  {feature.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-muted-foreground leading-relaxed">
-                  {feature.description}
-                </CardDescription>
-              </CardContent>
+                  <CardTitle className="text-foreground text-xl font-medium">
+                    {feature.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </div>
             </Card>
           ))}
         </div>

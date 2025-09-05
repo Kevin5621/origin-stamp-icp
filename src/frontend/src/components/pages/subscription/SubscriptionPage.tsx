@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Check, Crown, Zap, Gift, CreditCard, Wallet } from "lucide-react";
+import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
@@ -41,6 +42,13 @@ export const SubscriptionPage: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<"icp" | "usd">("icp");
 
   const plans = subscriptionService.getSubscriptionPlans();
+
+  const planImages = {
+    Free: "/landing/free.webp",
+    Basic: "/landing/basic.webp",
+    Premium: "/landing/premium.webp",
+    Enterprise: "/landing/enterprise.webp",
+  };
 
   useEffect(() => {
     const planParam = searchParams.get("plan");
@@ -250,7 +258,7 @@ export const SubscriptionPage: React.FC = () => {
             return (
               <Card
                 key={plan.tier}
-                className={`relative transition-all duration-300 hover:shadow-lg ${
+                className={`group relative overflow-visible transition-all duration-300 hover:shadow-lg ${
                   plan.popular
                     ? "border-primary scale-105 shadow-lg"
                     : isCurrentPlan
@@ -258,8 +266,23 @@ export const SubscriptionPage: React.FC = () => {
                       : "border-border hover:border-primary/50"
                 }`}
               >
+                {/* Background Image */}
+                <div className="absolute inset-0 overflow-hidden rounded-lg">
+                  <Image
+                    src={planImages[plan.tier as keyof typeof planImages]}
+                    alt={`${plan.name} plan`}
+                    fill
+                    className={`object-cover transition-opacity duration-300 ${
+                      isCurrentPlan
+                        ? "opacity-50 group-hover:opacity-70"
+                        : "opacity-30 group-hover:opacity-70"
+                    }`}
+                  />
+                  <div className="bg-background/80 group-hover:bg-background/60 absolute inset-0 transition-colors duration-300" />
+                </div>
+
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 transform">
+                  <div className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 transform">
                     <Badge className="bg-primary text-primary-foreground px-3 py-1">
                       <Crown className="mr-1 h-3 w-3" />
                       Most Popular
@@ -268,67 +291,73 @@ export const SubscriptionPage: React.FC = () => {
                 )}
 
                 {isCurrentPlan && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 transform">
+                  <div className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 transform">
                     <Badge className="bg-green-500 px-3 py-1 text-white">
                       Current Plan
                     </Badge>
                   </div>
                 )}
 
-                <CardHeader className="pb-4 text-center">
-                  <CardTitle className="text-foreground text-2xl font-medium">
-                    {plan.name}
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground">
-                    {plan.description}
-                  </CardDescription>
-                  <div className="mt-4">
-                    <span className="text-foreground text-3xl font-light">
-                      {getPlanPrice(plan)}
-                    </span>
-                    {plan.tier !== "Free" && (
-                      <span className="text-muted-foreground text-sm">
-                        /month
+                {/* Content */}
+                <div className="relative z-10">
+                  <CardHeader className="pb-4 text-center">
+                    <CardTitle className="text-foreground text-2xl font-medium">
+                      {plan.name}
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground">
+                      {plan.description}
+                    </CardDescription>
+                    <div className="mt-4">
+                      <span className="text-foreground text-3xl font-light">
+                        {getPlanPrice(plan)}
                       </span>
-                    )}
-                  </div>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    {plan.features.map((feature, index) => (
-                      <div key={index} className="flex items-center space-x-3">
-                        <div className="bg-primary/10 rounded-full p-1">
-                          <Check className="text-primary h-3 w-3" />
-                        </div>
+                      {plan.tier !== "Free" && (
                         <span className="text-muted-foreground text-sm">
-                          {feature}
+                          /month
                         </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
+                      )}
+                    </div>
+                  </CardHeader>
 
-                <CardFooter className="pt-4">
-                  {isCurrentPlan ? (
-                    <Button className="w-full" variant="outline" disabled>
-                      Current Plan
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full"
-                      variant={plan.popular ? "default" : "outline"}
-                      onClick={() => handleUpgradeSubscription(plan)}
-                      disabled={isUpgrading}
-                    >
-                      {isUpgrading
-                        ? "Upgrading..."
-                        : isUpgrade
-                          ? "Upgrade"
-                          : "Get Started"}
-                    </Button>
-                  )}
-                </CardFooter>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-3">
+                      {plan.features.map((feature, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center space-x-3"
+                        >
+                          <div className="bg-primary/10 rounded-full p-1">
+                            <Check className="text-primary h-3 w-3" />
+                          </div>
+                          <span className="text-muted-foreground text-sm">
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="pt-4">
+                    {isCurrentPlan ? (
+                      <Button className="w-full" variant="outline" disabled>
+                        Current Plan
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full"
+                        variant={plan.popular ? "default" : "outline"}
+                        onClick={() => handleUpgradeSubscription(plan)}
+                        disabled={isUpgrading}
+                      >
+                        {isUpgrading
+                          ? "Upgrading..."
+                          : isUpgrade
+                            ? "Upgrade"
+                            : "Get Started"}
+                      </Button>
+                    )}
+                  </CardFooter>
+                </div>
               </Card>
             );
           })}

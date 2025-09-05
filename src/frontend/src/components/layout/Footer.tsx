@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -72,11 +73,13 @@ export function Footer() {
         <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-1">
             <Link href="/" className="mb-4 flex items-center space-x-2">
-              <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-                <span className="text-primary-foreground text-sm font-medium">
-                  ⚡
-                </span>
-              </div>
+              <Image
+                src="/favicon.ico"
+                alt="OriginStamp Logo"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
               <span className="text-foreground text-xl font-medium">
                 OriginStamp
               </span>
