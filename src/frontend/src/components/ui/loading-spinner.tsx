@@ -20,9 +20,9 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   variant = "infinite",
 }) => {
   const sizeMap = {
-    sm: 16,
-    md: 24,
-    lg: 32,
+    sm: 12,
+    md: 16,
+    lg: 24,
   };
 
   return (

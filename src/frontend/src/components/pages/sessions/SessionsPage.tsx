@@ -12,6 +12,58 @@ import {
   PhysicalArtService,
   type PhysicalArtSession,
 } from "@/services/physicalArtService";
+import Image from "next/image";
+
+// Empty State Component
+const EmptyState: React.FC<{
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  showActionButton?: boolean;
+  actionLabel?: string;
+  onAction?: () => void;
+  isLoading?: boolean;
+}> = ({
+  icon: Icon,
+  title,
+  description,
+  showActionButton = false,
+  actionLabel,
+  onAction,
+  isLoading = false,
+}) => (
+  <div className="py-16 text-center">
+    <div className="mx-auto mb-6 max-w-md">
+      <Image
+        src="/empty/empty-state2.webp"
+        alt="Empty state - Surrealist artist statue with floating colors"
+        width={400}
+        height={256}
+        className="mx-auto object-contain"
+        onError={(e) => {
+          const target = e.target as HTMLImageElement;
+          target.style.display = "none";
+          target.nextElementSibling?.classList.remove("hidden");
+        }}
+      />
+      <div className="bg-muted/20 mx-auto mb-4 flex hidden h-64 w-full items-center justify-center rounded-lg">
+        <Icon className="text-muted-foreground h-16 w-16" />
+      </div>
+    </div>
+    <h3 className="text-foreground mb-2 text-lg font-semibold">{title}</h3>
+    <p className="text-muted-foreground mx-auto mb-6 max-w-md">{description}</p>
+    {showActionButton && actionLabel && onAction && (
+      <Button onClick={onAction} disabled={isLoading}>
+        {isLoading ? (
+          <Spinner variant="infinite" size="sm" className="mr-2" />
+        ) : (
+          <Plus className="mr-2 h-4 w-4" />
+        )}
+        {actionLabel}
+      </Button>
+    )}
+  </div>
+);
 
 export const SessionsPage: React.FC = () => {
   const router = useRouter();
@@ -97,7 +149,7 @@ export const SessionsPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <Spinner variant="infinite" size="lg" />
+          <Spinner variant="infinite" size={16} />
           <p className="text-muted-foreground mt-4">
             Loading your art sessions...
           </p>
@@ -210,27 +262,15 @@ export const SessionsPage: React.FC = () => {
 
         <TabsContent value="all" className="space-y-4">
           {sessions.length === 0 ? (
-            <div className="py-16 text-center">
-              <Camera className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                No Art Sessions Yet
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Start documenting your artwork creation process to get certified
-                NFTs
-              </p>
-              <Button
-                onClick={handleCreateSession}
-                disabled={isCreatingSession}
-              >
-                {isCreatingSession ? (
-                  <Spinner variant="infinite" size="sm" className="mr-2" />
-                ) : (
-                  <Plus className="mr-2 h-4 w-4" />
-                )}
-                Create Your First Session
-              </Button>
-            </div>
+            <EmptyState
+              icon={Camera}
+              title="No Art Sessions Yet"
+              description="Start documenting your artwork creation process to get certified NFTs and showcase your artistic journey."
+              showActionButton={true}
+              actionLabel="Create Your First Session"
+              onAction={handleCreateSession}
+              isLoading={isCreatingSession}
+            />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {sessions.map((session) => (
@@ -241,10 +281,11 @@ export const SessionsPage: React.FC = () => {
                   {/* Artwork Thumbnail */}
                   <div className="bg-muted/50 relative flex aspect-video items-center justify-center overflow-hidden">
                     {session.uploaded_photos.length > 0 ? (
-                      <img
+                      <Image
                         src={session.uploaded_photos[0]}
                         alt={session.art_title}
-                        className="h-full w-full object-cover"
+                        fill
+                        className="object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = "none";
@@ -334,12 +375,15 @@ export const SessionsPage: React.FC = () => {
         <TabsContent value="active" className="space-y-4">
           {sessions.filter((s) => s.status === "active" || s.status === "draft")
             .length === 0 ? (
-            <div className="py-8 text-center">
-              <Upload className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-              <p className="text-muted-foreground">
-                No active sessions. Create a new session to get started.
-              </p>
-            </div>
+            <EmptyState
+              icon={Upload}
+              title="No Active Sessions"
+              description="You don't have any active art sessions at the moment. Create a new session to start documenting your artwork creation process."
+              showActionButton={true}
+              actionLabel="Start New Session"
+              onAction={handleCreateSession}
+              isLoading={isCreatingSession}
+            />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {sessions
@@ -348,28 +392,86 @@ export const SessionsPage: React.FC = () => {
                     session.status === "active" || session.status === "draft",
                 )
                 .map((session) => (
-                  <Card key={session.session_id} className="overflow-hidden">
-                    <div className="bg-muted/50 flex aspect-video items-center justify-center">
-                      <Camera className="text-muted-foreground h-12 w-12" />
+                  <Card
+                    key={session.session_id}
+                    className="overflow-hidden transition-shadow hover:shadow-lg"
+                  >
+                    <div className="bg-muted/50 relative flex aspect-video items-center justify-center overflow-hidden">
+                      {session.uploaded_photos.length > 0 ? (
+                        <Image
+                          src={session.uploaded_photos[0]}
+                          alt={session.art_title}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                            target.nextElementSibling?.classList.remove(
+                              "hidden",
+                            );
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className={`${session.uploaded_photos.length > 0 ? "hidden" : ""} flex items-center justify-center`}
+                      >
+                        <Camera className="text-muted-foreground h-12 w-12" />
+                      </div>
+                      <div className="absolute top-2 right-2">
+                        {getStatusIcon(session.status)}
+                      </div>
                     </div>
                     <CardContent className="p-4">
-                      <h3 className="text-foreground font-semibold">
-                        {session.art_title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm">
-                        {session.uploaded_photos?.length || 0} photos uploaded
-                      </p>
-                      <Button
-                        className="mt-3 w-full"
-                        onClick={() =>
-                          router.push(
-                            `/dashboard/sessions/${session.session_id}`,
-                          )
-                        }
-                      >
-                        <Upload className="mr-2 h-4 w-4" />
-                        Continue Session
-                      </Button>
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <h3 className="text-foreground text-sm leading-tight font-semibold">
+                              {session.art_title}
+                            </h3>
+                            <p className="text-muted-foreground text-xs">
+                              {session.description || "No description"}
+                            </p>
+                          </div>
+                          {getStatusBadge(session.status)}
+                        </div>
+
+                        <div className="text-muted-foreground flex items-center justify-between text-xs">
+                          <span>
+                            {session.uploaded_photos?.length || 0} photos
+                          </span>
+                          <span>
+                            {new Date(session.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() =>
+                              router.push(
+                                `/dashboard/sessions/${session.session_id}`,
+                              )
+                            }
+                          >
+                            <Eye className="mr-1 h-3 w-3" />
+                            View
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="flex-1"
+                            onClick={() =>
+                              router.push(
+                                `/dashboard/sessions/${session.session_id}`,
+                              )
+                            }
+                          >
+                            <Upload className="mr-1 h-3 w-3" />
+                            Continue
+                          </Button>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -379,32 +481,106 @@ export const SessionsPage: React.FC = () => {
 
         <TabsContent value="completed" className="space-y-4">
           {sessions.filter((s) => s.status === "completed").length === 0 ? (
-            <div className="py-8 text-center">
-              <CheckCircle className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-              <p className="text-muted-foreground">
-                Your completed sessions will be displayed here
-              </p>
-            </div>
+            <EmptyState
+              icon={CheckCircle}
+              title="No Completed Sessions"
+              description="Your completed art sessions and generated certificates will appear here once you finish documenting your artwork creation process."
+              showActionButton={true}
+              actionLabel="Create New Session"
+              onAction={handleCreateSession}
+              isLoading={isCreatingSession}
+            />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {sessions
                 .filter((session) => session.status === "completed")
                 .map((session) => (
-                  <Card key={session.session_id} className="overflow-hidden">
-                    <div className="bg-muted/50 flex aspect-video items-center justify-center">
-                      <CheckCircle className="h-12 w-12 text-green-500" />
+                  <Card
+                    key={session.session_id}
+                    className="overflow-hidden transition-shadow hover:shadow-lg"
+                  >
+                    <div className="bg-muted/50 relative flex aspect-video items-center justify-center overflow-hidden">
+                      {session.uploaded_photos.length > 0 ? (
+                        <Image
+                          src={session.uploaded_photos[0]}
+                          alt={session.art_title}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                            target.nextElementSibling?.classList.remove(
+                              "hidden",
+                            );
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className={`${session.uploaded_photos.length > 0 ? "hidden" : ""} flex items-center justify-center`}
+                      >
+                        <CheckCircle className="h-12 w-12 text-green-500" />
+                      </div>
+                      <div className="absolute top-2 right-2">
+                        {getStatusIcon(session.status)}
+                      </div>
                     </div>
                     <CardContent className="p-4">
-                      <h3 className="text-foreground font-semibold">
-                        {session.art_title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm">
-                        Certificate generated
-                      </p>
-                      <Button variant="outline" className="mt-3 w-full">
-                        <Eye className="mr-2 h-4 w-4" />
-                        View Certificate
-                      </Button>
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <h3 className="text-foreground text-sm leading-tight font-semibold">
+                              {session.art_title}
+                            </h3>
+                            <p className="text-muted-foreground text-xs">
+                              {session.description || "No description"}
+                            </p>
+                          </div>
+                          {getStatusBadge(session.status)}
+                        </div>
+
+                        <div className="text-muted-foreground flex items-center justify-between text-xs">
+                          <span>
+                            {session.uploaded_photos?.length || 0} photos
+                          </span>
+                          <span>
+                            {new Date(session.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        <div className="rounded-md border border-green-200 bg-green-50 p-2">
+                          <p className="text-xs font-medium text-green-700">
+                            Certificate Generated
+                          </p>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() =>
+                              router.push(
+                                `/dashboard/sessions/${session.session_id}`,
+                              )
+                            }
+                          >
+                            <Eye className="mr-1 h-3 w-3" />
+                            View
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="flex-1"
+                            onClick={() =>
+                              router.push(
+                                `/dashboard/certificates/${session.session_id}`,
+                              )
+                            }
+                          >
+                            <CheckCircle className="mr-1 h-3 w-3" />
+                            Certificate
+                          </Button>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -413,12 +589,95 @@ export const SessionsPage: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="pending" className="space-y-4">
-          <div className="py-8 text-center">
-            <Calendar className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-            <p className="text-muted-foreground">
-              Sessions awaiting review will be displayed here
-            </p>
-          </div>
+          {sessions.filter((s) => s.status === "pending").length === 0 ? (
+            <EmptyState
+              icon={Calendar}
+              title="No Pending Sessions"
+              description="Sessions that are submitted for review and awaiting verification will appear here. Complete your active sessions to see them in review."
+              showActionButton={true}
+              actionLabel="Create New Session"
+              onAction={handleCreateSession}
+              isLoading={isCreatingSession}
+            />
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {sessions
+                .filter((session) => session.status === "pending")
+                .map((session) => (
+                  <Card key={session.session_id} className="overflow-hidden">
+                    <div className="bg-muted/50 relative flex aspect-video items-center justify-center overflow-hidden">
+                      {session.uploaded_photos.length > 0 ? (
+                        <Image
+                          src={session.uploaded_photos[0]}
+                          alt={session.art_title}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                            target.nextElementSibling?.classList.remove(
+                              "hidden",
+                            );
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className={`${session.uploaded_photos.length > 0 ? "hidden" : ""} flex items-center justify-center`}
+                      >
+                        <Calendar className="text-muted-foreground h-12 w-12" />
+                      </div>
+                      <div className="absolute top-2 right-2">
+                        {getStatusIcon(session.status)}
+                      </div>
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <h3 className="text-foreground text-sm leading-tight font-semibold">
+                              {session.art_title}
+                            </h3>
+                            <p className="text-muted-foreground text-xs">
+                              {session.description || "No description"}
+                            </p>
+                          </div>
+                          {getStatusBadge(session.status)}
+                        </div>
+
+                        <div className="text-muted-foreground flex items-center justify-between text-xs">
+                          <span>
+                            {session.uploaded_photos?.length || 0} photos
+                          </span>
+                          <span>
+                            {new Date(session.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        <div className="rounded-md border border-yellow-200 bg-yellow-50 p-2">
+                          <p className="text-xs font-medium text-yellow-700">
+                            Under Review
+                          </p>
+                        </div>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={() =>
+                            router.push(
+                              `/dashboard/sessions/${session.session_id}`,
+                            )
+                          }
+                        >
+                          <Eye className="mr-1 h-3 w-3" />
+                          View Details
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

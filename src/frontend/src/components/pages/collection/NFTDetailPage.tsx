@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   Card,
@@ -23,6 +23,7 @@ import {
   Eye,
   Heart,
 } from "lucide-react";
+import Image from "next/image";
 import { useToastContext } from "@/contexts/ToastContext";
 import { backendService } from "@/services/backendService";
 
@@ -66,13 +67,7 @@ export const NFTDetailPage: React.FC = () => {
 
   const nftId = params.nftId as string;
 
-  useEffect(() => {
-    if (nftId) {
-      loadNFTDetails();
-    }
-  }, [nftId]);
-
-  const loadNFTDetails = async () => {
+  const loadNFTDetails = useCallback(async () => {
     setIsLoading(true);
     try {
       // Get token details from backend
@@ -83,8 +78,10 @@ export const NFTDetailPage: React.FC = () => {
 
         // Get session details for additional metadata
         const sessionDetails =
-          Array.isArray(token.session_id) && token.session_id.length > 0
-            ? await backendService.getSessionDetails(token.session_id[0]!)
+          Array.isArray(token.session_id) &&
+          token.session_id.length > 0 &&
+          token.session_id[0]
+            ? await backendService.getSessionDetails(token.session_id[0])
             : null;
 
         const nft: NFTData = {
@@ -139,7 +136,13 @@ export const NFTDetailPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [nftId, showError, router]);
+
+  useEffect(() => {
+    if (nftId) {
+      loadNFTDetails();
+    }
+  }, [nftId, loadNFTDetails]);
 
   const handleBack = () => {
     router.push("/dashboard/collection");
@@ -167,7 +170,7 @@ export const NFTDetailPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <Spinner variant="infinite" size="lg" />
+          <Spinner variant="infinite" size={16} />
           <p className="text-muted-foreground mt-4">Loading NFT details...</p>
         </div>
       </div>
@@ -225,10 +228,11 @@ export const NFTDetailPage: React.FC = () => {
             <CardContent className="p-0">
               <AspectRatio ratio={1} className="overflow-hidden rounded-lg">
                 {nftData.imageUrl ? (
-                  <img
+                  <Image
                     src={nftData.imageUrl}
                     alt={nftData.title}
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src =

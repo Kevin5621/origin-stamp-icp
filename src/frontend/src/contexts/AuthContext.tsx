@@ -40,28 +40,58 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("auth-user");
-    if (savedUser) {
-      try {
-        const userData = JSON.parse(savedUser);
-        setUser(userData);
+    const loadUserData = async () => {
+      const savedUser = localStorage.getItem("auth-user");
+      if (savedUser) {
+        try {
+          const userData = JSON.parse(savedUser);
 
-        if (userData.principal) {
-          localStorage.setItem(
-            "originstamp_user_principal",
-            userData.principal,
-          );
-        } else {
-          if (userData.loginMethod === "username") {
-            regeneratePrincipalForExistingUser(userData.username);
+          // Check if principal is valid format for username login
+          if (userData.principal && userData.loginMethod === "username") {
+            try {
+              const { Principal } = await import("@dfinity/principal");
+              Principal.fromText(userData.principal);
+              // Principal is valid, use as is
+              setUser(userData);
+              localStorage.setItem(
+                "originstamp_user_principal",
+                userData.principal,
+              );
+            } catch (error) {
+              console.warn(
+                "Invalid principal format detected, migrating user...",
+              );
+              // Principal is invalid, regenerate it
+              if (userData.username) {
+                regeneratePrincipalForExistingUser(userData.username);
+              } else {
+                // No username, clear invalid data
+                localStorage.removeItem("auth-user");
+                localStorage.removeItem("originstamp_user_principal");
+              }
+            }
+          } else {
+            // No principal or not username login, use as is
+            setUser(userData);
+            if (userData.principal) {
+              localStorage.setItem(
+                "originstamp_user_principal",
+                userData.principal,
+              );
+            } else if (userData.loginMethod === "username") {
+              regeneratePrincipalForExistingUser(userData.username);
+            }
           }
+        } catch (error) {
+          console.error("Error parsing saved user:", error);
+          localStorage.removeItem("auth-user");
+          localStorage.removeItem("originstamp_user_principal");
         }
-      } catch (error) {
-        console.error("Error parsing saved user:", error);
-        localStorage.removeItem("auth-user");
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+
+    loadUserData();
   }, []);
 
   useEffect(() => {
