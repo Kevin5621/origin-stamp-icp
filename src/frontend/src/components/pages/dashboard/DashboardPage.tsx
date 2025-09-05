@@ -21,11 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import type { DashboardCard, RecentActivity } from "@/types/dashboard";
 
-interface DashboardPageProps {
-  className?: string;
-}
-
-export const DashboardPage: React.FC<DashboardPageProps> = ({ className }) => {
+export const DashboardPage: React.FC = () => {
   // Customer-focused metrics
   const dashboardCards: DashboardCard[] = [
     {
