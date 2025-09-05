@@ -48,38 +48,40 @@ export function HeroSection() {
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 container mx-auto px-4 text-center">
-        <div className="mx-auto space-y-8">
-          <h1
-            className="text-5xl leading-tight font-light text-white drop-shadow-lg md:text-7xl lg:text-8xl"
-            style={{
-              opacity: showContent ? 1 : 0,
-              transform: showContent ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-            }}
-          >
-            Beyond Authenticity.{" "}
-            <span className="text-primary font-medium">
-              Verifiable Provenance.
-            </span>
-          </h1>
+      <div className="relative z-10 container mx-auto px-6 text-center">
+        <div className="mx-auto max-w-5xl space-y-12">
+          <div className="space-y-6">
+            <h1
+              className="text-4xl leading-tight font-light text-white drop-shadow-lg md:text-6xl lg:text-7xl xl:text-8xl"
+              style={{
+                opacity: showContent ? 1 : 0,
+                transform: showContent ? "translateY(0)" : "translateY(20px)",
+                transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
+              }}
+            >
+              Beyond Authenticity.{" "}
+              <span className="text-primary font-medium">
+                Verifiable Provenance.
+              </span>
+            </h1>
 
-          <p
-            className="mx-auto max-w-2xl text-xl leading-relaxed text-white/90 drop-shadow-md md:text-2xl"
-            style={{
-              opacity: showContent ? 1 : 0,
-              transform: showContent ? "translateY(0)" : "translateY(20px)",
-              transition:
-                "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s",
-            }}
-          >
-            In the age of AI, prove your process. OriginStamp provides an
-            immutable on-chain history for your work, creating the new standard
-            for digital trust.
-          </p>
+            <p
+              className="mx-auto max-w-3xl text-lg leading-relaxed text-white/90 drop-shadow-md md:text-xl lg:text-2xl"
+              style={{
+                opacity: showContent ? 1 : 0,
+                transform: showContent ? "translateY(0)" : "translateY(20px)",
+                transition:
+                  "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s",
+              }}
+            >
+              In the age of AI, prove your process. OriginStamp provides an
+              immutable on-chain history for your work, creating the new
+              standard for digital trust.
+            </p>
+          </div>
 
           <div
-            className="flex justify-center pt-8"
+            className="flex flex-col items-center gap-6 pt-8"
             style={{
               opacity: showContent ? 1 : 0,
               transform: showContent ? "translateY(0)" : "translateY(20px)",
@@ -89,11 +91,14 @@ export function HeroSection() {
           >
             <Button
               size="lg"
-              className="bg-primary hover:bg-primary/90 px-8 py-6 text-lg font-medium shadow-lg transition-shadow hover:shadow-xl"
+              className="bg-primary hover:bg-primary/90 px-10 py-6 text-lg font-medium shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
               onClick={handleCreateCertificate}
             >
               Discover Now
             </Button>
+            <p className="text-sm text-white/70">
+              Trusted by artists worldwide • Powered by Internet Computer
+            </p>
           </div>
         </div>
       </div>

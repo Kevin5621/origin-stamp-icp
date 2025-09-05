@@ -49,42 +49,44 @@ export function Footer() {
 
   return (
     <footer className="bg-background border-border border-t">
-      <div className="container mx-auto px-4 py-16">
-        <div className="mb-16 text-center">
-          <h3 className="text-foreground mb-4 text-2xl font-light">
+      <div className="container mx-auto px-6 py-20">
+        <div className="mb-20 text-center">
+          <h3 className="text-foreground mb-6 text-3xl font-light">
             Stay in the loop
           </h3>
-          <p className="text-muted-foreground mx-auto mb-6 max-w-md leading-relaxed">
+          <p className="text-muted-foreground mx-auto mb-8 max-w-lg text-lg leading-relaxed">
             Join our mailing list to stay in the loop with our newest feature
             releases, NFT drops, and tips and tricks for navigating OriginStamp.
           </p>
-          <div className="mx-auto flex max-w-md flex-col gap-4 sm:flex-row">
+          <div className="mx-auto flex max-w-lg flex-col gap-4 sm:flex-row">
             <Input
               type="email"
               placeholder="Your email address"
-              className="bg-background text-foreground placeholder:text-muted-foreground border"
+              className="bg-background text-foreground placeholder:text-muted-foreground h-12 border text-base"
             />
-            <Button className="font-medium">Sign up</Button>
+            <Button className="bg-primary hover:bg-primary/90 h-12 px-8 font-medium shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              Sign up
+            </Button>
           </div>
         </div>
 
         <Separator className="bg-border mb-12" />
 
-        <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
+        <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-1">
-            <Link href="/" className="mb-4 flex items-center space-x-2">
+            <Link href="/" className="group mb-6 flex items-center space-x-3">
               <Image
                 src="/favicon.ico"
                 alt="OriginStamp Logo"
-                width={32}
-                height={32}
-                className="rounded-lg"
+                width={36}
+                height={36}
+                className="rounded-lg transition-transform duration-300 group-hover:scale-105"
               />
-              <span className="text-foreground text-xl font-medium">
+              <span className="text-foreground text-2xl font-semibold">
                 OriginStamp
               </span>
             </Link>
-            <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
+            <p className="text-muted-foreground mb-8 text-base leading-relaxed">
               The world&apos;s first blockchain-powered digital marketplace for
               crypto collectibles and authenticated physical artwork.
             </p>
@@ -95,10 +97,10 @@ export function Footer() {
                   <Link
                     key={social.label}
                     href={social.href}
-                    className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg p-2 transition-colors"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg p-3 transition-all duration-300 hover:scale-110"
                     aria-label={social.label}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-6 w-6" />
                   </Link>
                 );
               })}
@@ -106,13 +108,15 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-foreground mb-4 font-medium">Marketplace</h4>
-            <ul className="space-y-2">
+            <h4 className="text-foreground mb-6 text-lg font-semibold">
+              Marketplace
+            </h4>
+            <ul className="space-y-3">
               {footerLinks.marketplace.map((link) => (
                 <li key={link.title}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+                    className="text-muted-foreground hover:text-foreground text-base font-medium transition-colors hover:underline"
                   >
                     {link.title}
                   </Link>
@@ -122,13 +126,15 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-foreground mb-4 font-medium">Account</h4>
-            <ul className="space-y-2">
+            <h4 className="text-foreground mb-6 text-lg font-semibold">
+              Account
+            </h4>
+            <ul className="space-y-3">
               {footerLinks.account.map((link) => (
                 <li key={link.title}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+                    className="text-muted-foreground hover:text-foreground text-base font-medium transition-colors hover:underline"
                   >
                     {link.title}
                   </Link>
@@ -138,13 +144,15 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-foreground mb-4 font-medium">Resources</h4>
-            <ul className="space-y-2">
+            <h4 className="text-foreground mb-6 text-lg font-semibold">
+              Resources
+            </h4>
+            <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
                 <li key={link.title}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+                    className="text-muted-foreground hover:text-foreground text-base font-medium transition-colors hover:underline"
                   >
                     {link.title}
                   </Link>
@@ -154,13 +162,15 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-foreground mb-4 font-medium">Company</h4>
-            <ul className="space-y-2">
+            <h4 className="text-foreground mb-6 text-lg font-semibold">
+              Company
+            </h4>
+            <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.title}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+                    className="text-muted-foreground hover:text-foreground text-base font-medium transition-colors hover:underline"
                   >
                     {link.title}
                   </Link>
@@ -173,19 +183,19 @@ export function Footer() {
         <Separator className="bg-border mb-8" />
 
         <div className="flex flex-col items-center justify-between md:flex-row">
-          <div className="text-muted-foreground mb-4 text-sm font-medium md:mb-0">
+          <div className="text-muted-foreground mb-6 text-base font-medium md:mb-0">
             © 2024 OriginStamp, Inc. All rights reserved.
           </div>
-          <div className="flex space-x-6">
+          <div className="flex space-x-8">
             <Link
               href="/privacy"
-              className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+              className="text-muted-foreground hover:text-foreground text-base font-medium transition-colors hover:underline"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+              className="text-muted-foreground hover:text-foreground text-base font-medium transition-colors hover:underline"
             >
               Terms of Service
             </Link>

@@ -34,19 +34,19 @@ export function NavigationHeader() {
   };
 
   return (
-    <header className="bg-background/80 border-border sticky top-0 z-50 border-b backdrop-blur-md">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+    <header className="bg-background/90 border-border sticky top-0 z-50 border-b shadow-sm backdrop-blur-lg">
+      <div className="container mx-auto px-6">
+        <div className="flex h-18 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="group flex items-center space-x-3">
             <Image
               src="/favicon.ico"
               alt="OriginStamp Logo"
-              width={32}
-              height={32}
-              className="rounded-lg"
+              width={36}
+              height={36}
+              className="rounded-lg transition-transform duration-300 group-hover:scale-105"
             />
-            <span className="text-foreground text-xl font-medium">
+            <span className="text-foreground text-2xl font-semibold">
               OriginStamp
             </span>
           </Link>
@@ -54,11 +54,11 @@ export function NavigationHeader() {
           {/* Desktop Navigation */}
           <nav className="hidden md:block">
             <NavigationMenu>
-              <NavigationMenuList className="space-x-6">
+              <NavigationMenuList className="space-x-8">
                 <NavigationMenuItem>
                   <Link
                     href="/dashboard/marketplace"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg px-3 py-2 text-base font-medium transition-colors"
                   >
                     Marketplace
                   </Link>
@@ -66,7 +66,7 @@ export function NavigationHeader() {
                 <NavigationMenuItem>
                   <Link
                     href="/dashboard/subscription"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg px-3 py-2 text-base font-medium transition-colors"
                   >
                     Pricing
                   </Link>
@@ -74,7 +74,7 @@ export function NavigationHeader() {
                 <NavigationMenuItem>
                   <Link
                     href="/about"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg px-3 py-2 text-base font-medium transition-colors"
                   >
                     About
                   </Link>
@@ -84,7 +84,7 @@ export function NavigationHeader() {
           </nav>
 
           {/* Right Side */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -94,11 +94,11 @@ export function NavigationHeader() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
+                    className="hover:bg-muted/50 relative h-10 w-10 rounded-full transition-colors"
                   >
-                    <Avatar className="h-8 w-8">
+                    <Avatar className="h-10 w-10">
                       <AvatarImage src={profilePicture} alt={user.username} />
-                      <AvatarFallback className="bg-primary text-primary-foreground">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-sm font-semibold">
                         {user.username.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -142,7 +142,10 @@ export function NavigationHeader() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button onClick={() => setIsLoginModalOpen(true)}>
+              <Button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="bg-primary hover:bg-primary/90 px-6 py-2 text-base font-medium shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              >
                 Connect Wallet
               </Button>
             )}
