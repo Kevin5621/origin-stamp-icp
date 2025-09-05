@@ -58,17 +58,17 @@ export const SessionRecordPage: React.FC = () => {
       const sessionData = await PhysicalArtService.getSessionDetails(sessionId);
       if (sessionData) {
         setSession(sessionData);
+        setIsLoading(false);
       } else {
-        showError("Session not found");
-        router.push("/dashboard/sessions");
+        router.push("/not-found");
+        return;
       }
     } catch (error) {
       console.error("Failed to load session:", error);
-      showError("Failed to load session details");
-    } finally {
-      setIsLoading(false);
+      router.push("/not-found");
+      return;
     }
-  }, [sessionId, showError, router]);
+  }, [sessionId, router]);
 
   useEffect(() => {
     if (sessionId) {
@@ -242,25 +242,6 @@ export const SessionRecordPage: React.FC = () => {
     );
   }
 
-  if (!session) {
-    return (
-      <div className="container mx-auto py-6">
-        <div className="mx-auto max-w-2xl">
-          <Alert className="border-destructive/50 bg-destructive/10">
-            <AlertCircle className="text-destructive h-4 w-4" />
-            <AlertDescription className="text-destructive">
-              Session not found or you don&apos;t have permission to access it.
-            </AlertDescription>
-          </Alert>
-          <Button onClick={handleBack} variant="outline" className="mt-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Sessions
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   if (s3Configured === false) {
     return (
       <div className="container mx-auto py-6">
@@ -279,6 +260,10 @@ export const SessionRecordPage: React.FC = () => {
         </div>
       </div>
     );
+  }
+
+  if (!session) {
+    return null;
   }
 
   const uploadedPhotosCount = session.uploaded_photos.length;

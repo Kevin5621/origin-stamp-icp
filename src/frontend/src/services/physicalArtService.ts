@@ -1,4 +1,8 @@
-import { S3Client, PutObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  HeadObjectCommand,
+} from "@aws-sdk/client-s3";
 import { backendService } from "./backendService";
 import type { PhysicalArtSession as BackendPhysicalArtSession } from "../../../declarations/backend/backend.did.d.ts";
 
@@ -52,7 +56,11 @@ export class PhysicalArtService {
     description: string,
   ): Promise<string> {
     try {
-      return await backendService.createPhysicalArtSession(username, artTitle, description);
+      return await backendService.createPhysicalArtSession(
+        username,
+        artTitle,
+        description,
+      );
     } catch (error) {
       console.error("Failed to create session:", error);
       throw error;
@@ -87,12 +95,17 @@ export class PhysicalArtService {
       );
 
       // Validate S3 config
-      if (!s3Config.bucket_name || !s3Config.region || !s3Config.access_key_id || !s3Config.secret_access_key) {
+      if (
+        !s3Config.bucket_name ||
+        !s3Config.region ||
+        !s3Config.access_key_id ||
+        !s3Config.secret_access_key
+      ) {
         console.error(`[S3Upload] Invalid S3 config:`, {
           bucket_name: !!s3Config.bucket_name,
           region: !!s3Config.region,
           access_key_id: !!s3Config.access_key_id,
-          secret_access_key: !!s3Config.secret_access_key
+          secret_access_key: !!s3Config.secret_access_key,
         });
         return {
           success: false,
@@ -105,41 +118,41 @@ export class PhysicalArtService {
         console.error(`[S3Upload] Invalid file type: ${file.type}`);
         return {
           success: false,
-        message:
-          "Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.",
-      };
-    }
+          message:
+            "Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.",
+        };
+      }
 
-    if (!this.validateFileSize(file)) {
+      if (!this.validateFileSize(file)) {
         console.error(`[S3Upload] File too large: ${file.size} bytes`);
-      return {
+        return {
           success: false,
-        message: "File size too large. Maximum size is 10MB.",
-      };
-    }
+          message: "File size too large. Maximum size is 10MB.",
+        };
+      }
 
       // Generate unique key for the file
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-    const fileKey = `physical-art/${sessionId}/${timestamp}-${sanitizedFileName}`;
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+      const fileKey = `physical-art/${sessionId}/${timestamp}-${sanitizedFileName}`;
 
       console.log(`[S3Upload] Generated file key: ${fileKey}`);
 
       // Validate S3 configuration
-    if (
-      !s3Config.region ||
-      !s3Config.bucket_name ||
-      !s3Config.access_key_id ||
-      !s3Config.secret_access_key
-    ) {
+      if (
+        !s3Config.region ||
+        !s3Config.bucket_name ||
+        !s3Config.access_key_id ||
+        !s3Config.secret_access_key
+      ) {
         console.error("[S3Upload] Invalid S3 configuration:", {
           region: s3Config.region,
           bucket: s3Config.bucket_name,
           hasAccessKey: !!s3Config.access_key_id,
           hasSecretKey: !!s3Config.secret_access_key,
         });
-      throw new Error("Invalid S3 configuration: missing required fields");
-    }
+        throw new Error("Invalid S3 configuration: missing required fields");
+      }
 
       // Create S3 client with proper endpoint configuration
       const clientConfig: Record<string, unknown> = {
@@ -151,7 +164,7 @@ export class PhysicalArtService {
       };
 
       // Handle endpoint configuration properly
-    if (s3Config.endpoint) {
+      if (s3Config.endpoint) {
         const endpoint =
           Array.isArray(s3Config.endpoint) && s3Config.endpoint.length > 0
             ? s3Config.endpoint[0]
@@ -159,10 +172,10 @@ export class PhysicalArtService {
               ? s3Config.endpoint
               : null;
 
-      if (endpoint) {
+        if (endpoint) {
           clientConfig.endpoint = endpoint.startsWith("http")
-          ? endpoint
-          : `https://${endpoint}`;
+            ? endpoint
+            : `https://${endpoint}`;
           clientConfig.forcePathStyle = true; // Required for S3-compatible services
           console.log(
             `[S3Upload] Using custom endpoint: ${clientConfig.endpoint}`,
@@ -179,7 +192,9 @@ export class PhysicalArtService {
         // In production, you might want to add a simple HeadBucket or ListObjectsV2 call here
       } catch (connectionError) {
         console.error(`[S3Upload] S3 connection test failed:`, connectionError);
-        throw new Error(`S3 connection failed: ${connectionError instanceof Error ? connectionError.message : 'Unknown error'}`);
+        throw new Error(
+          `S3 connection failed: ${connectionError instanceof Error ? connectionError.message : "Unknown error"}`,
+        );
       }
 
       // Convert file to buffer
@@ -207,16 +222,18 @@ export class PhysicalArtService {
         bucket: s3Config.bucket_name,
         key: fileKey,
         contentType: file.type,
-        bodySize: buffer.length
+        bodySize: buffer.length,
       });
-      
+
       // Step 1: Upload to S3 first (following frontend-backup pattern)
       try {
         await s3Client.send(uploadCommand);
         console.log(`[S3Upload] S3 upload successful`);
       } catch (s3Error) {
         console.error(`[S3Upload] S3 upload failed:`, s3Error);
-        throw new Error(`S3 upload failed: ${s3Error instanceof Error ? s3Error.message : "Unknown S3 error"}`);
+        throw new Error(
+          `S3 upload failed: ${s3Error instanceof Error ? s3Error.message : "Unknown S3 error"}`,
+        );
       }
 
       // Step 2: Construct the file URL properly (following frontend-backup pattern)
@@ -245,8 +262,11 @@ export class PhysicalArtService {
 
       // Step 3: Record the uploaded file in the session (only after S3 upload success)
       try {
-        const recordResult = await backendService.uploadPhotoToSession(sessionId, photoUrl);
-        
+        const recordResult = await backendService.uploadPhotoToSession(
+          sessionId,
+          photoUrl,
+        );
+
         if (recordResult) {
           console.log(`[S3Upload] Photo recorded in session: ${sessionId}`);
           return {
@@ -261,7 +281,9 @@ export class PhysicalArtService {
         }
       } catch (recordError) {
         console.error(`[S3Upload] Backend record error:`, recordError);
-        throw new Error(`Backend record failed: ${recordError instanceof Error ? recordError.message : "Unknown backend error"}`);
+        throw new Error(
+          `Backend record failed: ${recordError instanceof Error ? recordError.message : "Unknown backend error"}`,
+        );
       }
     } catch (error) {
       console.error("[S3Upload] Upload failed:", error);
@@ -286,10 +308,13 @@ export class PhysicalArtService {
           region: backendConfig.region,
           access_key_id: backendConfig.access_key_id,
           secret_access_key: backendConfig.secret_access_key,
-          endpoint: backendConfig.endpoint.length > 0 ? backendConfig.endpoint[0] : undefined,
+          endpoint:
+            backendConfig.endpoint.length > 0
+              ? backendConfig.endpoint[0]
+              : undefined,
         };
       }
-      
+
       console.error("Failed to get S3 config: No configuration found");
       return null;
     } catch (error) {
@@ -313,14 +338,16 @@ export class PhysicalArtService {
   /**
    * Get session details
    */
-  static async getSessionDetails(sessionId: string): Promise<PhysicalArtSession | null> {
+  static async getSessionDetails(
+    sessionId: string,
+  ): Promise<PhysicalArtSession | null> {
     try {
       const result = await backendService.getSessionDetails(sessionId);
-      
+
       if (result) {
         return this.convertBackendSessionToFrontend(result);
       }
-      
+
       return null;
     } catch (error) {
       console.error("Failed to get session details:", error);
@@ -331,14 +358,18 @@ export class PhysicalArtService {
   /**
    * Get user sessions
    */
-  static async getUserSessions(username: string): Promise<PhysicalArtSession[]> {
+  static async getUserSessions(
+    username: string,
+  ): Promise<PhysicalArtSession[]> {
     try {
       const result = await backendService.getUserSessions(username);
-      
+
       if (Array.isArray(result)) {
-        return result.map(session => this.convertBackendSessionToFrontend(session));
+        return result.map((session) =>
+          this.convertBackendSessionToFrontend(session),
+        );
       }
-      
+
       return [];
     } catch (error) {
       console.error("Failed to get user sessions:", error);
@@ -349,7 +380,10 @@ export class PhysicalArtService {
   /**
    * Update session status
    */
-  static async updateSessionStatus(sessionId: string, status: string): Promise<boolean> {
+  static async updateSessionStatus(
+    sessionId: string,
+    status: string,
+  ): Promise<boolean> {
     try {
       return await backendService.updateSessionStatus(sessionId, status);
     } catch (error) {
@@ -361,7 +395,10 @@ export class PhysicalArtService {
   /**
    * Remove photo from session
    */
-  static async removePhotoFromSession(sessionId: string, photoUrl: string): Promise<boolean> {
+  static async removePhotoFromSession(
+    sessionId: string,
+    photoUrl: string,
+  ): Promise<boolean> {
     try {
       return await backendService.removePhotoFromSession(sessionId, photoUrl);
     } catch (error) {
@@ -392,11 +429,12 @@ export class PhysicalArtService {
     return file.size <= maxSize;
   }
 
-
   /**
    * Convert backend PhysicalArtSession to frontend format
    */
-  private static convertBackendSessionToFrontend(backendSession: BackendPhysicalArtSession): PhysicalArtSession {
+  private static convertBackendSessionToFrontend(
+    backendSession: BackendPhysicalArtSession,
+  ): PhysicalArtSession {
     return {
       session_id: backendSession.session_id,
       username: backendSession.username,
