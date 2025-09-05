@@ -26,7 +26,6 @@ export { NavigationHeader } from "./navigation/NavigationHeader";
 
 // Section Components
 export { HeroSection } from "./sections/HeroSection";
-export { CreatorsSection } from "./sections/CreatorsSection";
 export { FeaturesSection } from "./sections/FeaturesSection";
 export { SubscriptionSection } from "./sections/SubscriptionSection";
 

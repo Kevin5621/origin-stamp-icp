@@ -25,7 +25,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden -mt-16 pt-16">
+    <section className="relative sticky top-0 z-30 -mt-16 flex min-h-screen items-center justify-center overflow-hidden pt-16">
       {/* Background Image Container dengan Natural Fade */}
       <div className="absolute inset-0">
         <div className="relative h-full w-full">

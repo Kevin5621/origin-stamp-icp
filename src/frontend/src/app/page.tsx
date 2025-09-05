@@ -1,6 +1,5 @@
 import { NavigationHeader } from "@/components/navigation/NavigationHeader";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { CreatorsSection } from "@/components/sections/CreatorsSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { SubscriptionSection } from "@/components/sections/SubscriptionSection";
 import { Footer } from "@/components/layout/Footer";
@@ -16,11 +15,16 @@ export default function Home() {
       <NavigationHeader />
       <main>
         <HeroSection />
-        <CreatorsSection />
-        <FeaturesSection />
-        <SubscriptionSection />
+        <div className="relative z-40">
+          <FeaturesSection />
+        </div>
+        <div className="relative z-50">
+          <SubscriptionSection />
+        </div>
       </main>
-      <Footer />
+      <div className="relative z-60">
+        <Footer />
+      </div>
     </div>
   );
 }
