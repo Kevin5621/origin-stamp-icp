@@ -230,18 +230,18 @@ export const ProfilePage: React.FC = () => {
         file,
       );
 
-      if (uploadResult.success && uploadResult.file_url) {
+      if (uploadResult.success && uploadResult.url) {
         // Update local state
         if (userProfile) {
           const updatedProfile = {
             ...userProfile,
-            profile_picture: uploadResult.file_url,
+            profile_picture: uploadResult.url,
           };
           setUserProfile(updatedProfile);
         }
 
         // Update profile picture using hook
-        updateProfilePicture(uploadResult.file_url);
+        updateProfilePicture(uploadResult.url);
 
         success("Profile photo updated successfully!");
       } else {

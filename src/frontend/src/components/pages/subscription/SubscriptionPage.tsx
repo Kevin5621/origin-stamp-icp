@@ -13,16 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Check,
-  Crown,
-  Sparkles,
-  Zap,
-  Gift,
-  CreditCard,
-  Wallet,
-} from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Check, Crown, Zap, Gift, CreditCard, Wallet } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
@@ -45,7 +37,6 @@ export const SubscriptionPage: React.FC = () => {
     redeemCoupon,
   } = useSubscription();
 
-  const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [couponCode, setCouponCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"icp" | "usd">("icp");
 
@@ -54,7 +45,8 @@ export const SubscriptionPage: React.FC = () => {
   useEffect(() => {
     const planParam = searchParams.get("plan");
     if (planParam) {
-      setSelectedPlan(planParam);
+      // Handle plan selection if needed
+      console.log("Selected plan:", planParam);
     }
   }, [searchParams]);
 
@@ -73,7 +65,7 @@ export const SubscriptionPage: React.FC = () => {
       } else {
         showError("Invalid or expired coupon code");
       }
-    } catch (error) {
+    } catch {
       showError("Failed to redeem coupon. Please try again.");
     }
   };
@@ -92,7 +84,7 @@ export const SubscriptionPage: React.FC = () => {
       } else {
         showError("Failed to upgrade subscription. Please try again.");
       }
-    } catch (error) {
+    } catch {
       showError("Failed to upgrade subscription. Please try again.");
     }
   };

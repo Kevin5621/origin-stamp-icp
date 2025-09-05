@@ -12,7 +12,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.850.0",
+    "@aws-sdk/client-s3": "^3.882.0",
     "@dfinity/agent": "^0.15.0",
     "@dfinity/auth-client": "^0.15.0",
     "@dfinity/candid": "^0.15.0",
@@ -22,7 +22,9 @@
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-hover-card": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-progress": "^1.1.7",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.6",

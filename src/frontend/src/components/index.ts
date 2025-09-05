@@ -36,6 +36,11 @@ export { DashboardPage } from "./pages/dashboard/DashboardPage";
 // Subscription Components
 export { SubscriptionPage } from "./pages/subscription/SubscriptionPage";
 
+// Session Components
+export { SessionsPage } from "./pages/sessions/SessionsPage";
+export { CreateSessionPage } from "./pages/sessions/CreateSessionPage";
+export { SessionRecordPage } from "./pages/sessions/SessionRecordPage";
+
 // Auth Components
 export { LoginForm } from "./auth/LoginForm";
 export { LoginModal } from "./auth/LoginModal";
