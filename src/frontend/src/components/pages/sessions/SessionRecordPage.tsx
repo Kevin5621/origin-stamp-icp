@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -11,26 +12,23 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/spinner";
 import {
   ArrowLeft,
-  Upload,
   Camera,
   CheckCircle,
   AlertCircle,
-  X,
+  Upload,
   Image as ImageIcon,
-  FileImage,
 } from "lucide-react";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
   PhysicalArtService,
   type PhysicalArtSession,
-  type UploadProgress,
 } from "@/services/physicalArtService";
+import SortableImageUpload from "@/components/file-upload/sortable";
 
 export const SessionRecordPage: React.FC = () => {
   const params = useParams();
@@ -38,13 +36,8 @@ export const SessionRecordPage: React.FC = () => {
   const { success: showSuccess, error: showError } = useToastContext();
   const { maxPhotos, canGenerateNFT } = useSubscription();
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [session, setSession] = useState<PhysicalArtSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<
-    Map<string, UploadProgress>
-  >(new Map());
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [s3Configured, setS3Configured] = useState<boolean | null>(null);
 
@@ -87,102 +80,22 @@ export const SessionRecordPage: React.FC = () => {
     }
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
-
-    const fileArray = Array.from(files);
-
-    // Validate file count
-    const totalFiles = session?.uploaded_photos.length || 0;
-    if (totalFiles + fileArray.length > maxPhotos) {
-      showError(
-        `You can only upload up to ${maxPhotos} photos. You have ${totalFiles} photos and trying to add ${fileArray.length} more.`,
-      );
-      return;
-    }
-
-    // Validate file types and sizes
-    const validFiles: File[] = [];
-    for (const file of fileArray) {
-      if (!validateFile(file)) {
-        continue;
-      }
-      validFiles.push(file);
-    }
-
-    setSelectedFiles(validFiles);
-  };
-
-  const validateFile = (file: File): boolean => {
-    // Check file type
-    const allowedTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/webp",
-      "image/gif",
-    ];
-    if (!allowedTypes.includes(file.type.toLowerCase())) {
-      showError(
-        `Invalid file type: ${file.name}. Only JPEG, PNG, WebP, and GIF are allowed.`,
-      );
-      return false;
-    }
-
-    // Check file size (10MB limit)
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      showError(`File too large: ${file.name}. Maximum size is 10MB.`);
-      return false;
-    }
-
-    return true;
-  };
-
   const handleUploadFiles = async () => {
     if (!sessionId || selectedFiles.length === 0) return;
 
-    setIsUploading(true);
-    const newUploadProgress = new Map<string, UploadProgress>();
-
     try {
-      // Initialize progress for all files
-      selectedFiles.forEach((file) => {
-        newUploadProgress.set(file.name, {
-          progress: 0,
-          status: "uploading",
-        });
-      });
-      setUploadProgress(newUploadProgress);
-
       // Upload files one by one
       for (const file of selectedFiles) {
         try {
           const result = await PhysicalArtService.uploadPhoto(sessionId, file);
-
-          if (result.success) {
-            newUploadProgress.set(file.name, {
-              progress: 100,
-              status: "completed",
-              url: result.url,
-            });
-          } else {
-            newUploadProgress.set(file.name, {
-              progress: 0,
-              status: "error",
-              error: result.message,
-            });
+          if (!result.success) {
+            showError(`Failed to upload ${file.name}: ${result.message}`);
           }
         } catch (error) {
-          newUploadProgress.set(file.name, {
-            progress: 0,
-            status: "error",
-            error: error instanceof Error ? error.message : "Upload failed",
-          });
+          showError(
+            `Failed to upload ${file.name}: ${error instanceof Error ? error.message : "Upload failed"}`,
+          );
         }
-
-        setUploadProgress(new Map(newUploadProgress));
       }
 
       // Refresh session data
@@ -190,26 +103,11 @@ export const SessionRecordPage: React.FC = () => {
 
       // Clear selected files
       setSelectedFiles([]);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-
       showSuccess("Photos uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
       showError("Failed to upload photos");
-    } finally {
-      setIsUploading(false);
     }
-  };
-
-  const removeSelectedFile = (fileName: string) => {
-    setSelectedFiles((prev) => prev.filter((file) => file.name !== fileName));
-    setUploadProgress((prev) => {
-      const newMap = new Map(prev);
-      newMap.delete(fileName);
-      return newMap;
-    });
   };
 
   const handleBack = () => {
@@ -245,7 +143,7 @@ export const SessionRecordPage: React.FC = () => {
   if (s3Configured === false) {
     return (
       <div className="container mx-auto py-6">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto">
           <Alert className="border-destructive/50 bg-destructive/10">
             <AlertCircle className="text-destructive h-4 w-4" />
             <AlertDescription className="text-destructive">
@@ -272,7 +170,7 @@ export const SessionRecordPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="mx-auto max-w-4xl space-y-6">
+      <div className="mx-auto max-w-7xl space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
           <Button onClick={handleBack} variant="outline" size="sm">
@@ -289,153 +187,77 @@ export const SessionRecordPage: React.FC = () => {
           {getStatusBadge(session.status)}
         </div>
 
-        {/* Session Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Camera className="mr-2 h-5 w-5" />
-              Session Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <div>
-                <p className="text-muted-foreground text-sm font-medium">
-                  Photos Uploaded
-                </p>
-                <p className="text-2xl font-bold">
-                  {uploadedPhotosCount} / {maxPhotos}
-                </p>
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm font-medium">
-                  Created
-                </p>
-                <p className="text-sm">
-                  {new Date(session.created_at).toLocaleDateString()}
-                </p>
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm font-medium">
-                  Status
-                </p>
-                <p className="text-sm">{session.status}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Upload Section */}
-        {canUploadMore && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Upload className="mr-2 h-5 w-5" />
-                Upload Photos
-              </CardTitle>
-              <CardDescription>
-                Upload photos of your artwork creation process. You can upload
-                up to {remainingPhotos} more photos.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* File Input */}
-              <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  disabled={isUploading}
-                />
-                <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  variant="outline"
-                  disabled={isUploading}
-                  className="mb-2"
-                >
-                  <FileImage className="mr-2 h-4 w-4" />
-                  Select Photos
-                </Button>
-                <p className="text-muted-foreground text-sm">
-                  Drag and drop images here, or click to select
-                </p>
-                <p className="text-muted-foreground mt-1 text-xs">
-                  Supports JPEG, PNG, WebP, GIF up to 10MB each
-                </p>
-              </div>
-
-              {/* Selected Files */}
-              {selectedFiles.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="font-medium">Selected Files:</h4>
-                  {selectedFiles.map((file) => {
-                    const progress = uploadProgress.get(file.name);
-                    return (
-                      <div
-                        key={file.name}
-                        className="flex items-center gap-3 rounded-lg border p-3"
-                      >
-                        <ImageIcon className="text-muted-foreground h-4 w-4" />
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">{file.name}</p>
-                          <p className="text-muted-foreground text-xs">
-                            {(file.size / 1024 / 1024).toFixed(2)} MB
-                          </p>
-                          {progress && (
-                            <div className="mt-2">
-                              <Progress
-                                value={progress.progress}
-                                className="h-2"
-                              />
-                              <p className="text-muted-foreground mt-1 text-xs">
-                                {progress.status === "uploading" &&
-                                  "Uploading..."}
-                                {progress.status === "completed" && "Completed"}
-                                {progress.status === "error" && progress.error}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                        {!isUploading && (
-                          <Button
-                            onClick={() => removeSelectedFile(file.name)}
-                            variant="ghost"
-                            size="sm"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    );
-                  })}
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Session Info - Spans 4 columns on large screens */}
+          <div className="lg:col-span-4">
+            <Card className="h-full">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Camera className="mr-2 h-5 w-5" />
+                  Session Info
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <p className="text-muted-foreground text-sm font-medium">
+                      Photos Uploaded
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {uploadedPhotosCount} / {maxPhotos}
+                    </p>
+                  </div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <p className="text-muted-foreground text-sm font-medium">
+                      Created
+                    </p>
+                    <p className="text-sm">
+                      {new Date(session.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <p className="text-muted-foreground text-sm font-medium">
+                      Status
+                    </p>
+                    <p className="text-sm capitalize">{session.status}</p>
+                  </div>
                 </div>
-              )}
+              </CardContent>
+            </Card>
+          </div>
 
-              {/* Upload Button */}
-              {selectedFiles.length > 0 && (
-                <Button
-                  onClick={handleUploadFiles}
-                  disabled={isUploading}
-                  className="w-full"
-                >
-                  {isUploading ? (
-                    <Spinner variant="infinite" size="sm" className="mr-2" />
-                  ) : (
-                    <Upload className="mr-2 h-4 w-4" />
-                  )}
-                  {isUploading
-                    ? "Uploading..."
-                    : `Upload ${selectedFiles.length} Photo${selectedFiles.length > 1 ? "s" : ""}`}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        )}
+          {/* Upload Section - Spans 8 columns on large screens */}
+          {canUploadMore && (
+            <div className="lg:col-span-8">
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Upload className="mr-2 h-5 w-5" />
+                    Upload Photos
+                  </CardTitle>
+                  <CardDescription>
+                    Upload photos of your artwork creation process. You can
+                    upload up to {remainingPhotos} more photos.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <SortableImageUpload
+                    maxFiles={remainingPhotos}
+                    maxSize={10 * 1024 * 1024} // 10MB
+                    accept="image/*"
+                    onImagesChange={(images) => {
+                      setSelectedFiles(images.map((img) => img.file));
+                    }}
+                    onUploadComplete={handleUploadFiles}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
 
-        {/* Uploaded Photos */}
+        {/* Uploaded Photos Gallery - Horizontal Story Layout */}
         {uploadedPhotosCount > 0 && (
           <Card>
             <CardHeader>
@@ -443,93 +265,144 @@ export const SessionRecordPage: React.FC = () => {
                 <CheckCircle className="mr-2 h-5 w-5" />
                 Uploaded Photos ({uploadedPhotosCount})
               </CardTitle>
+              <CardDescription>
+                Your uploaded process documentation photos
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+              {/* Horizontal Scrollable Story Layout */}
+              <div className="flex gap-4 overflow-x-auto pb-4">
                 {session.uploaded_photos.map((photoUrl, index) => (
-                  <div key={index} className="group relative">
-                    <div className="bg-muted flex aspect-square items-center justify-center overflow-hidden rounded-lg">
+                  <div
+                    key={`${session.session_id}-photo-${index}`}
+                    className="group relative flex-shrink-0"
+                  >
+                    <div className="bg-muted hover:border-primary relative h-32 w-24 overflow-hidden rounded-lg border-2 border-transparent transition-all">
                       {photoUrl ? (
-                        <img
+                        <Image
                           src={photoUrl}
-                          alt={`Photo ${index + 1}`}
-                          className="h-full w-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = "none";
-                            target.nextElementSibling?.classList.remove(
-                              "hidden",
-                            );
-                          }}
+                          alt={`Process ${index + 1}`}
+                          fill
+                          className="object-contain"
+                          sizes="(max-width: 768px) 96px, 96px"
                         />
-                      ) : null}
-                      <div
-                        className={`${photoUrl ? "hidden" : ""} flex items-center justify-center`}
-                      >
-                        <ImageIcon className="text-muted-foreground h-8 w-8" />
+                      ) : (
+                        <div className="flex h-full items-center justify-center">
+                          <ImageIcon className="text-muted-foreground h-8 w-8" />
+                        </div>
+                      )}
+
+                      {/* Story Number Badge */}
+                      <div className="bg-primary text-primary-foreground absolute top-1 left-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
+                        {index + 1}
+                      </div>
+
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50 opacity-0 transition-all group-hover:opacity-100">
+                        <Button size="sm" variant="secondary">
+                          View
+                        </Button>
                       </div>
                     </div>
-                    <div className="bg-opacity-0 group-hover:bg-opacity-50 absolute inset-0 flex items-center justify-center rounded-lg bg-black opacity-0 transition-all group-hover:opacity-100">
-                      <Button size="sm" variant="secondary">
-                        View
-                      </Button>
-                    </div>
+
+                    {/* Progress Step Label */}
+                    <p className="text-muted-foreground mt-2 text-center text-xs">
+                      Step {index + 1}
+                    </p>
                   </div>
                 ))}
+
+                {/* Add More Photos Placeholder */}
+                {canUploadMore && (
+                  <div className="flex-shrink-0">
+                    <div className="bg-muted/50 border-muted-foreground/25 flex h-32 w-24 items-center justify-center rounded-lg border-2 border-dashed">
+                      <div className="text-center">
+                        <Camera className="text-muted-foreground mx-auto mb-1 h-6 w-6" />
+                        <p className="text-muted-foreground text-xs">
+                          Add More
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground mt-2 text-center text-xs">
+                      +{remainingPhotos}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Progress Timeline */}
+              <div className="mt-4 flex items-center justify-between">
+                <div className="text-muted-foreground text-sm">
+                  Documentation Progress
+                </div>
+                <div className="text-muted-foreground text-sm">
+                  {uploadedPhotosCount} of {maxPhotos} photos
+                </div>
+              </div>
+              <div className="bg-muted mt-2 h-2 rounded-full">
+                <div
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${(uploadedPhotosCount / maxPhotos) * 100}%`,
+                  }}
+                />
               </div>
             </CardContent>
           </Card>
         )}
 
-        {/* Complete Session */}
-        {uploadedPhotosCount > 0 &&
-          session.status !== "completed" &&
-          canGenerateNFT && (
-            <Card className="border-green-200 bg-green-50">
-              <CardHeader>
-                <CardTitle className="flex items-center text-green-900">
-                  <CheckCircle className="mr-2 h-5 w-5" />
-                  Ready to Complete Session
-                </CardTitle>
-                <CardDescription className="text-green-700">
-                  You have uploaded {uploadedPhotosCount} photos. Complete the
-                  session to generate a certificate and NFT.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="bg-green-600 text-white hover:bg-green-700">
-                  <CheckCircle className="mr-2 h-4 w-4" />
-                  Complete Session & Generate NFT
-                </Button>
-              </CardContent>
-            </Card>
-          )}
+        {/* Bento Grid for Action Cards */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Complete Session Card */}
+          {uploadedPhotosCount > 0 &&
+            session.status !== "completed" &&
+            canGenerateNFT && (
+              <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-green-900 dark:text-green-100">
+                    <CheckCircle className="mr-2 h-5 w-5" />
+                    Ready to Complete Session
+                  </CardTitle>
+                  <CardDescription className="text-green-700 dark:text-green-300">
+                    You have uploaded {uploadedPhotosCount} photos. Complete the
+                    session to generate a certificate and NFT.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button className="w-full bg-green-600 text-white hover:bg-green-700">
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    Complete Session & Generate NFT
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
 
-        {/* NFT Generation Disabled */}
-        {uploadedPhotosCount > 0 &&
-          session.status !== "completed" &&
-          !canGenerateNFT && (
-            <Card className="border-yellow-200 bg-yellow-50">
-              <CardHeader>
-                <CardTitle className="flex items-center text-yellow-900">
-                  <AlertCircle className="mr-2 h-5 w-5" />
-                  NFT Generation Not Available
-                </CardTitle>
-                <CardDescription className="text-yellow-700">
-                  Upgrade your subscription to generate NFTs from your artwork
-                  sessions.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button
-                  onClick={() => router.push("/dashboard/subscription")}
-                  className="bg-yellow-600 text-white hover:bg-yellow-700"
-                >
-                  Upgrade Subscription
-                </Button>
-              </CardContent>
-            </Card>
-          )}
+          {/* NFT Generation Disabled Card */}
+          {uploadedPhotosCount > 0 &&
+            session.status !== "completed" &&
+            !canGenerateNFT && (
+              <Card className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-yellow-900 dark:text-yellow-100">
+                    <AlertCircle className="mr-2 h-5 w-5" />
+                    NFT Generation Not Available
+                  </CardTitle>
+                  <CardDescription className="text-yellow-700 dark:text-yellow-300">
+                    Upgrade your subscription to generate NFTs from your artwork
+                    sessions.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button
+                    onClick={() => router.push("/dashboard/subscription")}
+                    className="w-full bg-yellow-600 text-white hover:bg-yellow-700"
+                  >
+                    Upgrade Subscription
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+        </div>
       </div>
     </div>
   );

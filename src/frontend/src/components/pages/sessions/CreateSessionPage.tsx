@@ -121,7 +121,7 @@ export const CreateSessionPage: React.FC = () => {
   if (s3Configured === false) {
     return (
       <div className="container mx-auto py-6">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto">
           <Alert className="border-destructive/50 bg-destructive/10">
             <AlertCircle className="text-destructive h-4 w-4" />
             <AlertDescription className="text-destructive">
@@ -140,7 +140,7 @@ export const CreateSessionPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="mx-auto max-w-2xl space-y-6">
+      <div className="mx-auto max-w-7xl space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
           <Button onClick={handleBack} variant="outline" size="sm">
@@ -156,121 +156,164 @@ export const CreateSessionPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Subscription Info */}
-        <Card className="border-primary/20 bg-primary/5">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-primary flex items-center text-lg">
-              <Camera className="mr-2 h-5 w-5" />
-              Your Plan Limits
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-primary/80 space-y-1 text-sm">
-              <p>
-                • Maximum photos per session: <strong>{maxPhotos}</strong>
-              </p>
-              <p>
-                • NFT generation:{" "}
-                <strong>{canGenerateNFT ? "Enabled" : "Disabled"}</strong>
-              </p>
-              {!canGenerateNFT && (
-                <p className="text-primary/60 mt-2 text-xs">
-                  Upgrade your plan to generate NFTs from your artwork
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Subscription Info Card - Spans 4 columns */}
+          <div className="lg:col-span-4">
+            <Card className="border-primary/20 bg-primary/5 h-full">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-primary flex items-center text-lg">
+                  <Camera className="mr-2 h-5 w-5" />
+                  Your Plan Limits
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="bg-primary/10 rounded-lg p-3">
+                    <p className="text-primary/80 text-sm font-medium">
+                      Maximum photos per session
+                    </p>
+                    <p className="text-primary text-xl font-bold">
+                      {maxPhotos} photos
+                    </p>
+                  </div>
+                  <div className="bg-primary/10 rounded-lg p-3">
+                    <p className="text-primary/80 text-sm font-medium">
+                      NFT generation
+                    </p>
+                    <p className="text-primary text-lg font-semibold">
+                      {canGenerateNFT ? "Enabled" : "Disabled"}
+                    </p>
+                  </div>
+                  {!canGenerateNFT && (
+                    <div className="rounded-lg border border-yellow-200 bg-yellow-100 p-3">
+                      <p className="text-xs text-yellow-800">
+                        Upgrade to enable NFT generation for your artwork
+                        sessions
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-        {/* Create Session Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Session Details</CardTitle>
-            <CardDescription>
-              Provide information about your artwork to create a new session
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Artwork Title */}
-            <div className="space-y-2">
-              <Label htmlFor="artTitle">
-                Artwork Title <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="artTitle"
-                type="text"
-                value={artTitle}
-                onChange={(e) => setArtTitle(e.target.value)}
-                placeholder="Enter your artwork title"
-                disabled={isCreating}
-                className={errors.title ? "border-red-500" : ""}
-              />
-              {errors.title && (
-                <p className="text-sm text-red-500">{errors.title}</p>
-              )}
-            </div>
+          {/* Create Session Form - Spans 8 columns */}
+          <div className="lg:col-span-8">
+            <Card className="h-full">
+              <CardHeader>
+                <CardTitle>Session Details</CardTitle>
+                <CardDescription>
+                  Provide information about your artwork to create a new session
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Artwork Title */}
+                <div className="space-y-2">
+                  <Label htmlFor="artTitle">
+                    Artwork Title <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="artTitle"
+                    type="text"
+                    value={artTitle}
+                    onChange={(e) => setArtTitle(e.target.value)}
+                    placeholder="Enter your artwork title"
+                    disabled={isCreating}
+                    className={errors.title ? "border-red-500" : ""}
+                  />
+                  {errors.title && (
+                    <p className="text-sm text-red-500">{errors.title}</p>
+                  )}
+                </div>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description">
-                Description{" "}
-                <span className="text-muted-foreground">(Optional)</span>
-              </Label>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe your artwork, materials used, inspiration, etc."
-                rows={4}
-                disabled={isCreating}
-                className={errors.description ? "border-red-500" : ""}
-              />
-              <div className="text-muted-foreground flex justify-between text-xs">
-                <span>{description.length}/500 characters</span>
-                {errors.description && (
-                  <span className="text-red-500">{errors.description}</span>
-                )}
-              </div>
-            </div>
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="description">
+                    Description{" "}
+                    <span className="text-muted-foreground">(Optional)</span>
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Describe your artwork, materials used, inspiration, etc."
+                    rows={4}
+                    disabled={isCreating}
+                    className={errors.description ? "border-red-500" : ""}
+                  />
+                  <div className="text-muted-foreground flex justify-between text-xs">
+                    <span>{description.length}/500 characters</span>
+                    {errors.description && (
+                      <span className="text-red-500">{errors.description}</span>
+                    )}
+                  </div>
+                </div>
 
-            {/* Create Button */}
-            <div className="flex gap-4 pt-4">
-              <Button
-                onClick={handleCreateSession}
-                disabled={isCreating || !artTitle.trim()}
-                className="flex-1"
-              >
-                {isCreating ? (
-                  <Spinner variant="infinite" size="sm" className="mr-2" />
-                ) : (
-                  <Camera className="mr-2 h-4 w-4" />
-                )}
-                {isCreating ? "Creating Session..." : "Create Session"}
-              </Button>
-              <Button
-                onClick={handleBack}
-                variant="outline"
-                disabled={isCreating}
-              >
-                Cancel
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                {/* Create Button */}
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    onClick={handleCreateSession}
+                    disabled={isCreating || !artTitle.trim()}
+                    className="flex-1"
+                    size="lg"
+                  >
+                    {isCreating ? (
+                      <Spinner variant="infinite" size="sm" className="mr-2" />
+                    ) : (
+                      <Camera className="mr-2 h-4 w-4" />
+                    )}
+                    {isCreating ? "Creating Session..." : "Create Session"}
+                  </Button>
+                  <Button
+                    onClick={handleBack}
+                    variant="outline"
+                    disabled={isCreating}
+                    size="lg"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
-        {/* Help Text */}
-        <Card className="border-gray-200 bg-gray-50">
+        {/* Help Text Card - Full width with bento grid */}
+        <Card className="border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950">
           <CardContent className="pt-6">
-            <div className="space-y-2 text-sm text-gray-700">
-              <h4 className="font-semibold">What happens next?</h4>
-              <ul className="ml-4 list-inside list-disc space-y-1">
-                <li>You&apos;ll be redirected to the session page</li>
-                <li>Upload photos of your artwork creation process</li>
-                <li>Complete the session to generate a certificate</li>
-                {canGenerateNFT && (
-                  <li>Mint an NFT representing your artwork</li>
-                )}
-              </ul>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="space-y-2">
+                <h4 className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <span className="mr-2">💡</span>
+                  Getting Started
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Create a session to document your artistic process from start
+                  to finish
+                </p>
+              </div>
+              <div className="space-y-2">
+                <h4 className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <span className="mr-2">📸</span>
+                  Photo Documentation
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Upload photos showing your creation process, materials, and
+                  progress
+                </p>
+              </div>
+              <div className="space-y-2">
+                <h4 className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <span className="mr-2">🎨</span>
+                  {canGenerateNFT ? "NFT Certificate" : "Documentation"}
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  {canGenerateNFT
+                    ? "Complete the session to generate a verified certificate of authenticity"
+                    : "Create a documented record of your artwork creation process"}
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>

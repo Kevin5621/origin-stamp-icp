@@ -49,7 +49,7 @@ export function HeroSection() {
 
       {/* Content Container */}
       <div className="relative z-10 container mx-auto px-4 text-center">
-        <div className="mx-auto max-w-4xl space-y-8">
+        <div className="mx-auto space-y-8">
           <h1
             className="text-5xl leading-tight font-light text-white drop-shadow-lg md:text-7xl lg:text-8xl"
             style={{
