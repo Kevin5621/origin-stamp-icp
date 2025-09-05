@@ -448,8 +448,26 @@ export const SessionRecordPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {session.uploaded_photos.map((photoUrl, index) => (
                   <div key={index} className="group relative">
-                    <div className="bg-muted flex aspect-square items-center justify-center rounded-lg">
-                      <ImageIcon className="text-muted-foreground h-8 w-8" />
+                    <div className="bg-muted flex aspect-square items-center justify-center overflow-hidden rounded-lg">
+                      {photoUrl ? (
+                        <img
+                          src={photoUrl}
+                          alt={`Photo ${index + 1}`}
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                            target.nextElementSibling?.classList.remove(
+                              "hidden",
+                            );
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className={`${photoUrl ? "hidden" : ""} flex items-center justify-center`}
+                      >
+                        <ImageIcon className="text-muted-foreground h-8 w-8" />
+                      </div>
                     </div>
                     <div className="bg-opacity-0 group-hover:bg-opacity-50 absolute inset-0 flex items-center justify-center rounded-lg bg-black opacity-0 transition-all group-hover:opacity-100">
                       <Button size="sm" variant="secondary">

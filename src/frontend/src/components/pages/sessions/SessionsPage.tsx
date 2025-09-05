@@ -239,8 +239,24 @@ export const SessionsPage: React.FC = () => {
                   className="overflow-hidden transition-shadow hover:shadow-lg"
                 >
                   {/* Artwork Thumbnail */}
-                  <div className="bg-muted/50 relative flex aspect-video items-center justify-center">
-                    <Camera className="text-muted-foreground h-12 w-12" />
+                  <div className="bg-muted/50 relative flex aspect-video items-center justify-center overflow-hidden">
+                    {session.uploaded_photos.length > 0 ? (
+                      <img
+                        src={session.uploaded_photos[0]}
+                        alt={session.art_title}
+                        className="h-full w-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                          target.nextElementSibling?.classList.remove("hidden");
+                        }}
+                      />
+                    ) : null}
+                    <div
+                      className={`${session.uploaded_photos.length > 0 ? "hidden" : ""} flex items-center justify-center`}
+                    >
+                      <Camera className="text-muted-foreground h-12 w-12" />
+                    </div>
                     <div className="absolute top-2 right-2">
                       {getStatusIcon(session.status)}
                     </div>
