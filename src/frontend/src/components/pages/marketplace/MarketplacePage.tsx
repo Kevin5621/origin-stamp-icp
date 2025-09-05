@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useEffect, useState } from "react";
 import { Store, Heart, Eye, Search, Filter, Grid, List } from "lucide-react";
 import {
@@ -47,12 +47,15 @@ export const MarketplacePage: React.FC = () => {
         if (mounted) setFetched(nfts);
       } catch (e) {
         console.error("Failed to fetch marketplace NFTs", e);
-        if (mounted) setError(e instanceof Error ? e.message : "Failed to load NFTs");
+        if (mounted)
+          setError(e instanceof Error ? e.message : "Failed to load NFTs");
       } finally {
         if (mounted) setLoading(false);
       }
     })();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Fallback demo data (kept exactly as before for UI consistency when no backend data)
@@ -173,20 +176,32 @@ export const MarketplacePage: React.FC = () => {
   };
 
   // Map backend NFTs to card shape (reuse existing fields with safe defaults)
-  const mappedBackend: MarketplaceCardNFT[] = fetched.map<MarketplaceCardNFT>((nft): MarketplaceCardNFT => ({
-    id: nft.id,
-    title: nft.title,
-    artist: nft.creator.username,
-    artistAvatar: nft.creator.avatar || nft.creator.username.slice(0, 2).toUpperCase(),
-    price: `${nft.price.amount} ${nft.price.currency}`,
-    originalPrice: null as string | null,
-    status: nft.status === "for_sale" ? "available" : nft.status === "auction" ? "auction" : "sold",
-    views: nft.views,
-    likes: nft.likes,
-    category: nft.tags[0]?.split(":")[0] || "General",
-    rarity: nft.tags.includes("rarity:Ultra Rare") ? "Ultra Rare" : nft.tags.includes("rarity:Rare") ? "Rare" : "Common",
-    thumbnailUrl: nft.imageUrl,
-  }));
+  const mappedBackend: MarketplaceCardNFT[] = fetched.map<MarketplaceCardNFT>(
+    (nft): MarketplaceCardNFT => ({
+      id: nft.id,
+      title: nft.title,
+      artist: nft.creator.username,
+      artistAvatar:
+        nft.creator.avatar || nft.creator.username.slice(0, 2).toUpperCase(),
+      price: `${nft.price.amount} ${nft.price.currency}`,
+      originalPrice: null as string | null,
+      status:
+        nft.status === "for_sale"
+          ? "available"
+          : nft.status === "auction"
+            ? "auction"
+            : "sold",
+      views: nft.views,
+      likes: nft.likes,
+      category: nft.tags[0]?.split(":")[0] || "General",
+      rarity: nft.tags.includes("rarity:Ultra Rare")
+        ? "Ultra Rare"
+        : nft.tags.includes("rarity:Rare")
+          ? "Rare"
+          : "Common",
+      thumbnailUrl: nft.imageUrl,
+    }),
+  );
 
   // Currently we only show fetched NFTs (fallback demo list removed/commented). Add fallback here if desired.
   const displayNFTs: MarketplaceCardNFT[] = mappedBackend;
