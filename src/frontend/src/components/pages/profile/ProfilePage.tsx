@@ -282,7 +282,7 @@ export const ProfilePage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <LoadingSpinner size="lg" />
+        <LoadingSpinner size="sm" />
       </div>
     );
   }

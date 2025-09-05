@@ -100,6 +100,10 @@ interface BackendActor {
   ) => Promise<
     [] | [import("../../../declarations/backend/backend.did").Token]
   >;
+  get_user_nfts: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    principal: any,
+  ) => Promise<import("../../../declarations/backend/backend.did").Token[]>;
 }
 
 // Initialize ICP agent for proper connection (only on client-side)
@@ -1209,6 +1213,56 @@ export const backendService = {
       return null;
     } catch (error) {
       console.error("Failed to get token details:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get user's NFTs
+   * @param userPrincipal User principal
+   * @returns Promise with array of user's NFTs
+   */
+  async getUserNFTs(
+    userPrincipal: string,
+  ): Promise<import("../../../declarations/backend/backend.did").Token[]> {
+    try {
+      await icpAgentService.initialize();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      // Convert string principal to Principal object
+      const { Principal } = await import("@dfinity/principal");
+      let principal;
+
+      try {
+        principal = Principal.fromText(userPrincipal);
+      } catch (error) {
+        console.warn(
+          `Invalid principal format: ${userPrincipal}, generating new one...`,
+        );
+        // Generate a valid principal from the invalid one
+        const encoder = new TextEncoder();
+        const data = encoder.encode(userPrincipal + "originstamp_SALT_2024");
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+        // Take first 8 bytes and create valid Principal
+        const bytes = new Uint8Array(8);
+        for (let i = 0; i < 8; i++) {
+          bytes[i] = hashArray[i] || 0;
+        }
+
+        principal = Principal.fromUint8Array(bytes);
+        console.log(`Generated new valid principal: ${principal.toText()}`);
+      }
+
+      const result = await backendActor.get_user_nfts(principal);
+      return result;
+    } catch (error) {
+      console.error("Failed to get user NFTs:", error);
       throw error;
     }
   },

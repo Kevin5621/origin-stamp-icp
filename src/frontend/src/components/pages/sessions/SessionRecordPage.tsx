@@ -177,7 +177,7 @@ export const SessionRecordPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <Spinner variant="infinite" size="lg" />
+          <Spinner variant="infinite" size={16} />
           <p className="text-muted-foreground mt-4">
             Loading session details...
           </p>
