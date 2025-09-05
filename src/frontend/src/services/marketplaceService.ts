@@ -20,7 +20,9 @@ interface FilterOptions {
 
 // (Reserved for future create operation)
 interface CreateNFTData {
-  title: string; description: string; image: string;
+  title: string;
+  description: string;
+  image: string;
   attributes?: Array<{ trait_type: string; value: string }>;
 } // eslint-disable-line @typescript-eslint/no-unused-vars
 
@@ -44,7 +46,10 @@ async function createBackendActor(): Promise<BackendActor> {
         canisterId,
       }) as unknown as BackendActor;
     } catch (err) {
-      console.warn("[MarketplaceService] Dynamic actor creation failed, using fallback", err);
+      console.warn(
+        "[MarketplaceService] Dynamic actor creation failed, using fallback",
+        err,
+      );
     }
   }
   return backend as unknown as BackendActor;
@@ -72,7 +77,11 @@ export class MarketplaceService {
             if (!details.length) return null;
             return this.convertTokenToNFT(details[0]!);
           } catch (err) {
-            console.warn("[MarketplaceService] token fetch failed", id.toString(), err);
+            console.warn(
+              "[MarketplaceService] token fetch failed",
+              id.toString(),
+              err,
+            );
             return null;
           }
         }),
@@ -86,13 +95,15 @@ export class MarketplaceService {
 
   private static convertTokenToNFT(token: BackendToken): NFT {
     const description = Array.isArray(token.metadata.description)
-      ? (token.metadata.description[0] || "")
+      ? token.metadata.description[0] || ""
       : (token.metadata.description as string) || "";
     const imageUrl = Array.isArray(token.metadata.image)
-      ? (token.metadata.image[0] || "")
+      ? token.metadata.image[0] || ""
       : (token.metadata.image as string) || "";
     const createdMs = Number(token.created_at) / 1_000_000; // ns -> ms
-    const sessionId: string = token.session_id.length ? token.session_id[0]! : "";
+    const sessionId: string = token.session_id.length
+      ? token.session_id[0]!
+      : "";
 
     return {
       id: token.id.toString(),
@@ -102,7 +113,7 @@ export class MarketplaceService {
         imageUrl ||
         `https://via.placeholder.com/600x600?text=NFT+${token.id.toString()}`,
       creator: {
-  username: token.owner.owner.toString().slice(0, 10) + "...",
+        username: token.owner.owner.toString().slice(0, 10) + "...",
         avatar: "",
         verified: true,
       },
@@ -116,7 +127,9 @@ export class MarketplaceService {
       likes: 0,
       views: 0,
       createdAt: new Date(createdMs).toISOString(),
-  tags: token.metadata.attributes?.map((a) => `${a.trait_type}:${a.value}`) || [],
+      tags:
+        token.metadata.attributes?.map((a) => `${a.trait_type}:${a.value}`) ||
+        [],
       collection: sessionId ? `Session ${sessionId}` : undefined,
     };
   }
