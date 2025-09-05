@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Camera } from "lucide-react";
+import { Camera, RefreshCw } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -48,7 +48,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onPhotoUpload,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { profilePicture } = useProfilePicture();
+  const { profilePicture, generateNewAvatar, isGeneratedAvatar } =
+    useProfilePicture();
 
   const getLoginMethodLabel = (method?: string) => {
     switch (method) {
@@ -102,19 +103,30 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 {user?.username?.charAt(0).toUpperCase() || "U"}
               </AvatarFallback>
             </Avatar>
-            <Button
-              size="icon"
-              variant="outline"
-              className="absolute -right-2 -bottom-2 h-8 w-8 rounded-full"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploadingPhoto}
-            >
-              {uploadingPhoto ? (
-                <LoadingSpinner size="sm" />
-              ) : (
-                <Camera className="h-4 w-4" />
-              )}
-            </Button>
+            <div className="absolute -right-2 -bottom-2 flex gap-1">
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-8 w-8 rounded-full"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingPhoto}
+              >
+                {uploadingPhoto ? (
+                  <LoadingSpinner size="sm" />
+                ) : (
+                  <Camera className="h-4 w-4" />
+                )}
+              </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-8 w-8 rounded-full"
+                onClick={generateNewAvatar}
+                title="Generate new avatar"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
             <input
               ref={fileInputRef}
               type="file"
@@ -126,9 +138,16 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
           <div className="flex-1 space-y-4">
             <div>
-              <h2 className="text-foreground text-2xl font-bold">
-                {userProfile?.username || user?.username || "Your Name"}
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-foreground text-2xl font-bold">
+                  {userProfile?.username || user?.username || "Your Name"}
+                </h2>
+                {isGeneratedAvatar && (
+                  <Badge variant="secondary" className="text-xs">
+                    Generated Avatar
+                  </Badge>
+                )}
+              </div>
               <p className="text-muted-foreground">
                 {userProfile?.email || user?.email || "your.email@example.com"}
               </p>

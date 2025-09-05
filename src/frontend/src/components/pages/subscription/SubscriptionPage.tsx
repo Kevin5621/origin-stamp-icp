@@ -299,8 +299,8 @@ export const SubscriptionPage: React.FC = () => {
                 )}
 
                 {/* Content */}
-                <div className="relative z-10">
-                  <CardHeader className="pb-4 text-center">
+                <div className="relative z-10 p-6">
+                  <CardHeader className="px-0 pb-4 text-center">
                     <CardTitle className="text-foreground text-2xl font-medium">
                       {plan.name}
                     </CardTitle>
@@ -319,7 +319,7 @@ export const SubscriptionPage: React.FC = () => {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 px-0">
                     <div className="space-y-3">
                       {plan.features.map((feature, index) => (
                         <div
@@ -337,7 +337,7 @@ export const SubscriptionPage: React.FC = () => {
                     </div>
                   </CardContent>
 
-                  <CardFooter className="pt-4">
+                  <CardFooter className="px-0 pt-4">
                     {isCurrentPlan ? (
                       <Button className="w-full" variant="outline" disabled>
                         Current Plan
@@ -345,7 +345,7 @@ export const SubscriptionPage: React.FC = () => {
                     ) : (
                       <Button
                         className="w-full"
-                        variant={plan.popular ? "default" : "outline"}
+                        variant={plan.popular ? "primary" : "outline"}
                         onClick={() => handleUpgradeSubscription(plan)}
                         disabled={isUpgrading}
                       >

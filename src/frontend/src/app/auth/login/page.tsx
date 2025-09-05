@@ -295,7 +295,7 @@ const LoginPage: React.FC = () => {
 
           <div className="mt-4 text-center">
             <Button
-              variant="link"
+              variant="ghost"
               onClick={toggleMode}
               className="text-muted-foreground hover:text-foreground text-sm"
             >

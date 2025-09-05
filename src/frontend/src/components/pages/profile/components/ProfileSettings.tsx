@@ -76,7 +76,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               </CardDescription>
             </div>
             <Button
-              variant={editingProfile ? "outline" : "default"}
+              variant={editingProfile ? "outline" : "primary"}
               onClick={onEditToggle}
             >
               {editingProfile ? (

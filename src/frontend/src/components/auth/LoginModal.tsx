@@ -276,7 +276,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
           <div className="text-center">
             <Button
-              variant="link"
+              variant="ghost"
               onClick={toggleMode}
               className="text-muted-foreground hover:text-foreground text-sm"
             >

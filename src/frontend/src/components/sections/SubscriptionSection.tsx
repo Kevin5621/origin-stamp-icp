@@ -67,14 +67,14 @@ export function SubscriptionSection() {
           {plans.map((plan) => (
             <Card
               key={plan.tier}
-              className={`group relative overflow-hidden transition-all duration-300 hover:shadow-lg ${
+              className={`group relative overflow-visible transition-all duration-300 hover:shadow-lg ${
                 plan.popular
                   ? "border-primary scale-105 shadow-lg"
                   : "border-border hover:border-primary/50"
               }`}
             >
               {/* Background Image */}
-              <div className="absolute inset-0">
+              <div className="absolute inset-0 overflow-hidden rounded-lg">
                 <Image
                   src={planImages[plan.tier as keyof typeof planImages]}
                   alt={`${plan.name} plan`}
@@ -94,8 +94,8 @@ export function SubscriptionSection() {
               )}
 
               {/* Content */}
-              <div className="relative z-10">
-                <CardHeader className="pb-4 text-center">
+              <div className="relative z-10 p-6">
+                <CardHeader className="px-0 pb-4 text-center">
                   <CardTitle className="text-foreground text-2xl font-medium">
                     {plan.name}
                   </CardTitle>
@@ -114,7 +114,7 @@ export function SubscriptionSection() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 px-0">
                   <div className="space-y-3">
                     {plan.features.map((feature, index) => (
                       <div key={index} className="flex items-center space-x-3">
@@ -156,10 +156,10 @@ export function SubscriptionSection() {
                   </div>
                 </CardContent>
 
-                <CardFooter className="pt-4">
+                <CardFooter className="px-0 pt-4">
                   <Button
                     className="w-full"
-                    variant={plan.popular ? "default" : "outline"}
+                    variant={plan.popular ? "primary" : "outline"}
                     onClick={() =>
                       plan.tier === "Free"
                         ? handleGetStarted(plan)

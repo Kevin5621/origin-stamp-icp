@@ -171,7 +171,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </form>
 
         <div className="mt-4 text-center">
-          <Button variant="link" onClick={toggleMode} className="text-sm">
+          <Button variant="ghost" onClick={toggleMode} className="text-sm">
             {isRegistering
               ? "Already have an account? Sign in"
               : "Don't have an account? Create one"}

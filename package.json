@@ -45,6 +45,8 @@
   },
   "dependencies": {
     "@dfinity/auth-client": "^2.4.1",
+    "@dicebear/collection": "^9.2.4",
+    "@dicebear/core": "^9.2.4",
     "@react-three/drei": "^10.5.1",
     "@react-three/fiber": "^9.2.0",
     "@studio-freight/lenis": "^1.0.42",

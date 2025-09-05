@@ -50,7 +50,7 @@ export default function NotFound() {
             </div>
 
             <div className="flex flex-col justify-center gap-3 sm:flex-row">
-              <Button asChild variant="default">
+              <Button asChild variant="primary">
                 <Link href="/">Go Home</Link>
               </Button>
               <Button asChild variant="outline">
