@@ -85,12 +85,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const data = encoder.encode(username + "originstamp_SALT_2024");
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
 
-        const principalText = hashHex.slice(0, 16);
-        return principalText;
+        // Take first 8 bytes and create valid Principal
+        const bytes = new Uint8Array(8);
+        for (let i = 0; i < 8; i++) {
+          bytes[i] = hashArray[i] || 0;
+        }
+
+        // Create Principal from bytes
+        const { Principal } = await import("@dfinity/principal");
+        return Principal.fromUint8Array(bytes).toText();
       } catch (error) {
         console.error("Failed to generate principal for username:", error);
         return null;
@@ -206,12 +210,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const data = encoder.encode(username + "originstamp_SALT_2024");
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
 
-        const principalText = hashHex.slice(0, 16);
-        return principalText;
+        // Take first 8 bytes and create valid Principal
+        const bytes = new Uint8Array(8);
+        for (let i = 0; i < 8; i++) {
+          bytes[i] = hashArray[i] || 0;
+        }
+
+        // Create Principal from bytes
+        const { Principal } = await import("@dfinity/principal");
+        return Principal.fromUint8Array(bytes).toText();
       } catch (error) {
         console.error(
           "Failed to regenerate principal for existing user:",

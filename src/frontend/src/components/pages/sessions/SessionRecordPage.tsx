@@ -28,6 +28,8 @@ import {
   PhysicalArtService,
   type PhysicalArtSession,
 } from "@/services/physicalArtService";
+import { NFTService, type NFTMintingResult } from "@/services/nftService";
+import { useAuth } from "@/contexts/AuthContext";
 import SortableImageUpload from "@/components/file-upload/sortable";
 
 export const SessionRecordPage: React.FC = () => {
@@ -35,11 +37,16 @@ export const SessionRecordPage: React.FC = () => {
   const router = useRouter();
   const { success: showSuccess, error: showError } = useToastContext();
   const { maxPhotos, canGenerateNFT } = useSubscription();
+  const { user } = useAuth();
 
   const [session, setSession] = useState<PhysicalArtSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [s3Configured, setS3Configured] = useState<boolean | null>(null);
+  const [isMintingNFT, setIsMintingNFT] = useState(false);
+  const [mintingResult, setMintingResult] = useState<NFTMintingResult | null>(
+    null,
+  );
 
   const sessionId = params.sessionId as string;
 
@@ -112,6 +119,45 @@ export const SessionRecordPage: React.FC = () => {
 
   const handleBack = () => {
     router.push("/dashboard/sessions");
+  };
+
+  const handleCompleteSession = async () => {
+    if (!session || !user?.principal) {
+      showError("Session or user data not available");
+      return;
+    }
+
+    setIsMintingNFT(true);
+    setMintingResult(null);
+
+    try {
+      showSuccess("Starting NFT minting process...");
+
+      const result = await NFTService.completeSession(session, user.principal);
+
+      if (result.success) {
+        setMintingResult(result);
+        showSuccess(`🎉 NFT minted successfully! Token ID: ${result.nftId}`);
+
+        // Update session status in local state
+        setSession((prev) => (prev ? { ...prev, status: "completed" } : null));
+
+        // Navigate to NFT detail page after a short delay
+        setTimeout(() => {
+          router.push(`/dashboard/collection/${result.nftId}`);
+        }, 2000);
+      } else {
+        showError(`NFT minting failed: ${result.error}`);
+        setMintingResult(result);
+      }
+    } catch (error) {
+      console.error("Complete session failed:", error);
+      showError(
+        `Failed to complete session: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    } finally {
+      setIsMintingNFT(false);
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -377,9 +423,19 @@ export const SessionRecordPage: React.FC = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-green-600 text-white hover:bg-green-700">
-                    <CheckCircle className="mr-2 h-4 w-4" />
-                    Complete Session & Generate NFT
+                  <Button
+                    onClick={handleCompleteSession}
+                    disabled={isMintingNFT}
+                    className="w-full bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+                  >
+                    {isMintingNFT ? (
+                      <Spinner variant="infinite" size="sm" className="mr-2" />
+                    ) : (
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                    )}
+                    {isMintingNFT
+                      ? "Minting NFT..."
+                      : "Complete Session & Generate NFT"}
                   </Button>
                 </CardContent>
               </Card>
@@ -410,6 +466,73 @@ export const SessionRecordPage: React.FC = () => {
                 </CardContent>
               </Card>
             )}
+
+          {/* NFT Minting Result Card */}
+          {mintingResult && (
+            <Card
+              className={`border-2 ${
+                mintingResult.success
+                  ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
+                  : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950"
+              }`}
+            >
+              <CardHeader>
+                <CardTitle
+                  className={`flex items-center ${
+                    mintingResult.success
+                      ? "text-green-900 dark:text-green-100"
+                      : "text-red-900 dark:text-red-100"
+                  }`}
+                >
+                  {mintingResult.success ? (
+                    <CheckCircle className="mr-2 h-5 w-5" />
+                  ) : (
+                    <AlertCircle className="mr-2 h-5 w-5" />
+                  )}
+                  {mintingResult.success
+                    ? "NFT Minted Successfully!"
+                    : "NFT Minting Failed"}
+                </CardTitle>
+                <CardDescription
+                  className={
+                    mintingResult.success
+                      ? "text-green-700 dark:text-green-300"
+                      : "text-red-700 dark:text-red-300"
+                  }
+                >
+                  {mintingResult.success
+                    ? `Your artwork has been minted as NFT with Token ID: ${mintingResult.nftId}. Redirecting to NFT details...`
+                    : `Failed to mint NFT: ${mintingResult.error}`}
+                </CardDescription>
+              </CardHeader>
+              {mintingResult.success && (
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Token ID:</span>
+                      <span className="font-mono text-sm">
+                        {mintingResult.nftId}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">
+                        Certificate ID:
+                      </span>
+                      <span className="font-mono text-sm">
+                        {mintingResult.certificateId}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Token URI:</span>
+                      <span className="max-w-xs truncate font-mono text-sm">
+                        {mintingResult.tokenUri}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          )}
         </div>
       </div>
     </div>
