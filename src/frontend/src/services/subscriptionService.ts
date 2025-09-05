@@ -1,3 +1,5 @@
+import { backendService } from "./backendService";
+
 // Types for subscription management
 export type SubscriptionTier = "Free" | "Basic" | "Premium" | "Enterprise";
 
@@ -27,45 +29,6 @@ export interface SubscriptionPlan {
   popular?: boolean;
 }
 
-// Hardcoded demo coupons (not displayed in UI but available for testing)
-const DEMO_COUPONS: Coupon[] = [
-  {
-    code: "DEMO-BASIC-2025",
-    coupon_type: "Basic",
-    is_active: true,
-    max_uses: 100,
-    current_uses: 0,
-    expires_at: BigInt(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
-  },
-  {
-    code: "DEMO-PREMIUM-2025",
-    coupon_type: "Premium",
-    is_active: true,
-    max_uses: 50,
-    current_uses: 0,
-    expires_at: BigInt(Date.now() + 180 * 24 * 60 * 60 * 1000), // 6 months from now
-  },
-  {
-    code: "DEMO-ENTERPRISE-2025",
-    coupon_type: "Enterprise",
-    is_active: true,
-    max_uses: 25,
-    current_uses: 0,
-    expires_at: BigInt(Date.now() + 90 * 24 * 60 * 60 * 1000), // 3 months from now
-  },
-];
-
-// Mock user subscriptions storage (for demo purposes)
-const USER_SUBSCRIPTIONS: Map<string, SubscriptionTier> = new Map();
-
-// Initialize demo for browser console access
-if (typeof window !== "undefined") {
-  (window as unknown as { [key: string]: unknown }).demoCoupons = {
-    list: () => subscriptionService.logDemoCoupons(),
-    codes: DEMO_COUPONS.map((c) => c.code),
-  };
-}
-
 /**
  * Service for handling all subscription-related operations
  */
@@ -77,12 +40,11 @@ export const subscriptionService = {
     username: string,
   ): Promise<SubscriptionTier | null> {
     try {
-      // For demo purposes, return mock data
-      const subscription = USER_SUBSCRIPTIONS.get(username) || "Free";
-      return subscription;
+      const subscription = await backendService.getUserSubscription(username);
+      return subscription as SubscriptionTier | null;
     } catch (error) {
       console.error("Failed to get user subscription:", error);
-      return "Free"; // Default to free tier
+      return null;
     }
   },
 
@@ -93,11 +55,8 @@ export const subscriptionService = {
     username: string,
   ): Promise<SubscriptionLimits | null> {
     try {
-      const subscription = await this.getUserSubscription(username);
-      if (!subscription) return null;
-
-      const plan = this.getSubscriptionPlan(subscription);
-      return plan?.limits || null;
+      const limits = await backendService.getUserSubscriptionLimits(username);
+      return limits;
     } catch (error) {
       console.error("Failed to get subscription limits:", error);
       return null;
@@ -109,8 +68,7 @@ export const subscriptionService = {
    */
   async initializeUserSubscription(username: string): Promise<boolean> {
     try {
-      USER_SUBSCRIPTIONS.set(username, "Free");
-      return true;
+      return await backendService.initializeUserSubscription(username);
     } catch (error) {
       console.error("Failed to initialize user subscription:", error);
       return false;
@@ -125,9 +83,14 @@ export const subscriptionService = {
     tier: SubscriptionTier,
   ): Promise<boolean> {
     try {
-      USER_SUBSCRIPTIONS.set(username, tier);
-      console.log(`✅ User ${username} subscription updated to ${tier}`);
-      return true;
+      const success = await backendService.updateUserSubscription(
+        username,
+        tier,
+      );
+      if (success) {
+        console.log(`✅ User ${username} subscription updated to ${tier}`);
+      }
+      return success;
     } catch (error) {
       console.error("Failed to update user subscription:", error);
       return false;
@@ -139,26 +102,15 @@ export const subscriptionService = {
    */
   async redeemCoupon(username: string, couponCode: string): Promise<boolean> {
     try {
-      const coupon = DEMO_COUPONS.find(
-        (c) =>
-          c.code === couponCode && c.is_active && c.current_uses < c.max_uses,
-      );
-
-      if (!coupon) {
+      const success = await backendService.redeemCoupon(username, couponCode);
+      if (success) {
+        console.log(
+          `✅ Coupon ${couponCode} redeemed! User ${username} upgraded`,
+        );
+      } else {
         console.log("❌ Invalid or expired coupon code");
-        return false;
       }
-
-      // Update user subscription to coupon tier
-      USER_SUBSCRIPTIONS.set(username, coupon.coupon_type);
-
-      // Increment coupon usage (demo purposes)
-      coupon.current_uses++;
-
-      console.log(
-        `✅ Coupon ${couponCode} redeemed! User ${username} upgraded to ${coupon.coupon_type}`,
-      );
-      return true;
+      return success;
     } catch (error) {
       console.error("Failed to redeem coupon:", error);
       return false;
@@ -170,7 +122,15 @@ export const subscriptionService = {
    */
   async getAvailableCoupons(): Promise<Coupon[]> {
     try {
-      return DEMO_COUPONS.filter((c) => c.is_active);
+      const coupons = await backendService.getAvailableCoupons();
+      return coupons.map((coupon) => ({
+        code: coupon.code,
+        coupon_type: coupon.coupon_type as SubscriptionTier,
+        is_active: coupon.is_active,
+        max_uses: coupon.max_uses,
+        current_uses: coupon.current_uses,
+        expires_at: coupon.expires_at,
+      }));
     } catch (error) {
       console.error("Failed to get available coupons:", error);
       return [];
@@ -182,11 +142,11 @@ export const subscriptionService = {
    */
   async initializeDemoCoupons(): Promise<boolean> {
     try {
-      console.log(
-        "✅ Demo coupons initialized:",
-        DEMO_COUPONS.map((c) => c.code),
-      );
-      return true;
+      const success = await backendService.initializeDemoCoupons();
+      if (success) {
+        console.log("✅ Demo coupons initialized in backend");
+      }
+      return success;
     } catch (error) {
       console.error("Failed to initialize demo coupons:", error);
       return false;
@@ -288,22 +248,20 @@ export const subscriptionService = {
   },
 
   /**
-   * Get demo coupons for testing (not displayed in UI)
-   */
-  getDemoCoupons(): Coupon[] {
-    return DEMO_COUPONS;
-  },
-
-  /**
    * Log available demo coupons to console (for testing)
    */
-  logDemoCoupons(): void {
-    console.log("🎟️ Available Demo Coupons:");
-    DEMO_COUPONS.forEach((coupon) => {
-      console.log(
-        `- ${coupon.code}: ${coupon.coupon_type} tier (${coupon.max_uses - coupon.current_uses} uses left)`,
-      );
-    });
-    console.log("💡 Use these codes in the coupon redemption section!");
+  async logDemoCoupons(): Promise<void> {
+    try {
+      const coupons = await this.getAvailableCoupons();
+      console.log("🎟️ Available Demo Coupons:");
+      coupons.forEach((coupon) => {
+        console.log(
+          `- ${coupon.code}: ${coupon.coupon_type} tier (${coupon.max_uses - coupon.current_uses} uses left)`,
+        );
+      });
+      console.log("💡 Use these codes in the coupon redemption section!");
+    } catch (error) {
+      console.error("Failed to log demo coupons:", error);
+    }
   },
 };

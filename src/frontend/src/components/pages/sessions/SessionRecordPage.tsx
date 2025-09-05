@@ -333,17 +333,25 @@ export const SessionRecordPage: React.FC = () => {
               {/* Progress Timeline */}
               <div className="mt-4 flex items-center justify-between">
                 <div className="text-muted-foreground text-sm">
-                  Documentation Progress
+                  {uploadedPhotosCount >= maxPhotos
+                    ? "Maximum Reached"
+                    : "Documentation Progress"}
                 </div>
                 <div className="text-muted-foreground text-sm">
-                  {uploadedPhotosCount} of {maxPhotos} photos
+                  {uploadedPhotosCount >= maxPhotos
+                    ? `${uploadedPhotosCount} photos (Max: ${maxPhotos})`
+                    : `${uploadedPhotosCount} of ${maxPhotos} photos`}
                 </div>
               </div>
               <div className="bg-muted mt-2 h-2 rounded-full">
                 <div
-                  className="bg-primary h-2 rounded-full transition-all duration-300"
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    uploadedPhotosCount >= maxPhotos
+                      ? "bg-success"
+                      : "bg-primary"
+                  }`}
                   style={{
-                    width: `${(uploadedPhotosCount / maxPhotos) * 100}%`,
+                    width: `${Math.min((uploadedPhotosCount / maxPhotos) * 100, 100)}%`,
                   }}
                 />
               </div>

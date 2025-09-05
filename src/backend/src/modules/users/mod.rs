@@ -47,6 +47,7 @@ pub fn register_user(username: String, password: String) -> LoginResult {
                 password_hash: simple_hash(&password),
                 created_at: ic_cdk::api::time(),
                 avatar_url: Some(avatar_url),
+                subscription_tier: "Free".to_string(),
             };
 
             users_map.insert(username.clone(), user);

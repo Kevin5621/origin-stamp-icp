@@ -96,11 +96,13 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({
       setSubscriptionLimits(limits);
     } catch (error) {
       console.error("Failed to load user subscription:", error);
-      // Set default to Free tier
-      setCurrentSubscription("Free");
-      setSubscriptionLimits(
-        subscriptionService.getSubscriptionPlan("Free")?.limits || null,
-      );
+      // Only set to Free if this is the first load (no previous state)
+      if (currentSubscription === null) {
+        setCurrentSubscription("Free");
+        setSubscriptionLimits(
+          subscriptionService.getSubscriptionPlan("Free")?.limits || null,
+        );
+      }
     } finally {
       setIsLoading(false);
     }

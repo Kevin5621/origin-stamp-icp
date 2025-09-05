@@ -83,19 +83,27 @@ export const CreateSessionPage: React.FC = () => {
 
     setIsCreating(true);
     try {
+      showSuccess("Creating your art session...");
+
       const sessionId = await PhysicalArtService.createSession(
         user.username,
         artTitle.trim(),
         description.trim() || "No description provided",
       );
 
-      showSuccess("Art session created successfully!");
-      router.push(`/dashboard/sessions/${sessionId}`);
+      showSuccess(
+        `🎨 Session "${artTitle.trim()}" created successfully! You can now start documenting your artwork.`,
+      );
+
+      // Small delay to show success message before redirect
+      setTimeout(() => {
+        router.push(`/dashboard/sessions/${sessionId}`);
+      }, 1500);
     } catch (error) {
       console.error("Failed to create session:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Failed to create session";
-      showError(errorMessage);
+      showError(`Failed to create session: ${errorMessage}`);
     } finally {
       setIsCreating(false);
     }
