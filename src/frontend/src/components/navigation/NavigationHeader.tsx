@@ -21,7 +21,8 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { useProfilePicture } from "@/hooks/useProfilePicture";
-import { Menu, User, LogOut, Settings, Wallet } from "lucide-react";
+import { Menu, User, LogOut, Settings } from "lucide-react";
+import Image from "next/image";
 
 export function NavigationHeader() {
   const { user, logout } = useAuth();
@@ -38,9 +39,13 @@ export function NavigationHeader() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-primary rounded-lg p-2">
-              <Wallet className="text-primary-foreground h-6 w-6" />
-            </div>
+            <Image
+              src="/favicon.ico"
+              alt="OriginStamp Logo"
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
             <span className="text-foreground text-xl font-medium">
               OriginStamp
             </span>
