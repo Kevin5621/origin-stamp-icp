@@ -1,4 +1,5 @@
-import React from "react";
+'use client';
+import React, { useEffect, useState } from "react";
 import { Store, Heart, Eye, Search, Filter, Grid, List } from "lucide-react";
 import {
   Card,
@@ -12,65 +13,107 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { MarketplaceService } from "@/services/marketplaceService";
+import type { NFT } from "@/types/nft";
+
+// Local card view type (decoupled from on-chain NFT type)
+interface MarketplaceCardNFT {
+  id: string;
+  title: string;
+  artist: string;
+  artistAvatar: string;
+  price: string;
+  originalPrice: string | null;
+  status: "available" | "sold" | "auction";
+  views: number;
+  likes: number;
+  category: string;
+  rarity: string; // ("Ultra Rare" | "Rare" | "Common" | etc)
+  thumbnailUrl: string;
+}
+
 export const MarketplacePage: React.FC = () => {
-  const featuredNFTs = [
-    {
-      id: "nft_001",
-      title: "Abstract Digital Art #896",
-      artist: "@digital_artist",
-      artistAvatar: "DA",
-      price: "2.5 ICP",
-      originalPrice: "3.0 ICP",
-      status: "available",
-      views: 1247,
-      likes: 89,
-      category: "Digital Art",
-      rarity: "Rare",
-      thumbnailUrl: "/placeholder-nft-1.jpg",
-    },
-    {
-      id: "nft_002",
-      title: "Modern Landscape #542",
-      artist: "@nature_photographer",
-      artistAvatar: "NP",
-      price: "1.8 ICP",
-      originalPrice: null,
-      status: "available",
-      views: 892,
-      likes: 64,
-      category: "Photography",
-      rarity: "Common",
-      thumbnailUrl: "/placeholder-nft-2.jpg",
-    },
-    {
-      id: "nft_003",
-      title: "Urban Street Art #123",
-      artist: "@street_artist",
-      artistAvatar: "SA",
-      price: "3.2 ICP",
-      originalPrice: null,
-      status: "sold",
-      views: 2156,
-      likes: 156,
-      category: "Street Art",
-      rarity: "Ultra Rare",
-      thumbnailUrl: "/placeholder-nft-3.jpg",
-    },
-    {
-      id: "nft_004",
-      title: "Sculpture Series #001",
-      artist: "@sculptor_bob",
-      artistAvatar: "SB",
-      price: "4.5 ICP",
-      originalPrice: null,
-      status: "available",
-      views: 657,
-      likes: 43,
-      category: "Sculpture",
-      rarity: "Rare",
-      thumbnailUrl: "/placeholder-nft-4.jpg",
-    },
-  ];
+  // Local state for dynamic NFTs
+  const [fetched, setFetched] = useState<NFT[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const nfts = await MarketplaceService.getNFTs();
+        if (mounted) setFetched(nfts);
+      } catch (e) {
+        console.error("Failed to fetch marketplace NFTs", e);
+        if (mounted) setError(e instanceof Error ? e.message : "Failed to load NFTs");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  // Fallback demo data (kept exactly as before for UI consistency when no backend data)
+  // const featuredNFTs = [
+  //   {
+  //     id: "nft_001",
+  //     title: "Abstract Digital Art #896",
+  //     artist: "@digital_artist",
+  //     artistAvatar: "DA",
+  //     price: "2.5 ICP",
+  //     originalPrice: "3.0 ICP",
+  //     status: "available",
+  //     views: 1247,
+  //     likes: 89,
+  //     category: "Digital Art",
+  //     rarity: "Rare",
+  //     thumbnailUrl: "/placeholder-nft-1.jpg",
+  //   },
+  //   {
+  //     id: "nft_002",
+  //     title: "Modern Landscape #542",
+  //     artist: "@nature_photographer",
+  //     artistAvatar: "NP",
+  //     price: "1.8 ICP",
+  //     originalPrice: null,
+  //     status: "available",
+  //     views: 892,
+  //     likes: 64,
+  //     category: "Photography",
+  //     rarity: "Common",
+  //     thumbnailUrl: "/placeholder-nft-2.jpg",
+  //   },
+  //   {
+  //     id: "nft_003",
+  //     title: "Urban Street Art #123",
+  //     artist: "@street_artist",
+  //     artistAvatar: "SA",
+  //     price: "3.2 ICP",
+  //     originalPrice: null,
+  //     status: "sold",
+  //     views: 2156,
+  //     likes: 156,
+  //     category: "Street Art",
+  //     rarity: "Ultra Rare",
+  //     thumbnailUrl: "/placeholder-nft-3.jpg",
+  //   },
+  //   {
+  //     id: "nft_004",
+  //     title: "Sculpture Series #001",
+  //     artist: "@sculptor_bob",
+  //     artistAvatar: "SB",
+  //     price: "4.5 ICP",
+  //     originalPrice: null,
+  //     status: "available",
+  //     views: 657,
+  //     likes: 43,
+  //     category: "Sculpture",
+  //     rarity: "Rare",
+  //     thumbnailUrl: "/placeholder-nft-4.jpg",
+  //   },
+  // ];
 
   const categories = [
     { name: "All", count: 245 },
@@ -128,6 +171,25 @@ export const MarketplacePage: React.FC = () => {
         );
     }
   };
+
+  // Map backend NFTs to card shape (reuse existing fields with safe defaults)
+  const mappedBackend: MarketplaceCardNFT[] = fetched.map<MarketplaceCardNFT>((nft): MarketplaceCardNFT => ({
+    id: nft.id,
+    title: nft.title,
+    artist: nft.creator.username,
+    artistAvatar: nft.creator.avatar || nft.creator.username.slice(0, 2).toUpperCase(),
+    price: `${nft.price.amount} ${nft.price.currency}`,
+    originalPrice: null as string | null,
+    status: nft.status === "for_sale" ? "available" : nft.status === "auction" ? "auction" : "sold",
+    views: nft.views,
+    likes: nft.likes,
+    category: nft.tags[0]?.split(":")[0] || "General",
+    rarity: nft.tags.includes("rarity:Ultra Rare") ? "Ultra Rare" : nft.tags.includes("rarity:Rare") ? "Rare" : "Common",
+    thumbnailUrl: nft.imageUrl,
+  }));
+
+  // Currently we only show fetched NFTs (fallback demo list removed/commented). Add fallback here if desired.
+  const displayNFTs: MarketplaceCardNFT[] = mappedBackend;
 
   return (
     <div className="container mx-auto space-y-6 py-6">
@@ -258,7 +320,7 @@ export const MarketplacePage: React.FC = () => {
 
         <TabsContent value="featured" className="space-y-4">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {featuredNFTs.map((nft) => (
+            {displayNFTs.map((nft: MarketplaceCardNFT) => (
               <Card
                 key={nft.id}
                 className="group overflow-hidden transition-all duration-200 hover:shadow-lg"
