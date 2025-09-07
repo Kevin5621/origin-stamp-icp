@@ -45,20 +45,7 @@ export const DashboardPage: React.FC = () => {
       {/* Metrics Cards */}
       {metrics && <DashboardMetrics metrics={metrics} loading={loading} />}
 
-      {/* Main Content */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Portfolio Chart */}
-        {chartData && (
-          <div className="lg:col-span-2">
-            <PortfolioChart chartData={chartData} loading={loading} />
-          </div>
-        )}
-
-        {/* Quick Actions */}
-        <QuickActions />
-      </div>
-
-      {/* Performance Stats */}
+      {/* Performance Overview - Top Section */}
       {performanceStats && (
         <PerformanceStats
           performanceStats={performanceStats}
@@ -66,74 +53,87 @@ export const DashboardPage: React.FC = () => {
         />
       )}
 
-      {/* Portfolio Overview */}
-      <div className="border-border bg-card rounded-lg border p-6">
-        <h3 className="text-card-foreground mb-4 text-lg font-semibold">
-          Portfolio Overview
-        </h3>
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="bg-muted grid w-full grid-cols-3">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="sessions">Sessions</TabsTrigger>
-            <TabsTrigger value="collection">Collection</TabsTrigger>
-          </TabsList>
+      {/* Main Content Grid */}
+      <div className="grid gap-6 lg:grid-cols-12">
+        {/* Portfolio Overview - Left Side (8 columns) */}
+        <div className="lg:col-span-8">
+          <div className="border-border bg-card rounded-lg border p-6">
+            <h3 className="text-card-foreground mb-4 text-lg font-semibold">
+              Portfolio Overview
+            </h3>
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="bg-muted grid w-full grid-cols-3">
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="sessions">Sessions</TabsTrigger>
+                <TabsTrigger value="collection">Collection</TabsTrigger>
+              </TabsList>
 
-          <TabsContent value="overview" className="mt-6 space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <h4 className="text-card-foreground text-sm font-medium">
-                  Total Art Value
-                </h4>
-                <p className="text-card-foreground text-2xl font-bold">
-                  {metrics
-                    ? `${metrics.portfolio_value_icp.toFixed(2)} ICP`
-                    : "0.00 ICP"}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  {metrics
-                    ? `+${metrics.portfolio_growth_percentage.toFixed(1)}% from last month`
-                    : "No data available"}
-                </p>
-              </div>
-              <div className="space-y-2">
-                <h4 className="text-card-foreground text-sm font-medium">
-                  Active Sessions
-                </h4>
-                <p className="text-card-foreground text-2xl font-bold">
-                  {metrics ? metrics.active_sessions : 0}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  {metrics
-                    ? `${metrics.certificates_created} certificates created`
-                    : "No sessions yet"}
-                </p>
-              </div>
-            </div>
-          </TabsContent>
+              <TabsContent value="overview" className="mt-6 space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <h4 className="text-card-foreground text-sm font-medium">
+                      Total Art Value
+                    </h4>
+                    <p className="text-card-foreground text-2xl font-bold">
+                      {metrics
+                        ? `${metrics.portfolio_value_icp.toFixed(2)} ICP`
+                        : "0.00 ICP"}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {metrics
+                        ? `+${metrics.portfolio_growth_percentage.toFixed(1)}% from last month`
+                        : "No data available"}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-card-foreground text-sm font-medium">
+                      Active Sessions
+                    </h4>
+                    <p className="text-card-foreground text-2xl font-bold">
+                      {metrics ? metrics.active_sessions : 0}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {metrics
+                        ? `${metrics.certificates_created} certificates created`
+                        : "No sessions yet"}
+                    </p>
+                  </div>
+                </div>
+              </TabsContent>
 
-          <TabsContent value="sessions" className="mt-6">
-            <div className="py-8 text-center">
-              <div className="text-muted-foreground bg-muted mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-                🎨
-              </div>
-              <p className="text-muted-foreground">
-                Your art sessions activity will be displayed here
-              </p>
-            </div>
-          </TabsContent>
+              <TabsContent value="sessions" className="mt-6">
+                <div className="py-8 text-center">
+                  <div className="text-muted-foreground bg-muted mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+                    🎨
+                  </div>
+                  <p className="text-muted-foreground">
+                    Your art sessions activity will be displayed here
+                  </p>
+                </div>
+              </TabsContent>
 
-          <TabsContent value="collection" className="mt-6">
-            <div className="py-8 text-center">
-              <div className="text-muted-foreground bg-muted mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-                📦
-              </div>
-              <p className="text-muted-foreground">
-                Your NFT collection overview will be displayed here
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
+              <TabsContent value="collection" className="mt-6">
+                <div className="py-8 text-center">
+                  <div className="text-muted-foreground bg-muted mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+                    📦
+                  </div>
+                  <p className="text-muted-foreground">
+                    Your NFT collection overview will be displayed here
+                  </p>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
+
+        {/* Quick Actions - Right Side (4 columns) */}
+        <div className="lg:col-span-4">
+          <QuickActions />
+        </div>
       </div>
+
+      {/* Portfolio Growth Chart - Full Width Bottom Section */}
+      {chartData && <PortfolioChart chartData={chartData} loading={loading} />}
     </div>
   );
 };
