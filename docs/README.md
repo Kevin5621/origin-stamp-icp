@@ -131,4 +131,4 @@ When contributing to documentation:
 
 ---
 
-_Last updated: December 2024_
+_Last updated: December 2025_

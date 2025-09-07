@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 "originstamp_user_principal",
                 userData.principal,
               );
-            } catch (error) {
+            } catch {
               console.warn(
                 "Invalid principal format detected, migrating user...",
               );
@@ -112,7 +112,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const generateUsernamePrincipal = async () => {
       try {
         const encoder = new TextEncoder();
-        const data = encoder.encode(username + "originstamp_SALT_2024");
+        const data = encoder.encode(username + "originstamp_SALT_2025");
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
 
@@ -177,7 +177,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const encoder = new TextEncoder();
         const data = encoder.encode(
-          userInfo.id + "originstamp_GOOGLE_SALT_2024",
+          userInfo.id + "originstamp_GOOGLE_SALT_2025",
         );
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -237,7 +237,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const generateUsernamePrincipal = async () => {
       try {
         const encoder = new TextEncoder();
-        const data = encoder.encode(username + "originstamp_SALT_2024");
+        const data = encoder.encode(username + "originstamp_SALT_2025");
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
 

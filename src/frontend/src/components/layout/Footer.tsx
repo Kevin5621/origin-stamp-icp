@@ -184,7 +184,7 @@ export function Footer() {
 
         <div className="flex flex-col items-center justify-between md:flex-row">
           <div className="text-muted-foreground mb-6 text-base font-medium md:mb-0">
-            © 2024 OriginStamp, Inc. All rights reserved.
+            © 2025 OriginStamp, Inc. All rights reserved.
           </div>
           <div className="flex space-x-8">
             <Link

@@ -1122,7 +1122,7 @@ export const backendService = {
         );
         // Generate a valid principal from the invalid one
         const encoder = new TextEncoder();
-        const data = encoder.encode(userPrincipal + "originstamp_SALT_2024");
+        const data = encoder.encode(userPrincipal + "originstamp_SALT_2025");
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
 
@@ -1239,13 +1239,13 @@ export const backendService = {
 
       try {
         principal = Principal.fromText(userPrincipal);
-      } catch (error) {
+      } catch {
         console.warn(
           `Invalid principal format: ${userPrincipal}, generating new one...`,
         );
         // Generate a valid principal from the invalid one
         const encoder = new TextEncoder();
-        const data = encoder.encode(userPrincipal + "originstamp_SALT_2024");
+        const data = encoder.encode(userPrincipal + "originstamp_SALT_2025");
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
 

@@ -553,14 +553,14 @@ export const mockSessions = [
     title: "Test Art 1",
     description: "Test description 1",
     status: "completed",
-    createdAt: "2024-01-01T00:00:00Z",
+    createdAt: "2025-01-01T00:00:00Z",
   },
   {
     id: "session-2",
     title: "Test Art 2",
     description: "Test description 2",
     status: "in_progress",
-    createdAt: "2024-01-02T00:00:00Z",
+    createdAt: "2025-01-02T00:00:00Z",
   },
 ];
 ```
