@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   Package,
   Heart,
@@ -339,10 +340,11 @@ export const CollectionPage: React.FC = () => {
                     {/* NFT Image */}
                     <div className="bg-muted/50 relative flex aspect-square items-center justify-center overflow-hidden">
                       {nft.imageUrl ? (
-                        <img
+                        <Image
                           src={nft.imageUrl}
                           alt={nft.title}
-                          className="h-full w-full object-cover"
+                          fill
+                          className="object-cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.style.display = "none";
@@ -504,10 +506,11 @@ export const CollectionPage: React.FC = () => {
                 <Card key={nft.id} className="overflow-hidden">
                   <div className="from-primary/20 to-secondary/20 relative flex aspect-square items-center justify-center overflow-hidden bg-gradient-to-br">
                     {nft.imageUrl ? (
-                      <img
+                      <Image
                         src={nft.imageUrl}
                         alt={nft.title}
-                        className="h-full w-full object-cover"
+                        fill
+                        className="object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = "none";
@@ -581,10 +584,11 @@ export const CollectionPage: React.FC = () => {
                 <Card key={fav.id} className="overflow-hidden">
                   <div className="bg-muted/50 relative flex aspect-square items-center justify-center overflow-hidden">
                     {fav.imageUrl ? (
-                      <img
+                      <Image
                         src={fav.imageUrl}
                         alt={fav.title}
-                        className="h-full w-full object-cover"
+                        fill
+                        className="object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = "none";
