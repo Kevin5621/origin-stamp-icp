@@ -49,6 +49,34 @@ interface BackendActor {
     session_id: string,
     photo_url: string,
   ) => Promise<import("../../../declarations/backend/backend.did").Result_1>;
+  // Verification methods
+  create_verification_request: (
+    session_id: string,
+    asset_urls: string[],
+  ) => Promise<import("../../../declarations/backend/backend.did").Result_1>;
+  get_verification_result: (
+    verification_id: string,
+  ) => Promise<
+    | []
+    | [import("../../../declarations/backend/backend.did").AIVerificationResult]
+  >;
+  get_session_verifications: (
+    session_id: string,
+  ) => Promise<
+    import("../../../declarations/backend/backend.did").AIVerificationResult[]
+  >;
+  update_verification_result: (
+    verification_id: string,
+    result: import("../../../declarations/backend/backend.did").AIVerificationResult,
+  ) => Promise<import("../../../declarations/backend/backend.did").Result_2>;
+  get_pending_verifications: () => Promise<
+    import("../../../declarations/backend/backend.did").AIVerificationResult[]
+  >;
+  manual_verification_override: (
+    verification_id: string,
+    status: string,
+    admin_notes: string,
+  ) => Promise<import("../../../declarations/backend/backend.did").Result_2>;
   // Subscription methods
   get_user_subscription: (
     username: string,
@@ -196,7 +224,7 @@ export async function getBackendActor(): Promise<BackendActor | null> {
 
     // Only fallback to imported backend if it exists
     if (backend) {
-      return backend as BackendActor;
+      return backend as unknown as BackendActor;
     }
 
     return null;
@@ -1307,6 +1335,154 @@ export const backendService = {
       return result;
     } catch (error) {
       console.error("Failed to get user NFTs:", error);
+      throw error;
+    }
+  },
+
+  // ============================================================================
+  // AI VERIFICATION METHODS
+  // ============================================================================
+
+  /**
+   * Create a new AI verification request for a session
+   * @param sessionId Session ID to verify
+   * @param assetUrls Array of asset URLs to verify
+   * @returns Promise with verification request result
+   */
+  async createVerificationRequest(
+    sessionId: string,
+    assetUrls: string[],
+  ): Promise<import("../../../declarations/backend/backend.did").Result_1> {
+    try {
+      await icpAgentService.initialize();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      const result = await backendActor.create_verification_request(
+        sessionId,
+        assetUrls,
+      );
+      console.log("Verification request created:", result);
+      return result;
+    } catch (error) {
+      console.error("Failed to create verification request:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get verification result for a session
+   * @param sessionId Session ID to check
+   * @returns Promise with verification result or null
+   */
+  async getVerificationResult(
+    sessionId: string,
+  ): Promise<
+    | import("../../../declarations/backend/backend.did").AIVerificationResult
+    | null
+  > {
+    try {
+      await icpAgentService.initialize();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      const results = await backendActor.get_session_verifications(sessionId);
+      // Return the most recent verification result
+      return results.length > 0 ? results[results.length - 1] || null : null;
+    } catch (error) {
+      console.error("Failed to get verification result:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Update verification result (for AI worker callback)
+   * @param verificationId Verification ID
+   * @param result AI verification result
+   * @returns Promise with update result
+   */
+  async updateVerificationResult(
+    verificationId: string,
+    result: import("../../../declarations/backend/backend.did").AIVerificationResult,
+  ): Promise<import("../../../declarations/backend/backend.did").Result_2> {
+    try {
+      await icpAgentService.initialize();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      const updateResult = await backendActor.update_verification_result(
+        verificationId,
+        result,
+      );
+      console.log("Verification result updated:", updateResult);
+      return updateResult;
+    } catch (error) {
+      console.error("Failed to update verification result:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get all pending verification requests (admin use)
+   * @returns Promise with array of pending verification requests
+   */
+  async getPendingVerifications(): Promise<
+    import("../../../declarations/backend/backend.did").AIVerificationResult[]
+  > {
+    try {
+      await icpAgentService.initialize();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      const result = await backendActor.get_pending_verifications();
+      return result;
+    } catch (error) {
+      console.error("Failed to get pending verifications:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Manually override verification status (admin use)
+   * @param verificationId Verification ID
+   * @param status New status
+   * @param adminNotes Admin notes
+   * @returns Promise with override result
+   */
+  async manualVerificationOverride(
+    verificationId: string,
+    status: "approved" | "rejected",
+    adminNotes: string,
+  ): Promise<import("../../../declarations/backend/backend.did").Result_2> {
+    try {
+      await icpAgentService.initialize();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      const result = await backendActor.manual_verification_override(
+        verificationId,
+        status,
+        adminNotes,
+      );
+      console.log("Manual verification override:", result);
+      return result;
+    } catch (error) {
+      console.error("Failed to perform manual verification override:", error);
       throw error;
     }
   },

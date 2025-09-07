@@ -31,6 +31,11 @@ import {
 import { NFTService, type NFTMintingResult } from "@/services/nftService";
 import { useAuth } from "@/contexts/AuthContext";
 import SortableImageUpload from "@/components/file-upload/sortable";
+import { VerificationCard } from "@/components/verification/VerificationComponents";
+import {
+  VerificationService,
+  type VerificationResult,
+} from "@/services/verificationService";
 
 export const SessionRecordPage: React.FC = () => {
   const params = useParams();
@@ -48,7 +53,31 @@ export const SessionRecordPage: React.FC = () => {
     null,
   );
 
+  // Verification state
+  const [verification, setVerification] = useState<VerificationResult | null>(
+    null,
+  );
+  const [isLoadingVerification, setIsLoadingVerification] = useState(false);
+
   const sessionId = params.sessionId as string;
+
+  // Verification handlers (define early)
+  const loadVerification = useCallback(async () => {
+    if (!sessionId) return;
+
+    setIsLoadingVerification(true);
+    try {
+      console.log("Loading verification for session:", sessionId);
+      const result = await VerificationService.getVerificationResult(sessionId);
+      console.log("Loaded verification result:", result);
+      setVerification(result);
+    } catch (error) {
+      console.error("Failed to load verification:", error);
+      setVerification(null);
+    } finally {
+      setIsLoadingVerification(false);
+    }
+  }, [sessionId]);
 
   const loadSessionDetails = useCallback(async () => {
     if (!sessionId) return;
@@ -74,8 +103,9 @@ export const SessionRecordPage: React.FC = () => {
     if (sessionId) {
       loadSessionDetails();
       checkS3Configuration();
+      loadVerification(); // Load verification on mount
     }
-  }, [sessionId, loadSessionDetails]);
+  }, [sessionId, loadSessionDetails, loadVerification]);
 
   const checkS3Configuration = async () => {
     try {
@@ -403,6 +433,97 @@ export const SessionRecordPage: React.FC = () => {
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* AI Verification Section */}
+        {uploadedPhotosCount > 0 && (
+          <div className="w-full">
+            <VerificationCard
+              verification={verification}
+              loading={isLoadingVerification}
+              onRequestVerification={async () => {
+                setIsLoadingVerification(true);
+                try {
+                  // Get asset URLs from session
+                  const assetUrls = session.uploaded_photos;
+
+                  if (assetUrls.length === 0) {
+                    showError("No photos uploaded for verification");
+                    setIsLoadingVerification(false);
+                    return;
+                  }
+
+                  // Create verification request
+                  const verificationId =
+                    await VerificationService.createVerificationRequest(
+                      sessionId,
+                      assetUrls,
+                    );
+                  showSuccess(
+                    "AI verification request submitted successfully!",
+                  );
+
+                  // Poll for results with timeout
+                  let pollCount = 0;
+                  const maxPolls = 20; // Max 20 polls (60 seconds)
+
+                  const pollForResults = async () => {
+                    try {
+                      pollCount++;
+                      console.log(
+                        `Polling verification results... (${pollCount}/${maxPolls})`,
+                      );
+
+                      const result =
+                        await VerificationService.getVerificationResult(
+                          sessionId,
+                        );
+                      console.log("Verification result:", result);
+
+                      if (result && result.status !== "Pending") {
+                        setVerification(result);
+                        setIsLoadingVerification(false);
+                        showSuccess(
+                          `AI verification completed! Score: ${result.final_score}%`,
+                        );
+                        return;
+                      }
+
+                      // Check if we've exceeded max polls
+                      if (pollCount >= maxPolls) {
+                        setIsLoadingVerification(false);
+                        showError(
+                          "Verification is taking longer than expected. Please check back later.",
+                        );
+                        return;
+                      }
+
+                      // Continue polling if still pending
+                      setTimeout(pollForResults, 3000);
+                    } catch (error) {
+                      console.error(
+                        "Failed to poll verification results:",
+                        error,
+                      );
+                      setIsLoadingVerification(false);
+                      showError("Failed to get verification results");
+                    }
+                  };
+
+                  // Start polling after a short delay
+                  setTimeout(pollForResults, 2000);
+                } catch (error) {
+                  console.error(
+                    "Failed to create verification request:",
+                    error,
+                  );
+                  setIsLoadingVerification(false);
+                  showError("Failed to submit verification request");
+                }
+              }}
+              showAdminControls={false}
+            />
+          </div>
         )}
 
         {/* Bento Grid for Action Cards */}

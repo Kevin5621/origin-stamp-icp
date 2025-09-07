@@ -1,6 +1,9 @@
 # Various IDEs and Editors
 .idea/
 **/*~
+.vscode/
+*.swp
+*.swo
 
 # Mac OSX temporary files
 .DS_Store
@@ -14,11 +17,75 @@
 
 # rust
 target/
+Cargo.lock
 
 # frontend code
 node_modules/
 dist/
 .svelte-kit/
+.next/
+out/
+build/
 
 # environment variables
 .env
+.env.local
+.env.production
+
+# AI Verification Worker
+services/ai-verification-worker/venv/
+services/ai-verification-worker/__pycache__/
+services/ai-verification-worker/*.pyc
+services/ai-verification-worker/*.pyo
+services/ai-verification-worker/*.pyd
+services/ai-verification-worker/.Python
+services/ai-verification-worker/*.log
+services/ai-verification-worker/*.pid
+services/ai-verification-worker/models/
+services/ai-verification-worker/temp/
+services/ai-verification-worker/.pytest_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ML Models and Data
+*.pkl
+*.joblib
+*.h5
+*.pb
+*.onnx
+*.tflite
+checkpoints/
+logs/
+tensorboard/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

@@ -80,6 +80,24 @@ while true; do
     dfx deploy
     sleep 5
     bash scripts/setup-s3.sh || true
+    
+    # Setup AI Verification Worker
+    echo "🤖 Setting up AI Verification Worker..."
+    pushd services/ai-verification-worker/ > /dev/null
+    if [ ! -d "venv" ]; then
+        echo "📦 Creating Python virtual environment..."
+        python3 -m venv venv
+    fi
+    source venv/bin/activate
+    pip install -r requirements.txt || true
+    
+    # Start AI worker in background
+    echo "🚀 Starting AI Verification Worker (background)..."
+    nohup python3 worker.py > worker.log 2>&1 &
+    echo $! > worker.pid
+    echo "✅ AI Worker started with PID $(cat worker.pid)"
+    popd > /dev/null
+    
     echo "🌐 Starting frontend..."
     pushd src/frontend/ > /dev/null
     timeout 2700 npm start || true

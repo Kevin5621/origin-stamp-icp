@@ -1,3 +1,25 @@
+type AIVerificationAsset = record {
+  sha256 : text;
+  content_type : text;
+  step_index : nat64;
+  s3_url : text;
+  asset_id : text;
+};
+type AIVerificationResult = record {
+  status : VerificationStatus;
+  evidence_urls : vec text;
+  model_version : text;
+  session_id : text;
+  breakdown : vec record { text; float64 };
+  assets : vec AIVerificationAsset;
+  created_at : nat64;
+  anomaly_count : nat32;
+  final_score : float64;
+  base_similarity : float64;
+  notes : vec text;
+  checked_at : nat64;
+  verification_id : text;
+};
 type Account = record { owner : principal; subaccount : opt blob };
 type Certificate = record {
   nft_id : opt text;
@@ -168,10 +190,13 @@ type VerificationResult = record {
   score : nat32;
   details : text;
 };
+type VerificationStatus = variant { Rejected; ReviewNeeded; Verified; Pending };
 service : () -> {
   configure_s3 : (S3Config) -> (bool);
   create_coupon : (text, CouponType, nat32, nat64) -> (Result);
   create_physical_art_session : (text, text, text) -> (Result_1);
+  create_verification_request : (text, vec text) -> (Result_1);
+  delete_verification_asset : (text, text) -> (Result);
   generate_certificate : (CreateCertificateRequest) -> (Result_2);
   generate_nft_for_certificate : (text) -> (Result_3);
   generate_upload_url : (text, UploadFileData) -> (Result_1);
@@ -184,12 +209,14 @@ service : () -> {
   get_certificate_nft_metadata : (text) -> (opt text) query;
   get_dashboard_metrics : () -> (DashboardMetrics) query;
   get_nft_metadata : (text) -> (opt text) query;
+  get_pending_verifications : () -> (vec AIVerificationResult) query;
   get_recent_sessions : (nat64) -> (vec PhysicalArtSession) query;
   get_s3_config : () -> (opt S3Config) query;
   get_s3_config_status : () -> (bool) query;
   get_session_count : () -> (nat64) query;
   get_session_details : (text) -> (opt PhysicalArtSession) query;
   get_session_nfts : (text) -> (vec Token) query;
+  get_session_verifications : (text) -> (vec AIVerificationResult) query;
   get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   get_token_details : (nat64) -> (opt Token) query;
   get_user_activity_timeline : (text, nat64) -> (vec UserActivity) query;
@@ -205,6 +232,8 @@ service : () -> {
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
   get_user_subscription : (text) -> (opt CouponType) query;
   get_user_subscription_debug : (text) -> (opt CouponType) query;
+  get_verification_result : (text) -> (opt AIVerificationResult) query;
+  get_verification_stats : () -> (nat64, nat64, nat64, nat64) query;
   icrc7_balance_of : (vec Account) -> (vec nat64) query;
   icrc7_collection_metadata : () -> (CollectionMetadata) query;
   icrc7_description : () -> (opt text) query;
@@ -219,6 +248,12 @@ service : () -> {
   initialize_demo_coupons : () -> (Result);
   initialize_user_subscription : (text) -> (Result);
   login : (text, text) -> (LoginResult);
+  manual_verification_override : (
+      text,
+      VerificationStatus,
+      text,
+      opt float64,
+    ) -> (Result);
   mint_certificate_nft : (text, Account) -> (Result_5);
   mint_nft_from_session : (text, Account, vec record { text; text }) -> (
       Result_5,
@@ -236,6 +271,16 @@ service : () -> {
   update_user_avatar : (text, text) -> (Result);
   update_user_subscription : (text, CouponType) -> (Result);
   update_username : (text, text, text) -> (LoginResult);
+  update_verification_result : (
+      text,
+      VerificationStatus,
+      float64,
+      float64,
+      nat32,
+      vec record { text; float64 },
+      vec text,
+      vec text,
+    ) -> (Result);
   upload_photo_to_session : (text, text) -> (Result);
   verify_certificate : (text) -> (Result_6);
 }
