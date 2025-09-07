@@ -32,6 +32,12 @@ type CertificateMetadata = record {
   creation_tools : vec text;
   total_actions : nat32;
 };
+type ChartDataPoint = record {
+  certificates_created : nat64;
+  sessions_completed : nat64;
+  date : text;
+  portfolio_value : float64;
+};
 type CollectionMetadata = record {
   name : text;
   description : opt text;
@@ -127,6 +133,36 @@ type UploadFileData = record {
   file_size : nat64;
   filename : text;
 };
+type UserActivity = record {
+  id : text;
+  status : text;
+  activity_type : text;
+  title : text;
+  metadata : text;
+  description : text;
+  timestamp : nat64;
+};
+type UserChartData = record { period : text; data : vec ChartDataPoint };
+type UserDashboardData = record {
+  metrics : UserDashboardMetrics;
+  recent_activities : vec UserActivity;
+  chart_data : UserChartData;
+  performance_stats : UserPerformanceStats;
+};
+type UserDashboardMetrics = record {
+  total_sessions : nat64;
+  certificates_created : nat64;
+  active_sessions : nat64;
+  nfts_owned : nat64;
+  portfolio_growth_percentage : float64;
+  portfolio_value_icp : float64;
+};
+type UserPerformanceStats = record {
+  avg_verification_score : float64;
+  success_rate : float64;
+  top_artwork : text;
+  total_uploads : nat64;
+};
 type VerificationResult = record {
   valid : bool;
   score : nat32;
@@ -156,11 +192,16 @@ service : () -> {
   get_session_nfts : (text) -> (vec Token) query;
   get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   get_token_details : (nat64) -> (opt Token) query;
+  get_user_activity_timeline : (text, nat64) -> (vec UserActivity) query;
   get_user_avatar : (text) -> (opt text) query;
   get_user_certificates : (text) -> (vec Certificate) query;
+  get_user_chart_data : (text, text) -> (opt UserChartData) query;
   get_user_count : () -> (nat64) query;
+  get_user_dashboard_data : (text) -> (opt UserDashboardData) query;
+  get_user_dashboard_metrics : (text) -> (opt UserDashboardMetrics) query;
   get_user_info : (text) -> (opt record { text; nat64 }) query;
   get_user_nfts : (principal) -> (vec Token) query;
+  get_user_performance_stats : (text) -> (opt UserPerformanceStats) query;
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
   get_user_subscription : (text) -> (opt CouponType) query;
   get_user_subscription_debug : (text) -> (opt CouponType) query;

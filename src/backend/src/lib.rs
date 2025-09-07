@@ -14,9 +14,10 @@ pub use modules::nft::mint_certificate_nft;
 
 // Re-export all types needed for Candid interface
 pub use types::{
-    Account, Certificate, CollectionMetadata, CreateCertificateRequest, LoginResult,
-    NFTGenerationResult, PhysicalArtSession, S3Config, Token, TokenMetadata, TransferRequest,
-    TransferResponse, UploadFileData, VerificationResult,
+    Account, Certificate, ChartDataPoint, CollectionMetadata, CreateCertificateRequest,
+    LoginResult, NFTGenerationResult, PhysicalArtSession, S3Config, Token, TokenMetadata,
+    TransferRequest, TransferResponse, UploadFileData, UserActivity, UserChartData,
+    UserDashboardData, UserDashboardMetrics, UserPerformanceStats, VerificationResult,
 };
 
 // Dashboard metrics structure

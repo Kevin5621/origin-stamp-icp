@@ -5,6 +5,53 @@ export interface DashboardMetrics {
   total_certificates: number;
 }
 
+// New user-specific dashboard types
+export interface UserDashboardMetrics {
+  total_sessions: number;
+  active_sessions: number;
+  certificates_created: number;
+  nfts_owned: number;
+  portfolio_value_icp: number;
+  portfolio_growth_percentage: number;
+}
+
+export interface ChartDataPoint {
+  date: string;
+  portfolio_value: number;
+  certificates_created: number;
+  sessions_completed: number;
+}
+
+export interface UserChartData {
+  period: string; // "7d", "30d", "90d", "1y"
+  data: ChartDataPoint[];
+}
+
+export interface UserActivity {
+  id: string;
+  activity_type: string; // "session", "certificate", "nft", "purchase"
+  title: string;
+  description: string;
+  timestamp: number;
+  status: string; // "completed", "pending", "failed"
+  metadata: string; // JSON string
+}
+
+export interface UserPerformanceStats {
+  avg_verification_score: number;
+  total_uploads: number;
+  success_rate: number;
+  top_artwork: string;
+}
+
+export interface UserDashboardData {
+  metrics: UserDashboardMetrics;
+  chart_data: UserChartData;
+  recent_activities: UserActivity[];
+  performance_stats: UserPerformanceStats;
+}
+
+// Legacy types for backward compatibility
 export interface DashboardData {
   metrics: DashboardMetrics;
   recent_activities: RecentActivity[];

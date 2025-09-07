@@ -104,6 +104,50 @@ interface BackendActor {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     principal: any,
   ) => Promise<import("../../../declarations/backend/backend.did").Token[]>;
+  // Dashboard methods
+  get_user_dashboard_metrics: (
+    username: string,
+  ) => Promise<
+    | []
+    | [import("../../../declarations/backend/backend.did").UserDashboardMetrics]
+  >;
+  get_user_chart_data: (
+    username: string,
+    period: string,
+  ) => Promise<
+    [] | [import("../../../declarations/backend/backend.did").UserChartData]
+  >;
+  get_user_activity_timeline: (
+    username: string,
+    limit: bigint,
+  ) => Promise<
+    import("../../../declarations/backend/backend.did").UserActivity[]
+  >;
+  get_user_performance_stats: (
+    username: string,
+  ) => Promise<
+    | []
+    | [import("../../../declarations/backend/backend.did").UserPerformanceStats]
+  >;
+  get_user_dashboard_data: (
+    username: string,
+  ) => Promise<
+    [] | [import("../../../declarations/backend/backend.did").UserDashboardData]
+  >;
+  // Additional methods needed by dashboard service
+  get_dashboard_metrics: () => Promise<
+    import("../../../declarations/backend/backend.did").DashboardMetrics
+  >;
+  get_recent_sessions: (
+    limit: bigint,
+  ) => Promise<
+    import("../../../declarations/backend/backend.did").PhysicalArtSession[]
+  >;
+  get_user_certificates: (
+    username: string,
+  ) => Promise<
+    import("../../../declarations/backend/backend.did").Certificate[]
+  >;
 }
 
 // Initialize ICP agent for proper connection (only on client-side)
@@ -1116,7 +1160,7 @@ export const backendService = {
 
       try {
         principal = Principal.fromText(userPrincipal);
-      } catch (error) {
+      } catch {
         console.warn(
           `Invalid principal format: ${userPrincipal}, generating new one...`,
         );
