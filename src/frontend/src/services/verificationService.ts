@@ -2,8 +2,13 @@ import { backendService } from "./backendService";
 import type {
   AIVerificationResult as BackendVerificationResult,
   VerificationStatus as BackendVerificationStatus,
-  AIVerificationAsset as BackendVerificationAsset,
 } from "../../../declarations/backend/backend.did.d.ts";
+
+// Import types for internal use
+import type {
+  VerificationResult,
+  VerificationStatus,
+} from "../types/verification";
 
 // Re-export types from centralized location
 export type {
