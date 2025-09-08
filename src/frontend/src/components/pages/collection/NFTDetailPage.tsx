@@ -26,6 +26,9 @@ import {
 import Image from "next/image";
 import { useToastContext } from "@/contexts/ToastContext";
 import { backendService } from "@/services/backendService";
+import { VerificationContainer } from "@/components/verification/VerificationContainer";
+import { VerificationService } from "@/services/verificationService";
+import { type VerificationResult } from "@/types/verification";
 
 interface NFTData {
   id: string;
@@ -54,6 +57,10 @@ interface NFTData {
     likes: number;
     createdAt: string;
   };
+  verification: {
+    preview_verification?: VerificationResult;
+    final_verification?: VerificationResult;
+  };
 }
 
 export const NFTDetailPage: React.FC = () => {
@@ -63,9 +70,25 @@ export const NFTDetailPage: React.FC = () => {
 
   const [nftData, setNftData] = useState<NFTData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingVerification, setIsLoadingVerification] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
   const nftId = params.nftId as string;
+
+  const loadVerificationData = useCallback(async (sessionId: string) => {
+    if (!sessionId) return null;
+
+    setIsLoadingVerification(true);
+    try {
+      const result = await VerificationService.getVerificationResult(sessionId);
+      return result;
+    } catch (error) {
+      console.error("Failed to load verification:", error);
+      return null;
+    } finally {
+      setIsLoadingVerification(false);
+    }
+  }, []);
 
   const loadNFTDetails = useCallback(async () => {
     setIsLoading(true);
@@ -83,6 +106,14 @@ export const NFTDetailPage: React.FC = () => {
           token.session_id[0]
             ? await backendService.getSessionDetails(token.session_id[0])
             : null;
+
+        // Load verification data
+        const sessionId = Array.isArray(token.session_id)
+          ? token.session_id[0] || ""
+          : "";
+        const verificationData = sessionId
+          ? await loadVerificationData(sessionId)
+          : null;
 
         const nft: NFTData = {
           id: token.id.toString(),
@@ -123,6 +154,22 @@ export const NFTDetailPage: React.FC = () => {
               Number(token.created_at) / 1000000,
             ).toISOString(),
           },
+          verification: {
+            preview_verification: verificationData
+              ? {
+                  ...verificationData,
+                  verification_type: "preview" as const,
+                  is_final_verification: false,
+                }
+              : undefined,
+            final_verification: verificationData
+              ? {
+                  ...verificationData,
+                  verification_type: "final" as const,
+                  is_final_verification: true,
+                }
+              : undefined,
+          },
         };
 
         setNftData(nft);
@@ -136,7 +183,7 @@ export const NFTDetailPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [nftId, showError, router]);
+  }, [nftId, showError, router, loadVerificationData]);
 
   useEffect(() => {
     if (nftId) {
@@ -413,6 +460,31 @@ export const NFTDetailPage: React.FC = () => {
               </CardContent>
             </Card>
           )}
+
+          {/* AI Verification Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">AI Verification</h3>
+            <div className="grid gap-4">
+              <VerificationContainer
+                verification={nftData.verification.preview_verification || null}
+                verificationType="preview"
+                loading={isLoadingVerification}
+                onViewDetails={() => {
+                  // TODO: Implement detailed verification view
+                  console.log("View preview verification details");
+                }}
+              />
+              <VerificationContainer
+                verification={nftData.verification.final_verification || null}
+                verificationType="final"
+                loading={isLoadingVerification}
+                onViewDetails={() => {
+                  // TODO: Implement detailed verification view
+                  console.log("View final verification details");
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

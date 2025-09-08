@@ -31,7 +31,7 @@ import {
 import { NFTService, type NFTMintingResult } from "@/services/nftService";
 import { useAuth } from "@/contexts/AuthContext";
 import SortableImageUpload from "@/components/file-upload/sortable";
-import { VerificationCard } from "@/components/verification/VerificationComponents";
+import { VerificationContainer } from "@/components/verification/VerificationContainer";
 import {
   VerificationService,
   type VerificationResult,
@@ -62,28 +62,36 @@ export const SessionRecordPage: React.FC = () => {
   const sessionId = params.sessionId as string;
 
   // Verification handlers (define early)
-  const loadVerification = useCallback(async (forceRefresh = false) => {
-    if (!sessionId) return;
+  const loadVerification = useCallback(
+    async (forceRefresh = false) => {
+      if (!sessionId) return;
 
-    setIsLoadingVerification(true);
-    try {
-      console.log("Loading verification for session:", sessionId, forceRefresh ? "(force refresh)" : "");
-      
-      // Add timestamp to force refresh if needed
-      const result = await VerificationService.getVerificationResult(sessionId);
-      console.log("Loaded verification result:", result);
-      
-      // Only update if we got a result or if we're forcing refresh
-      if (result || forceRefresh) {
-        setVerification(result);
+      setIsLoadingVerification(true);
+      try {
+        console.log(
+          "Loading verification for session:",
+          sessionId,
+          forceRefresh ? "(force refresh)" : "",
+        );
+
+        // Add timestamp to force refresh if needed
+        const result =
+          await VerificationService.getVerificationResult(sessionId);
+        console.log("Loaded verification result:", result);
+
+        // Only update if we got a result or if we're forcing refresh
+        if (result || forceRefresh) {
+          setVerification(result);
+        }
+      } catch (error) {
+        console.error("Failed to load verification:", error);
+        setVerification(null);
+      } finally {
+        setIsLoadingVerification(false);
       }
-    } catch (error) {
-      console.error("Failed to load verification:", error);
-      setVerification(null);
-    } finally {
-      setIsLoadingVerification(false);
-    }
-  }, [sessionId]);
+    },
+    [sessionId],
+  );
 
   const loadSessionDetails = useCallback(async () => {
     if (!sessionId) return;
@@ -455,14 +463,16 @@ export const SessionRecordPage: React.FC = () => {
                 🔄 Force Refresh Verification
               </Button>
               {verification && (
-                <div className="text-sm text-muted-foreground">
-                  Status: {verification.status} | Score: {verification.final_score}%
+                <div className="text-muted-foreground text-sm">
+                  Status: {verification.status} | Score:{" "}
+                  {verification.final_score}%
                 </div>
               )}
             </div>
-            
-            <VerificationCard
+
+            <VerificationContainer
               verification={verification}
+              verificationType="preview"
               loading={isLoadingVerification}
               onRequestVerification={async () => {
                 setIsLoadingVerification(true);
@@ -550,7 +560,6 @@ export const SessionRecordPage: React.FC = () => {
                   showError("Failed to submit verification request");
                 }
               }}
-              showAdminControls={false}
             />
           </div>
         )}

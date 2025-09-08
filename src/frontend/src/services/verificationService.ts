@@ -5,43 +5,14 @@ import type {
   AIVerificationAsset as BackendVerificationAsset,
 } from "../../../declarations/backend/backend.did.d.ts";
 
-// Frontend types
-export interface VerificationResult {
-  verification_id: string;
-  session_id: string;
-  assets: VerificationAsset[];
-  status: VerificationStatus;
-  final_score: number;
-  base_similarity: number;
-  anomaly_count: number;
-  breakdown: Record<string, number>;
-  model_version: string;
-  evidence_urls: string[];
-  checked_at: number;
-  created_at: number;
-  notes: string[];
-}
-
-export interface VerificationAsset {
-  asset_id: string;
-  s3_url: string;
-  step_index: number;
-  sha256: string;
-  content_type: string;
-}
-
-export type VerificationStatus =
-  | "Pending"
-  | "Verified"
-  | "ReviewNeeded"
-  | "Rejected";
-
-export interface VerificationStats {
-  total: number;
-  pending: number;
-  verified: number;
-  rejected: number;
-}
+// Re-export types from centralized location
+export type {
+  VerificationResult,
+  VerificationAsset,
+  VerificationStatus,
+  VerificationStats,
+  VerificationType,
+} from "../types/verification";
 
 /**
  * AI Verification Service - Handles verification requests and results
@@ -236,6 +207,10 @@ export class VerificationService {
       checked_at: Number(backendResult.checked_at),
       created_at: Number(backendResult.created_at),
       notes: backendResult.notes,
+      // New fields for NFT integration
+      verification_type: "preview" as const, // Default to preview, can be overridden
+      nft_id: undefined,
+      is_final_verification: false,
     };
   }
 
