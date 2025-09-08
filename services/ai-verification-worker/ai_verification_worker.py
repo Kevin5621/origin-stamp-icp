@@ -211,15 +211,15 @@ class AIVerificationWorker:
             breakdown_items = []
             for key, value in breakdown_list:
                 breakdown_items.append(f'record {{"{key}"; {value}}}')
-            breakdown_candid = f"vec {{{', '.join(breakdown_items)}}}"
+            breakdown_candid = f"vec {{{'; '.join(breakdown_items)}}}"
             
             # Format evidence URLs for Candid
-            evidence_candid = "vec {}" if not evidence_urls else f"vec {{{', '.join([f'\"{url}\"' for url in evidence_urls])}}}"
+            evidence_candid = "vec {}" if not evidence_urls else f"vec {{{'; '.join([f'\"{url}\"' for url in evidence_urls])}}}"
             
             # Format notes for Candid
-            notes_candid = "vec {}" if not notes else f"vec {{{', '.join([f'\"{note}\"' for note in notes])}}}"
+            notes_candid = "vec {}" if not notes else f"vec {{{'; '.join([f'\"{note}\"' for note in notes])}}}"
             
-            # Build dfx command
+            # Build dfx command with proper Candid formatting
             cmd = [
                 "dfx", "canister", "call",
                 "--network", self.network,
@@ -227,6 +227,9 @@ class AIVerificationWorker:
                 "update_verification_result",
                 f'("{verification_id}", {status_variant}, {final_score}, {base_similarity}, {anomaly_count}, {breakdown_candid}, {evidence_candid}, {notes_candid})'
             ]
+            
+            # Log the command for debugging
+            logger.info(f"DFX Command: {' '.join(cmd)}")
             
             logger.info(f"Updating verification {verification_id} with score {final_score}")
             

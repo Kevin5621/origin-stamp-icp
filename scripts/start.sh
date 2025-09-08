@@ -91,11 +91,41 @@ while true; do
     source venv/bin/activate
     pip install -r requirements.txt || true
     
-    # Start AI worker in background
+    # Start AI worker in background with auto-restart
     echo "🚀 Starting AI Verification Worker (background)..."
-    nohup python3 worker.py > worker.log 2>&1 &
-    echo $! > worker.pid
-    echo "✅ AI Worker started with PID $(cat worker.pid)"
+    
+    # Function to start worker
+    start_ai_worker() {
+        nohup python3 ai_verification_worker.py > ai_verification_worker.log 2>&1 &
+        echo $! > ai_verification_worker.pid
+        echo "✅ AI Worker started with PID $(cat ai_verification_worker.pid)"
+    }
+    
+    # Function to check if worker is running
+    is_worker_running() {
+        if [ -f "ai_verification_worker.pid" ]; then
+            local pid=$(cat ai_verification_worker.pid)
+            ps -p $pid > /dev/null 2>&1
+        else
+            false
+        fi
+    }
+    
+    # Start worker initially
+    start_ai_worker
+    
+    # Start monitoring in background
+    (
+        while true; do
+            sleep 30
+            if ! is_worker_running; then
+                echo "🔄 AI Worker not running, restarting..."
+                start_ai_worker
+            fi
+        done
+    ) &
+    echo $! > ai_worker_monitor.pid
+    echo "📡 AI Worker monitor started with PID $(cat ai_worker_monitor.pid)"
     popd > /dev/null
     
     echo "🌐 Starting frontend..."

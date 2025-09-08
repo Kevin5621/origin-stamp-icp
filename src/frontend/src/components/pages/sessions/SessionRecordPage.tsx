@@ -62,15 +62,21 @@ export const SessionRecordPage: React.FC = () => {
   const sessionId = params.sessionId as string;
 
   // Verification handlers (define early)
-  const loadVerification = useCallback(async () => {
+  const loadVerification = useCallback(async (forceRefresh = false) => {
     if (!sessionId) return;
 
     setIsLoadingVerification(true);
     try {
-      console.log("Loading verification for session:", sessionId);
+      console.log("Loading verification for session:", sessionId, forceRefresh ? "(force refresh)" : "");
+      
+      // Add timestamp to force refresh if needed
       const result = await VerificationService.getVerificationResult(sessionId);
       console.log("Loaded verification result:", result);
-      setVerification(result);
+      
+      // Only update if we got a result or if we're forcing refresh
+      if (result || forceRefresh) {
+        setVerification(result);
+      }
     } catch (error) {
       console.error("Failed to load verification:", error);
       setVerification(null);
@@ -438,6 +444,23 @@ export const SessionRecordPage: React.FC = () => {
         {/* AI Verification Section */}
         {uploadedPhotosCount > 0 && (
           <div className="w-full">
+            {/* Debug: Manual Refresh Button */}
+            <div className="mb-4 flex gap-2">
+              <Button
+                onClick={() => loadVerification(true)}
+                variant="outline"
+                size="sm"
+                disabled={isLoadingVerification}
+              >
+                🔄 Force Refresh Verification
+              </Button>
+              {verification && (
+                <div className="text-sm text-muted-foreground">
+                  Status: {verification.status} | Score: {verification.final_score}%
+                </div>
+              )}
+            </div>
+            
             <VerificationCard
               verification={verification}
               loading={isLoadingVerification}
@@ -487,6 +510,12 @@ export const SessionRecordPage: React.FC = () => {
                           `AI verification completed! Score: ${result.final_score}%`,
                         );
                         return;
+                      }
+
+                      // If still pending, force refresh the verification data
+                      if (result && result.status === "Pending") {
+                        console.log("Still pending, forcing refresh...");
+                        await loadVerification(true);
                       }
 
                       // Check if we've exceeded max polls
