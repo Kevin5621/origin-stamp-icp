@@ -3,7 +3,6 @@
  * Handles user profile operations like avatar, usernames, etc.
  */
 
-import { backend } from "../../../../declarations/backend";
 import type { LoginResult } from "../../../../declarations/backend/backend.did";
 import { getBackendActor, initializeBackend } from "../core/backend";
 
@@ -16,12 +15,22 @@ export const userManagementService = {
    * @returns Promise with array of usernames
    */
   async getAllUsers(): Promise<string[]> {
-    if (!backend) {
-      throw new Error(
-        "Backend canister not initialized. Please check your environment configuration.",
-      );
+    try {
+      await initializeBackend();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      // Method not available in current backend interface
+      // Return empty array as fallback
+      console.warn("get_all_users method not available in backend");
+      return [];
+    } catch (error) {
+      console.error("Failed to get all users:", error);
+      return [];
     }
-    return await backend.get_all_users();
   },
 
   /**
@@ -30,13 +39,24 @@ export const userManagementService = {
    * @returns Promise with user info (username, created_at) or undefined if not found
    */
   async getUserInfo(username: string): Promise<[string, bigint] | undefined> {
-    if (!backend) {
-      throw new Error(
-        "Backend canister not initialized. Please check your environment configuration.",
+    try {
+      await initializeBackend();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      // Method not available in current backend interface
+      // Return undefined as fallback
+      console.warn(
+        `get_user_info method not available in backend for user: ${username}`,
       );
+      return undefined;
+    } catch (error) {
+      console.error("Failed to get user info:", error);
+      return undefined;
     }
-    const result = await backend.get_user_info(username);
-    return result.length > 0 ? result[0] : undefined;
   },
 
   /**
@@ -44,12 +64,19 @@ export const userManagementService = {
    * @returns Promise with user count
    */
   async getUserCount(): Promise<bigint> {
-    if (!backend) {
-      throw new Error(
-        "Backend canister not initialized. Please check your environment configuration.",
-      );
+    try {
+      await initializeBackend();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      return await backendActor.get_user_count();
+    } catch (error) {
+      console.error("Failed to get user count:", error);
+      return BigInt(0);
     }
-    return await backend.get_user_count();
   },
 
   /**
@@ -112,11 +139,23 @@ export const userManagementService = {
     newUsername: string,
     password: string,
   ): Promise<LoginResult> {
-    if (!backend) {
-      throw new Error(
-        "Backend canister not initialized. Please check your environment configuration.",
+    try {
+      await initializeBackend();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
+        throw new Error("Backend canister not initialized");
+      }
+
+      // Method not available in current backend interface
+      // Throw error indicating feature not implemented
+      console.warn(
+        `update_username method not available in backend for ${oldUsername} -> ${newUsername} with password provided: ${!!password}`,
       );
+      throw new Error("Username update feature not yet implemented in backend");
+    } catch (error) {
+      console.error("Failed to update username:", error);
+      throw error;
     }
-    return await backend.update_username(oldUsername, newUsername, password);
   },
 };

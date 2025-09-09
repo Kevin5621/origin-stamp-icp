@@ -6,8 +6,8 @@
 import { backend } from "../../../../declarations/backend";
 import { idlFactory } from "../../../../declarations/backend/backend.did.js";
 import { Actor } from "@dfinity/agent";
-import { envService } from "../envService";
-import { icpAgentService } from "../icpAgentService";
+import { envService } from "./environment";
+import { icpAgentService } from "./agent";
 import type { BackendActor } from "./types";
 
 /**

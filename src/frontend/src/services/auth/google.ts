@@ -1,9 +1,14 @@
+/**
+ * Google Authentication Module
+ * Handles Google OAuth integration for authentication
+ */
+
 import {
   GoogleUser,
   GoogleAuthConfig,
   CredentialResponse,
-} from "../types/auth";
-import { envService } from "./envService";
+} from "../../types/auth";
+import { envService } from "../core";
 
 declare global {
   interface Window {

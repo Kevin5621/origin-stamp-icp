@@ -3,7 +3,6 @@
  * Handles dashboard data and statistics operations
  */
 
-import { backend } from "../../../../declarations/backend";
 import { getBackendActor, initializeBackend } from "../core/backend";
 import type { NFTMarketplaceStats, CreatorStats } from "../core/types";
 
@@ -58,7 +57,10 @@ export const dashboardStatsService = {
    */
   async getTopCreators(): Promise<CreatorStats[]> {
     try {
-      if (!backend) {
+      await initializeBackend();
+      const backendActor = await getBackendActor();
+
+      if (!backendActor) {
         return [];
       }
 

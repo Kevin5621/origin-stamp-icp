@@ -1,5 +1,5 @@
 /**
- * Environment Configuration Service
+ * Environment Configuration Module
  * Centralizes environment variable management for the OriginStamp application
  */
 

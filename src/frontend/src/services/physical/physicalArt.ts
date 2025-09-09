@@ -1,10 +1,10 @@
-import {
-  S3Client,
-  PutObjectCommand,
-  HeadObjectCommand,
-} from "@aws-sdk/client-s3";
-import { backendService } from "./backendService";
-import type { PhysicalArtSession as BackendPhysicalArtSession } from "../../../declarations/backend/backend.did.d.ts";
+/**
+ * Physical Art Service - Handles S3 uploads and session management
+ */
+
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { backendService } from "../backendService";
+import type { PhysicalArtSession as BackendPhysicalArtSession } from "../../../../declarations/backend/backend.did.d.ts";
 
 // Types
 export interface PhysicalArtSession {
@@ -39,9 +39,6 @@ export interface UploadProgress {
   url?: string;
   error?: string;
 }
-
-// Backend Actor - using backendService
-// All backend calls now go through backendService
 
 /**
  * Physical Art Service - Handles S3 uploads and session management
@@ -447,3 +444,5 @@ export class PhysicalArtService {
     };
   }
 }
+
+export const physicalArtService = PhysicalArtService;

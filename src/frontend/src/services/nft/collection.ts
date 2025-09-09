@@ -1,4 +1,9 @@
-import { backendService } from "./backendService";
+/**
+ * Collection Service Module
+ * Handles NFT collection operations and management
+ */
+
+import { backendService } from "../backendService";
 
 export interface NFTCollectionItem {
   id: string;
@@ -83,7 +88,9 @@ export class CollectionService {
           // Get session details for additional metadata
           const sessionDetails =
             Array.isArray(token.session_id) && token.session_id.length > 0
-              ? await backendService.getSessionDetails(token.session_id[0]!)
+              ? await backendService.getSessionDetails(
+                  token.session_id[0] || "",
+                )
               : null;
 
           const nftItem: NFTCollectionItem = {
@@ -176,7 +183,7 @@ export class CollectionService {
         if (session.status === "completed") {
           try {
             // Try to find NFT for this session
-            // This is a simplified approach - in real implementation, you'd need to track NFT-session relationships
+            // TODO need to track NFT-session relationships
             const mockNFT: NFTCollectionItem = {
               id: `created_${session.session_id}`,
               title: session.art_title,
@@ -248,8 +255,7 @@ export class CollectionService {
     try {
       console.log(`[CollectionService] Loading favorites for: ${username}`);
 
-      // For now, return empty array - favorites functionality needs to be implemented in backend
-      // This would typically involve a favorites table/collection
+      // TODO needs to be implemented in backend
       const favorites: FavoriteItem[] = [];
 
       console.log(`[CollectionService] Loaded ${favorites.length} favorites`);
@@ -326,8 +332,8 @@ export class CollectionService {
         `[CollectionService] Setting price for NFT ${nftId}: ${price} ${currency}`,
       );
 
-      // This would call backend to update NFT listing price
-      // For now, return success
+      // would call backend to update NFT listing price
+      // TODO
       return true;
     } catch (error) {
       console.error("[CollectionService] Failed to set NFT price:", error);
@@ -347,8 +353,8 @@ export class CollectionService {
         `[CollectionService] Adding NFT ${nftId} to favorites for ${username}`,
       );
 
-      // This would call backend to add to favorites
-      // For now, return success
+      // would call backend to add to favorites
+      // TODO
       return true;
     } catch (error) {
       console.error("[CollectionService] Failed to add to favorites:", error);
@@ -368,8 +374,8 @@ export class CollectionService {
         `[CollectionService] Removing NFT ${nftId} from favorites for ${username}`,
       );
 
-      // This would call backend to remove from favorites
-      // For now, return success
+      // would call backend to remove from favorites
+      // TODO
       return true;
     } catch (error) {
       console.error(

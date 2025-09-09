@@ -1,3 +1,8 @@
+/**
+ * Avatar Service Module
+ * Handles avatar generation and management
+ */
+
 import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
 

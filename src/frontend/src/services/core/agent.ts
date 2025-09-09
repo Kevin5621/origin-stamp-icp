@@ -1,10 +1,12 @@
+/**
+ * ICP Agent Service Module
+ * Manages Internet Computer Protocol connections
+ */
+
 import { HttpAgent, Actor } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
-import { envService } from "./envService";
+import { envService } from "./environment";
 
-/**
- * ICP Agent Service for managing Internet Computer Protocol connections
- */
 export class ICPAgentService {
   private static instance: ICPAgentService;
   private agent: HttpAgent | null = null;

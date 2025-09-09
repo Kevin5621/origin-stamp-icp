@@ -1,32 +1,33 @@
-// Export all services with environment configuration
-export { backendService } from "./backendService";
-export { googleAuthService } from "./googleAuth";
-export { PhysicalArtService } from "./physicalArtService";
-export { dashboardService } from "./dashboardService";
-export { credentialAuthService } from "./credentialAuthService";
-export { subscriptionService } from "./subscriptionService";
-export { NFTService } from "./nftService";
-export { VerificationService } from "./verificationService";
-export { envService, env } from "./envService";
+/**
+ * Main services exports - Modular Structure Only
+ */
 
-// Export modular service modules for direct access
+// Core services
 export * from "./core";
+
+// Authentication services
 export * from "./auth";
+
+// User services
 export * from "./user";
-export * from "./physical";
-export * from "./storage";
-export * from "./subscription";
+
+// NFT services
 export * from "./nft";
+
+// Physical art services
+export * from "./physical";
+
+// Storage services
+export * from "./storage";
+
+// Subscription services
+export * from "./subscription";
+
+// Verification services
 export * from "./verification";
+
+// Dashboard services
 export * from "./dashboard";
 
-// Export default auth service
-export { default as AuthService } from "./authService";
-
-// Re-export types
-export type { EnvironmentConfig } from "./envService";
-export type { AuthResult, CredentialAuthConfig } from "./credentialAuthService";
-export type { SubscriptionPlan, SubscriptionTier, SubscriptionLimits } from "./subscriptionService";
-export type { PhysicalArtSession } from "./physicalArtService";
-export type { NFTMintingResult } from "./nftService";
-export type { VerificationResult, VerificationStatus } from "./verificationService";
+// Legacy services (to be removed)
+export * from "./backendService";

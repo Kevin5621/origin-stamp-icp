@@ -1,10 +1,11 @@
-import { envService } from "./envService";
-import { backendService } from "./backendService";
-
 /**
- * Credential Authentication Service
+ * Credential Authentication Module
  * Handles username/password authentication using environment configuration
  */
+
+import { envService } from "../core";
+import { backendService } from "../backendService";
+
 export interface CredentialAuthConfig {
   backendCanisterId: string;
   network: string;
@@ -68,10 +69,7 @@ export class CredentialAuthService {
         };
       }
 
-      const result = await backendService.registerUser(
-        username,
-        password,
-      );
+      const result = await backendService.registerUser(username, password);
 
       return {
         success: result.success,
