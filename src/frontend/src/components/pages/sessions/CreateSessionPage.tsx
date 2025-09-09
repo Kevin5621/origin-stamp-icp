@@ -19,7 +19,7 @@ import { ArrowLeft, Camera, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
-import { PhysicalArtService } from "@/services/physicalArtService";
+import { backendService } from "@/services";
 
 export const CreateSessionPage: React.FC = () => {
   const router = useRouter();
@@ -39,7 +39,7 @@ export const CreateSessionPage: React.FC = () => {
 
   const checkS3Configuration = async () => {
     try {
-      const configured = await PhysicalArtService.isS3Configured();
+      const configured = await backendService.isS3Configured();
       setS3Configured(configured);
     } catch (error) {
       console.error("Failed to check S3 configuration:", error);
@@ -85,7 +85,7 @@ export const CreateSessionPage: React.FC = () => {
     try {
       showSuccess("Creating your art session...");
 
-      const sessionId = await PhysicalArtService.createSession(
+      const sessionId = await backendService.createPhysicalArtSession(
         user.username,
         artTitle.trim(),
         description.trim() || "No description provided",

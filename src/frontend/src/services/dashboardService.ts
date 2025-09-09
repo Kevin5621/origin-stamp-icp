@@ -9,7 +9,7 @@ import type {
   UserChartData,
   UserActivity,
   UserPerformanceStats,
-} from "@/types/dashboard";
+} from "../types/dashboard";
 
 class DashboardService {
   async getDashboardMetrics(): Promise<DashboardMetrics> {

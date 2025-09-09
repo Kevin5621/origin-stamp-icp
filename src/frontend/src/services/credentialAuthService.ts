@@ -68,7 +68,10 @@ export class CredentialAuthService {
         };
       }
 
-      const result = await backendService.registerUser(username, password);
+      const result = await backendService.registerUser(
+        username,
+        password,
+      );
 
       return {
         success: result.success,

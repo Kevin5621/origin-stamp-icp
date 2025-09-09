@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useToastContext } from "@/contexts/ToastContext";
-import { backendService } from "@/services/backendService";
+import { backendService } from "@/services";
 import { VerificationContainer } from "@/components/verification/VerificationContainer";
 import { VerificationService } from "@/services/verificationService";
 import { type VerificationResult } from "@/types/verification";

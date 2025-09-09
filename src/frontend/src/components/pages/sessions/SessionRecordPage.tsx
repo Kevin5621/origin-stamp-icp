@@ -25,10 +25,11 @@ import {
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
+  backendService,
   PhysicalArtService,
   type PhysicalArtSession,
-} from "@/services/physicalArtService";
-import { NFTService, type NFTMintingResult } from "@/services/nftService";
+} from "@/services";
+import { NFTService, type NFTMintingResult } from "@/services";
 import { useAuth } from "@/contexts/AuthContext";
 import SortableImageUpload from "@/components/file-upload/sortable";
 import { VerificationContainer } from "@/components/verification/VerificationContainer";

@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { PhysicalArtService } from "@/services/physicalArtService";
+import { backendService, PhysicalArtService } from "@/services";
 import { useProfilePicture } from "@/hooks/useProfilePicture";
 import {
   ProfileHeader,

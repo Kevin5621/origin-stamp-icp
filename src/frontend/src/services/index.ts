@@ -4,10 +4,10 @@ export { googleAuthService } from "./googleAuth";
 export { PhysicalArtService } from "./physicalArtService";
 export { dashboardService } from "./dashboardService";
 export { credentialAuthService } from "./credentialAuthService";
+export { subscriptionService } from "./subscriptionService";
+export { NFTService } from "./nftService";
+export { VerificationService } from "./verificationService";
 export { envService, env } from "./envService";
-
-// Export modular backend services
-export { modularBackendService, backendServiceModular } from "./modularBackendService";
 
 // Export modular service modules for direct access
 export * from "./core";
@@ -26,3 +26,7 @@ export { default as AuthService } from "./authService";
 // Re-export types
 export type { EnvironmentConfig } from "./envService";
 export type { AuthResult, CredentialAuthConfig } from "./credentialAuthService";
+export type { SubscriptionPlan, SubscriptionTier, SubscriptionLimits } from "./subscriptionService";
+export type { PhysicalArtSession } from "./physicalArtService";
+export type { NFTMintingResult } from "./nftService";
+export type { VerificationResult, VerificationStatus } from "./verificationService";

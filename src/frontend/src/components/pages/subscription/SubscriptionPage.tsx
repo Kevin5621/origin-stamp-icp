@@ -22,7 +22,7 @@ import { useToastContext } from "@/contexts/ToastContext";
 import {
   subscriptionService,
   type SubscriptionPlan,
-} from "@/services/subscriptionService";
+} from "@/services";
 
 export const SubscriptionPage: React.FC = () => {
   const searchParams = useSearchParams();

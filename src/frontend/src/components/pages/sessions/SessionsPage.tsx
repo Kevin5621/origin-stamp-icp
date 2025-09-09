@@ -9,9 +9,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
-  PhysicalArtService,
+  backendService,
   type PhysicalArtSession,
-} from "@/services/physicalArtService";
+} from "@/services";
 import Image from "next/image";
 
 // Empty State Component
@@ -82,10 +82,10 @@ export const SessionsPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const userSessions = await PhysicalArtService.getUserSessions(
+      const userSessions = await backendService.getUserSessions(
         user.username,
       );
-      setSessions(userSessions);
+      setSessions(userSessions as PhysicalArtSession[]);
     } catch (error) {
       console.error("Failed to load sessions:", error);
       showError("Failed to load your art sessions");

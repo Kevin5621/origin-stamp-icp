@@ -13,7 +13,7 @@ import {
   type SubscriptionTier,
   type SubscriptionLimits,
   type SubscriptionPlan,
-} from "@/services/subscriptionService";
+} from "@/services";
 
 interface SubscriptionContextType {
   // Current subscription state

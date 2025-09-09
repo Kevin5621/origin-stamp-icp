@@ -34,7 +34,9 @@ export interface BackendActor {
     session_id: string,
   ) => Promise<
     | []
-    | [import("../../../../declarations/backend/backend.did").PhysicalArtSession]
+    | [
+        import("../../../../declarations/backend/backend.did").PhysicalArtSession,
+      ]
   >;
   get_user_sessions: (
     username: string,
@@ -58,7 +60,9 @@ export interface BackendActor {
     verification_id: string,
   ) => Promise<
     | []
-    | [import("../../../../declarations/backend/backend.did").AIVerificationResult]
+    | [
+        import("../../../../declarations/backend/backend.did").AIVerificationResult,
+      ]
   >;
   get_session_verifications: (
     session_id: string,
@@ -87,7 +91,9 @@ export interface BackendActor {
     username: string,
   ) => Promise<
     | []
-    | [import("../../../../declarations/backend/backend.did").SubscriptionLimits]
+    | [
+        import("../../../../declarations/backend/backend.did").SubscriptionLimits,
+      ]
   >;
   set_user_subscription: (
     username: string,
@@ -137,7 +143,9 @@ export interface BackendActor {
     username: string,
   ) => Promise<
     | []
-    | [import("../../../../declarations/backend/backend.did").UserDashboardMetrics]
+    | [
+        import("../../../../declarations/backend/backend.did").UserDashboardMetrics,
+      ]
   >;
   get_user_chart_data: (
     username: string,
@@ -155,12 +163,15 @@ export interface BackendActor {
     username: string,
   ) => Promise<
     | []
-    | [import("../../../../declarations/backend/backend.did").UserPerformanceStats]
+    | [
+        import("../../../../declarations/backend/backend.did").UserPerformanceStats,
+      ]
   >;
   get_user_dashboard_data: (
     username: string,
   ) => Promise<
-    [] | [import("../../../../declarations/backend/backend.did").UserDashboardData]
+    | []
+    | [import("../../../../declarations/backend/backend.did").UserDashboardData]
   >;
   // Additional methods needed by dashboard service
   get_dashboard_metrics: () => Promise<

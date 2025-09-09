@@ -9,7 +9,7 @@ import {
 import type {
   VerificationResult,
   VerificationStatus,
-} from "@/services/verificationService";
+} from "@/services";
 
 interface VerificationBadgeProps {
   status: VerificationStatus;
