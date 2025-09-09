@@ -6,10 +6,7 @@ import {
   XCircle,
   Clock,
 } from "lucide-react";
-import type {
-  VerificationResult,
-  VerificationStatus,
-} from "@/services";
+import type { VerificationResult, VerificationStatus } from "@/services";
 
 interface VerificationBadgeProps {
   status: VerificationStatus;
@@ -35,7 +32,7 @@ export const VerificationBadge: React.FC<VerificationBadgeProps> = ({
 }) => {
   const getStatusConfig = (status: VerificationStatus) => {
     switch (status) {
-      case "Verified":
+      case "verified":
         return {
           icon: CheckCircle,
           color: "text-green-600",
@@ -43,7 +40,7 @@ export const VerificationBadge: React.FC<VerificationBadgeProps> = ({
           borderColor: "border-green-200",
           label: "Verified",
         };
-      case "ReviewNeeded":
+      case "in_progress":
         return {
           icon: AlertTriangle,
           color: "text-yellow-600",
@@ -51,7 +48,7 @@ export const VerificationBadge: React.FC<VerificationBadgeProps> = ({
           borderColor: "border-yellow-200",
           label: "Review Needed",
         };
-      case "Rejected":
+      case "rejected":
         return {
           icon: XCircle,
           color: "text-red-600",
@@ -59,7 +56,22 @@ export const VerificationBadge: React.FC<VerificationBadgeProps> = ({
           borderColor: "border-red-200",
           label: "Rejected",
         };
-      case "Pending":
+      case "pending":
+        return {
+          icon: Clock,
+          color: "text-blue-600",
+          bgColor: "bg-blue-50",
+          borderColor: "border-blue-200",
+          label: "Pending",
+        };
+      case "failed":
+        return {
+          icon: XCircle,
+          color: "text-red-600",
+          bgColor: "bg-red-50",
+          borderColor: "border-red-200",
+          label: "Failed",
+        };
       default:
         return {
           icon: Clock,
@@ -110,7 +122,7 @@ export const VerificationCard: React.FC<VerificationCardProps> = ({
   showAdminControls = false,
 }) => {
   const [overrideStatus, setOverrideStatus] =
-    React.useState<VerificationStatus>("Verified");
+    React.useState<VerificationStatus>("verified");
   const [overrideNotes, setOverrideNotes] = React.useState("");
   const [showOverrideForm, setShowOverrideForm] = React.useState(false);
 
@@ -172,32 +184,36 @@ export const VerificationCard: React.FC<VerificationCardProps> = ({
         </div>
         <VerificationBadge
           status={verification.status}
-          score={verification.final_score}
+          score={verification.confidence_score}
         />
       </div>
 
-      {/* Score Breakdown */}
+      {/* Verification Details */}
       <div className="mb-4">
         <h4 className="mb-2 text-sm font-medium text-gray-700">
-          Score Breakdown
+          Verification Details
         </h4>
         <div className="grid grid-cols-2 gap-3 text-sm">
-          {Object.entries(verification.breakdown).map(([key, value]) => (
-            <div key={key} className="flex justify-between">
-              <span className="text-gray-600 capitalize">
-                {key.replace(/_/g, " ")}:
-              </span>
-              <span className="font-medium">{value}%</span>
-            </div>
-          ))}
+          <div className="flex justify-between">
+            <span className="text-gray-600">Confidence Score:</span>
+            <span className="font-medium">
+              {verification.confidence_score}%
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Status:</span>
+            <span className="font-medium capitalize">
+              {verification.status}
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Anomalies */}
-      {verification.anomaly_count > 0 && (
+      {verification.verification_notes.length > 0 && (
         <div className="mb-4">
           <h4 className="mb-2 text-sm font-medium text-red-700">
-            Anomalies Detected ({verification.anomaly_count})
+            Verification Notes ({verification.verification_notes.length})
           </h4>
           <p className="text-sm text-red-600">
             Some images in the sequence may be inconsistent with the art
@@ -207,18 +223,20 @@ export const VerificationCard: React.FC<VerificationCardProps> = ({
       )}
 
       {/* Notes */}
-      {verification.notes.length > 0 && (
+      {verification.verification_notes.length > 0 && (
         <div className="mb-4">
           <h4 className="mb-2 text-sm font-medium text-gray-700">
             Analysis Notes
           </h4>
           <ul className="space-y-1 text-sm text-gray-600">
-            {verification.notes.map((note, index) => (
-              <li key={index} className="flex items-start gap-2">
-                <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-gray-400"></span>
-                <span>{note}</span>
-              </li>
-            ))}
+            {verification.verification_notes.map(
+              (note: string, index: number) => (
+                <li key={index} className="flex items-start gap-2">
+                  <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-gray-400"></span>
+                  <span>{note}</span>
+                </li>
+              ),
+            )}
           </ul>
         </div>
       )}
@@ -291,10 +309,9 @@ export const VerificationCard: React.FC<VerificationCardProps> = ({
       <div className="mt-4 border-t border-gray-200 pt-4 text-xs text-gray-500">
         <div className="flex justify-between">
           <span>
-            Processed:{" "}
-            {new Date(verification.checked_at * 1000).toLocaleString()}
+            Updated: {new Date(verification.updated_at * 1000).toLocaleString()}
           </span>
-          <span>Model: {verification.model_version}</span>
+          <span>ID: {verification.verification_id}</span>
         </div>
       </div>
     </div>

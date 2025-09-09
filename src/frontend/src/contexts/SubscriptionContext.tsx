@@ -4,7 +4,8 @@ import React, {
   createContext,
   useContext,
   useState,
-  useEffect,
+  useMemo,
+  useCallback,
   ReactNode,
 } from "react";
 import { useAuth } from "./AuthContext";
@@ -61,9 +62,15 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [isRedeeming, setIsRedeeming] = useState(false);
 
+  // Helper function to get plan by name
+  const getPlanByName = useCallback((name: string) => {
+    const plans = subscriptionService.getSubscriptionPlans();
+    return plans.find((plan) => plan.tier === name) || null;
+  }, []);
+
   // Computed values
   const currentPlan = currentSubscription
-    ? subscriptionService.getSubscriptionPlan(currentSubscription)
+    ? getPlanByName(currentSubscription.name)
     : null;
   const canGenerateNFT = subscriptionLimits?.can_generate_nft || false;
   const maxPhotos = subscriptionLimits?.max_photos || 5;
@@ -71,18 +78,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({
   const hasPrioritySupport = subscriptionLimits?.priority_support || false;
   const isSubscriptionActive = currentSubscription !== null;
 
-  // Load user subscription on mount and when user changes
-  useEffect(() => {
-    if (user?.username) {
-      loadUserSubscription();
-    } else {
-      setCurrentSubscription(null);
-      setSubscriptionLimits(null);
-      setIsLoading(false);
-    }
-  }, [user?.username]);
-
-  const loadUserSubscription = async () => {
+  const loadUserSubscription = useCallback(async () => {
     if (!user?.username) return;
 
     setIsLoading(true);
@@ -92,93 +88,143 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({
         subscriptionService.getUserSubscriptionLimits(user.username),
       ]);
 
-      setCurrentSubscription(subscription);
+      if (subscription) {
+        const plan = getPlanByName(subscription);
+        if (plan) {
+          setCurrentSubscription({
+            name: plan.tier,
+            price: plan.price,
+            currency: plan.currency,
+            features: plan.features,
+            limits: {
+              maxPhotos: plan.limits.max_photos,
+              maxFileSizeMB: plan.limits.max_file_size_mb,
+              canGenerateNFT: plan.limits.can_generate_nft,
+              prioritySupport: plan.limits.priority_support,
+            },
+          });
+        }
+      }
       setSubscriptionLimits(limits);
     } catch (error) {
       console.error("Failed to load user subscription:", error);
       // Only set to Free if this is the first load (no previous state)
       if (currentSubscription === null) {
-        setCurrentSubscription("Free");
-        setSubscriptionLimits(
-          subscriptionService.getSubscriptionPlan("Free")?.limits || null,
-        );
+        const freePlan = getPlanByName("Free");
+        if (freePlan) {
+          setCurrentSubscription({
+            name: "Free",
+            price: freePlan.price,
+            currency: freePlan.currency,
+            features: freePlan.features,
+            limits: {
+              maxPhotos: freePlan.limits.max_photos,
+              maxFileSizeMB: freePlan.limits.max_file_size_mb,
+              canGenerateNFT: freePlan.limits.can_generate_nft,
+              prioritySupport: freePlan.limits.priority_support,
+            },
+          });
+          setSubscriptionLimits(freePlan.limits);
+        }
       }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user?.username, currentSubscription, getPlanByName]);
 
-  const refreshSubscription = async () => {
+  const refreshSubscription = useCallback(async () => {
     await loadUserSubscription();
-  };
+  }, [loadUserSubscription]);
 
-  const upgradeSubscription = async (
-    tier: SubscriptionTier,
-  ): Promise<boolean> => {
-    if (!user?.username) return false;
+  const upgradeSubscription = useCallback(
+    async (tier: SubscriptionTier): Promise<boolean> => {
+      if (!user?.username) return false;
 
-    setIsUpgrading(true);
-    try {
-      const success = await subscriptionService.updateUserSubscription(
-        user.username,
-        tier,
-      );
-      if (success) {
-        await loadUserSubscription(); // Refresh data
+      setIsUpgrading(true);
+      try {
+        const success = await subscriptionService.updateUserSubscription(
+          user.username,
+          tier,
+        );
+        if (success) {
+          await loadUserSubscription(); // Refresh data
+        }
+        return success;
+      } catch (error) {
+        console.error("Failed to upgrade subscription:", error);
+        return false;
+      } finally {
+        setIsUpgrading(false);
       }
-      return success;
-    } catch (error) {
-      console.error("Failed to upgrade subscription:", error);
-      return false;
-    } finally {
-      setIsUpgrading(false);
-    }
-  };
+    },
+    [user?.username, loadUserSubscription],
+  );
 
-  const redeemCoupon = async (couponCode: string): Promise<boolean> => {
-    if (!user?.username) return false;
+  const redeemCoupon = useCallback(
+    async (couponCode: string): Promise<boolean> => {
+      if (!user?.username) return false;
 
-    setIsRedeeming(true);
-    try {
-      const success = await subscriptionService.redeemCoupon(
-        user.username,
-        couponCode,
-      );
-      if (success) {
-        await loadUserSubscription(); // Refresh data
+      setIsRedeeming(true);
+      try {
+        const success = await subscriptionService.redeemCoupon(
+          user.username,
+          couponCode,
+        );
+        if (success) {
+          await loadUserSubscription(); // Refresh data
+        }
+        return success;
+      } catch (error) {
+        console.error("Failed to redeem coupon:", error);
+        return false;
+      } finally {
+        setIsRedeeming(false);
       }
-      return success;
-    } catch (error) {
-      console.error("Failed to redeem coupon:", error);
-      return false;
-    } finally {
-      setIsRedeeming(false);
-    }
-  };
+    },
+    [user?.username, loadUserSubscription],
+  );
 
-  const value: SubscriptionContextType = {
-    // Current subscription state
-    currentSubscription,
-    subscriptionLimits,
-    currentPlan,
+  const value: SubscriptionContextType = useMemo(
+    () => ({
+      // Current subscription state
+      currentSubscription,
+      subscriptionLimits,
+      currentPlan,
 
-    // Loading states
-    isLoading,
-    isUpgrading,
-    isRedeeming,
+      // Loading states
+      isLoading,
+      isUpgrading,
+      isRedeeming,
 
-    // Actions
-    refreshSubscription,
-    upgradeSubscription,
-    redeemCoupon,
+      // Actions
+      refreshSubscription,
+      upgradeSubscription,
+      redeemCoupon,
 
-    // Helper methods
-    canGenerateNFT,
-    maxPhotos,
-    maxFileSize,
-    hasPrioritySupport,
-    isSubscriptionActive,
-  };
+      // Helper methods
+      canGenerateNFT,
+      maxPhotos,
+      maxFileSize,
+      hasPrioritySupport,
+      isSubscriptionActive,
+    }),
+    [
+      currentSubscription,
+      subscriptionLimits,
+      currentPlan,
+      isLoading,
+      isUpgrading,
+      isRedeeming,
+      refreshSubscription,
+      upgradeSubscription,
+      redeemCoupon,
+      canGenerateNFT,
+      maxPhotos,
+      maxFileSize,
+      hasPrioritySupport,
+      isSubscriptionActive,
+    ],
+  );
 
   return (
     <SubscriptionContext.Provider value={value}>

@@ -19,10 +19,7 @@ import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
-import {
-  subscriptionService,
-  type SubscriptionPlan,
-} from "@/services";
+import { subscriptionService, type SubscriptionPlan } from "@/services";
 
 export const SubscriptionPage: React.FC = () => {
   const searchParams = useSearchParams();
@@ -85,7 +82,19 @@ export const SubscriptionPage: React.FC = () => {
     }
 
     try {
-      const success = await upgradeSubscription(plan.tier);
+      const subscriptionTier = {
+        name: plan.tier,
+        price: plan.price,
+        currency: plan.currency,
+        features: plan.features,
+        limits: {
+          maxPhotos: plan.limits.max_photos,
+          maxFileSizeMB: plan.limits.max_file_size_mb,
+          canGenerateNFT: plan.limits.can_generate_nft,
+          prioritySupport: plan.limits.priority_support,
+        },
+      };
+      const success = await upgradeSubscription(subscriptionTier);
 
       if (success) {
         showSuccess(`Successfully upgraded to ${plan.name} plan!`);
@@ -250,10 +259,10 @@ export const SubscriptionPage: React.FC = () => {
           Available Plans
         </h3>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {plans.map((plan) => {
-            const isCurrentPlan = currentSubscription === plan.tier;
+          {plans.map((plan: SubscriptionPlan) => {
+            const isCurrentPlan = currentSubscription?.name === plan.tier;
             const isUpgrade =
-              currentSubscription && plan.tier !== currentSubscription;
+              currentSubscription && plan.tier !== currentSubscription.name;
 
             return (
               <Card
@@ -321,7 +330,7 @@ export const SubscriptionPage: React.FC = () => {
 
                   <CardContent className="space-y-4 px-0">
                     <div className="space-y-3">
-                      {plan.features.map((feature, index) => (
+                      {plan.features.map((feature: string, index: number) => (
                         <div
                           key={index}
                           className="flex items-center space-x-3"

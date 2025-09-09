@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
-import { avatarService } from "@/services/avatarService";
+import { avatarService } from "@/services/user/avatar";
 import { backendService } from "@/services/backendService";
 
 export const useProfilePicture = () => {

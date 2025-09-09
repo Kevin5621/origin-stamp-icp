@@ -87,7 +87,18 @@ export const subscriptionManagementService = {
    */
   async updateUserSubscription(
     username: string,
-    subscriptionTier: "Free" | "Basic" | "Premium" | "Enterprise",
+    subscriptionTier: {
+      name: string;
+      price: number;
+      currency: string;
+      features: string[];
+      limits: {
+        maxPhotos: number;
+        maxFileSizeMB: number;
+        canGenerateNFT: boolean;
+        prioritySupport: boolean;
+      };
+    },
   ): Promise<boolean> {
     try {
       await initializeBackend();
@@ -99,7 +110,7 @@ export const subscriptionManagementService = {
 
       // Convert string to CouponType variant
       let couponType: import("../../../../declarations/backend/backend.did").CouponType;
-      switch (subscriptionTier) {
+      switch (subscriptionTier.name) {
         case "Free":
           couponType = { Free: null };
           break;
@@ -258,5 +269,125 @@ export const subscriptionManagementService = {
       console.error("Failed to initialize demo coupons:", error);
       throw error;
     }
+  },
+
+  /**
+   * Get available subscription plans
+   * @returns Array of subscription plans
+   */
+  getSubscriptionPlans(): Array<{
+    id: string;
+    name: string;
+    tier: "Free" | "Basic" | "Premium" | "Enterprise";
+    price: number;
+    currency: string;
+    interval: "monthly" | "yearly";
+    features: string[];
+    limits: {
+      max_photos: number;
+      max_file_size_mb: number;
+      can_generate_nft: boolean;
+      priority_support: boolean;
+    };
+    recommended?: boolean;
+    popular?: boolean;
+    description?: string;
+  }> {
+    return [
+      {
+        id: "free",
+        name: "Free",
+        tier: "Free",
+        price: 0,
+        currency: "USD",
+        interval: "monthly",
+        features: [
+          "Up to 5 photos per session",
+          "Basic verification",
+          "Community support",
+          "Standard file formats",
+        ],
+        limits: {
+          max_photos: 5,
+          max_file_size_mb: 10,
+          can_generate_nft: false,
+          priority_support: false,
+        },
+        description:
+          "Perfect for getting started with digital art verification",
+      },
+      {
+        id: "basic",
+        name: "Basic",
+        tier: "Basic",
+        price: 9.99,
+        currency: "USD",
+        interval: "monthly",
+        features: [
+          "Up to 25 photos per session",
+          "Advanced verification",
+          "Email support",
+          "All file formats",
+          "Basic NFT generation",
+        ],
+        limits: {
+          max_photos: 25,
+          max_file_size_mb: 50,
+          can_generate_nft: true,
+          priority_support: false,
+        },
+        description: "Great for regular artists and creators",
+      },
+      {
+        id: "premium",
+        name: "Premium",
+        tier: "Premium",
+        price: 29.99,
+        currency: "USD",
+        interval: "monthly",
+        features: [
+          "Unlimited photos per session",
+          "AI-powered verification",
+          "Priority support",
+          "All file formats",
+          "Advanced NFT generation",
+          "Custom metadata",
+          "API access",
+        ],
+        limits: {
+          max_photos: -1, // Unlimited
+          max_file_size_mb: 100,
+          can_generate_nft: true,
+          priority_support: true,
+        },
+        recommended: true,
+        popular: true,
+        description: "Perfect for professional artists and studios",
+      },
+      {
+        id: "enterprise",
+        name: "Enterprise",
+        tier: "Enterprise",
+        price: 99.99,
+        currency: "USD",
+        interval: "monthly",
+        features: [
+          "Unlimited everything",
+          "Custom verification models",
+          "Dedicated support",
+          "White-label options",
+          "Advanced analytics",
+          "Custom integrations",
+          "SLA guarantee",
+        ],
+        limits: {
+          max_photos: -1, // Unlimited
+          max_file_size_mb: 500,
+          can_generate_nft: true,
+          priority_support: true,
+        },
+        description: "For large organizations and enterprises",
+      },
+    ];
   },
 };

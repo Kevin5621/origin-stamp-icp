@@ -14,8 +14,8 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import { useToastContext } from "../../contexts/ToastContext";
 import { AuthClient } from "@dfinity/auth-client";
-import { googleAuthService } from "../../services/googleAuth";
-import { AuthService } from "../../services/authService";
+import { googleAuthService } from "../../services/auth/google";
+import { AuthService } from "../../services/auth";
 import { User, Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
 import { LoadingSpinner } from "../ui/loading-spinner";
 
@@ -37,13 +37,58 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleClose = () => {
+  const resetForm = () => {
     setShowCustomLogin(false);
     setAuthMethod("");
     setUsername("");
     setPassword("");
     setIsRegistering(false);
+  };
+
+  const handleClose = () => {
+    resetForm();
     onClose();
+  };
+
+  const handleAuthSuccess = (principal: string, isNewUser: boolean = false) => {
+    const welcomeMessage = isNewUser
+      ? `Welcome! User ${principal.slice(0, 8)}...`
+      : `Welcome back! User ${principal.slice(0, 8)}...`;
+    success(welcomeMessage);
+    handleClose();
+  };
+
+  const processInternetIdentityAuth = async (authClient: AuthClient) => {
+    const isAuthenticated = await authClient.isAuthenticated();
+    if (isAuthenticated) {
+      const identity = authClient.getIdentity();
+      const principal = identity.getPrincipal().toString();
+      loginWithInternetIdentity(principal);
+      handleAuthSuccess(principal);
+      return true;
+    }
+    return false;
+  };
+
+  const startInternetIdentityLogin = async (authClient: AuthClient) => {
+    return new Promise<void>((resolve, reject) => {
+      authClient.login({
+        identityProvider: "https://identity.ic0.app",
+        windowOpenerFeatures:
+          "toolbar=0,location=0,menubar=0,width=500,height=500,left=100,top=100",
+        onSuccess: () => {
+          const identity = authClient.getIdentity();
+          const principal = identity.getPrincipal().toString();
+          loginWithInternetIdentity(principal);
+          handleAuthSuccess(principal, true);
+          resolve();
+        },
+        onError: (err) => {
+          console.error("Internet Identity login failed:", err);
+          reject(new Error("Internet Identity login failed"));
+        },
+      });
+    });
   };
 
   const handleInternetIdentityLogin = async () => {
@@ -53,33 +98,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     try {
       const authClient = await AuthClient.create();
 
-      const isAuthenticated = await authClient.isAuthenticated();
-      if (isAuthenticated) {
-        const identity = authClient.getIdentity();
-        const principal = identity.getPrincipal().toString();
-        loginWithInternetIdentity(principal);
-        success(`Welcome back! User ${principal.slice(0, 8)}...`);
-        handleClose();
+      const isAlreadyAuthenticated =
+        await processInternetIdentityAuth(authClient);
+      if (isAlreadyAuthenticated) {
         return;
       }
 
-      await authClient.login({
-        identityProvider: "https://identity.ic0.app",
-        windowOpenerFeatures:
-          "toolbar=0,location=0,menubar=0,width=500,height=500,left=100,top=100",
-        onSuccess: () => {
-          console.log("Internet Identity login successful");
-          const identity = authClient.getIdentity();
-          const principal = identity.getPrincipal().toString();
-          loginWithInternetIdentity(principal);
-          success(`Welcome! User ${principal.slice(0, 8)}...`);
-          handleClose();
-        },
-        onError: (err) => {
-          console.error("Internet Identity login failed:", err);
-          error("Internet Identity login failed. Please try again.");
-        },
-      });
+      await startInternetIdentityLogin(authClient);
     } catch (err) {
       console.error("Error during Internet Identity login:", err);
       error("Internet Identity login failed. Please try again.");
@@ -113,28 +138,56 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleBackToOptions = () => {
-    setShowCustomLogin(false);
-    setAuthMethod("");
-    setUsername("");
-    setPassword("");
-    setIsRegistering(false);
+    resetForm();
+  };
+
+  const validateCredentials = () => {
+    if (!username.trim() || !password.trim()) {
+      warning("Please fill in all fields");
+      return false;
+    }
+
+    if (username.trim().length < 3) {
+      warning("Username must be at least 3 characters long");
+      return false;
+    }
+
+    if (password.length < 6) {
+      warning("Password must be at least 6 characters long");
+      return false;
+    }
+
+    return true;
+  };
+
+  const processRegistration = async () => {
+    const result = await AuthService.registerUser(username.trim(), password);
+
+    if (result.success) {
+      success(`Account created successfully! Welcome, ${result.username}!`);
+      login(result.username || username);
+      handleClose();
+    } else {
+      error(result.message);
+    }
+  };
+
+  const processLogin = async () => {
+    const result = await AuthService.loginUser(username.trim(), password);
+
+    if (result.success) {
+      success(`Welcome back, ${result.username}!`);
+      login(result.username || username);
+      handleClose();
+    } else {
+      error(result.message);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!username.trim() || !password.trim()) {
-      warning("Please fill in all fields");
-      return;
-    }
-
-    if (username.trim().length < 3) {
-      warning("Username must be at least 3 characters long");
-      return;
-    }
-
-    if (password.length < 6) {
-      warning("Password must be at least 6 characters long");
+    if (!validateCredentials()) {
       return;
     }
 
@@ -142,28 +195,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
     try {
       if (isRegistering) {
-        const result = await AuthService.registerUser(
-          username.trim(),
-          password,
-        );
-
-        if (result.success) {
-          success(`Account created successfully! Welcome, ${result.username}!`);
-          login(result.username || username);
-          handleClose();
-        } else {
-          error(result.message);
-        }
+        await processRegistration();
       } else {
-        const result = await AuthService.loginUser(username.trim(), password);
-
-        if (result.success) {
-          success(`Welcome back, ${result.username}!`);
-          login(result.username || username);
-          handleClose();
-        } else {
-          error(result.message);
-        }
+        await processLogin();
       }
     } catch (err) {
       console.error("Authentication error:", err);
@@ -265,11 +299,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 ) : (
                   <CheckCircle className="mr-2 h-4 w-4" />
                 )}
-                {isLoading
-                  ? "Processing..."
-                  : isRegistering
-                    ? "Create Account"
-                    : "Sign In"}
+                {(() => {
+                  if (isLoading) return "Processing...";
+                  if (isRegistering) return "Create Account";
+                  return "Sign In";
+                })()}
               </Button>
             </div>
           </form>

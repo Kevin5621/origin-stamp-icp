@@ -8,10 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToastContext } from "@/contexts/ToastContext";
-import {
-  backendService,
-  type PhysicalArtSession,
-} from "@/services";
+import { backendService, type PhysicalArtSession } from "@/services";
 import Image from "next/image";
 
 // Empty State Component
@@ -82,9 +79,7 @@ export const SessionsPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const userSessions = await backendService.getUserSessions(
-        user.username,
-      );
+      const userSessions = await backendService.getUserSessions(user.username);
       setSessions(userSessions as PhysicalArtSession[]);
     } catch (error) {
       console.error("Failed to load sessions:", error);

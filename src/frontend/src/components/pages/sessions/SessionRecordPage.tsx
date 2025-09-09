@@ -21,22 +21,20 @@ import {
   AlertCircle,
   Upload,
   Image as ImageIcon,
+  Shield,
 } from "lucide-react";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
-  backendService,
-  PhysicalArtService,
+  physicalArtService,
   type PhysicalArtSession,
+  nftCertificateService,
+  type NFTMintingResult,
+  verificationService,
+  type VerificationResult,
 } from "@/services";
-import { NFTService, type NFTMintingResult } from "@/services";
 import { useAuth } from "@/contexts/AuthContext";
 import SortableImageUpload from "@/components/file-upload/sortable";
-import { VerificationContainer } from "@/components/verification/VerificationContainer";
-import {
-  VerificationService,
-  type VerificationResult,
-} from "@/services/verificationService";
 
 export const SessionRecordPage: React.FC = () => {
   const params = useParams();
@@ -77,12 +75,33 @@ export const SessionRecordPage: React.FC = () => {
 
         // Add timestamp to force refresh if needed
         const result =
-          await VerificationService.getVerificationResult(sessionId);
+          await verificationService.getVerificationResult(sessionId);
         console.log("Loaded verification result:", result);
 
         // Only update if we got a result or if we're forcing refresh
         if (result || forceRefresh) {
-          setVerification(result);
+          // Convert backend result to frontend format
+          const convertedResult: VerificationResult | null = result
+            ? {
+                verification_id: result.verification_id,
+                session_id: result.session_id,
+                asset_urls: result.assets.map((asset) => asset.s3_url),
+                status:
+                  "Pending" in result.status
+                    ? "pending"
+                    : "Verified" in result.status
+                      ? "verified"
+                      : "Rejected" in result.status
+                        ? "rejected"
+                        : "in_progress",
+                confidence_score: result.final_score,
+                verification_notes: result.notes,
+                created_at: Number(result.created_at),
+                updated_at: Number(result.checked_at),
+                admin_notes: undefined,
+              }
+            : null;
+          setVerification(convertedResult);
         }
       } catch (error) {
         console.error("Failed to load verification:", error);
@@ -99,7 +118,7 @@ export const SessionRecordPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const sessionData = await PhysicalArtService.getSessionDetails(sessionId);
+      const sessionData = await physicalArtService.getSessionDetails(sessionId);
       if (sessionData) {
         setSession(sessionData);
         setIsLoading(false);
@@ -124,7 +143,7 @@ export const SessionRecordPage: React.FC = () => {
 
   const checkS3Configuration = async () => {
     try {
-      const configured = await PhysicalArtService.isS3Configured();
+      const configured = await physicalArtService.isS3Configured();
       setS3Configured(configured);
     } catch (error) {
       console.error("Failed to check S3 configuration:", error);
@@ -139,7 +158,7 @@ export const SessionRecordPage: React.FC = () => {
       // Upload files one by one
       for (const file of selectedFiles) {
         try {
-          const result = await PhysicalArtService.uploadPhoto(sessionId, file);
+          const result = await physicalArtService.uploadPhoto(sessionId, file);
           if (!result.success) {
             showError(`Failed to upload ${file.name}: ${result.message}`);
           }
@@ -178,28 +197,48 @@ export const SessionRecordPage: React.FC = () => {
     try {
       showSuccess("Starting NFT minting process...");
 
-      const result = await NFTService.completeSession(session, user.principal);
+      const tokenId = await nftCertificateService.mintNFTFromSession(
+        session.session_id,
+        user.principal,
+        [],
+      );
 
-      if (result.success) {
+      if (tokenId) {
+        const result: NFTMintingResult = {
+          success: true,
+          token_id: BigInt(tokenId),
+        };
         setMintingResult(result);
-        showSuccess(`🎉 NFT minted successfully! Token ID: ${result.nftId}`);
+        showSuccess(`🎉 NFT minted successfully! Token ID: ${tokenId}`);
 
         // Update session status in local state
-        setSession((prev) => (prev ? { ...prev, status: "completed" } : null));
+        setSession((prev: PhysicalArtSession | null) =>
+          prev ? { ...prev, status: "completed" } : null,
+        );
 
         // Navigate to NFT detail page after a short delay
         setTimeout(() => {
-          router.push(`/dashboard/collection/${result.nftId}`);
+          router.push(`/dashboard/collection/${tokenId}`);
         }, 2000);
       } else {
+        const result: NFTMintingResult = {
+          success: false,
+          error: "Failed to mint NFT",
+        };
         showError(`NFT minting failed: ${result.error}`);
         setMintingResult(result);
       }
     } catch (error) {
-      console.error("Complete session failed:", error);
+      console.error("NFT minting failed:", error);
       showError(
-        `Failed to complete session: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to mint NFT: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
+
+      const result: NFTMintingResult = {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+      setMintingResult(result);
     } finally {
       setIsMintingNFT(false);
     }
@@ -363,45 +402,47 @@ export const SessionRecordPage: React.FC = () => {
             <CardContent>
               {/* Horizontal Scrollable Story Layout */}
               <div className="flex gap-4 overflow-x-auto pb-4">
-                {session.uploaded_photos.map((photoUrl, index) => (
-                  <div
-                    key={`${session.session_id}-photo-${index}`}
-                    className="group relative flex-shrink-0"
-                  >
-                    <div className="bg-muted hover:border-primary relative h-32 w-24 overflow-hidden rounded-lg border-2 border-transparent transition-all">
-                      {photoUrl ? (
-                        <Image
-                          src={photoUrl}
-                          alt={`Process ${index + 1}`}
-                          fill
-                          className="object-contain"
-                          sizes="(max-width: 768px) 96px, 96px"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center">
-                          <ImageIcon className="text-muted-foreground h-8 w-8" />
+                {session.uploaded_photos.map(
+                  (photoUrl: string, index: number) => (
+                    <div
+                      key={`${session.session_id}-photo-${index}`}
+                      className="group relative flex-shrink-0"
+                    >
+                      <div className="bg-muted hover:border-primary relative h-32 w-24 overflow-hidden rounded-lg border-2 border-transparent transition-all">
+                        {photoUrl ? (
+                          <Image
+                            src={photoUrl}
+                            alt={`Process ${index + 1}`}
+                            fill
+                            className="object-contain"
+                            sizes="(max-width: 768px) 96px, 96px"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center">
+                            <ImageIcon className="text-muted-foreground h-8 w-8" />
+                          </div>
+                        )}
+
+                        {/* Story Number Badge */}
+                        <div className="bg-primary text-primary-foreground absolute top-1 left-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
+                          {index + 1}
                         </div>
-                      )}
 
-                      {/* Story Number Badge */}
-                      <div className="bg-primary text-primary-foreground absolute top-1 left-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
-                        {index + 1}
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50 opacity-0 transition-all group-hover:opacity-100">
+                          <Button size="sm" variant="secondary">
+                            View
+                          </Button>
+                        </div>
                       </div>
 
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50 opacity-0 transition-all group-hover:opacity-100">
-                        <Button size="sm" variant="secondary">
-                          View
-                        </Button>
-                      </div>
+                      {/* Progress Step Label */}
+                      <p className="text-muted-foreground mt-2 text-center text-xs">
+                        Step {index + 1}
+                      </p>
                     </div>
-
-                    {/* Progress Step Label */}
-                    <p className="text-muted-foreground mt-2 text-center text-xs">
-                      Step {index + 1}
-                    </p>
-                  </div>
-                ))}
+                  ),
+                )}
 
                 {/* Add More Photos Placeholder */}
                 {canUploadMore && (
@@ -466,102 +507,137 @@ export const SessionRecordPage: React.FC = () => {
               {verification && (
                 <div className="text-muted-foreground text-sm">
                   Status: {verification.status} | Score:{" "}
-                  {verification.final_score}%
+                  {verification.confidence_score}%
                 </div>
               )}
             </div>
 
-            <VerificationContainer
-              verification={verification}
-              verificationType="preview"
-              loading={isLoadingVerification}
-              onRequestVerification={async () => {
-                setIsLoadingVerification(true);
-                try {
-                  // Get asset URLs from session
-                  const assetUrls = session.uploaded_photos;
+            <div className="space-y-4">
+              <Button
+                onClick={async () => {
+                  setIsLoadingVerification(true);
+                  try {
+                    // Get asset URLs from session
+                    const assetUrls = session.uploaded_photos;
 
-                  if (assetUrls.length === 0) {
-                    showError("No photos uploaded for verification");
-                    setIsLoadingVerification(false);
-                    return;
-                  }
+                    if (assetUrls.length === 0) {
+                      showError("No photos uploaded for verification");
+                      setIsLoadingVerification(false);
+                      return;
+                    }
 
-                  // Create verification request
-                  const verificationId =
-                    await VerificationService.createVerificationRequest(
+                    // Create verification request
+                    await verificationService.createVerificationRequest(
                       sessionId,
                       assetUrls,
                     );
-                  showSuccess(
-                    "AI verification request submitted successfully!",
-                  );
+                    showSuccess(
+                      "AI verification request submitted successfully!",
+                    );
 
-                  // Poll for results with timeout
-                  let pollCount = 0;
-                  const maxPolls = 20; // Max 20 polls (60 seconds)
+                    // Poll for results with timeout
+                    let pollCount = 0;
+                    const maxPolls = 20; // Max 20 polls (60 seconds)
 
-                  const pollForResults = async () => {
-                    try {
-                      pollCount++;
-                      console.log(
-                        `Polling verification results... (${pollCount}/${maxPolls})`,
-                      );
-
-                      const result =
-                        await VerificationService.getVerificationResult(
-                          sessionId,
+                    const pollForResults = async () => {
+                      try {
+                        pollCount++;
+                        console.log(
+                          `Polling verification results... (${pollCount}/${maxPolls})`,
                         );
-                      console.log("Verification result:", result);
 
-                      if (result && result.status !== "Pending") {
-                        setVerification(result);
+                        const result =
+                          await verificationService.getVerificationResult(
+                            sessionId,
+                          );
+                        console.log("Verification result:", result);
+
+                        if (result && !("Pending" in result.status)) {
+                          // Convert backend result to frontend format
+                          const convertedResult: VerificationResult = {
+                            verification_id: result.verification_id,
+                            session_id: result.session_id,
+                            asset_urls: result.assets.map(
+                              (asset) => asset.s3_url,
+                            ),
+                            status:
+                              "Pending" in result.status
+                                ? "pending"
+                                : "Verified" in result.status
+                                  ? "verified"
+                                  : "Rejected" in result.status
+                                    ? "rejected"
+                                    : "in_progress",
+                            confidence_score: result.final_score,
+                            verification_notes: result.notes,
+                            created_at: Number(result.created_at),
+                            updated_at: Number(result.checked_at),
+                            admin_notes: undefined,
+                          };
+                          setVerification(convertedResult);
+                          setIsLoadingVerification(false);
+                          showSuccess(
+                            `AI verification completed! Score: ${result.final_score}%`,
+                          );
+                          return;
+                        }
+
+                        // If still pending, force refresh the verification data
+                        if (result && "Pending" in result.status) {
+                          console.log("Still pending, forcing refresh...");
+                          await loadVerification(true);
+                        }
+
+                        // Check if we've exceeded max polls
+                        if (pollCount >= maxPolls) {
+                          setIsLoadingVerification(false);
+                          showError(
+                            "Verification is taking longer than expected. Please check back later.",
+                          );
+                          return;
+                        }
+
+                        // Continue polling if still pending
+                        setTimeout(pollForResults, 3000);
+                      } catch (error) {
+                        console.error(
+                          "Failed to poll verification results:",
+                          error,
+                        );
                         setIsLoadingVerification(false);
-                        showSuccess(
-                          `AI verification completed! Score: ${result.final_score}%`,
-                        );
-                        return;
+                        showError("Failed to get verification results");
                       }
+                    };
 
-                      // If still pending, force refresh the verification data
-                      if (result && result.status === "Pending") {
-                        console.log("Still pending, forcing refresh...");
-                        await loadVerification(true);
-                      }
-
-                      // Check if we've exceeded max polls
-                      if (pollCount >= maxPolls) {
-                        setIsLoadingVerification(false);
-                        showError(
-                          "Verification is taking longer than expected. Please check back later.",
-                        );
-                        return;
-                      }
-
-                      // Continue polling if still pending
-                      setTimeout(pollForResults, 3000);
-                    } catch (error) {
-                      console.error(
-                        "Failed to poll verification results:",
-                        error,
-                      );
-                      setIsLoadingVerification(false);
-                      showError("Failed to get verification results");
-                    }
-                  };
-
-                  // Start polling after a short delay
-                  setTimeout(pollForResults, 2000);
-                } catch (error) {
-                  console.error(
-                    "Failed to create verification request:",
-                    error,
-                  );
-                  setIsLoadingVerification(false);
-                  showError("Failed to submit verification request");
+                    // Start polling after a short delay
+                    setTimeout(pollForResults, 2000);
+                  } catch (error) {
+                    console.error(
+                      "Failed to create verification request:",
+                      error,
+                    );
+                    setIsLoadingVerification(false);
+                    showError("Failed to submit verification request");
+                  }
+                }}
+                disabled={
+                  isLoadingVerification || !session.uploaded_photos.length
                 }
-              }}
-            />
+                className="w-full"
+              >
+                {isLoadingVerification ? (
+                  <>
+                    <Spinner className="mr-2 h-4 w-4" />
+                    Requesting AI Verification...
+                  </>
+                ) : (
+                  <>
+                    <Shield className="mr-2 h-4 w-4" />
+                    Request AI Verification
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         )}
 
@@ -661,7 +737,7 @@ export const SessionRecordPage: React.FC = () => {
                   }
                 >
                   {mintingResult.success
-                    ? `Your artwork has been minted as NFT with Token ID: ${mintingResult.nftId}. Redirecting to NFT details...`
+                    ? `Your artwork has been minted as NFT with Token ID: ${mintingResult.token_id}. Redirecting to NFT details...`
                     : `Failed to mint NFT: ${mintingResult.error}`}
                 </CardDescription>
               </CardHeader>
@@ -671,21 +747,15 @@ export const SessionRecordPage: React.FC = () => {
                     <div className="flex justify-between">
                       <span className="text-sm font-medium">Token ID:</span>
                       <span className="font-mono text-sm">
-                        {mintingResult.nftId}
+                        {mintingResult.token_id?.toString()}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm font-medium">
-                        Certificate ID:
+                        Transaction Hash:
                       </span>
                       <span className="font-mono text-sm">
-                        {mintingResult.certificateId}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Token URI:</span>
-                      <span className="max-w-xs truncate font-mono text-sm">
-                        {mintingResult.tokenUri}
+                        {mintingResult.transaction_hash || "N/A"}
                       </span>
                     </div>
                   </div>

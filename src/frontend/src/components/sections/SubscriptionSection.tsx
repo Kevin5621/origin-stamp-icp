@@ -13,10 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Check, Crown, Sparkles, Zap } from "lucide-react";
 import Image from "next/image";
-import {
-  subscriptionService,
-  type SubscriptionPlan,
-} from "@/services/subscriptionService";
+import { type SubscriptionPlan } from "@/services";
+import { subscriptionService } from "@/services";
 
 export function SubscriptionSection() {
   const [isLoading, setIsLoading] = useState(false);
@@ -116,7 +114,7 @@ export function SubscriptionSection() {
 
                 <CardContent className="space-y-4 px-0">
                   <div className="space-y-3">
-                    {plan.features.map((feature, index) => (
+                    {plan.features.map((feature: string, index: number) => (
                       <div key={index} className="flex items-center space-x-3">
                         <div className="bg-primary/10 rounded-full p-1">
                           <Check className="text-primary h-3 w-3" />

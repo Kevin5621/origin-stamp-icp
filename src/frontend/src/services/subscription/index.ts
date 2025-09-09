@@ -28,12 +28,15 @@ export interface SubscriptionLimits {
 export interface SubscriptionPlan {
   id: string;
   name: string;
+  tier: "Free" | "Basic" | "Premium" | "Enterprise";
   price: number;
   currency: string;
   interval: "monthly" | "yearly";
   features: string[];
   limits: SubscriptionLimits;
   recommended?: boolean;
+  popular?: boolean;
+  description?: string;
 }
 
 export interface CouponData {

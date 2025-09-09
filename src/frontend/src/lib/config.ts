@@ -1,4 +1,4 @@
-import { envService } from "../services/envService";
+import { envService } from "../services/core/environment";
 
 const envConfig = envService.getConfig();
 

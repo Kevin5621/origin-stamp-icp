@@ -6,7 +6,6 @@ import {
   Store,
   Package,
   User,
-  Heart,
   Wallet,
   CreditCard,
   Crown,
@@ -61,7 +60,7 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
       );
     }
 
-    if (!currentSubscription || currentSubscription === "Free") {
+    if (!currentSubscription || currentSubscription.name === "Free") {
       return (
         <Badge variant="outline" className="text-xs">
           Free
@@ -73,7 +72,7 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
     return (
       <Badge variant={isPopular ? "default" : "secondary"} className="text-xs">
         {isPopular && <Crown className="mr-1 h-3 w-3" />}
-        {currentSubscription}
+        {currentSubscription.name}
       </Badge>
     );
   };
@@ -82,13 +81,13 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
     if (isLoading) return null;
 
     if (
-      currentSubscription === "Premium" ||
-      currentSubscription === "Enterprise"
+      currentSubscription?.name === "Premium" ||
+      currentSubscription?.name === "Enterprise"
     ) {
       return <Crown className="h-3 w-3 text-yellow-500" />;
     }
 
-    if (currentSubscription === "Basic") {
+    if (currentSubscription?.name === "Basic") {
       return <Sparkles className="h-3 w-3 text-blue-500" />;
     }
 
@@ -124,7 +123,7 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
             <span className="text-muted-foreground text-xs">Plan:</span>
             {getSubscriptionBadge()}
           </div>
-          {currentPlan && currentSubscription !== "Free" && (
+          {currentPlan && currentSubscription?.name !== "Free" && (
             <p className="text-muted-foreground mt-1 text-xs">
               {currentPlan.limits.max_photos} photos •{" "}
               {currentPlan.limits.max_file_size_mb}MB files

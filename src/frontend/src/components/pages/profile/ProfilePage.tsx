@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { backendService, PhysicalArtService } from "@/services";
+import { physicalArtService } from "@/services";
 import { useProfilePicture } from "@/hooks/useProfilePicture";
 import {
   ProfileHeader,
@@ -62,7 +62,7 @@ interface ActivityItem {
 // Utility functions are included in the component implementation below
 
 export const ProfilePage: React.FC = () => {
-  const { user, updateUser } = useAuth();
+  const { user } = useAuth();
   const { success, error } = useToastContext();
   const { updateProfilePicture } = useProfilePicture();
 
@@ -209,13 +209,13 @@ export const ProfilePage: React.FC = () => {
     if (!file || !user?.username) return;
 
     // Validate file type
-    if (!PhysicalArtService.validateFileType(file)) {
+    if (!physicalArtService.validateFileType(file)) {
       error("Please select a valid image file (JPEG, PNG, WebP, or GIF)");
       return;
     }
 
     // Validate file size (max 5MB for profile photos)
-    if (!PhysicalArtService.validateFileSize(file, 5)) {
+    if (!physicalArtService.validateFileSize(file, 5)) {
       error("File size too large. Maximum size is 5MB for profile photos");
       return;
     }
@@ -225,7 +225,7 @@ export const ProfilePage: React.FC = () => {
       const profileSessionId = `profile_${user.username}_${Date.now()}`;
 
       // Upload to S3
-      const uploadResult = await PhysicalArtService.uploadPhoto(
+      const uploadResult = await physicalArtService.uploadPhoto(
         profileSessionId,
         file,
       );
