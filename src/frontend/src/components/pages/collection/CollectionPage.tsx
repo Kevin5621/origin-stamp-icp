@@ -30,7 +30,7 @@ import {
   NFTCollectionItem,
   CollectionStats,
   FavoriteItem,
-} from "@/services/collectionService";
+} from "@/services";
 
 export const CollectionPage: React.FC = () => {
   const router = useRouter();

@@ -27,7 +27,7 @@ import Image from "next/image";
 import { useToastContext } from "@/contexts/ToastContext";
 import { backendService } from "@/services";
 import { VerificationContainer } from "@/components/verification/VerificationContainer";
-import { VerificationService } from "@/services/verificationService";
+import { verificationService } from "@/services";
 import { type VerificationResult } from "@/types/verification";
 
 interface NFTData {
@@ -80,7 +80,7 @@ export const NFTDetailPage: React.FC = () => {
 
     setIsLoadingVerification(true);
     try {
-      const result = await VerificationService.getVerificationResult(sessionId);
+      const result = await verificationService.getVerificationResult(sessionId);
       return result;
     } catch (error) {
       console.error("Failed to load verification:", error);
@@ -157,14 +157,64 @@ export const NFTDetailPage: React.FC = () => {
           verification: {
             preview_verification: verificationData
               ? {
-                  ...verificationData,
+                  verification_id: verificationData.verification_id,
+                  session_id: verificationData.session_id,
+                  assets: verificationData.assets.map((asset) => ({
+                    asset_id: asset.asset_id,
+                    s3_url: asset.s3_url,
+                    step_index: Number(asset.step_index),
+                    sha256: asset.sha256,
+                    content_type: asset.content_type,
+                  })),
+                  status:
+                    "Pending" in verificationData.status
+                      ? "Pending"
+                      : "Verified" in verificationData.status
+                        ? "Verified"
+                        : "Rejected" in verificationData.status
+                          ? "Rejected"
+                          : "ReviewNeeded",
+                  final_score: verificationData.final_score,
+                  base_similarity: verificationData.base_similarity,
+                  anomaly_count: verificationData.anomaly_count,
+                  breakdown: Object.fromEntries(verificationData.breakdown),
+                  model_version: verificationData.model_version,
+                  evidence_urls: verificationData.evidence_urls,
+                  checked_at: Number(verificationData.checked_at),
+                  created_at: Number(verificationData.created_at),
+                  notes: verificationData.notes || [],
                   verification_type: "preview" as const,
                   is_final_verification: false,
                 }
               : undefined,
             final_verification: verificationData
               ? {
-                  ...verificationData,
+                  verification_id: verificationData.verification_id,
+                  session_id: verificationData.session_id,
+                  assets: verificationData.assets.map((asset) => ({
+                    asset_id: asset.asset_id,
+                    s3_url: asset.s3_url,
+                    step_index: Number(asset.step_index),
+                    sha256: asset.sha256,
+                    content_type: asset.content_type,
+                  })),
+                  status:
+                    "Pending" in verificationData.status
+                      ? "Pending"
+                      : "Verified" in verificationData.status
+                        ? "Verified"
+                        : "Rejected" in verificationData.status
+                          ? "Rejected"
+                          : "ReviewNeeded",
+                  final_score: verificationData.final_score,
+                  base_similarity: verificationData.base_similarity,
+                  anomaly_count: verificationData.anomaly_count,
+                  breakdown: Object.fromEntries(verificationData.breakdown),
+                  model_version: verificationData.model_version,
+                  evidence_urls: verificationData.evidence_urls,
+                  checked_at: Number(verificationData.checked_at),
+                  created_at: Number(verificationData.created_at),
+                  notes: verificationData.notes || [],
                   verification_type: "final" as const,
                   is_final_verification: true,
                 }

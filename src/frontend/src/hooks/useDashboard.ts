@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { dashboardService } from "@/services/dashboardService";
+import { dashboardStatsService } from "@/services";
 import { useAuth } from "@/contexts/AuthContext";
 import type {
   DashboardData,
@@ -21,9 +21,45 @@ export const useDashboard = () => {
     try {
       setLoading(true);
       setError(null);
-      const dashboardData = await dashboardService.getDashboardData(
-        user?.username,
-      );
+      const marketplaceStats =
+        await dashboardStatsService.getMarketplaceStats();
+      const topCreators = await dashboardStatsService.getTopCreators();
+
+      // Create mock dashboard data structure
+      const dashboardData = {
+        metrics: {
+          total_users: parseInt(
+            marketplaceStats.totalCreators.replace("+", ""),
+          ),
+          total_sessions: parseInt(
+            marketplaceStats.totalSessions.replace("+", ""),
+          ),
+          total_certificates: parseInt(
+            marketplaceStats.totalArtworks.replace("+", ""),
+          ),
+        },
+        recent_activities: topCreators.map((creator) => ({
+          id: creator.username,
+          type: "certificate" as const,
+          title: `${creator.username} created ${creator.certificateCount} certificates`,
+          description: `Active creator with ${creator.sessionCount} sessions`,
+          timestamp: Date.now().toString(),
+          status: "completed" as const,
+          metadata: {
+            session_id: creator.username,
+            certificate_id: creator.username,
+            file_count: creator.certificateCount,
+            verification_score: 0,
+          },
+        })),
+        user_stats: {
+          certificates_created: 0,
+          sessions_completed: 0,
+          total_uploads: 0,
+          verification_score: 0,
+        },
+      };
+
       setData(dashboardData);
       setMetrics(dashboardData.metrics);
       setActivities(dashboardData.recent_activities);
@@ -39,7 +75,17 @@ export const useDashboard = () => {
 
   const refreshMetrics = async () => {
     try {
-      const newMetrics = await dashboardService.getDashboardMetrics();
+      const marketplaceStats =
+        await dashboardStatsService.getMarketplaceStats();
+      const newMetrics = {
+        total_users: parseInt(marketplaceStats.totalCreators.replace("+", "")),
+        total_sessions: parseInt(
+          marketplaceStats.totalSessions.replace("+", ""),
+        ),
+        total_certificates: parseInt(
+          marketplaceStats.totalArtworks.replace("+", ""),
+        ),
+      };
       setMetrics(newMetrics);
       if (data) {
         setData({ ...data, metrics: newMetrics });
@@ -53,7 +99,21 @@ export const useDashboard = () => {
 
   const refreshActivities = async () => {
     try {
-      const newActivities = await dashboardService.getRecentActivities();
+      const topCreators = await dashboardStatsService.getTopCreators();
+      const newActivities = topCreators.map((creator) => ({
+        id: creator.username,
+        type: "certificate" as const,
+        title: `${creator.username} created ${creator.certificateCount} certificates`,
+        description: `Active creator with ${creator.sessionCount} sessions`,
+        timestamp: Date.now().toString(),
+        status: "completed" as const,
+        metadata: {
+          session_id: creator.username,
+          certificate_id: creator.username,
+          file_count: creator.certificateCount,
+          verification_score: 0,
+        },
+      }));
       setActivities(newActivities);
       if (data) {
         setData({ ...data, recent_activities: newActivities });

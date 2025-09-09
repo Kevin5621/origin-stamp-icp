@@ -80,7 +80,13 @@ export const SessionsPage: React.FC = () => {
     setIsLoading(true);
     try {
       const userSessions = await backendService.getUserSessions(user.username);
-      setSessions(userSessions as PhysicalArtSession[]);
+      // Convert backend sessions to frontend format
+      const convertedSessions = userSessions.map((session) => ({
+        ...session,
+        created_at: Number(session.created_at),
+        updated_at: Number(session.updated_at),
+      }));
+      setSessions(convertedSessions);
     } catch (error) {
       console.error("Failed to load sessions:", error);
       showError("Failed to load your art sessions");
