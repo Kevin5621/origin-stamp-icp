@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Spinner } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   ArrowLeft,
@@ -267,7 +267,7 @@ export const NFTDetailPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <Spinner variant="infinite" size={16} />
+          <LoadingSpinner variant="infinite" size="md" />
           <p className="text-muted-foreground mt-4">Loading NFT details...</p>
         </div>
       </div>

@@ -8,7 +8,6 @@ import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import ToastContainer from "@/components/ui/toast-container";
 import { CookieSync } from "../components/auth/CookieSync";
 import { ResourcePreloader } from "@/components/common/ResourcePreloader";
-import { PerformanceMonitor } from "@/components/common/PerformanceMonitor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,7 +60,6 @@ export default function RootLayout({
                 />
                 {children}
                 <ToastContainer />
-                <PerformanceMonitor />
               </ToastProvider>
             </SubscriptionProvider>
           </AuthProvider>

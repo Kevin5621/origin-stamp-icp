@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
@@ -206,7 +206,7 @@ export const CollectionPage: React.FC = () => {
     return (
       <div className="container mx-auto py-6">
         <div className="flex items-center justify-center py-12">
-          <Spinner variant="infinite" size={16} />
+          <LoadingSpinner variant="infinite" size="md" />
           <span className="text-muted-foreground ml-2">
             Loading collection...
           </span>
@@ -682,7 +682,11 @@ export const CollectionPage: React.FC = () => {
               >
                 {isSettingPrice ? (
                   <>
-                    <Spinner variant="infinite" size="sm" className="mr-2" />
+                    <LoadingSpinner
+                      variant="infinite"
+                      size="sm"
+                      className="mr-2"
+                    />
                     Setting...
                   </>
                 ) : (

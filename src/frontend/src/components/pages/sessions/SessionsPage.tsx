@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Spinner } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import { backendService, type PhysicalArtSession } from "@/services";
@@ -52,7 +52,7 @@ const EmptyState: React.FC<{
     {showActionButton && actionLabel && onAction && (
       <Button onClick={onAction} disabled={isLoading}>
         {isLoading ? (
-          <Spinner variant="infinite" size="sm" className="mr-2" />
+          <LoadingSpinner variant="infinite" size="sm" className="mr-2" />
         ) : (
           <Plus className="mr-2 h-4 w-4" />
         )}
@@ -150,7 +150,7 @@ export const SessionsPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <Spinner variant="infinite" size={16} />
+          <LoadingSpinner variant="infinite" size="md" />
           <p className="text-muted-foreground mt-4">
             Loading your art sessions...
           </p>
@@ -177,7 +177,7 @@ export const SessionsPage: React.FC = () => {
           className="bg-primary text-primary-foreground hover:bg-primary/90"
         >
           {isCreatingSession ? (
-            <Spinner variant="infinite" size="sm" className="mr-2" />
+            <LoadingSpinner variant="infinite" size="sm" className="mr-2" />
           ) : (
             <Plus className="mr-2 h-4 w-4" />
           )}

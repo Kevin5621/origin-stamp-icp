@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   ArrowLeft,
@@ -23,31 +23,11 @@ import {
   Image as ImageIcon,
   Palette,
   Zap,
-  CheckCircle2,
-  Clock,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import { backendService } from "@/services";
-
-// Helper function to get step icon
-const getStepIcon = (currentStep: number, targetStep: number) => {
-  if (currentStep >= targetStep) {
-    return <CheckCircle2 className="h-4 w-4 text-green-600" />;
-  }
-  if (currentStep === targetStep - 1) {
-    return <Clock className="text-primary h-4 w-4 animate-pulse" />;
-  }
-  return <Clock className="text-muted-foreground h-4 w-4" />;
-};
-
-// Helper function to get step text color
-const getStepTextColor = (currentStep: number, targetStep: number) => {
-  if (currentStep >= targetStep) return "text-green-600";
-  if (currentStep === targetStep - 1) return "text-primary";
-  return "text-muted-foreground";
-};
 
 export const CreateSessionPage: React.FC = () => {
   const router = useRouter();
@@ -60,8 +40,6 @@ export const CreateSessionPage: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [s3Configured, setS3Configured] = useState<boolean | null>(null);
-  const [creationProgress, setCreationProgress] = useState<string>("");
-  const [creationStep, setCreationStep] = useState<number>(0);
 
   React.useEffect(() => {
     checkS3Configuration();
@@ -112,28 +90,14 @@ export const CreateSessionPage: React.FC = () => {
     }
 
     setIsCreating(true);
-    setCreationStep(1);
-
     try {
-      // Step 1: Validate form
-      setCreationProgress("Validating session details...");
-      setCreationStep(1);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Step 2: Create session
-      setCreationProgress("Creating art session...");
-      setCreationStep(2);
+      showSuccess("Creating your art session...");
 
       const sessionId = await backendService.createPhysicalArtSession(
         user.username,
         artTitle.trim(),
         description.trim() || "No description provided",
       );
-
-      // Step 3: Setup complete
-      setCreationProgress("Session created successfully!");
-      setCreationStep(3);
-      await new Promise((resolve) => setTimeout(resolve, 500));
 
       showSuccess(
         `Session "${artTitle.trim()}" created successfully! You can now start documenting your artwork.`,
@@ -148,8 +112,6 @@ export const CreateSessionPage: React.FC = () => {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to create session";
       showError(`Failed to create session: ${errorMessage}`);
-      setCreationStep(0);
-      setCreationProgress("");
     } finally {
       setIsCreating(false);
     }
@@ -163,7 +125,7 @@ export const CreateSessionPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <Spinner variant="infinite" size={16} />
+          <LoadingSpinner variant="infinite" size="md" />
           <p className="text-muted-foreground mt-4">
             Checking S3 configuration...
           </p>
@@ -275,23 +237,6 @@ export const CreateSessionPage: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Processing Status Alert */}
-                {isCreating && (
-                  <Alert className="border-primary/30 bg-primary/5">
-                    <Camera className="h-4 w-4" />
-                    <AlertDescription className="text-primary">
-                      <span className="font-medium">
-                        Creating your art session...
-                      </span>
-                      <br />
-                      <span className="text-primary/80 text-sm">
-                        Please don&apos;t close this page while we set up your
-                        session.
-                      </span>
-                    </AlertDescription>
-                  </Alert>
-                )}
-
                 {/* Artwork Title */}
                 <div className="space-y-2">
                   <Label
@@ -356,106 +301,33 @@ export const CreateSessionPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Progress Indicator - Show when creating */}
-                {isCreating && (
-                  <div className="bg-primary/5 border-primary/20 space-y-4 rounded-lg border p-4">
-                    <div className="flex items-center gap-3">
-                      <Spinner variant="infinite" size="sm" />
-                      <div className="flex-1">
-                        <p className="text-foreground text-sm font-medium">
-                          {creationProgress}
-                        </p>
-                        <div className="mt-2 flex items-center gap-2">
-                          <div className="flex items-center gap-1">
-                            {getStepIcon(creationStep, 1)}
-                            <span
-                              className={`text-xs ${getStepTextColor(creationStep, 1)}`}
-                            >
-                              Validate
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            {getStepIcon(creationStep, 2)}
-                            <span
-                              className={`text-xs ${getStepTextColor(creationStep, 2)}`}
-                            >
-                              Create
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            {getStepIcon(creationStep, 3)}
-                            <span
-                              className={`text-xs ${getStepTextColor(creationStep, 3)}`}
-                            >
-                              Complete
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="bg-muted/50 h-2 w-full rounded-full">
-                      <div
-                        className="bg-primary h-2 rounded-full transition-all duration-500 ease-out"
-                        style={{ width: `${(creationStep / 3) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-
                 {/* Create Button */}
                 <div className="border-border flex gap-4 border-t pt-4">
                   <Button
                     onClick={handleCreateSession}
                     disabled={isCreating || !artTitle.trim()}
-                    className={`flex-1 transition-all duration-200 ${
-                      isCreating
-                        ? "bg-primary/80 cursor-not-allowed"
-                        : "bg-primary hover:bg-primary/90"
-                    } text-primary-foreground`}
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground flex-1"
                     size="lg"
                   >
                     {isCreating ? (
-                      <>
-                        <Spinner
-                          variant="infinite"
-                          size="sm"
-                          className="mr-2"
-                        />
-                        <span className="animate-pulse">
-                          {creationStep === 1 && "Validating..."}
-                          {creationStep === 2 && "Creating Session..."}
-                          {creationStep === 3 && "Finishing..."}
-                          {creationStep === 0 && "Processing..."}
-                        </span>
-                      </>
+                      <LoadingSpinner
+                        variant="infinite"
+                        size="sm"
+                        className="mr-2"
+                      />
                     ) : (
-                      <>
-                        <Camera className="mr-2 h-4 w-4" />
-                        Create Session
-                      </>
+                      <Camera className="mr-2 h-4 w-4" />
                     )}
+                    {isCreating ? "Creating Session..." : "Create Session"}
                   </Button>
                   <Button
                     onClick={handleBack}
                     variant="outline"
                     disabled={isCreating}
                     size="lg"
-                    className={`border-border transition-all duration-200 ${
-                      isCreating
-                        ? "cursor-not-allowed opacity-50"
-                        : "hover:bg-muted"
-                    }`}
+                    className="border-border hover:bg-muted"
                   >
-                    {isCreating ? (
-                      <>
-                        <Clock className="mr-2 h-4 w-4 animate-pulse" />
-                        Please Wait
-                      </>
-                    ) : (
-                      "Cancel"
-                    )}
+                    Cancel
                   </Button>
                 </div>
               </CardContent>
