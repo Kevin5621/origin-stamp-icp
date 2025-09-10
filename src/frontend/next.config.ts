@@ -1,6 +1,53 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Performance optimizations
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-icons",
+      "recharts",
+    ],
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
+      },
+    },
+  },
+
+  // Bundle optimization
+  webpack: (config, { dev, isServer }) => {
+    // Optimize bundle splitting
+    if (!dev && !isServer) {
+      config.optimization.splitChunks = {
+        chunks: "all",
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendors",
+            chunks: "all",
+          },
+          recharts: {
+            test: /[\\/]node_modules[\\/]recharts[\\/]/,
+            name: "recharts",
+            chunks: "all",
+            priority: 20,
+          },
+          radix: {
+            test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+            name: "radix",
+            chunks: "all",
+            priority: 15,
+          },
+        },
+      };
+    }
+    return config;
+  },
+
   env: {
     // Backend Configuration
     CANISTER_ID_BACKEND: process.env.CANISTER_ID_BACKEND,
@@ -22,7 +69,10 @@ const nextConfig: NextConfig = {
     S3_REGION: process.env.S3_REGION,
     S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
   },
+
   images: {
+    formats: ["image/webp", "image/avif"],
+    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: "https",
@@ -44,6 +94,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
   async headers() {
     return [
       {
@@ -72,6 +123,29 @@ const nextConfig: NextConfig = {
           {
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains",
+          },
+          // Performance headers
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/static/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },

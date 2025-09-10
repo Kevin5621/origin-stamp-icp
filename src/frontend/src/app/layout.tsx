@@ -7,6 +7,8 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import ToastContainer from "@/components/ui/toast-container";
 import { CookieSync } from "../components/auth/CookieSync";
+import { ResourcePreloader } from "@/components/common/ResourcePreloader";
+import { PerformanceMonitor } from "@/components/common/PerformanceMonitor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,8 +45,23 @@ export default function RootLayout({
             <SubscriptionProvider>
               <ToastProvider>
                 <CookieSync />
+                <ResourcePreloader
+                  preloadRoutes={[
+                    "/dashboard",
+                    "/dashboard/collection",
+                    "/dashboard/marketplace",
+                    "/dashboard/sessions",
+                    "/dashboard/profile",
+                  ]}
+                  preloadImages={[
+                    "/landing/hero.webp",
+                    "/landing/blockchain-authenticatio.webp",
+                    "/landing/instant-verification.webp",
+                  ]}
+                />
                 {children}
                 <ToastContainer />
+                <PerformanceMonitor />
               </ToastProvider>
             </SubscriptionProvider>
           </AuthProvider>

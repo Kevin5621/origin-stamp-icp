@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import dynamic from "next/dynamic";
 
 import {
   Card,
@@ -12,13 +12,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  Tooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import type { UserChartData } from "@/types/dashboard";
+import type { ChartConfig } from "@/components/ui/chart";
+
+// Lazy load the heavy chart components
+const LazyChart = dynamic(
+  () => import("./LazyChart").then((mod) => ({ default: mod.LazyChart })),
+  {
+    loading: () => (
+      <div className="bg-muted h-[300px] w-full animate-pulse rounded" />
+    ),
+    ssr: false,
+  },
+);
 
 interface PortfolioChartProps {
   chartData: UserChartData;
@@ -121,88 +127,17 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({
             </div>
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="h-[300px]">
-            <AreaChart
-              accessibilityLayer
+          <Suspense
+            fallback={
+              <div className="bg-muted h-[300px] w-full animate-pulse rounded" />
+            }
+          >
+            <LazyChart
               data={chartDataToRender}
-              margin={{
-                left: 12,
-                right: 12,
-              }}
-              height={300}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => {
-                  const dayNumber = value.replace("Day ", "");
-                  return dayNumber;
-                }}
-                interval={4} // Show every 5th day to avoid crowding
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                domain={hasData ? [0, "dataMax + 1"] : [-1, 1]}
-                ticks={hasData ? undefined : [-1, 0, 1]}
-              />
-              <Tooltip cursor={false} content={<ChartTooltipContent />} />
-              <defs>
-                <linearGradient id="fillPortfolio" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor="#f97316"
-                    stopOpacity={hasData ? 0.8 : 0.4}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="#f97316"
-                    stopOpacity={hasData ? 0.1 : 0.1}
-                  />
-                </linearGradient>
-                <linearGradient
-                  id="fillCertificates"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="#f97316"
-                    stopOpacity={hasData ? 0.6 : 0.3}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="#f97316"
-                    stopOpacity={hasData ? 0.05 : 0.05}
-                  />
-                </linearGradient>
-              </defs>
-              <Area
-                dataKey="certificates_created"
-                type="natural"
-                fill="url(#fillCertificates)"
-                fillOpacity={hasData ? 0.3 : 0.15}
-                stroke="#f97316"
-                strokeWidth={hasData ? 2 : 2}
-                stackId="a"
-              />
-              <Area
-                dataKey="portfolio_value"
-                type="natural"
-                fill="url(#fillPortfolio)"
-                fillOpacity={hasData ? 0.4 : 0.2}
-                stroke="#f97316"
-                strokeWidth={hasData ? 2 : 2}
-                stackId="a"
-              />
-            </AreaChart>
-          </ChartContainer>
+              hasData={hasData}
+              config={chartConfig}
+            />
+          </Suspense>
         )}
       </CardContent>
       <CardFooter>

@@ -4,12 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:fast": "next dev --turbopack --port 3000",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "build:dfx": "next build --turbopack && mkdir -p dist && cp -r .next/static dist/static && cp -r .next/server dist/server && cp -r public dist/",
     "start": "next dev --turbopack",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "type-check": "tsc --noEmit",
-    "test": "echo \"No tests yet\""
+    "test": "echo \"No tests yet\"",
+    "perf": "next build && next start"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.882.0",

@@ -2,6 +2,7 @@
  * Backend Service - Modular Architecture
  * Combines all modular services into a single service interface
  * Organized by domain for better maintainability
+ * Enhanced with caching for performance optimization
  */
 
 import { userAuthService } from "./auth";
@@ -18,6 +19,39 @@ import {
   getBackendCanisterId,
 } from "./core";
 
+// Simple in-memory cache for frequently accessed data
+const cache = new Map<
+  string,
+  { data: unknown; timestamp: number; ttl: number }
+>();
+
+const CACHE_TTL = {
+  STATS: 2 * 60 * 1000, // 2 minutes for stats
+  USER_INFO: 5 * 60 * 1000, // 5 minutes for user info
+  SESSION_DETAILS: 1 * 60 * 1000, // 1 minute for session details
+  NFT_COLLECTION: 3 * 60 * 1000, // 3 minutes for NFT collection
+};
+
+function getCachedData<T>(key: string): T | null {
+  const entry = cache.get(key);
+  if (!entry) return null;
+
+  if (Date.now() - entry.timestamp > entry.ttl) {
+    cache.delete(key);
+    return null;
+  }
+
+  return entry.data as T;
+}
+
+function setCachedData<T>(key: string, data: T, ttl: number): void {
+  cache.set(key, {
+    data,
+    timestamp: Date.now(),
+    ttl,
+  });
+}
+
 /**
  * Backend Service
  * Provides all backend functionality through organized modules
@@ -29,7 +63,15 @@ export const backendService = {
 
   // ===== USER MANAGEMENT METHODS =====
   getAllUsers: userManagementService.getAllUsers,
-  getUserInfo: userManagementService.getUserInfo,
+  getUserInfo: async (username: string) => {
+    const cacheKey = `user_info_${username}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const result = await userManagementService.getUserInfo(username);
+    setCachedData(cacheKey, result, CACHE_TTL.USER_INFO);
+    return result;
+  },
   getUserCount: userManagementService.getUserCount,
   getUserAvatar: userManagementService.getUserAvatar,
   updateUserAvatar: userManagementService.updateUserAvatar,
@@ -73,13 +115,41 @@ export const backendService = {
   manualVerificationOverride: aiVerificationService.manualVerificationOverride,
 
   // ===== DASHBOARD METHODS =====
-  getMarketplaceStats: dashboardStatsService.getMarketplaceStats,
-  getTopCreators: dashboardStatsService.getTopCreators,
+  getMarketplaceStats: async () => {
+    const cacheKey = "marketplace_stats";
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const result = await dashboardStatsService.getMarketplaceStats();
+    setCachedData(cacheKey, result, CACHE_TTL.STATS);
+    return result;
+  },
+  getTopCreators: async () => {
+    const cacheKey = "top_creators";
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const result = await dashboardStatsService.getTopCreators();
+    setCachedData(cacheKey, result, CACHE_TTL.STATS);
+    return result;
+  },
 
   // ===== UTILITY METHODS =====
   isAvailable: isBackendAvailable,
   getCanisterId: getBackendCanisterId,
   getBackendActor,
+
+  // ===== CACHE MANAGEMENT =====
+  clearCache: () => {
+    cache.clear();
+  },
+  invalidateCache: (pattern: string) => {
+    for (const key of cache.keys()) {
+      if (key.includes(pattern)) {
+        cache.delete(key);
+      }
+    }
+  },
 
   // ===== MODULE ACCESS =====
   // Direct access to modules for advanced usage
