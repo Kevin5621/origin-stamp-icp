@@ -35,7 +35,6 @@ interface ImageUploadProps {
   accept?: string;
   className?: string;
   onImagesChange?: (images: ImageFile[]) => void;
-  onUploadComplete?: () => void;
 }
 
 export default function SortableImageUpload({
@@ -44,7 +43,6 @@ export default function SortableImageUpload({
   accept = "image/*",
   className,
   onImagesChange,
-  onUploadComplete,
 }: ImageUploadProps) {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -332,32 +330,6 @@ export default function SortableImageUpload({
               </SortableItem>
             ))}
           </Sortable>
-        </div>
-      )}
-
-      {/* Upload action */}
-      {images.length > 0 && (
-        <div className="text-center">
-          {(() => {
-            const isUploading = images.some(
-              (img) => img.status === "uploading",
-            );
-            const photoCount = images.length;
-            const photoText = photoCount === 1 ? "Photo" : "Photos";
-            const buttonText = isUploading
-              ? "Processing..."
-              : `Upload ${photoCount} ${photoText}`;
-
-            return (
-              <Button
-                onClick={() => onUploadComplete?.()}
-                className="w-full"
-                disabled={isUploading}
-              >
-                {buttonText}
-              </Button>
-            );
-          })()}
         </div>
       )}
 
