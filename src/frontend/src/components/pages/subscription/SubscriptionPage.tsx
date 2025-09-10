@@ -4,17 +4,9 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Check, Crown, Zap, Gift, CreditCard, Wallet } from "lucide-react";
+import { Crown, Zap, CreditCard, Wallet, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
@@ -128,88 +120,202 @@ export const SubscriptionPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-16">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <div className="border-primary mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
-          <p className="text-muted-foreground">
-            Loading subscription information...
-          </p>
+          <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
+          <p className="text-muted-foreground text-sm">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto space-y-6 py-6">
-      {/* Header */}
-      <div className="flex flex-col space-y-4">
-        <div>
-          <h2 className="text-foreground text-2xl font-bold">
-            Subscription Management
-          </h2>
-          <p className="text-muted-foreground">
-            Upgrade your plan to unlock more features and increase your art
-            authentication capabilities
-          </p>
-        </div>
+    <div className="mx-auto overflow-visible px-4 py-12">
+      {/* Minimalist Header */}
+      <div className="mb-16 text-center">
+        <h1 className="text-foreground mb-4 text-4xl font-light tracking-tight">
+          Subscription
+        </h1>
+        <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+          Choose the perfect plan for your art authentication needs
+        </p>
       </div>
 
-      {/* Current Subscription Status */}
+      {/* Current Plan Status - Minimalist */}
       {currentPlan && (
-        <Card className="border-primary/20 bg-primary/5">
-          <CardHeader>
-            <CardTitle className="text-foreground flex items-center">
-              <Crown className="text-primary mr-2 h-5 w-5" />
-              Current Plan: {currentPlan.name}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground">
-              {currentPlan.description}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <div className="bg-background rounded-lg p-4">
-                <div className="text-foreground mb-1 text-2xl font-light">
-                  {currentPlan.limits.max_photos}
-                </div>
-                <div className="text-muted-foreground text-sm">
-                  Photos per session
-                </div>
-              </div>
-              <div className="bg-background rounded-lg p-4">
-                <div className="text-foreground mb-1 text-2xl font-light">
-                  {currentPlan.limits.max_file_size_mb}MB
-                </div>
-                <div className="text-muted-foreground text-sm">
-                  File size limit
-                </div>
-              </div>
-              <div className="bg-background rounded-lg p-4">
-                <div className="text-foreground mb-1 text-2xl font-light">
-                  {currentPlan.limits.can_generate_nft ? "✓" : "✗"}
-                </div>
-                <div className="text-muted-foreground text-sm">
-                  NFT generation
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mb-12 text-center">
+          <div className="bg-primary/10 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm">
+            <Crown className="text-primary h-4 w-4" />
+            <span className="text-primary font-medium">
+              Current: {currentPlan.name}
+            </span>
+          </div>
+        </div>
       )}
 
-      {/* Coupon Redemption */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-foreground flex items-center">
-            <Gift className="text-primary mr-2 h-5 w-5" />
-            Redeem Coupon
-          </CardTitle>
-          <CardDescription>
-            Have a coupon code? Redeem it to upgrade your subscription.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4">
+      {/* Payment Method - Minimalist */}
+      <div className="mb-12 flex justify-center">
+        <Tabs
+          value={paymentMethod}
+          onValueChange={(value) => setPaymentMethod(value as "icp" | "usd")}
+          className="w-auto"
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="icp" className="flex items-center gap-2">
+              <Wallet className="h-4 w-4" />
+              ICP
+            </TabsTrigger>
+            <TabsTrigger value="usd" className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              USD
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {/* Plans Grid - With Background Images */}
+      <div className="mb-16 grid gap-8 overflow-visible md:grid-cols-2 lg:grid-cols-4">
+        {plans.map((plan: SubscriptionPlan) => {
+          const isCurrentPlan = currentSubscription?.name === plan.tier;
+          const isUpgrade =
+            currentSubscription && plan.tier !== currentSubscription.name;
+
+          return (
+            <div
+              key={plan.tier}
+              className={`group relative h-full overflow-visible rounded-2xl border transition-all duration-300 hover:shadow-xl ${
+                plan.popular
+                  ? "border-primary scale-105 shadow-lg"
+                  : isCurrentPlan
+                    ? "border-primary/50 bg-primary/5"
+                    : "border-border hover:border-primary/30"
+              }`}
+            >
+              {/* Background Image */}
+              <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                <Image
+                  src={planImages[plan.tier as keyof typeof planImages]}
+                  alt={`${plan.name} plan`}
+                  fill
+                  className={`object-cover transition-opacity duration-300 ${
+                    isCurrentPlan
+                      ? "opacity-40 group-hover:opacity-60"
+                      : "opacity-25 group-hover:opacity-50"
+                  }`}
+                />
+                <div className="bg-background/85 group-hover:bg-background/75 absolute inset-0 transition-colors duration-300" />
+              </div>
+
+              {/* Popular Badge */}
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2">
+                  <Badge className="bg-primary text-primary-foreground shadow-lg">
+                    <Crown className="mr-1 h-3 w-3" />
+                    Popular
+                  </Badge>
+                </div>
+              )}
+
+              {/* Current Plan Badge */}
+              {isCurrentPlan && (
+                <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2">
+                  <Badge className="bg-green-500 text-white shadow-lg">
+                    Current
+                  </Badge>
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="relative z-10 flex h-full flex-col p-8">
+                {/* Plan Header */}
+                <div className="mb-8 text-center">
+                  <h3 className="text-foreground mb-3 text-2xl font-light">
+                    {plan.name}
+                  </h3>
+                  <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
+                    {plan.description}
+                  </p>
+                  <div className="mb-4">
+                    <span className="text-foreground text-4xl font-light">
+                      {getPlanPrice(plan)}
+                    </span>
+                    {plan.tier !== "Free" && (
+                      <span className="text-muted-foreground text-sm">
+                        /month
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Features - Minimalist List */}
+                <div className="mb-8 flex-1 space-y-3">
+                  {plan.features.map((feature: string, index: number) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="bg-primary mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"></div>
+                      <span className="text-muted-foreground text-sm leading-relaxed">
+                        {feature}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Limits - Clean Grid */}
+                <div className="bg-muted/40 mb-8 grid grid-cols-1 gap-3 rounded-xl p-4 backdrop-blur-sm">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Photos</span>
+                    <span className="text-foreground font-medium">
+                      {plan.limits.max_photos === -1
+                        ? "∞"
+                        : plan.limits.max_photos}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">File Size</span>
+                    <span className="text-foreground font-medium">
+                      {plan.limits.max_file_size_mb}MB
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      NFT Generation
+                    </span>
+                    <span className="text-foreground font-medium">
+                      {plan.limits.can_generate_nft ? "✓" : "✗"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Button */}
+                <Button
+                  className="w-full"
+                  variant={plan.popular ? "primary" : "outline"}
+                  onClick={() => handleUpgradeSubscription(plan)}
+                  disabled={isUpgrading || isCurrentPlan}
+                >
+                  {isCurrentPlan ? (
+                    "Current Plan"
+                  ) : isUpgrading ? (
+                    "Upgrading..."
+                  ) : (
+                    <>
+                      {isUpgrade ? "Upgrade" : "Get Started"}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Coupon Section - Minimalist */}
+      <div className="mb-16 text-center">
+        <div className="mx-auto max-w-md">
+          <h3 className="text-foreground mb-4 text-lg font-medium">
+            Have a coupon?
+          </h3>
+          <div className="flex gap-3">
             <Input
               placeholder="Enter coupon code"
               value={couponCode}
@@ -219,181 +325,29 @@ export const SubscriptionPage: React.FC = () => {
             <Button
               onClick={handleRedeemCoupon}
               disabled={isRedeeming || !couponCode.trim()}
+              variant="outline"
             >
-              {isRedeeming ? "Redeeming..." : "Redeem"}
+              {isRedeeming ? "..." : "Redeem"}
             </Button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Payment Method Selection */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Payment Method</CardTitle>
-          <CardDescription>
-            Choose your preferred payment method
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs
-            value={paymentMethod}
-            onValueChange={(value) => setPaymentMethod(value as "icp" | "usd")}
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="icp" className="flex items-center gap-2">
-                <Wallet className="h-4 w-4" />
-                ICP
-              </TabsTrigger>
-              <TabsTrigger value="usd" className="flex items-center gap-2">
-                <CreditCard className="h-4 w-4" />
-                USD
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      {/* Available Plans */}
-      <div>
-        <h3 className="text-foreground mb-6 text-xl font-semibold">
-          Available Plans
-        </h3>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {plans.map((plan: SubscriptionPlan) => {
-            const isCurrentPlan = currentSubscription?.name === plan.tier;
-            const isUpgrade =
-              currentSubscription && plan.tier !== currentSubscription.name;
-
-            return (
-              <Card
-                key={plan.tier}
-                className={`group relative overflow-visible transition-all duration-300 hover:shadow-lg ${
-                  plan.popular
-                    ? "border-primary scale-105 shadow-lg"
-                    : isCurrentPlan
-                      ? "border-primary/50 bg-primary/5"
-                      : "border-border hover:border-primary/50"
-                }`}
-              >
-                {/* Background Image */}
-                <div className="absolute inset-0 overflow-hidden rounded-lg">
-                  <Image
-                    src={planImages[plan.tier as keyof typeof planImages]}
-                    alt={`${plan.name} plan`}
-                    fill
-                    className={`object-cover transition-opacity duration-300 ${
-                      isCurrentPlan
-                        ? "opacity-50 group-hover:opacity-70"
-                        : "opacity-30 group-hover:opacity-70"
-                    }`}
-                  />
-                  <div className="bg-background/80 group-hover:bg-background/60 absolute inset-0 transition-colors duration-300" />
-                </div>
-
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 transform">
-                    <Badge className="bg-primary text-primary-foreground px-3 py-1">
-                      <Crown className="mr-1 h-3 w-3" />
-                      Most Popular
-                    </Badge>
-                  </div>
-                )}
-
-                {isCurrentPlan && (
-                  <div className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 transform">
-                    <Badge className="bg-green-500 px-3 py-1 text-white">
-                      Current Plan
-                    </Badge>
-                  </div>
-                )}
-
-                {/* Content */}
-                <div className="relative z-10 p-6">
-                  <CardHeader className="px-0 pb-4 text-center">
-                    <CardTitle className="text-foreground text-2xl font-medium">
-                      {plan.name}
-                    </CardTitle>
-                    <CardDescription className="text-muted-foreground">
-                      {plan.description}
-                    </CardDescription>
-                    <div className="mt-4">
-                      <span className="text-foreground text-3xl font-light">
-                        {getPlanPrice(plan)}
-                      </span>
-                      {plan.tier !== "Free" && (
-                        <span className="text-muted-foreground text-sm">
-                          /month
-                        </span>
-                      )}
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="space-y-4 px-0">
-                    <div className="space-y-3">
-                      {plan.features.map((feature: string, index: number) => (
-                        <div
-                          key={index}
-                          className="flex items-center space-x-3"
-                        >
-                          <div className="bg-primary/10 rounded-full p-1">
-                            <Check className="text-primary h-3 w-3" />
-                          </div>
-                          <span className="text-muted-foreground text-sm">
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-
-                  <CardFooter className="px-0 pt-4">
-                    {isCurrentPlan ? (
-                      <Button className="w-full" variant="outline" disabled>
-                        Current Plan
-                      </Button>
-                    ) : (
-                      <Button
-                        className="w-full"
-                        variant={plan.popular ? "primary" : "outline"}
-                        onClick={() => handleUpgradeSubscription(plan)}
-                        disabled={isUpgrading}
-                      >
-                        {isUpgrading
-                          ? "Upgrading..."
-                          : isUpgrade
-                            ? "Upgrade"
-                            : "Get Started"}
-                      </Button>
-                    )}
-                  </CardFooter>
-                </div>
-              </Card>
-            );
-          })}
         </div>
       </div>
 
-      {/* Support Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-foreground text-xl">Need Help?</CardTitle>
-          <CardDescription>
-            Our support team is here to help you with any subscription
-            questions.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            <Button variant="outline" className="px-8">
-              Contact Support
-            </Button>
-            <Button className="px-8">
-              <Zap className="mr-2 h-4 w-4" />
-              View Documentation
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Support - Minimalist */}
+      <div className="text-center">
+        <p className="text-muted-foreground mb-4 text-sm">
+          Need help choosing?
+        </p>
+        <div className="flex justify-center gap-4">
+          <Button variant="ghost" size="sm">
+            Contact Support
+          </Button>
+          <Button variant="ghost" size="sm">
+            <Zap className="mr-2 h-4 w-4" />
+            Documentation
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
