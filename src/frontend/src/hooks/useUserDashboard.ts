@@ -136,7 +136,7 @@ export const useUserDashboard = () => {
     }
   };
 
-  const refreshChartData = async (period: string = "30d") => {
+  const refreshChartData = async () => {
     if (!user?.username) return;
 
     try {

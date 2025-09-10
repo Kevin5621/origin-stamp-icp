@@ -11,7 +11,7 @@ interface CacheOptions {
   maxSize?: number; // Maximum cache size
 }
 
-export function useApiCache<T = any>(options: CacheOptions = {}) {
+export function useApiCache<T = unknown>(options: CacheOptions = {}) {
   const { ttl = 5 * 60 * 1000, maxSize = 100 } = options; // Default 5 minutes TTL
   const cache = useRef<Map<string, CacheEntry<T>>>(new Map());
 
@@ -36,7 +36,9 @@ export function useApiCache<T = any>(options: CacheOptions = {}) {
       // Remove oldest entries if cache is full
       if (cache.current.size >= maxSize) {
         const firstKey = cache.current.keys().next().value;
-        cache.current.delete(firstKey);
+        if (firstKey) {
+          cache.current.delete(firstKey);
+        }
       }
 
       cache.current.set(key, {

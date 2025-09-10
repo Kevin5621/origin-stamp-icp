@@ -31,14 +31,20 @@ export const PerformanceMonitor: React.FC = () => {
         }
 
         if (entry.entryType === "first-input") {
+          const firstInputEntry = entry as PerformanceEntry & {
+            processingStart: number;
+          };
           setMetrics((prev) => ({
             ...prev,
-            fid: entry.processingStart - entry.startTime,
+            fid: firstInputEntry.processingStart - firstInputEntry.startTime,
           }));
         }
 
         if (entry.entryType === "layout-shift") {
-          const layoutShiftEntry = entry as any;
+          const layoutShiftEntry = entry as PerformanceEntry & {
+            hadRecentInput: boolean;
+            value: number;
+          };
           if (!layoutShiftEntry.hadRecentInput) {
             setMetrics((prev) => ({
               ...prev,

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 
 interface LazyChartProps {
-  data: any[];
+  data: Record<string, unknown>[];
   hasData: boolean;
   config: ChartConfig;
 }

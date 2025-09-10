@@ -6,7 +6,6 @@ import {
   Mail,
   Phone,
   MapPin,
-  Globe,
   Save,
   X,
   Edit,

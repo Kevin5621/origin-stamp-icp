@@ -71,7 +71,7 @@ export const useDashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [user?.username]);
+  }, []);
 
   const refreshMetrics = async () => {
     try {

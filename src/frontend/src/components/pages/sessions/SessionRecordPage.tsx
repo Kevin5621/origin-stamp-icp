@@ -22,6 +22,16 @@ import {
   Upload,
   Image as ImageIcon,
   Shield,
+  Brain,
+  Zap,
+  Target,
+  AlertTriangle,
+  Clock,
+  RefreshCw,
+  TrendingUp,
+  Eye,
+  FileCheck,
+  Award,
 } from "lucide-react";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
@@ -32,9 +42,47 @@ import {
   type NFTMintingResult,
   verificationService,
   type VerificationResult,
+  type VerificationStatus,
 } from "@/services";
 import { useAuth } from "@/contexts/AuthContext";
 import SortableImageUpload from "@/components/file-upload/sortable";
+
+// Helper functions to reduce complexity
+const backendStatus = (backendStatus: { [key: string]: unknown }): VerificationStatus => {
+  if ("Pending" in backendStatus) return "pending";
+  if ("Verified" in backendStatus) return "verified";
+  if ("Rejected" in backendStatus) return "rejected";
+  return "in_progress";
+};
+
+const getVerificationBadgeClass = (status: VerificationStatus): string => {
+  switch (status) {
+    case "verified":
+      return "bg-green-100 text-green-800 border-green-200";
+    case "pending":
+      return "bg-yellow-100 text-yellow-800 border-yellow-200";
+    case "rejected":
+      return "bg-red-100 text-red-800 border-red-200";
+    case "in_progress":
+      return "bg-orange-100 text-orange-800 border-orange-200";
+    case "failed":
+      return "bg-red-100 text-red-800 border-red-200";
+    default:
+      return "bg-blue-100 text-blue-800 border-blue-200";
+  }
+};
+
+const getScoreColor = (score: number): string => {
+  if (score >= 80) return "text-green-600";
+  if (score >= 60) return "text-yellow-600";
+  return "text-red-600";
+};
+
+const getAuthenticityLabel = (score: number): string => {
+  if (score >= 80) return "Highly Authentic";
+  if (score >= 60) return "Moderately Authentic";
+  return "Needs Review";
+};
 
 export const SessionRecordPage: React.FC = () => {
   const params = useParams();
@@ -67,33 +115,16 @@ export const SessionRecordPage: React.FC = () => {
 
       setIsLoadingVerification(true);
       try {
-        console.log(
-          "Loading verification for session:",
-          sessionId,
-          forceRefresh ? "(force refresh)" : "",
-        );
-
-        // Add timestamp to force refresh if needed
         const result =
           await verificationService.getVerificationResult(sessionId);
-        console.log("Loaded verification result:", result);
 
-        // Only update if we got a result or if we're forcing refresh
         if (result || forceRefresh) {
-          // Convert backend result to frontend format
           const convertedResult: VerificationResult | null = result
             ? {
                 verification_id: result.verification_id,
                 session_id: result.session_id,
                 asset_urls: result.assets.map((asset) => asset.s3_url),
-                status:
-                  "Pending" in result.status
-                    ? "pending"
-                    : "Verified" in result.status
-                      ? "verified"
-                      : "Rejected" in result.status
-                        ? "rejected"
-                        : "in_progress",
+                status: backendStatus(result.status),
                 confidence_score: result.final_score,
                 verification_notes: result.notes,
                 created_at: Number(result.created_at),
@@ -321,37 +352,153 @@ export const SessionRecordPage: React.FC = () => {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           {/* Session Info - Spans 4 columns on large screens */}
           <div className="lg:col-span-4">
-            <Card className="h-full">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Camera className="mr-2 h-5 w-5" />
-                  Session Info
+            <Card className="border-primary/20 h-full">
+              <CardHeader className="border-border border-b">
+                <CardTitle className="text-primary flex items-center gap-2">
+                  <Camera className="h-5 w-5" />
+                  Session Overview
                 </CardTitle>
+                <CardDescription>
+                  Track your artwork documentation progress
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="bg-muted/50 rounded-lg p-3">
-                    <p className="text-muted-foreground text-sm font-medium">
-                      Photos Uploaded
-                    </p>
-                    <p className="text-2xl font-bold">
+              <CardContent className="space-y-4 pt-6">
+                <div className="space-y-4">
+                  {/* Photos Progress */}
+                  <div className="from-primary/10 to-primary/5 rounded-lg bg-gradient-to-r p-4">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-primary text-sm font-medium">
+                        Photos Uploaded
+                      </span>
+                      <Zap className="text-primary h-4 w-4" />
+                    </div>
+                    <div className="text-primary mb-1 text-3xl font-bold">
                       {uploadedPhotosCount} / {maxPhotos}
-                    </p>
+                    </div>
+                    <div className="text-primary/80 mb-3 text-xs">
+                      {remainingPhotos > 0
+                        ? `${remainingPhotos} more photos available`
+                        : "Maximum reached"}
+                    </div>
+                    {/* Progress Bar */}
+                    <div className="bg-primary/20 h-2 w-full rounded-full">
+                      <div
+                        className="bg-primary h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${(uploadedPhotosCount / maxPhotos) * 100}%`,
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
-                    <p className="text-muted-foreground text-sm font-medium">
-                      Created
-                    </p>
-                    <p className="text-sm">
-                      {new Date(session.created_at).toLocaleDateString()}
-                    </p>
+
+                  {/* Session Details Grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-muted/50 rounded-lg p-3">
+                      <div className="mb-1 flex items-center gap-2">
+                        <Clock className="text-muted-foreground h-3 w-3" />
+                        <span className="text-muted-foreground text-xs font-medium">
+                          Created
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium">
+                        {new Date(session.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    <div className="bg-muted/50 rounded-lg p-3">
+                      <div className="mb-1 flex items-center gap-2">
+                        <TrendingUp className="text-muted-foreground h-3 w-3" />
+                        <span className="text-muted-foreground text-xs font-medium">
+                          Status
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium capitalize">
+                        {session.status}
+                      </p>
+                    </div>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
-                    <p className="text-muted-foreground text-sm font-medium">
-                      Status
-                    </p>
-                    <p className="text-sm capitalize">{session.status}</p>
+
+                  {/* AI Verification Quick Status */}
+                  <div className="border-border rounded-lg border p-3">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-sm font-medium">
+                        AI Verification
+                      </span>
+                      <Brain className="h-4 w-4 text-blue-600" />
+                    </div>
+                    {verification ? (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground text-xs">
+                            Score
+                          </span>
+                          <span className="text-primary text-sm font-bold">
+                            {verification.confidence_score}%
+                          </span>
+                        </div>
+                        <Badge
+                          className={`text-xs ${getVerificationBadgeClass(verification.status)}`}
+                        >
+                          {verification.status.charAt(0).toUpperCase() +
+                            verification.status.slice(1)}
+                        </Badge>
+                      </div>
+                    ) : (
+                      <div className="py-2 text-center">
+                        <span className="text-muted-foreground text-xs">
+                          Not started
+                        </span>
+                      </div>
+                    )}
                   </div>
+
+                  {/* Quick Actions */}
+                  {session.status !== "completed" && (
+                    <div className="border-border border-t pt-2">
+                      <h4 className="text-muted-foreground mb-2 text-sm font-medium">
+                        Quick Actions
+                      </h4>
+                      <div className="space-y-2">
+                        {canUploadMore && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full justify-start"
+                            onClick={() => {
+                              const uploadSection = document.querySelector(
+                                "[data-upload-section]",
+                              );
+                              uploadSection?.scrollIntoView({
+                                behavior: "smooth",
+                              });
+                            }}
+                          >
+                            <Upload className="mr-2 h-3 w-3" />
+                            Add More Photos
+                          </Button>
+                        )}
+                        {uploadedPhotosCount > 0 && !verification && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full justify-start"
+                            onClick={() => {
+                              const verificationSection =
+                                document.querySelector(
+                                  "[data-verification-section]",
+                                );
+                              verificationSection?.scrollIntoView({
+                                behavior: "smooth",
+                              });
+                            }}
+                          >
+                            <Brain className="mr-2 h-3 w-3" />
+                            Start AI Analysis
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -359,19 +506,40 @@ export const SessionRecordPage: React.FC = () => {
 
           {/* Upload Section - Spans 8 columns on large screens */}
           {canUploadMore && (
-            <div className="lg:col-span-8">
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Upload className="mr-2 h-5 w-5" />
+            <div className="lg:col-span-8" data-upload-section>
+              <Card className="border-accent/20 bg-accent/5 h-full">
+                <CardHeader className="border-border border-b">
+                  <CardTitle className="text-accent-foreground flex items-center gap-2">
+                    <Upload className="h-5 w-5" />
                     Upload Photos
                   </CardTitle>
                   <CardDescription>
                     Upload photos of your artwork creation process. You can
-                    upload up to {remainingPhotos} more photos.
+                    upload up to{" "}
+                    <span className="text-accent font-semibold">
+                      {remainingPhotos}
+                    </span>{" "}
+                    more photos.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
+                  <div className="bg-background/50 border-accent/20 mb-4 rounded-lg border p-3">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Target className="text-accent h-4 w-4" />
+                      <span className="text-accent-foreground text-sm font-medium">
+                        Photo Guidelines
+                      </span>
+                    </div>
+                    <ul className="text-muted-foreground space-y-1 text-xs">
+                      <li>• Document your creation process step-by-step</li>
+                      <li>
+                        • Include materials, tools, and work-in-progress shots
+                      </li>
+                      <li>• Ensure good lighting and clear image quality</li>
+                      <li>• Max file size: 10MB per photo</li>
+                    </ul>
+                  </div>
+
                   <SortableImageUpload
                     maxFiles={remainingPhotos}
                     maxSize={10 * 1024 * 1024} // 10MB
@@ -491,153 +659,362 @@ export const SessionRecordPage: React.FC = () => {
           </Card>
         )}
 
-        {/* AI Verification Section */}
+        {/* AI Verification Section - Enhanced */}
         {uploadedPhotosCount > 0 && (
-          <div className="w-full">
-            {/* Debug: Manual Refresh Button */}
-            <div className="mb-4 flex gap-2">
-              <Button
-                onClick={() => loadVerification(true)}
-                variant="outline"
-                size="sm"
-                disabled={isLoadingVerification}
-              >
-                🔄 Force Refresh Verification
-              </Button>
-              {verification && (
-                <div className="text-muted-foreground text-sm">
-                  Status: {verification.status} | Score:{" "}
-                  {verification.confidence_score}%
-                </div>
-              )}
-            </div>
+          <div className="space-y-6" data-verification-section>
+            {/* AI Verification Main Card */}
+            <Card className="border-primary/20 bg-primary/5">
+              <CardHeader>
+                <CardTitle className="text-primary flex items-center gap-2">
+                  <Brain className="h-5 w-5" />
+                  AI Verification Analysis
+                </CardTitle>
+                <CardDescription>
+                  Advanced AI analysis for authenticity verification and quality
+                  assessment
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Verification Status */}
+                {verification ? (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    {/* Overall Score */}
+                    <div className="bg-background/50 rounded-lg p-4">
+                      <div className="mb-2 flex items-center gap-2">
+                        <Award
+                          className={`h-4 w-4 ${getScoreColor(verification.confidence_score)}`}
+                        />
+                        <span className="text-sm font-medium">
+                          Overall Score
+                        </span>
+                      </div>
+                      <div className="text-primary text-2xl font-bold">
+                        {verification.confidence_score}%
+                      </div>
+                      <div className="text-muted-foreground mt-1 text-xs">
+                        Authenticity Confidence
+                      </div>
+                    </div>
 
-            <div className="space-y-4">
-              <Button
-                onClick={async () => {
-                  setIsLoadingVerification(true);
-                  try {
-                    // Get asset URLs from session
-                    const assetUrls = session.uploaded_photos;
+                    {/* Status Badge */}
+                    <div className="bg-background/50 rounded-lg p-4">
+                      <div className="mb-2 flex items-center gap-2">
+                        <FileCheck className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium">Status</span>
+                      </div>
+                      <Badge
+                        className={`text-sm ${
+                          verification.status === "verified"
+                            ? "bg-green-100 text-green-800"
+                            : verification.status === "pending"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : verification.status === "rejected"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-blue-100 text-blue-800"
+                        }`}
+                      >
+                        {verification.status.charAt(0).toUpperCase() +
+                          verification.status.slice(1)}
+                      </Badge>
+                      <div className="text-muted-foreground mt-2 text-xs">
+                        Last checked:{" "}
+                        {new Date(verification.updated_at).toLocaleString()}
+                      </div>
+                    </div>
 
-                    if (assetUrls.length === 0) {
-                      showError("No photos uploaded for verification");
-                      setIsLoadingVerification(false);
-                      return;
-                    }
-
-                    // Create verification request
-                    await verificationService.createVerificationRequest(
-                      sessionId,
-                      assetUrls,
-                    );
-                    showSuccess(
-                      "AI verification request submitted successfully!",
-                    );
-
-                    // Poll for results with timeout
-                    let pollCount = 0;
-                    const maxPolls = 20; // Max 20 polls (60 seconds)
-
-                    const pollForResults = async () => {
-                      try {
-                        pollCount++;
-                        console.log(
-                          `Polling verification results... (${pollCount}/${maxPolls})`,
-                        );
-
-                        const result =
-                          await verificationService.getVerificationResult(
-                            sessionId,
-                          );
-                        console.log("Verification result:", result);
-
-                        if (result && !("Pending" in result.status)) {
-                          // Convert backend result to frontend format
-                          const convertedResult: VerificationResult = {
-                            verification_id: result.verification_id,
-                            session_id: result.session_id,
-                            asset_urls: result.assets.map(
-                              (asset) => asset.s3_url,
-                            ),
-                            status:
-                              "Pending" in result.status
-                                ? "pending"
-                                : "Verified" in result.status
-                                  ? "verified"
-                                  : "Rejected" in result.status
-                                    ? "rejected"
-                                    : "in_progress",
-                            confidence_score: result.final_score,
-                            verification_notes: result.notes,
-                            created_at: Number(result.created_at),
-                            updated_at: Number(result.checked_at),
-                            admin_notes: undefined,
-                          };
-                          setVerification(convertedResult);
-                          setIsLoadingVerification(false);
-                          showSuccess(
-                            `AI verification completed! Score: ${result.final_score}%`,
-                          );
-                          return;
-                        }
-
-                        // If still pending, force refresh the verification data
-                        if (result && "Pending" in result.status) {
-                          console.log("Still pending, forcing refresh...");
-                          await loadVerification(true);
-                        }
-
-                        // Check if we've exceeded max polls
-                        if (pollCount >= maxPolls) {
-                          setIsLoadingVerification(false);
-                          showError(
-                            "Verification is taking longer than expected. Please check back later.",
-                          );
-                          return;
-                        }
-
-                        // Continue polling if still pending
-                        setTimeout(pollForResults, 3000);
-                      } catch (error) {
-                        console.error(
-                          "Failed to poll verification results:",
-                          error,
-                        );
-                        setIsLoadingVerification(false);
-                        showError("Failed to get verification results");
-                      }
-                    };
-
-                    // Start polling after a short delay
-                    setTimeout(pollForResults, 2000);
-                  } catch (error) {
-                    console.error(
-                      "Failed to create verification request:",
-                      error,
-                    );
-                    setIsLoadingVerification(false);
-                    showError("Failed to submit verification request");
-                  }
-                }}
-                disabled={
-                  isLoadingVerification || !session.uploaded_photos.length
-                }
-                className="w-full"
-              >
-                {isLoadingVerification ? (
-                  <>
-                    <Spinner className="mr-2 h-4 w-4" />
-                    Requesting AI Verification...
-                  </>
+                    {/* Photos Analyzed */}
+                    <div className="bg-background/50 rounded-lg p-4">
+                      <div className="mb-2 flex items-center gap-2">
+                        <Eye className="h-4 w-4 text-purple-600" />
+                        <span className="text-sm font-medium">
+                          Photos Analyzed
+                        </span>
+                      </div>
+                      <div className="text-primary text-2xl font-bold">
+                        {verification.asset_urls?.length || 0}
+                      </div>
+                      <div className="text-muted-foreground mt-1 text-xs">
+                        Process Documentation
+                      </div>
+                    </div>
+                  </div>
                 ) : (
-                  <>
-                    <Shield className="mr-2 h-4 w-4" />
-                    Request AI Verification
-                  </>
+                  <div className="bg-background/50 rounded-lg py-8 text-center">
+                    <Shield className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+                    <h3 className="mb-2 text-lg font-semibold">
+                      No Verification Yet
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      Start AI verification to analyze your artwork&apos;s
+                      authenticity and quality
+                    </p>
+                  </div>
                 )}
-              </Button>
-            </div>
+
+                {/* Verification Actions */}
+                <div className="border-t pt-4">
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={async () => {
+                        setIsLoadingVerification(true);
+                        try {
+                          const assetUrls = session.uploaded_photos;
+                          if (assetUrls.length === 0) {
+                            showError("No photos uploaded for verification");
+                            setIsLoadingVerification(false);
+                            return;
+                          }
+
+                          await verificationService.createVerificationRequest(
+                            sessionId,
+                            assetUrls,
+                          );
+                          showSuccess(
+                            "AI verification request submitted successfully!",
+                          );
+
+                          // Enhanced polling with better feedback
+                          let pollCount = 0;
+                          const maxPolls = 20;
+
+                          const pollForResults = async () => {
+                            try {
+                              pollCount++;
+                              const result =
+                                await verificationService.getVerificationResult(
+                                  sessionId,
+                                );
+
+                              if (result && !("Pending" in result.status)) {
+                                const convertedResult: VerificationResult = {
+                                  verification_id: result.verification_id,
+                                  session_id: result.session_id,
+                                  asset_urls: result.assets.map(
+                                    (asset) => asset.s3_url,
+                                  ),
+                                  status:
+                                    "Pending" in result.status
+                                      ? "pending"
+                                      : "Verified" in result.status
+                                        ? "verified"
+                                        : "Rejected" in result.status
+                                          ? "rejected"
+                                          : "in_progress",
+                                  confidence_score: result.final_score,
+                                  verification_notes: result.notes,
+                                  created_at: Number(result.created_at),
+                                  updated_at: Number(result.checked_at),
+                                  admin_notes: undefined,
+                                };
+                                setVerification(convertedResult);
+                                setIsLoadingVerification(false);
+                                showSuccess(
+                                  `AI verification completed! Score: ${result.final_score}%`,
+                                );
+                                return;
+                              }
+
+                              if (pollCount >= maxPolls) {
+                                setIsLoadingVerification(false);
+                                showError(
+                                  "Verification is taking longer than expected. Please check back later.",
+                                );
+                                return;
+                              }
+
+                              setTimeout(pollForResults, 3000);
+                            } catch (error) {
+                              console.error(
+                                "Failed to poll verification results:",
+                                error,
+                              );
+                              setIsLoadingVerification(false);
+                              showError("Failed to get verification results");
+                            }
+                          };
+
+                          setTimeout(pollForResults, 2000);
+                        } catch (error) {
+                          console.error(
+                            "Failed to create verification request:",
+                            error,
+                          );
+                          setIsLoadingVerification(false);
+                          showError("Failed to submit verification request");
+                        }
+                      }}
+                      disabled={
+                        isLoadingVerification || !session.uploaded_photos.length
+                      }
+                      className="bg-primary hover:bg-primary/90 flex-1"
+                    >
+                      {isLoadingVerification ? (
+                        <>
+                          <Spinner className="mr-2 h-4 w-4" />
+                          Analyzing with AI...
+                        </>
+                      ) : (
+                        <>
+                          <Brain className="mr-2 h-4 w-4" />
+                          {verification
+                            ? "Re-run AI Analysis"
+                            : "Start AI Verification"}
+                        </>
+                      )}
+                    </Button>
+
+                    <Button
+                      onClick={() => loadVerification(true)}
+                      variant="outline"
+                      disabled={isLoadingVerification}
+                      className="border-primary/20 hover:bg-primary/10"
+                    >
+                      <RefreshCw
+                        className={`h-4 w-4 ${isLoadingVerification ? "animate-spin" : ""}`}
+                      />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Verification Progress Indicator */}
+                {isLoadingVerification && (
+                  <div className="bg-primary/10 border-primary/20 mt-4 rounded-lg border p-4">
+                    <div className="mb-3 flex items-center gap-3">
+                      <Spinner className="text-primary h-5 w-5" />
+                      <div>
+                        <p className="text-primary text-sm font-medium">
+                          AI Analysis in Progress
+                        </p>
+                        <p className="text-primary/80 text-xs">
+                          Our AI is analyzing your artwork for authenticity
+                          patterns...
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="text-primary/80 flex items-center justify-between text-xs">
+                        <span>Processing {uploadedPhotosCount} photos</span>
+                        <span>This may take 30-60 seconds</span>
+                      </div>
+                      <div className="bg-primary/20 h-2 w-full rounded-full">
+                        <div className="bg-primary h-2 w-3/4 animate-pulse rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Detailed Verification Results */}
+            {verification && (
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {/* Analysis Details */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Target className="h-5 w-5 text-blue-600" />
+                      Analysis Details
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between rounded-lg bg-blue-50 p-3">
+                        <span className="text-sm font-medium">
+                          Authenticity Score
+                        </span>
+                        <div className="text-right">
+                          <div className="text-lg font-bold text-blue-600">
+                            {verification.confidence_score}%
+                          </div>
+                          <div className="text-xs text-blue-600/80">
+                            {getAuthenticityLabel(
+                              verification.confidence_score,
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground text-sm">
+                            Process Consistency
+                          </span>
+                          <div className="bg-muted h-2 w-24 rounded-full">
+                            <div
+                              className="h-2 rounded-full bg-green-500"
+                              style={{
+                                width: `${Math.min(verification.confidence_score, 100)}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground text-sm">
+                            Image Quality
+                          </span>
+                          <div className="bg-muted h-2 w-24 rounded-full">
+                            <div
+                              className="h-2 rounded-full bg-blue-500"
+                              style={{
+                                width: `${Math.min(verification.confidence_score + 10, 100)}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground text-sm">
+                            Temporal Flow
+                          </span>
+                          <div className="bg-muted h-2 w-24 rounded-full">
+                            <div
+                              className="h-2 rounded-full bg-purple-500"
+                              style={{
+                                width: `${Math.min(verification.confidence_score - 5, 100)}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Verification Notes */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileCheck className="h-5 w-5 text-green-600" />
+                      AI Findings
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {verification.verification_notes &&
+                    verification.verification_notes.length > 0 ? (
+                      <div className="space-y-2">
+                        {verification.verification_notes.map((note, index) => (
+                          <div
+                            key={index}
+                            className="bg-muted/50 flex items-start gap-2 rounded p-2"
+                          >
+                            <div className="bg-primary mt-2 h-2 w-2 flex-shrink-0 rounded-full" />
+                            <span className="text-sm">{note}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-4 text-center">
+                        <Clock className="text-muted-foreground mx-auto mb-2 h-8 w-8" />
+                        <p className="text-muted-foreground text-sm">
+                          Detailed analysis notes will appear here after
+                          processing
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </div>
         )}
 
@@ -647,10 +1024,10 @@ export const SessionRecordPage: React.FC = () => {
           {uploadedPhotosCount > 0 &&
             session.status !== "completed" &&
             canGenerateNFT && (
-              <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-green-900 dark:text-green-100">
-                    <CheckCircle className="mr-2 h-5 w-5" />
+              <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100 dark:border-green-800 dark:from-green-950 dark:to-green-900">
+                <CardHeader className="border-b border-green-200 dark:border-green-800">
+                  <CardTitle className="flex items-center gap-2 text-green-900 dark:text-green-100">
+                    <Award className="h-5 w-5" />
                     Ready to Complete Session
                   </CardTitle>
                   <CardDescription className="text-green-700 dark:text-green-300">
@@ -658,21 +1035,61 @@ export const SessionRecordPage: React.FC = () => {
                     session to generate a certificate and NFT.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button
-                    onClick={handleCompleteSession}
-                    disabled={isMintingNFT}
-                    className="w-full bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
-                  >
-                    {isMintingNFT ? (
-                      <Spinner variant="infinite" size="sm" className="mr-2" />
-                    ) : (
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                    )}
-                    {isMintingNFT
-                      ? "Minting NFT..."
-                      : "Complete Session & Generate NFT"}
-                  </Button>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    {/* Pre-completion checklist */}
+                    <div className="bg-background/50 space-y-2 rounded-lg p-3">
+                      <h4 className="mb-2 text-sm font-medium text-green-900 dark:text-green-100">
+                        Pre-completion Check
+                      </h4>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-xs">
+                          <CheckCircle className="h-3 w-3 text-green-600" />
+                          <span>
+                            Photos uploaded ({uploadedPhotosCount}/{maxPhotos})
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs">
+                          {verification ? (
+                            <CheckCircle className="h-3 w-3 text-green-600" />
+                          ) : (
+                            <AlertTriangle className="h-3 w-3 text-yellow-600" />
+                          )}
+                          <span>
+                            AI Verification{" "}
+                            {verification ? "completed" : "recommended"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs">
+                          <CheckCircle className="h-3 w-3 text-green-600" />
+                          <span>NFT generation enabled</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={handleCompleteSession}
+                      disabled={isMintingNFT}
+                      className="w-full bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+                      size="lg"
+                    >
+                      {isMintingNFT ? (
+                        <>
+                          <Spinner
+                            variant="infinite"
+                            size="sm"
+                            className="mr-2"
+                          />
+                          Minting NFT...
+                        </>
+                      ) : (
+                        <>
+                          <Award className="mr-2 h-4 w-4" />
+                          Complete Session & Generate NFT
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -681,10 +1098,10 @@ export const SessionRecordPage: React.FC = () => {
           {uploadedPhotosCount > 0 &&
             session.status !== "completed" &&
             !canGenerateNFT && (
-              <Card className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-yellow-900 dark:text-yellow-100">
-                    <AlertCircle className="mr-2 h-5 w-5" />
+              <Card className="border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:border-yellow-800 dark:from-yellow-950 dark:to-yellow-900">
+                <CardHeader className="border-b border-yellow-200 dark:border-yellow-800">
+                  <CardTitle className="flex items-center gap-2 text-yellow-900 dark:text-yellow-100">
+                    <AlertTriangle className="h-5 w-5" />
                     NFT Generation Not Available
                   </CardTitle>
                   <CardDescription className="text-yellow-700 dark:text-yellow-300">
@@ -692,13 +1109,29 @@ export const SessionRecordPage: React.FC = () => {
                     sessions.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button
-                    onClick={() => router.push("/dashboard/subscription")}
-                    className="w-full bg-yellow-600 text-white hover:bg-yellow-700"
-                  >
-                    Upgrade Subscription
-                  </Button>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    <div className="bg-background/50 rounded-lg p-3">
+                      <h4 className="mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-100">
+                        Unlock NFT Features
+                      </h4>
+                      <ul className="space-y-1 text-xs text-yellow-700 dark:text-yellow-300">
+                        <li>• Generate verified NFT certificates</li>
+                        <li>• Blockchain-based authenticity proof</li>
+                        <li>• Enhanced AI verification features</li>
+                        <li>• Priority support</li>
+                      </ul>
+                    </div>
+
+                    <Button
+                      onClick={() => router.push("/dashboard/subscription")}
+                      className="w-full bg-yellow-600 text-white hover:bg-yellow-700"
+                      size="lg"
+                    >
+                      <Zap className="mr-2 h-4 w-4" />
+                      Upgrade Subscription
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -708,22 +1141,28 @@ export const SessionRecordPage: React.FC = () => {
             <Card
               className={`border-2 ${
                 mintingResult.success
-                  ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
-                  : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950"
+                  ? "border-green-200 bg-gradient-to-br from-green-50 to-green-100 dark:border-green-800 dark:from-green-950 dark:to-green-900"
+                  : "border-red-200 bg-gradient-to-br from-red-50 to-red-100 dark:border-red-800 dark:from-red-950 dark:to-red-900"
               }`}
             >
-              <CardHeader>
+              <CardHeader
+                className={`border-b ${
+                  mintingResult.success
+                    ? "border-green-200 dark:border-green-800"
+                    : "border-red-200 dark:border-red-800"
+                }`}
+              >
                 <CardTitle
-                  className={`flex items-center ${
+                  className={`flex items-center gap-2 ${
                     mintingResult.success
                       ? "text-green-900 dark:text-green-100"
                       : "text-red-900 dark:text-red-100"
                   }`}
                 >
                   {mintingResult.success ? (
-                    <CheckCircle className="mr-2 h-5 w-5" />
+                    <Award className="h-5 w-5" />
                   ) : (
-                    <AlertCircle className="mr-2 h-5 w-5" />
+                    <AlertTriangle className="h-5 w-5" />
                   )}
                   {mintingResult.success
                     ? "NFT Minted Successfully!"
@@ -742,21 +1181,27 @@ export const SessionRecordPage: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               {mintingResult.success && (
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Token ID:</span>
-                      <span className="font-mono text-sm">
-                        {mintingResult.token_id?.toString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">
-                        Transaction Hash:
-                      </span>
-                      <span className="font-mono text-sm">
-                        {mintingResult.transaction_hash || "N/A"}
-                      </span>
+                <CardContent className="pt-6">
+                  <div className="bg-background/50 rounded-lg p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Token ID:</span>
+                        <code className="bg-muted rounded px-2 py-1 font-mono text-sm">
+                          {mintingResult.token_id?.toString()}
+                        </code>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">
+                          Transaction Hash:
+                        </span>
+                        <code className="bg-muted max-w-32 truncate rounded px-2 py-1 font-mono text-sm">
+                          {mintingResult.transaction_hash || "Processing..."}
+                        </code>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Network:</span>
+                        <span className="text-sm">Internet Computer</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
