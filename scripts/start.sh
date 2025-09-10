@@ -71,65 +71,62 @@ dfx identity use staging
 echo "🚀 Deploying canisters..."
 dfx deploy
 
-while true; do
-    git pull origin main || true
-    npm install || true
-    pushd src/frontend/ > /dev/null
-    npm install || true
-    popd > /dev/null
-    dfx deploy
-    sleep 5
-    bash scripts/setup-s3.sh || true
-    
-    # Setup AI Verification Worker
-    echo "🤖 Setting up AI Verification Worker..."
-    pushd services/ai-verification-worker/ > /dev/null
-    if [ ! -d "venv" ]; then
-        echo "📦 Creating Python virtual environment..."
-        python3 -m venv venv
+# Setup S3 configuration
+echo "☁️ Setting up S3 configuration..."
+bash scripts/setup-s3.sh || echo "⚠️ S3 setup failed, continuing..."
+
+# Setup AI Verification Worker
+echo "🤖 Setting up AI Verification Worker..."
+pushd services/ai-verification-worker/ > /dev/null
+if [ ! -d "venv" ]; then
+    echo "📦 Creating Python virtual environment..."
+    python3 -m venv venv
+fi
+source venv/bin/activate
+pip install -r requirements.txt || true
+
+# Start AI worker in background with auto-restart
+echo "🚀 Starting AI Verification Worker (background)..."
+
+# Function to start worker
+start_ai_worker() {
+    nohup python3 ai_verification_worker.py > ai_verification_worker.log 2>&1 &
+    echo $! > ai_verification_worker.pid
+    echo "✅ AI Worker started with PID $(cat ai_verification_worker.pid)"
+}
+
+# Function to check if worker is running
+is_worker_running() {
+    if [ -f "ai_verification_worker.pid" ]; then
+        local pid=$(cat ai_verification_worker.pid)
+        ps -p $pid > /dev/null 2>&1
+    else
+        false
     fi
-    source venv/bin/activate
-    pip install -r requirements.txt || true
-    
-    # Start AI worker in background with auto-restart
-    echo "🚀 Starting AI Verification Worker (background)..."
-    
-    # Function to start worker
-    start_ai_worker() {
-        nohup python3 ai_verification_worker.py > ai_verification_worker.log 2>&1 &
-        echo $! > ai_verification_worker.pid
-        echo "✅ AI Worker started with PID $(cat ai_verification_worker.pid)"
-    }
-    
-    # Function to check if worker is running
-    is_worker_running() {
-        if [ -f "ai_verification_worker.pid" ]; then
-            local pid=$(cat ai_verification_worker.pid)
-            ps -p $pid > /dev/null 2>&1
-        else
-            false
+}
+
+# Start worker initially
+start_ai_worker
+
+# Start monitoring in background
+(
+    while true; do
+        sleep 30
+        if ! is_worker_running; then
+            echo "🔄 AI Worker not running, restarting..."
+            start_ai_worker
         fi
-    }
-    
-    # Start worker initially
-    start_ai_worker
-    
-    # Start monitoring in background
-    (
-        while true; do
-            sleep 30
-            if ! is_worker_running; then
-                echo "🔄 AI Worker not running, restarting..."
-                start_ai_worker
-            fi
-        done
-    ) &
-    echo $! > ai_worker_monitor.pid
-    echo "📡 AI Worker monitor started with PID $(cat ai_worker_monitor.pid)"
-    popd > /dev/null
-    
-    echo "🌐 Starting frontend..."
-    pushd src/frontend/ > /dev/null
-    timeout 2700 npm start || true
-    popd > /dev/null
-done
+    done
+) &
+echo $! > ai_worker_monitor.pid
+echo "📡 AI Worker monitor started with PID $(cat ai_worker_monitor.pid)"
+popd > /dev/null
+
+echo "🌐 Application deployed successfully!"
+echo ""
+echo "📱 Frontend URL: http://bd3sg-teaaa-aaaaa-qaaba-cai.localhost:4943/"
+echo "🔧 Backend Candid: http://127.0.0.1:4943/?canisterId=be2us-64aaa-aaaaa-qaabq-cai&id=bkyz2-fmaaa-aaaaa-qaaaq-cai"
+echo "🤖 AI Worker: Running in background (PID $(cat services/ai-verification-worker/ai_verification_worker.pid))"
+echo ""
+echo "✅ Deployment complete! The application is now running in production mode."
+echo "💡 To start development mode, run: cd src/frontend && npm run dev"
