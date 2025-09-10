@@ -122,11 +122,7 @@ echo $! > ai_worker_monitor.pid
 echo "📡 AI Worker monitor started with PID $(cat ai_worker_monitor.pid)"
 popd > /dev/null
 
-echo "🌐 Application deployed successfully!"
-echo ""
-echo "📱 Frontend URL: http://bd3sg-teaaa-aaaaa-qaaba-cai.localhost:4943/"
-echo "🔧 Backend Candid: http://127.0.0.1:4943/?canisterId=be2us-64aaa-aaaaa-qaabq-cai&id=bkyz2-fmaaa-aaaaa-qaaaq-cai"
-echo "🤖 AI Worker: Running in background (PID $(cat services/ai-verification-worker/ai_verification_worker.pid))"
-echo ""
-echo "✅ Deployment complete! The application is now running in production mode."
-echo "💡 To start development mode, run: cd src/frontend && npm run dev"
+echo "🌐 Starting frontend development server..."
+pushd src/frontend/ > /dev/null
+npm run dev
+popd > /dev/null

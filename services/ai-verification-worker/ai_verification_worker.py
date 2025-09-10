@@ -219,13 +219,13 @@ class AIVerificationWorker:
             # Format notes for Candid
             notes_candid = "vec {}" if not notes else f"vec {{{'; '.join([f'\"{note}\"' for note in notes])}}}"
             
-            # Build dfx command with proper Candid formatting
+            # Build dfx command with new struct format
             cmd = [
                 "dfx", "canister", "call",
                 "--network", self.network,
                 self.canister_id,
                 "update_verification_result",
-                f'("{verification_id}", {status_variant}, {final_score}, {base_similarity}, {anomaly_count}, {breakdown_candid}, {evidence_candid}, {notes_candid})'
+                f'(record {{ verification_id = "{verification_id}"; status = {status_variant}; final_score = {final_score}; base_similarity = {base_similarity}; anomaly_count = {anomaly_count}; breakdown = {breakdown_candid}; evidence_urls = {evidence_candid}; notes = {notes_candid} }})'
             ]
             
             # Log the command for debugging
