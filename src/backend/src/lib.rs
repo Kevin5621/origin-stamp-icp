@@ -18,7 +18,7 @@ pub use types::{
     CollectionMetadata, CreateCertificateRequest, LoginResult, NFTGenerationResult,
     PhysicalArtSession, S3Config, Token, TokenMetadata, TransferRequest, TransferResponse,
     UploadFileData, UserActivity, UserChartData, UserDashboardData, UserDashboardMetrics,
-    UserPerformanceStats, VerificationResult, VerificationStatus,
+    UserPerformanceStats, VerificationResult, VerificationStatus, VerificationUpdateRequest,
 };
 
 // Dashboard metrics structure

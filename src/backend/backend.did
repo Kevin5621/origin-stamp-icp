@@ -191,6 +191,16 @@ type VerificationResult = record {
   details : text;
 };
 type VerificationStatus = variant { Rejected; ReviewNeeded; Verified; Pending };
+type VerificationUpdateRequest = record {
+  status : VerificationStatus;
+  evidence_urls : vec text;
+  breakdown : vec record { text; float64 };
+  anomaly_count : nat32;
+  final_score : float64;
+  base_similarity : float64;
+  notes : vec text;
+  verification_id : text;
+};
 service : () -> {
   configure_s3 : (S3Config) -> (bool);
   create_coupon : (text, CouponType, nat32, nat64) -> (Result);
@@ -271,16 +281,7 @@ service : () -> {
   update_user_avatar : (text, text) -> (Result);
   update_user_subscription : (text, CouponType) -> (Result);
   update_username : (text, text, text) -> (LoginResult);
-  update_verification_result : (
-      text,
-      VerificationStatus,
-      float64,
-      float64,
-      nat32,
-      vec record { text; float64 },
-      vec text,
-      vec text,
-    ) -> (Result);
+  update_verification_result : (VerificationUpdateRequest) -> (Result);
   upload_photo_to_session : (text, text) -> (Result);
   verify_certificate : (text) -> (Result_6);
 }

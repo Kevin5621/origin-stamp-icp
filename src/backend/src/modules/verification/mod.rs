@@ -1,4 +1,6 @@
-use crate::types::{AIVerificationAsset, AIVerificationResult, VerificationStatus};
+use crate::types::{
+    AIVerificationAsset, AIVerificationResult, VerificationStatus, VerificationUpdateRequest,
+};
 use crate::utils::generate_random_id;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -65,27 +67,18 @@ pub fn create_verification_request(
 
 // Update verification result (called by external worker)
 #[ic_cdk::update]
-pub fn update_verification_result(
-    verification_id: String,
-    status: VerificationStatus,
-    final_score: f64,
-    base_similarity: f64,
-    anomaly_count: u32,
-    breakdown: Vec<(String, f64)>,
-    evidence_urls: Vec<String>,
-    notes: Vec<String>,
-) -> Result<bool, String> {
+pub fn update_verification_result(request: VerificationUpdateRequest) -> Result<bool, String> {
     VERIFICATION_RESULTS.with(|results| {
         let mut results_map = results.borrow_mut();
-        match results_map.get_mut(&verification_id) {
+        match results_map.get_mut(&request.verification_id) {
             Some(verification) => {
-                verification.status = status;
-                verification.final_score = final_score;
-                verification.base_similarity = base_similarity;
-                verification.anomaly_count = anomaly_count;
-                verification.breakdown = breakdown.into_iter().collect();
-                verification.evidence_urls = evidence_urls;
-                verification.notes = notes;
+                verification.status = request.status;
+                verification.final_score = request.final_score;
+                verification.base_similarity = request.base_similarity;
+                verification.anomaly_count = request.anomaly_count;
+                verification.breakdown = request.breakdown.into_iter().collect();
+                verification.evidence_urls = request.evidence_urls;
+                verification.notes = request.notes;
                 verification.checked_at = ic_cdk::api::time();
                 Ok(true)
             }

@@ -45,6 +45,19 @@ pub struct VerificationRequest {
     pub callback_url: Option<String>, // For webhook back to canister
 }
 
+// Update request for verification results
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub struct VerificationUpdateRequest {
+    pub verification_id: String,
+    pub status: VerificationStatus,
+    pub final_score: f64,
+    pub base_similarity: f64,
+    pub anomaly_count: u32,
+    pub breakdown: Vec<(String, f64)>,
+    pub evidence_urls: Vec<String>,
+    pub notes: Vec<String>,
+}
+
 // Cerebras API integration types
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CerebrasRequest {
