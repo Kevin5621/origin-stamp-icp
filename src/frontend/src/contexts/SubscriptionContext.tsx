@@ -4,6 +4,7 @@ import React, {
   createContext,
   useContext,
   useState,
+  useEffect,
   useMemo,
   useCallback,
   ReactNode,
@@ -61,6 +62,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [isRedeeming, setIsRedeeming] = useState(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   // Helper function to get plan by name
   const getPlanByName = useCallback((name: string) => {
@@ -109,7 +111,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({
     } catch (error) {
       console.error("Failed to load user subscription:", error);
       // Only set to Free if this is the first load (no previous state)
-      if (currentSubscription === null) {
+      if (!hasLoadedOnce) {
         const freePlan = getPlanByName("Free");
         if (freePlan) {
           setCurrentSubscription({
@@ -129,8 +131,20 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({
       }
     } finally {
       setIsLoading(false);
+      setHasLoadedOnce(true);
     }
-  }, [user?.username, currentSubscription, getPlanByName]);
+  }, [user?.username, getPlanByName, hasLoadedOnce]);
+
+  // Load user subscription on mount and when user changes
+  useEffect(() => {
+    if (user?.username) {
+      loadUserSubscription();
+    } else {
+      setCurrentSubscription(null);
+      setSubscriptionLimits(null);
+      setIsLoading(false);
+    }
+  }, [user?.username, loadUserSubscription]);
 
   const refreshSubscription = useCallback(async () => {
     await loadUserSubscription();
