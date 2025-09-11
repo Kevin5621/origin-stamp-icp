@@ -14,7 +14,7 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import { useToastContext } from "../../contexts/ToastContext";
 import { AuthClient } from "@dfinity/auth-client";
-import { googleAuthService } from "../../services/auth/google";
+import { GoogleOAuthButton } from "./GoogleOAuthButton";
 import { AuthService } from "../../services/auth";
 import { User, Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
 import { LoadingSpinner } from "../ui/loading-spinner";
@@ -114,22 +114,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    setAuthMethod("google");
+  const handleGoogleLoginSuccess = (userInfo: {
+    id: string;
+    name: string;
+    email: string;
+    picture: string;
+  }) => {
+    loginWithGoogle(userInfo);
+    handleClose();
+  };
 
-    try {
-      const userInfo = await googleAuthService.signIn();
-      loginWithGoogle(userInfo);
-      success(`Welcome back, ${userInfo.name}!`);
-      handleClose();
-    } catch (err) {
-      console.error("Google login failed:", err);
-      error("Google login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-      setAuthMethod("");
-    }
+  const handleGoogleLoginError = (err: Error) => {
+    console.error("Google login failed:", err);
+    setAuthMethod("");
   };
 
   const handleUsernameLogin = () => {
@@ -358,26 +355,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             </div>
           </Button>
 
-          <Button
-            onClick={handleGoogleLogin}
-            disabled={isLoading}
-            className="border-border bg-background text-foreground hover:bg-muted hover:text-foreground h-12 w-full border text-base transition-all duration-200"
-          >
-            <div className="flex items-center space-x-3">
-              {isLoading && authMethod === "google" ? (
-                <LoadingSpinner size="md" variant="infinite" />
-              ) : (
-                <Image
-                  src="/google-logo.svg"
-                  alt="Google"
-                  width={20}
-                  height={20}
-                  className="h-5 w-5"
-                />
-              )}
-              <span>Continue with Google</span>
-            </div>
-          </Button>
+          <GoogleOAuthButton
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+            variant="signin"
+            size="md"
+            disabled={isLoading && authMethod !== "google"}
+          />
 
           <Button
             onClick={handleUsernameLogin}

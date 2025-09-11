@@ -8,6 +8,7 @@ import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import ToastContainer from "@/components/ui/toast-container";
 import { CookieSync } from "../components/auth/CookieSync";
 import { ResourcePreloader } from "@/components/common/ResourcePreloader";
+import { GoogleOAuthLoader } from "@/components/auth/GoogleOAuthLoader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,29 +41,34 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <SubscriptionProvider>
-              <ToastProvider>
-                <CookieSync />
-                <ResourcePreloader
-                  preloadRoutes={[
-                    "/dashboard",
-                    "/dashboard/collection",
-                    "/dashboard/marketplace",
-                    "/dashboard/sessions",
-                    "/dashboard/profile",
-                  ]}
-                  preloadImages={[
-                    "/landing/hero.webp",
-                    "/landing/blockchain-authenticatio.webp",
-                    "/landing/instant-verification.webp",
-                  ]}
-                />
-                {children}
-                <ToastContainer />
-              </ToastProvider>
-            </SubscriptionProvider>
-          </AuthProvider>
+          <GoogleOAuthLoader>
+            <AuthProvider>
+              <SubscriptionProvider>
+                <ToastProvider>
+                  <CookieSync />
+                  <ResourcePreloader
+                    preloadRoutes={[
+                      "/dashboard",
+                      "/dashboard/collection",
+                      "/dashboard/marketplace",
+                      "/dashboard/sessions",
+                      "/dashboard/profile",
+                      "/dashboard/subscription",
+                      "/dashboard/sessions/create",
+                    ]}
+                    preloadImages={[
+                      "/landing/hero.webp",
+                      "/landing/blockchain-authenticatio.webp",
+                      "/landing/instant-verification.webp",
+                    ]}
+                    enableIntelligentPreloading={true}
+                  />
+                  {children}
+                  <ToastContainer />
+                </ToastProvider>
+              </SubscriptionProvider>
+            </AuthProvider>
+          </GoogleOAuthLoader>
         </ThemeProvider>
       </body>
     </html>

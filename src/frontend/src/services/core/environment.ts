@@ -92,8 +92,7 @@ export class EnvironmentService {
           this.getEnvVar(
             "VITE_GOOGLE_CLIENT_ID",
             "NEXT_PUBLIC_GOOGLE_CLIENT_ID",
-          ) ||
-          "333774548009-b26h22g5nnemcbedv3btc4t6ddco5cv6.apps.googleusercontent.com",
+          ) || this.getDefaultGoogleClientId(),
         internetIdentityUrl:
           this.getEnvVar("NEXT_PUBLIC_INTERNET_IDENTITY_URL") ||
           "https://identity.ic0.app",
@@ -254,6 +253,109 @@ export class EnvironmentService {
     if (errors.length > 0) {
       throw new Error(`Environment configuration errors: ${errors.join(", ")}`);
     }
+  }
+
+  /**
+   * Validate Google OAuth configuration
+   */
+  public validateGoogleOAuthConfig(): {
+    valid: boolean;
+    errors: string[];
+    warnings: string[];
+  } {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    const clientId = this.config.auth.googleClientId;
+
+    // Check if Google Client ID is present
+    if (!clientId) {
+      errors.push("Google Client ID is not configured");
+    } else {
+      // Validate Google Client ID format
+      if (!clientId.includes(".apps.googleusercontent.com")) {
+        errors.push(
+          "Google Client ID format is invalid (should end with .apps.googleusercontent.com)",
+        );
+      }
+
+      // Check if it's a development/example client ID (more generic check)
+      if (this.isDevelopmentClientId(clientId)) {
+        warnings.push(
+          "Using development/example Google Client ID - please configure your own for production",
+        );
+      }
+
+      // Check client ID length (Google client IDs are typically 39-40 characters before .apps.googleusercontent.com)
+      const clientIdPart = clientId.split(".apps.googleusercontent.com")[0];
+      if (
+        clientIdPart &&
+        (clientIdPart.length < 35 || clientIdPart.length > 45)
+      ) {
+        warnings.push(
+          "Google Client ID length seems unusual - please verify it's correct",
+        );
+      }
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors,
+      warnings,
+    };
+  }
+
+  /**
+   * Check if the client ID appears to be a development/example ID
+   * This is a more generic check that doesn't hardcode specific values
+   */
+  private isDevelopmentClientId(clientId: string): boolean {
+    // Check for common development patterns
+    const regexPatterns = [
+      /^[0-9]+-example/,
+      /^[0-9]+-dev/,
+      /^[0-9]+-test/,
+      /^[0-9]+-demo/,
+    ];
+
+    // Check regex patterns
+    const matchesRegex = regexPatterns.some((pattern) =>
+      pattern.test(clientId),
+    );
+
+    // Check if it's the same as the default fallback
+    const isDefaultClientId = clientId === this.getDefaultGoogleClientId();
+
+    return matchesRegex || isDefaultClientId;
+  }
+
+  /**
+   * Get the default Google Client ID (used as fallback)
+   * This is the only place where we reference the specific default value
+   */
+  private getDefaultGoogleClientId(): string {
+    return "333774548009-b26h22g5nnemcbedv3btc4t6ddco5cv6.apps.googleusercontent.com";
+  }
+
+  /**
+   * Get Google OAuth configuration status
+   */
+  public getGoogleOAuthStatus(): {
+    configured: boolean;
+    clientId: string;
+    isValid: boolean;
+    errors: string[];
+    warnings: string[];
+  } {
+    const validation = this.validateGoogleOAuthConfig();
+
+    return {
+      configured: !!this.config.auth.googleClientId,
+      clientId: this.config.auth.googleClientId,
+      isValid: validation.valid,
+      errors: validation.errors,
+      warnings: validation.warnings,
+    };
   }
 }
 

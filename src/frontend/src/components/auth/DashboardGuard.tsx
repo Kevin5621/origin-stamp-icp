@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, memo } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -9,27 +9,41 @@ interface DashboardGuardProps {
   children: React.ReactNode;
 }
 
-export const DashboardGuard: React.FC<DashboardGuardProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const router = useRouter();
+export const DashboardGuard: React.FC<DashboardGuardProps> = memo(
+  ({ children }) => {
+    const { isAuthenticated, isLoading } = useAuth();
+    const router = useRouter();
+    const hasRedirectedRef = useRef(false);
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push("/auth/login");
+    useEffect(() => {
+      // Prevent multiple redirects
+      if (!isLoading && !isAuthenticated && !hasRedirectedRef.current) {
+        hasRedirectedRef.current = true;
+        router.push("/auth/login");
+      }
+    }, [isAuthenticated, isLoading, router]);
+
+    // Reset redirect flag when authentication state changes
+    useEffect(() => {
+      if (isAuthenticated) {
+        hasRedirectedRef.current = false;
+      }
+    }, [isAuthenticated]);
+
+    if (isLoading) {
+      return (
+        <div className="flex min-h-screen items-center justify-center">
+          <LoadingSpinner size="lg" variant="infinite" />
+        </div>
+      );
     }
-  }, [isAuthenticated, isLoading, router]);
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <LoadingSpinner size="lg" variant="infinite" />
-      </div>
-    );
-  }
+    if (!isAuthenticated) {
+      return null;
+    }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+    return <>{children}</>;
+  },
+);
 
-  return <>{children}</>;
-};
+DashboardGuard.displayName = "DashboardGuard";

@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useToastContext } from "../../../contexts/ToastContext";
 import { AuthClient } from "@dfinity/auth-client";
-import { googleAuthService, AuthService } from "../../../services";
+import { AuthService } from "../../../services";
+import { GoogleOAuthButton } from "../../../components/auth/GoogleOAuthButton";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { User, Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
@@ -99,26 +100,23 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    setAuthMethod("google");
+  const handleGoogleLoginSuccess = (userInfo: {
+    id: string;
+    name: string;
+    email: string;
+    picture: string;
+  }) => {
+    console.log("Google login successful, user:", userInfo);
+    loginWithGoogle(userInfo);
+    console.log("Redirecting to dashboard...");
+    setTimeout(() => {
+      router.replace("/dashboard");
+    }, 100);
+  };
 
-    try {
-      const userInfo = await googleAuthService.signIn();
-      console.log("Google login successful, user:", userInfo);
-      loginWithGoogle(userInfo);
-      success(`Welcome back, ${userInfo.name}!`);
-      console.log("Redirecting to dashboard...");
-      setTimeout(() => {
-        router.replace("/dashboard");
-      }, 100);
-    } catch (err) {
-      console.error("Google login failed:", err);
-      error("Google login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-      setAuthMethod("");
-    }
+  const handleGoogleLoginError = (err: Error) => {
+    console.error("Google login failed:", err);
+    setAuthMethod("");
   };
 
   const handleUsernameLogin = () => {
@@ -342,26 +340,13 @@ const LoginPage: React.FC = () => {
             </div>
           </Button>
 
-          <Button
-            onClick={handleGoogleLogin}
-            disabled={isLoading}
-            className="border-border bg-background text-foreground hover:bg-muted hover:text-foreground h-12 w-full border text-base transition-all duration-200"
-          >
-            <div className="flex items-center space-x-3">
-              {isLoading && authMethod === "google" ? (
-                <LoadingSpinner size="md" variant="infinite" />
-              ) : (
-                <Image
-                  src="/google-logo.svg"
-                  alt="Google"
-                  width={20}
-                  height={20}
-                  className="h-5 w-5"
-                />
-              )}
-              <span>Continue with Google</span>
-            </div>
-          </Button>
+          <GoogleOAuthButton
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+            variant="signin"
+            size="md"
+            disabled={isLoading && authMethod !== "google"}
+          />
 
           <Button
             onClick={handleUsernameLogin}
