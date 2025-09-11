@@ -5,8 +5,29 @@ pub struct User {
     pub username: String,
     pub password_hash: String,
     pub created_at: u64,
+    pub updated_at: u64,
     pub avatar_url: Option<String>,
     pub subscription_tier: String,
+    // Profile fields
+    pub display_name: Option<String>,
+    pub email: Option<String>,
+    pub bio: Option<String>,
+    pub location: Option<String>,
+}
+
+#[derive(Clone, Debug, CandidType, serde::Deserialize)]
+pub struct UpdateProfileRequest {
+    pub display_name: Option<String>,
+    pub email: Option<String>,
+    pub bio: Option<String>,
+    pub location: Option<String>,
+}
+
+#[derive(Clone, Debug, CandidType, serde::Deserialize)]
+pub struct ProfileUpdateResult {
+    pub success: bool,
+    pub message: String,
+    pub updated_fields: Vec<String>,
 }
 
 #[derive(Clone, Debug, CandidType)]

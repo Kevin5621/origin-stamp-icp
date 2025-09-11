@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  User,
-  Shield,
-  Lock,
-  Mail,
-  Phone,
-  MapPin,
-  Save,
-  X,
-  Edit,
-} from "lucide-react";
+import { User, Shield, Lock, Mail, MapPin, Save, X, Edit } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -25,9 +15,9 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface UserProfile {
   username: string;
+  display_name?: string;
   email?: string;
   bio?: string;
-  phone?: string;
   location?: string;
   profile_picture?: string;
   created_at?: bigint;
@@ -35,9 +25,9 @@ interface UserProfile {
 }
 
 interface ProfileForm {
+  display_name: string;
   email: string;
   bio: string;
-  phone: string;
   location: string;
 }
 
@@ -64,7 +54,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
     <div className="space-y-8">
       <Card>
         <CardHeader className="px-6 pt-6 pb-4">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-2">
               <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
                 <div className="bg-primary/10 rounded-lg p-2">
@@ -104,18 +94,34 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               </label>
               {editingProfile ? (
                 <Input
-                  value={userProfile?.username || ""}
-                  disabled
-                  className="bg-muted/50 h-11 sm:h-12"
-                  placeholder="Username cannot be changed"
+                  value={profileForm.display_name}
+                  onChange={(e) =>
+                    onProfileFormChange("display_name", e.target.value)
+                  }
+                  placeholder="Enter your display name"
+                  className="h-11 sm:h-12"
                 />
               ) : (
                 <div className="border-border bg-muted/30 flex h-11 items-center justify-between rounded-lg border p-3 sm:h-12">
                   <span className="text-foreground font-medium">
-                    {userProfile?.username || "Your Name"}
+                    {userProfile?.display_name ||
+                      userProfile?.username ||
+                      "Not set"}
                   </span>
                 </div>
               )}
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-foreground flex items-center gap-2 text-sm font-semibold">
+                <User className="text-muted-foreground h-4 w-4" />
+                Username (cannot be changed)
+              </label>
+              <div className="border-border bg-muted/50 flex h-11 items-center justify-between rounded-lg border p-3 sm:h-12">
+                <span className="text-muted-foreground font-medium">
+                  @{userProfile?.username || "username"}
+                </span>
+              </div>
             </div>
 
             <div className="space-y-3">
@@ -135,28 +141,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                 <div className="border-border bg-muted/30 flex h-11 items-center justify-between rounded-lg border p-3 sm:h-12">
                   <span className="text-foreground font-medium">
                     {userProfile?.email || "your.email@example.com"}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <label className="text-foreground flex items-center gap-2 text-sm font-semibold">
-                <Phone className="h-4 w-4" />
-                Phone Number
-              </label>
-              {editingProfile ? (
-                <Input
-                  type="tel"
-                  value={profileForm.phone}
-                  onChange={(e) => onProfileFormChange("phone", e.target.value)}
-                  placeholder="+1 (555) 123-4567"
-                  className="h-11 sm:h-12"
-                />
-              ) : (
-                <div className="border-border bg-muted/30 flex h-11 items-center justify-between rounded-lg border p-3 sm:h-12">
-                  <span className="text-foreground font-medium">
-                    {userProfile?.phone || "Not provided"}
                   </span>
                 </div>
               )}

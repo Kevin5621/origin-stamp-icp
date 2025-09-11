@@ -1,12 +1,14 @@
 use crate::types::{
-    ChartDataPoint, LoginResult, User, UserActivity, UserChartData, UserDashboardData,
-    UserDashboardMetrics, UserPerformanceStats,
+    ChartDataPoint, LoginResult, ProfileUpdateResult, UpdateProfileRequest, User, UserActivity,
+    UserChartData, UserDashboardData, UserDashboardMetrics, UserPerformanceStats,
 };
 use std::cell::RefCell;
 use std::collections::HashMap;
 
 thread_local! {
     static USERS: RefCell<HashMap<String, User>> = RefCell::new(HashMap::new());
+    static RATE_LIMITER: RefCell<HashMap<String, (u32, u64)>> = RefCell::new(HashMap::new());
+    static USERNAME_CACHE: RefCell<HashMap<String, bool>> = RefCell::new(HashMap::new());
 }
 
 fn simple_hash(password: &str) -> String {
@@ -22,6 +24,87 @@ fn generate_avatar_url(username: &str) -> String {
     format!(
         "https://api.dicebear.com/7.x/lorelei/svg?seed={username}&backgroundColor={selected_color}&radius=50&scale=80&size=128"
     )
+}
+
+// Rate limiting functions
+fn check_rate_limit(identifier: &str, max_attempts: u32, window_seconds: u64) -> bool {
+    let current_time = ic_cdk::api::time() / 1_000_000_000; // Convert to seconds
+
+    RATE_LIMITER.with(|limiter| {
+        let mut limiter_map = limiter.borrow_mut();
+
+        match limiter_map.get_mut(identifier) {
+            Some((attempts, last_attempt)) => {
+                if current_time - *last_attempt > window_seconds {
+                    // Reset window
+                    *attempts = 1;
+                    *last_attempt = current_time;
+                    true
+                } else if *attempts < max_attempts {
+                    *attempts += 1;
+                    true
+                } else {
+                    false
+                }
+            }
+            None => {
+                limiter_map.insert(identifier.to_string(), (1, current_time));
+                true
+            }
+        }
+    })
+}
+
+// Username availability check with caching
+fn is_username_available(username: &str) -> bool {
+    USERNAME_CACHE.with(|cache| {
+        let mut cache_map = cache.borrow_mut();
+
+        // Check cache first
+        if let Some(&cached_result) = cache_map.get(username) {
+            return !cached_result; // Cached true means taken, so available is false
+        }
+
+        // Check actual users
+        let is_taken = USERS.with(|users| users.borrow().contains_key(username));
+
+        // Cache the result
+        cache_map.insert(username.to_string(), is_taken);
+
+        !is_taken
+    })
+}
+
+// Validate profile fields
+fn validate_profile_fields(request: &UpdateProfileRequest) -> Result<(), String> {
+    if let Some(ref display_name) = request.display_name {
+        if display_name.len() > 50 {
+            return Err("Display name cannot exceed 50 characters".to_string());
+        }
+        if display_name.trim().is_empty() {
+            return Err("Display name cannot be empty".to_string());
+        }
+    }
+
+    if let Some(ref email) = request.email {
+        if !email.contains('@') || email.len() > 100 {
+            return Err("Invalid email format or too long".to_string());
+        }
+    }
+
+    if let Some(ref bio) = request.bio {
+        if bio.len() > 500 {
+            return Err("Bio cannot exceed 500 characters".to_string());
+        }
+    }
+
+    if let Some(ref location) = request.location {
+        if location.len() > 100 {
+            return Err("Location cannot exceed 100 characters".to_string());
+        }
+    }
+
+    Ok(())
 }
 
 #[ic_cdk::update]
@@ -45,12 +128,18 @@ pub fn register_user(username: String, password: String) -> LoginResult {
             }
         } else {
             let avatar_url = generate_avatar_url(&username);
+            let current_time = ic_cdk::api::time();
             let user = User {
                 username: username.clone(),
                 password_hash: simple_hash(&password),
-                created_at: ic_cdk::api::time(),
+                created_at: current_time,
+                updated_at: current_time,
                 avatar_url: Some(avatar_url),
                 subscription_tier: "Free".to_string(),
+                display_name: None,
+                email: None,
+                bio: None,
+                location: None,
             };
 
             users_map.insert(username.clone(), user);
@@ -465,4 +554,164 @@ fn generate_chart_data(
 
     chart_data.reverse(); // Show oldest to newest
     chart_data
+}
+
+// New Profile Management Functions
+
+#[ic_cdk::query]
+pub fn check_username_availability(username: String) -> bool {
+    if username.is_empty() || username.len() < 3 || username.len() > 30 {
+        return false;
+    }
+
+    // Check for valid characters (alphanumeric and underscore only)
+    if !username.chars().all(|c| c.is_alphanumeric() || c == '_') {
+        return false;
+    }
+
+    is_username_available(&username)
+}
+
+#[ic_cdk::update]
+pub fn update_user_profile(
+    username: String,
+    password: String,
+    profile_request: UpdateProfileRequest,
+) -> ProfileUpdateResult {
+    // Rate limiting check
+    if !check_rate_limit(&username, 5, 300) {
+        // 5 attempts per 5 minutes
+        return ProfileUpdateResult {
+            success: false,
+            message: "Too many update attempts. Please try again later.".to_string(),
+            updated_fields: vec![],
+        };
+    }
+
+    // Validate input
+    if let Err(validation_error) = validate_profile_fields(&profile_request) {
+        return ProfileUpdateResult {
+            success: false,
+            message: validation_error,
+            updated_fields: vec![],
+        };
+    }
+
+    USERS.with(|users| {
+        let mut users_map = users.borrow_mut();
+
+        match users_map.get_mut(&username) {
+            Some(user) => {
+                // Verify password
+                let password_hash = simple_hash(&password);
+                if user.password_hash != password_hash {
+                    return ProfileUpdateResult {
+                        success: false,
+                        message: "Invalid password".to_string(),
+                        updated_fields: vec![],
+                    };
+                }
+
+                let mut updated_fields = Vec::new();
+
+                // Update fields
+                if let Some(ref display_name) = profile_request.display_name {
+                    user.display_name = Some(display_name.trim().to_string());
+                    updated_fields.push("display_name".to_string());
+                }
+
+                if let Some(ref email) = profile_request.email {
+                    user.email = Some(email.trim().to_lowercase());
+                    updated_fields.push("email".to_string());
+                }
+
+                if let Some(ref bio) = profile_request.bio {
+                    user.bio = Some(bio.trim().to_string());
+                    updated_fields.push("bio".to_string());
+                }
+
+                if let Some(ref location) = profile_request.location {
+                    user.location = Some(location.trim().to_string());
+                    updated_fields.push("location".to_string());
+                }
+
+                // Update timestamp
+                user.updated_at = ic_cdk::api::time();
+
+                ProfileUpdateResult {
+                    success: true,
+                    message: "Profile updated successfully".to_string(),
+                    updated_fields,
+                }
+            }
+            None => ProfileUpdateResult {
+                success: false,
+                message: "User not found".to_string(),
+                updated_fields: vec![],
+            },
+        }
+    })
+}
+
+#[ic_cdk::query]
+pub fn get_user_profile(username: String) -> Option<User> {
+    USERS.with(|users| users.borrow().get(&username).cloned())
+}
+
+#[ic_cdk::update]
+pub fn update_display_name(
+    username: String,
+    new_display_name: String,
+    password: String,
+) -> LoginResult {
+    // Rate limiting
+    if !check_rate_limit(&format!("{username}_display_name"), 3, 600) {
+        // 3 attempts per 10 minutes
+        return LoginResult {
+            success: false,
+            message: "Too many display name update attempts. Please try again later.".to_string(),
+            username: None,
+        };
+    }
+
+    // Validate display name
+    if new_display_name.trim().is_empty() || new_display_name.len() > 50 {
+        return LoginResult {
+            success: false,
+            message: "Display name must be between 1 and 50 characters".to_string(),
+            username: None,
+        };
+    }
+
+    USERS.with(|users| {
+        let mut users_map = users.borrow_mut();
+
+        match users_map.get_mut(&username) {
+            Some(user) => {
+                // Verify password
+                let password_hash = simple_hash(&password);
+                if user.password_hash != password_hash {
+                    return LoginResult {
+                        success: false,
+                        message: "Invalid password".to_string(),
+                        username: None,
+                    };
+                }
+
+                user.display_name = Some(new_display_name.trim().to_string());
+                user.updated_at = ic_cdk::api::time();
+
+                LoginResult {
+                    success: true,
+                    message: "Display name updated successfully".to_string(),
+                    username: Some(username),
+                }
+            }
+            None => LoginResult {
+                success: false,
+                message: "User not found".to_string(),
+                username: None,
+            },
+        }
+    })
 }

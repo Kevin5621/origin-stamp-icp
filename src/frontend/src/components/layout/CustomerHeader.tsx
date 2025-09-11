@@ -14,9 +14,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfilePicture } from "@/hooks/useProfilePicture";
 
-interface CustomerHeaderProps {}
-
-export const CustomerHeader: React.FC<CustomerHeaderProps> = () => {
+export const CustomerHeader: React.FC = () => {
   const { user, logout } = useAuth();
   const { profilePicture } = useProfilePicture();
 

@@ -3,8 +3,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { physicalArtService } from "@/services";
+import { physicalArtService, profileService } from "@/services";
 import { useProfilePicture } from "@/hooks/useProfilePicture";
+import { PasswordConfirmationDialog } from "@/components/ui/password-confirmation-dialog";
 import {
   ProfileHeader,
   ProfileSettings,
@@ -16,9 +17,9 @@ import {
 // Backend integration types
 interface UserProfile {
   username: string;
+  display_name?: string;
   email?: string;
   bio?: string;
-  phone?: string;
   location?: string;
   profile_picture?: string;
   created_at?: bigint;
@@ -88,6 +89,17 @@ export const ProfilePage: React.FC = () => {
     activity_status: false,
     session_history: true,
   });
+
+  // Profile editing state
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    display_name: "",
+    email: "",
+    bio: "",
+    location: "",
+  });
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
 
   // Load user profile from backend
@@ -95,21 +107,54 @@ export const ProfilePage: React.FC = () => {
     if (!user?.username) return;
 
     try {
-      // For now using mock data - will implement backend call when ready
-      const mockProfile: UserProfile = {
-        username: user.username,
-        email: user.email || "",
-        bio: "Passionate digital artist exploring the intersection of technology and creativity.",
-        phone: "+1 (555) 123-4567",
-        location: "San Francisco, CA",
-        profile_picture: user.picture || "",
-        created_at: BigInt(Date.now() * 1000000),
-        updated_at: BigInt(Date.now() * 1000000),
-      };
+      // Try to load profile from backend/localStorage first
+      let loadedProfile: UserProfile | null = null;
 
-      setUserProfile(mockProfile);
-    } catch (err) {
-      console.error("Failed to load user profile:", err);
+      try {
+        const backendProfile = await profileService.getUserProfile(
+          user.username,
+        );
+        if (backendProfile) {
+          // Convert backend profile to local UserProfile format
+          loadedProfile = {
+            username: backendProfile.username,
+            display_name: backendProfile.display_name,
+            email: backendProfile.email,
+            bio: backendProfile.bio,
+            location: backendProfile.location,
+            profile_picture: user.picture || "",
+            created_at: BigInt(Date.now() * 1000000),
+            updated_at: BigInt(Date.now() * 1000000),
+          };
+        }
+      } catch (profileError) {
+        // Could not load profile from backend
+      }
+
+      // If no profile found, create default profile
+      if (!loadedProfile) {
+        loadedProfile = {
+          username: user.username,
+          display_name: user.username, // Default to username for now
+          email: user.email || "",
+          bio: "Passionate digital artist exploring the intersection of technology and creativity.",
+          location: "San Francisco, CA",
+          profile_picture: user.picture || "",
+          created_at: BigInt(Date.now() * 1000000),
+          updated_at: BigInt(Date.now() * 1000000),
+        };
+      }
+
+      setUserProfile(loadedProfile);
+
+      // Initialize profile form with loaded data
+      setProfileForm({
+        display_name: loadedProfile.display_name || "",
+        email: loadedProfile.email || "",
+        bio: loadedProfile.bio || "",
+        location: loadedProfile.location || "",
+      });
+    } catch {
       error("Failed to load profile data");
     }
   }, [user?.username, user?.email, user?.picture, error]);
@@ -128,8 +173,7 @@ export const ProfilePage: React.FC = () => {
       };
 
       setUserStats(mockStats);
-    } catch (err) {
-      console.error("Failed to load user stats:", err);
+    } catch {
       setUserStats({
         art_sessions: 0,
         nfts_owned: 0,
@@ -178,8 +222,7 @@ export const ProfilePage: React.FC = () => {
       ];
 
       setRecentActivity(mockActivities);
-    } catch (err) {
-      console.error("Failed to load recent activity:", err);
+    } catch {
       setRecentActivity([]);
     }
   }, [user?.username]);
@@ -247,8 +290,7 @@ export const ProfilePage: React.FC = () => {
       } else {
         error(uploadResult.message || "Failed to upload profile photo");
       }
-    } catch (err) {
-      console.error("Photo upload error:", err);
+    } catch {
       error("Failed to upload profile photo");
     }
   };
@@ -277,6 +319,77 @@ export const ProfilePage: React.FC = () => {
     // When backend is ready: backend.update_privacy_settings(user.username, { [setting]: !privacySettings[setting] });
 
     success("Privacy settings updated");
+  };
+
+  // Profile editing handlers
+  const handleProfileFormChange = (
+    field: keyof typeof profileForm,
+    value: string,
+  ) => {
+    setProfileForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleEditToggle = () => {
+    const formData = {
+      display_name: userProfile?.display_name || "",
+      email: userProfile?.email || "",
+      bio: userProfile?.bio || "",
+      location: userProfile?.location || "",
+    };
+
+    setProfileForm(formData);
+    setEditingProfile(!editingProfile);
+  };
+
+  const handleProfileSave = async () => {
+    if (!user?.username) return;
+
+    // Validate profile data first
+    const validation = profileService.validateProfileFields(profileForm);
+    if (!validation.isValid) {
+      error(validation.errors.join(", "));
+      return;
+    }
+
+    // Show password confirmation dialog
+    setShowPasswordDialog(true);
+  };
+
+  const handlePasswordConfirm = async (password: string) => {
+    if (!user?.username) return;
+
+    setProfileLoading(true);
+    setShowPasswordDialog(false);
+
+    try {
+      // Update profile using the backend service
+      const result = await profileService.updateProfile(
+        user.username,
+        password,
+        profileForm,
+      );
+
+      if (result.success) {
+        // Reload profile from backend to get the latest data
+        await loadUserProfile();
+
+        setEditingProfile(false);
+        success("Profile updated successfully");
+      } else {
+        error(result.message || "Failed to update profile");
+      }
+    } catch {
+      error("Failed to update profile");
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const handlePasswordCancel = () => {
+    setShowPasswordDialog(false);
   };
 
   if (loading) {
@@ -324,16 +437,16 @@ export const ProfilePage: React.FC = () => {
           <ProfileSettings
             userProfile={userProfile}
             profileForm={{
-              email: userProfile?.email || "",
-              bio: userProfile?.bio || "",
-              phone: userProfile?.phone || "",
-              location: userProfile?.location || "",
+              display_name: profileForm.display_name,
+              email: profileForm.email,
+              bio: profileForm.bio,
+              location: profileForm.location,
             }}
-            editingProfile={false}
-            loading={false}
-            onProfileFormChange={() => {}}
-            onEditToggle={() => {}}
-            onSave={() => {}}
+            editingProfile={editingProfile}
+            loading={profileLoading}
+            onProfileFormChange={handleProfileFormChange}
+            onEditToggle={handleEditToggle}
+            onSave={handleProfileSave}
           />
         </TabsContent>
 
@@ -364,6 +477,15 @@ export const ProfilePage: React.FC = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      <PasswordConfirmationDialog
+        isOpen={showPasswordDialog}
+        onConfirm={handlePasswordConfirm}
+        onCancel={handlePasswordCancel}
+        title="Confirm Profile Update"
+        description="Please enter your password to confirm the profile changes."
+        loading={profileLoading}
+      />
     </div>
   );
 };

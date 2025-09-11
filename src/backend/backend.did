@@ -108,6 +108,11 @@ type PhysicalArtSession = record {
   description : text;
   created_at : nat64;
 };
+type ProfileUpdateResult = record {
+  message : text;
+  updated_fields : vec text;
+  success : bool;
+};
 type Result = variant { Ok : bool; Err : text };
 type Result_1 = variant { Ok : text; Err : text };
 type Result_2 = variant { Ok : Certificate; Err : text };
@@ -150,10 +155,28 @@ type TransferRequest = record {
   created_at_time : opt nat64;
 };
 type TransferResponse = record { result : Result_4; token_id : nat64 };
+type UpdateProfileRequest = record {
+  bio : opt text;
+  email : opt text;
+  display_name : opt text;
+  location : opt text;
+};
 type UploadFileData = record {
   content_type : text;
   file_size : nat64;
   filename : text;
+};
+type User = record {
+  bio : opt text;
+  password_hash : text;
+  updated_at : nat64;
+  username : text;
+  avatar_url : opt text;
+  created_at : nat64;
+  email : opt text;
+  display_name : opt text;
+  subscription_tier : text;
+  location : opt text;
 };
 type UserActivity = record {
   id : text;
@@ -202,6 +225,7 @@ type VerificationUpdateRequest = record {
   verification_id : text;
 };
 service : () -> {
+  check_username_availability : (text) -> (bool) query;
   configure_s3 : (S3Config) -> (bool);
   create_coupon : (text, CouponType, nat32, nat64) -> (Result);
   create_physical_art_session : (text, text, text) -> (Result_1);
@@ -239,6 +263,7 @@ service : () -> {
   get_user_info : (text) -> (opt record { text; nat64 }) query;
   get_user_nfts : (principal) -> (vec Token) query;
   get_user_performance_stats : (text) -> (opt UserPerformanceStats) query;
+  get_user_profile : (text) -> (opt User) query;
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
   get_user_subscription : (text) -> (opt CouponType) query;
   get_user_subscription_debug : (text) -> (opt CouponType) query;
@@ -277,8 +302,12 @@ service : () -> {
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
       Result,
     );
+  update_display_name : (text, text, text) -> (LoginResult);
   update_session_status : (text, text) -> (Result);
   update_user_avatar : (text, text) -> (Result);
+  update_user_profile : (text, text, UpdateProfileRequest) -> (
+      ProfileUpdateResult,
+    );
   update_user_subscription : (text, CouponType) -> (Result);
   update_username : (text, text, text) -> (LoginResult);
   update_verification_result : (VerificationUpdateRequest) -> (Result);

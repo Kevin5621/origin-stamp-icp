@@ -76,6 +76,9 @@ export const backendService = {
   getUserAvatar: userManagementService.getUserAvatar,
   updateUserAvatar: userManagementService.updateUserAvatar,
   updateUsername: userManagementService.updateUsername,
+  checkUsernameAvailability: userManagementService.checkUsernameAvailability,
+  updateUserProfile: userManagementService.updateUserProfile,
+  getUserProfile: userManagementService.getUserProfile,
 
   // ===== PHYSICAL ART SESSION METHODS =====
   createPhysicalArtSession: physicalArtSessionService.createPhysicalArtSession,
