@@ -90,41 +90,41 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     : [];
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex items-start gap-6">
-          <div className="relative">
-            <Avatar className="h-24 w-24">
+    <Card className="overflow-hidden">
+      <CardContent className="p-6 lg:p-8">
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
+          <div className="relative flex-shrink-0">
+            <Avatar className="border-background h-28 w-28 border-4 shadow-lg sm:h-32 sm:w-32">
               <AvatarImage
                 src={userProfile?.profile_picture || profilePicture}
                 alt={user?.username}
               />
-              <AvatarFallback className="bg-primary/10 text-primary text-xl">
+              <AvatarFallback className="bg-primary/10 text-primary text-xl font-semibold sm:text-2xl">
                 {user?.username?.charAt(0).toUpperCase() || "U"}
               </AvatarFallback>
             </Avatar>
-            <div className="absolute -right-2 -bottom-2 flex gap-1">
+            <div className="absolute -right-1 -bottom-1 flex gap-1 sm:-right-2 sm:-bottom-2 sm:gap-2">
               <Button
                 size="icon"
                 variant="outline"
-                className="h-8 w-8 rounded-full"
+                className="bg-background h-8 w-8 rounded-full shadow-md hover:shadow-lg sm:h-9 sm:w-9"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingPhoto}
               >
                 {uploadingPhoto ? (
                   <LoadingSpinner size="sm" />
                 ) : (
-                  <Camera className="h-4 w-4" />
+                  <Camera className="h-3 w-3 sm:h-4 sm:w-4" />
                 )}
               </Button>
               <Button
                 size="icon"
                 variant="outline"
-                className="h-8 w-8 rounded-full"
+                className="bg-background h-8 w-8 rounded-full shadow-md hover:shadow-lg sm:h-9 sm:w-9"
                 onClick={generateNewAvatar}
                 title="Generate new avatar"
               >
-                <RefreshCw className="h-4 w-4" />
+                <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </div>
             <input
@@ -136,25 +136,27 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             />
           </div>
 
-          <div className="flex-1 space-y-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-foreground text-2xl font-bold">
+          <div className="flex-1 space-y-6">
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
                   {userProfile?.username || user?.username || "Your Name"}
-                </h2>
+                </h1>
                 {isGeneratedAvatar && (
                   <Badge variant="secondary" className="text-xs">
                     Generated Avatar
                   </Badge>
                 )}
               </div>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-base sm:text-lg">
                 {userProfile?.email || user?.email || "your.email@example.com"}
               </p>
-              <div className="mt-2 flex items-center gap-2">
-                <Badge variant="secondary">Digital Artist</Badge>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="secondary" className="text-sm">
+                  Digital Artist
+                </Badge>
                 {user?.loginMethod && (
-                  <Badge variant="outline">
+                  <Badge variant="outline" className="text-sm">
                     {getLoginMethodLabel(user.loginMethod)}
                   </Badge>
                 )}
@@ -162,18 +164,20 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             </div>
 
             {profileStats.length > 0 && (
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
                 {profileStats.map((stat) => {
                   const Icon = stat.icon;
                   return (
-                    <div key={stat.label} className="text-center">
-                      <div className="mb-2 flex items-center justify-center">
-                        <Icon className="text-muted-foreground h-5 w-5" />
+                    <div key={stat.label} className="space-y-2 text-center">
+                      <div className="flex items-center justify-center">
+                        <div className="bg-primary/10 rounded-full p-2.5 sm:p-3">
+                          <Icon className="text-primary h-5 w-5 sm:h-6 sm:w-6" />
+                        </div>
                       </div>
-                      <div className="text-foreground text-2xl font-bold">
+                      <div className="text-foreground text-2xl font-bold sm:text-3xl">
                         {stat.value}
                       </div>
-                      <div className="text-muted-foreground text-xs">
+                      <div className="text-muted-foreground text-xs font-medium sm:text-sm">
                         {stat.label}
                       </div>
                     </div>

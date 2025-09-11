@@ -281,7 +281,7 @@ export const ProfilePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-16">
+      <div className="flex min-h-[50vh] items-center justify-center">
         <LoadingSpinner size="sm" />
       </div>
     );
@@ -289,23 +289,31 @@ export const ProfilePage: React.FC = () => {
 
   if (!userProfile) {
     return (
-      <div className="flex items-center justify-center py-16">
+      <div className="flex min-h-[50vh] items-center justify-center">
         <p className="text-muted-foreground">Failed to load profile data</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto space-y-6 py-6">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:space-y-8 sm:py-8 lg:px-8">
       <Tabs defaultValue="profile" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="privacy">Privacy</TabsTrigger>
-          <TabsTrigger value="activity">Activity</TabsTrigger>
+        <TabsList className="mb-6 grid w-full grid-cols-4 sm:mb-8">
+          <TabsTrigger value="profile" className="text-xs sm:text-sm">
+            Profile
+          </TabsTrigger>
+          <TabsTrigger value="notifications" className="text-xs sm:text-sm">
+            Notifications
+          </TabsTrigger>
+          <TabsTrigger value="privacy" className="text-xs sm:text-sm">
+            Privacy
+          </TabsTrigger>
+          <TabsTrigger value="activity" className="text-xs sm:text-sm">
+            Activity
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile" className="space-y-6">
+        <TabsContent value="profile" className="mt-0 space-y-6 sm:space-y-8">
           <ProfileHeader
             user={user}
             userProfile={userProfile}
@@ -329,22 +337,31 @@ export const ProfilePage: React.FC = () => {
           />
         </TabsContent>
 
-        <TabsContent value="notifications" className="space-y-6">
-          <NotificationSettingsCard
-            settings={notificationSettings}
-            onSettingChange={handleNotificationChange}
-          />
+        <TabsContent
+          value="notifications"
+          className="mt-0 space-y-6 sm:space-y-8"
+        >
+          <div className="mx-auto max-w-4xl">
+            <NotificationSettingsCard
+              settings={notificationSettings}
+              onSettingChange={handleNotificationChange}
+            />
+          </div>
         </TabsContent>
 
-        <TabsContent value="privacy" className="space-y-6">
-          <PrivacySettingsCard
-            settings={privacySettings}
-            onSettingChange={handlePrivacyChange}
-          />
+        <TabsContent value="privacy" className="mt-0 space-y-6 sm:space-y-8">
+          <div className="mx-auto max-w-4xl">
+            <PrivacySettingsCard
+              settings={privacySettings}
+              onSettingChange={handlePrivacyChange}
+            />
+          </div>
         </TabsContent>
 
-        <TabsContent value="activity" className="space-y-6">
-          <ActivityFeedCard activities={recentActivity} isLoading={loading} />
+        <TabsContent value="activity" className="mt-0 space-y-6 sm:space-y-8">
+          <div className="mx-auto max-w-4xl">
+            <ActivityFeedCard activities={recentActivity} isLoading={loading} />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
