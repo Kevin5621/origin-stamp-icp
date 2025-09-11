@@ -42,21 +42,26 @@ jobs:
       - name: NPM install
         run: npm install
 
+      - name: Setup dfx
+        uses: dfinity/setup-dfx@main
+
+      - name: Start dfx
+        run: dfx start --background
+
+      - name: Build backend canister
+        run: |
+          dfx build backend
+          dfx stop
+
       - name: Install frontend dependencies
         run: cd src/frontend && npm install
 
       - name: Build frontend
         run: cd src/frontend && npm run build:dfx
 
-      - name: Setup dfx
-        uses: dfinity/setup-dfx@main
-
-      - name: Install dfx
+      - name: Deploy all canisters
         run: |
           dfx start --background
-
-      - name: Build all canisters
-        run: |
           dfx deploy
           dfx stop
 
