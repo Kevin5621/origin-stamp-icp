@@ -18,9 +18,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04]
-        ghc: ["8.8.4"]
-        spec:
-          - "0.16.1"
         node:
           - 22
 
@@ -48,6 +45,14 @@ jobs:
       - name: Start dfx
         run: dfx start --background
 
+      - name: Create canisters
+        run: dfx canister create --all
+
+      - name: Build Rust backend
+        run: |
+          cd src/backend
+          cargo build --target wasm32-unknown-unknown --release
+
       - name: Build backend canister
         run: |
           dfx build backend
@@ -66,7 +71,7 @@ jobs:
           dfx stop
 
       - name: Check Lint
-        run: npm run lint --write
+        run: npm run format
 
       - name: Run tests
         run: npm run test
