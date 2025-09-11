@@ -1,9 +1,5 @@
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { PageSkeleton } from "@/components/ui/skeleton-loading";
 
 export default function Loading() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <LoadingSpinner size="sm" variant="infinite" />
-    </div>
-  );
+  return <PageSkeleton />;
 }

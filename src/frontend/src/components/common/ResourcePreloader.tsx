@@ -2,20 +2,23 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { CriticalRoutePreloader } from "./IntelligentPreloader";
 
 interface ResourcePreloaderProps {
   preloadRoutes?: string[];
   preloadImages?: string[];
+  enableIntelligentPreloading?: boolean;
 }
 
 export const ResourcePreloader: React.FC<ResourcePreloaderProps> = ({
   preloadRoutes = [],
   preloadImages = [],
+  enableIntelligentPreloading = true,
 }) => {
   const router = useRouter();
 
   useEffect(() => {
-    // Preload critical routes
+    // Preload critical routes immediately
     preloadRoutes.forEach((route) => {
       router.prefetch(route);
     });
@@ -63,23 +66,40 @@ export const ResourcePreloader: React.FC<ResourcePreloaderProps> = ({
     };
   }, [preloadRoutes, preloadImages, router]);
 
-  return null;
+  return (
+    <>
+      {enableIntelligentPreloading && (
+        <CriticalRoutePreloader routes={preloadRoutes} />
+      )}
+    </>
+  );
 };
 
 // Hook for intelligent preloading based on user behavior
 export const useIntelligentPreloading = () => {
   const router = useRouter();
 
-  const preloadOnHover = (route: string) => {
-    router.prefetch(route);
+  const preloadOnHover = (route: string, delay = 100) => {
+    setTimeout(() => {
+      router.prefetch(route);
+    }, delay);
   };
 
-  const preloadOnFocus = (route: string) => {
-    router.prefetch(route);
+  const preloadOnFocus = (route: string, delay = 50) => {
+    setTimeout(() => {
+      router.prefetch(route);
+    }, delay);
+  };
+
+  const preloadCriticalRoutes = (routes: string[]) => {
+    routes.forEach((route) => {
+      router.prefetch(route);
+    });
   };
 
   return {
     preloadOnHover,
     preloadOnFocus,
+    preloadCriticalRoutes,
   };
 };

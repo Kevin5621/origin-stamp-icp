@@ -1,15 +1,30 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { SessionsPage } from "@/components/pages/sessions/SessionsPage";
 import { DashboardGuard } from "@/components/auth/DashboardGuard";
+import { SessionsSkeleton } from "@/components/ui/skeleton-loading";
+import dynamic from "next/dynamic";
+
+// Lazy load the sessions page component
+const SessionsPage = dynamic(
+  () =>
+    import("@/components/pages/sessions/SessionsPage").then((mod) => ({
+      default: mod.SessionsPage,
+    })),
+  {
+    loading: () => <SessionsSkeleton />,
+    ssr: false,
+  },
+);
 
 export default function Sessions() {
   return (
     <DashboardGuard>
       <MainLayout>
-        <SessionsPage />
+        <Suspense fallback={<SessionsSkeleton />}>
+          <SessionsPage />
+        </Suspense>
       </MainLayout>
     </DashboardGuard>
   );

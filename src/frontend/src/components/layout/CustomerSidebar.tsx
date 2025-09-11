@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
+import { IntelligentPreloader } from "@/components/common/IntelligentPreloader";
 
 interface CustomerSidebarProps {
   activeSection: string;
@@ -142,16 +143,23 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
                 const Icon = item.icon;
                 return (
                   <SidebarMenuItem key={item.id}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={activeSection === item.id}
-                      className="w-full"
+                    <IntelligentPreloader
+                      route={item.id}
+                      preloadOnHover={true}
+                      preloadOnFocus={true}
+                      preloadDelay={50}
                     >
-                      <Link href={item.id}>
-                        <Icon className="h-4 w-4" />
-                        <span>{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={activeSection === item.id}
+                        className="w-full"
+                      >
+                        <Link href={item.id}>
+                          <Icon className="h-4 w-4" />
+                          <span>{item.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </IntelligentPreloader>
                   </SidebarMenuItem>
                 );
               })}
@@ -168,16 +176,23 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
                 const Icon = item.icon;
                 return (
                   <SidebarMenuItem key={item.id}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={activeSection === item.id}
-                      className="w-full"
+                    <IntelligentPreloader
+                      route={item.id}
+                      preloadOnHover={true}
+                      preloadOnFocus={true}
+                      preloadDelay={50}
                     >
-                      <Link href={item.id}>
-                        <Icon className="h-4 w-4" />
-                        <span>{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={activeSection === item.id}
+                        className="w-full"
+                      >
+                        <Link href={item.id}>
+                          <Icon className="h-4 w-4" />
+                          <span>{item.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </IntelligentPreloader>
                   </SidebarMenuItem>
                 );
               })}
