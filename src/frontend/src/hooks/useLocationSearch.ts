@@ -31,7 +31,7 @@ export const useLocationSearch = (options: UseLocationSearchOptions = {}) => {
         limit,
       });
       setLocations(data);
-    } catch (err) {
+    } catch {
       setError("Failed to load locations");
       setLocations([]);
     } finally {

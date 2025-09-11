@@ -15,7 +15,6 @@ interface GoogleOAuthLoaderProps {
 export const GoogleOAuthLoader: React.FC<GoogleOAuthLoaderProps> = ({
   children,
 }) => {
-  const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,7 +22,7 @@ export const GoogleOAuthLoader: React.FC<GoogleOAuthLoaderProps> = ({
       try {
         // Check if Google script is already loaded
         if (window.google?.accounts?.id) {
-          setIsGoogleLoaded(true);
+          setLoadError(null);
           return;
         }
 
@@ -42,7 +41,6 @@ export const GoogleOAuthLoader: React.FC<GoogleOAuthLoaderProps> = ({
         // Handle script load success
         script.onload = () => {
           console.log("✅ Google Identity Services script loaded successfully");
-          setIsGoogleLoaded(true);
           setLoadError(null);
         };
 

@@ -27,7 +27,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
-import { backendService, type PhysicalArtSession } from "@/services";
+import { backendService } from "@/services";
 import { useSessionCache } from "@/hooks/useSessionCache";
 
 export const CreateSessionPage: React.FC = () => {

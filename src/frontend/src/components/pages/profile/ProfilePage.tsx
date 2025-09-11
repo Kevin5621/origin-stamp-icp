@@ -127,7 +127,7 @@ export const ProfilePage: React.FC = () => {
             updated_at: BigInt(Date.now() * 1000000),
           };
         }
-      } catch (profileError) {
+      } catch {
         // Could not load profile from backend
       }
 

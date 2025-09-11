@@ -66,7 +66,7 @@ class LocationService {
 
       const data = await response.json();
       return data;
-    } catch (error) {
+    } catch {
       throw new Error("Failed to search locations");
     }
   }
@@ -94,7 +94,7 @@ class LocationService {
 
       const data = await response.json();
       return data;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -130,7 +130,7 @@ class LocationService {
         if (locations.length > 0) {
           results.push(locations[0]);
         }
-      } catch (error) {
+      } catch {
         // Continue with other cities if one fails
         continue;
       }
