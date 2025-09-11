@@ -14,29 +14,15 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfilePicture } from "@/hooks/useProfilePicture";
 
-interface CustomerHeaderProps {
-  title: string;
-  subtitle?: string;
-}
+interface CustomerHeaderProps {}
 
-export const CustomerHeader: React.FC<CustomerHeaderProps> = ({
-  title,
-  subtitle,
-}) => {
+export const CustomerHeader: React.FC<CustomerHeaderProps> = () => {
   const { user, logout } = useAuth();
   const { profilePicture } = useProfilePicture();
 
   return (
     <header className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b backdrop-blur">
-      <div className="flex h-16 items-center gap-4 px-6">
-        {/* Title Section */}
-        <div className="flex-1">
-          <h1 className="text-foreground text-xl font-semibold">{title}</h1>
-          {subtitle && (
-            <p className="text-muted-foreground text-sm">{subtitle}</p>
-          )}
-        </div>
-
+      <div className="flex h-16 items-center justify-end gap-4 px-6">
         {/* Actions */}
         <div className="flex items-center gap-2">
           {/* Theme Toggle */}

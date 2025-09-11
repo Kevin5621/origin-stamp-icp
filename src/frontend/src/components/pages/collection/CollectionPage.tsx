@@ -312,17 +312,19 @@ export const CollectionPage: React.FC = () => {
 
         <TabsContent value="owned" className="space-y-4">
           {myCollection.length === 0 ? (
-            <div className="py-12 text-center">
-              <Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                No NFTs Owned
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                You don&apos;t have any NFTs in your collection yet.
-              </p>
-              <Button onClick={() => router.push("/dashboard/marketplace")}>
-                Browse Marketplace
-              </Button>
+            <div className="flex min-h-[400px] items-center justify-center">
+              <div className="text-center">
+                <Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+                <h3 className="text-foreground mb-2 text-lg font-semibold">
+                  No NFTs Owned
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  You don&apos;t have any NFTs in your collection yet.
+                </p>
+                <Button onClick={() => router.push("/dashboard/marketplace")}>
+                  Browse Marketplace
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -488,17 +490,21 @@ export const CollectionPage: React.FC = () => {
 
         <TabsContent value="created" className="space-y-4">
           {createdNFTs.length === 0 ? (
-            <div className="py-12 text-center">
-              <Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                No Created NFTs
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                You haven&apos;t created any NFTs yet.
-              </p>
-              <Button onClick={() => router.push("/dashboard/sessions/create")}>
-                Create Your First NFT
-              </Button>
+            <div className="flex min-h-[400px] items-center justify-center">
+              <div className="text-center">
+                <Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+                <h3 className="text-foreground mb-2 text-lg font-semibold">
+                  No Created NFTs
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  You haven&apos;t created any NFTs yet.
+                </p>
+                <Button
+                  onClick={() => router.push("/dashboard/sessions/create")}
+                >
+                  Create Your First NFT
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -566,17 +572,20 @@ export const CollectionPage: React.FC = () => {
 
         <TabsContent value="favorites" className="space-y-4">
           {favoriteNFTs.length === 0 ? (
-            <div className="py-12 text-center">
-              <Heart className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                No Favorites Yet
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Start adding NFTs to your favorites by clicking the heart icon.
-              </p>
-              <Button onClick={() => router.push("/dashboard/marketplace")}>
-                Browse Marketplace
-              </Button>
+            <div className="flex min-h-[400px] items-center justify-center">
+              <div className="text-center">
+                <Heart className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+                <h3 className="text-foreground mb-2 text-lg font-semibold">
+                  No Favorites Yet
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Start adding NFTs to your favorites by clicking the heart
+                  icon.
+                </p>
+                <Button onClick={() => router.push("/dashboard/marketplace")}>
+                  Browse Marketplace
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -626,11 +635,13 @@ export const CollectionPage: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-4">
-          <div className="py-8 text-center">
-            <Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-            <p className="text-muted-foreground">
-              Your collection activity history will be displayed here
-            </p>
+          <div className="flex min-h-[400px] items-center justify-center">
+            <div className="text-center">
+              <Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+              <p className="text-muted-foreground">
+                Your collection activity history will be displayed here
+              </p>
+            </div>
           </div>
         </TabsContent>
       </Tabs>

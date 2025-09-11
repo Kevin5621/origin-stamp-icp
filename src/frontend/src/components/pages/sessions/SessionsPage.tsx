@@ -30,12 +30,12 @@ const EmptyState: React.FC<{
   isLoading = false,
 }) => (
   <div className="py-16 text-center">
-    <div className="mx-auto mb-6 max-w-md">
+    <div className="mx-auto mb-4 max-w-[150px]">
       <Image
         src="/empty/empty-state2.webp"
         alt="Empty state - Surrealist artist statue with floating colors"
-        width={400}
-        height={256}
+        width={150}
+        height={96}
         className="mx-auto object-contain"
         onError={(e) => {
           const target = e.target as HTMLImageElement;
@@ -43,8 +43,8 @@ const EmptyState: React.FC<{
           target.nextElementSibling?.classList.remove("hidden");
         }}
       />
-      <div className="bg-muted/20 mx-auto mb-4 flex hidden h-64 w-full items-center justify-center rounded-lg">
-        <Icon className="text-muted-foreground h-16 w-16" />
+      <div className="bg-muted/20 mx-auto mb-4 hidden h-24 w-full items-center justify-center rounded-lg">
+        <Icon className="text-muted-foreground h-6 w-6" />
       </div>
     </div>
     <h3 className="text-foreground mb-2 text-lg font-semibold">{title}</h3>
