@@ -3,7 +3,7 @@
 import React, { Suspense } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { DashboardGuard } from "@/components/auth/DashboardGuard";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { SessionRecordSkeleton } from "@/components/ui/skeleton-loading";
 import dynamic from "next/dynamic";
 
 // Lazy load the session record page component (heavy component with 770 lines)
@@ -13,11 +13,7 @@ const SessionRecordPage = dynamic(
       default: mod.SessionRecordPage,
     })),
   {
-    loading: () => (
-      <div className="flex min-h-[700px] items-center justify-center">
-        <LoadingSpinner size="lg" variant="infinite" />
-      </div>
-    ),
+    loading: () => <SessionRecordSkeleton />,
     ssr: false,
   },
 );
@@ -26,13 +22,7 @@ export default function SessionRecord() {
   return (
     <DashboardGuard>
       <MainLayout>
-        <Suspense
-          fallback={
-            <div className="flex min-h-[700px] items-center justify-center">
-              <LoadingSpinner size="lg" variant="infinite" />
-            </div>
-          }
-        >
+        <Suspense fallback={<SessionRecordSkeleton />}>
           <SessionRecordPage />
         </Suspense>
       </MainLayout>

@@ -9,6 +9,10 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import { backendService, type PhysicalArtSession } from "@/services";
+import {
+  useSessionCache,
+  useOptimisticSessions,
+} from "@/hooks/useSessionCache";
 import Image from "next/image";
 
 // Empty State Component
@@ -66,6 +70,10 @@ export const SessionsPage: React.FC = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { error: showError } = useToastContext();
+  const { getCachedSessions, setCachedSessions, isCacheValid } =
+    useSessionCache();
+  const { optimisticSessions, isOptimistic, clearOptimisticSessions } =
+    useOptimisticSessions();
 
   const [sessions, setSessions] = useState<PhysicalArtSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -73,6 +81,14 @@ export const SessionsPage: React.FC = () => {
 
   const loadUserSessions = useCallback(async () => {
     if (!user?.username) {
+      setIsLoading(false);
+      return;
+    }
+
+    // Check cache first
+    const cachedSessions = getCachedSessions(user.username);
+    if (cachedSessions && isCacheValid(user.username)) {
+      setSessions(cachedSessions);
       setIsLoading(false);
       return;
     }
@@ -86,18 +102,39 @@ export const SessionsPage: React.FC = () => {
         created_at: Number(session.created_at),
         updated_at: Number(session.updated_at),
       }));
+
       setSessions(convertedSessions);
+      setCachedSessions(user.username, convertedSessions);
     } catch (error) {
       console.error("Failed to load sessions:", error);
       showError("Failed to load your art sessions");
     } finally {
       setIsLoading(false);
     }
-  }, [user?.username, showError]);
+  }, [
+    user?.username,
+    showError,
+    getCachedSessions,
+    setCachedSessions,
+    isCacheValid,
+  ]);
 
   useEffect(() => {
     loadUserSessions();
   }, [user?.username, loadUserSessions]);
+
+  // Clear optimistic sessions when real data loads
+  useEffect(() => {
+    if (sessions.length > 0 && isOptimistic) {
+      clearOptimisticSessions();
+    }
+  }, [sessions, isOptimistic, clearOptimisticSessions]);
+
+  // Use optimistic sessions if available, otherwise use real sessions
+  const displaySessions =
+    isOptimistic && optimisticSessions.length > 0
+      ? optimisticSessions
+      : sessions;
 
   const handleCreateSession = async () => {
     if (!user?.username) {
@@ -195,7 +232,7 @@ export const SessionsPage: React.FC = () => {
             <Camera className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sessions.length}</div>
+            <div className="text-2xl font-bold">{displaySessions.length}</div>
             <p className="text-muted-foreground text-xs">All time</p>
           </CardContent>
         </Card>
@@ -210,7 +247,7 @@ export const SessionsPage: React.FC = () => {
           <CardContent>
             <div className="text-2xl font-bold">
               {
-                sessions.filter(
+                displaySessions.filter(
                   (s) => s.status === "active" || s.status === "draft",
                 ).length
               }
@@ -226,7 +263,7 @@ export const SessionsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {sessions.filter((s) => s.status === "completed").length}
+              {displaySessions.filter((s) => s.status === "completed").length}
             </div>
             <p className="text-muted-foreground text-xs">All verified</p>
           </CardContent>
@@ -241,7 +278,7 @@ export const SessionsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {sessions.reduce(
+              {displaySessions.reduce(
                 (total, session) =>
                   total + (session.uploaded_photos?.length || 0),
                 0,
@@ -262,7 +299,7 @@ export const SessionsPage: React.FC = () => {
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
-          {sessions.length === 0 ? (
+          {displaySessions.length === 0 ? (
             <EmptyState
               icon={Camera}
               title="No Art Sessions Yet"
@@ -274,7 +311,7 @@ export const SessionsPage: React.FC = () => {
             />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {sessions.map((session) => (
+              {displaySessions.map((session) => (
                 <Card
                   key={session.session_id}
                   className="overflow-hidden transition-shadow hover:shadow-lg"
@@ -374,8 +411,9 @@ export const SessionsPage: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="active" className="space-y-4">
-          {sessions.filter((s) => s.status === "active" || s.status === "draft")
-            .length === 0 ? (
+          {displaySessions.filter(
+            (s) => s.status === "active" || s.status === "draft",
+          ).length === 0 ? (
             <EmptyState
               icon={Upload}
               title="No Active Sessions"
@@ -387,7 +425,7 @@ export const SessionsPage: React.FC = () => {
             />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {sessions
+              {displaySessions
                 .filter(
                   (session) =>
                     session.status === "active" || session.status === "draft",
@@ -481,7 +519,8 @@ export const SessionsPage: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="completed" className="space-y-4">
-          {sessions.filter((s) => s.status === "completed").length === 0 ? (
+          {displaySessions.filter((s) => s.status === "completed").length ===
+          0 ? (
             <EmptyState
               icon={CheckCircle}
               title="No Completed Sessions"
@@ -493,7 +532,7 @@ export const SessionsPage: React.FC = () => {
             />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {sessions
+              {displaySessions
                 .filter((session) => session.status === "completed")
                 .map((session) => (
                   <Card
@@ -590,7 +629,8 @@ export const SessionsPage: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="pending" className="space-y-4">
-          {sessions.filter((s) => s.status === "pending").length === 0 ? (
+          {displaySessions.filter((s) => s.status === "pending").length ===
+          0 ? (
             <EmptyState
               icon={Calendar}
               title="No Pending Sessions"
@@ -602,7 +642,7 @@ export const SessionsPage: React.FC = () => {
             />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {sessions
+              {displaySessions
                 .filter((session) => session.status === "pending")
                 .map((session) => (
                   <Card key={session.session_id} className="overflow-hidden">

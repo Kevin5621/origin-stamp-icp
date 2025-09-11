@@ -27,13 +27,15 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useToastContext } from "@/contexts/ToastContext";
-import { backendService } from "@/services";
+import { backendService, type PhysicalArtSession } from "@/services";
+import { useSessionCache } from "@/hooks/useSessionCache";
 
 export const CreateSessionPage: React.FC = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { success: showSuccess, error: showError } = useToastContext();
   const { maxPhotos, canGenerateNFT } = useSubscription();
+  const { invalidateCache } = useSessionCache();
 
   const [artTitle, setArtTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -100,13 +102,17 @@ export const CreateSessionPage: React.FC = () => {
       );
 
       showSuccess(
-        `Session "${artTitle.trim()}" created successfully! You can now start documenting your artwork.`,
+        `Session "${artTitle.trim()}" created successfully! Redirecting to session...`,
       );
 
-      // Small delay to show success message before redirect
-      setTimeout(() => {
-        router.push(`/dashboard/sessions/${sessionId}`);
-      }, 1500);
+      // Invalidate cache to ensure fresh data on next load
+      if (user?.username) {
+        invalidateCache(user.username);
+      }
+
+      // Instant redirect with prefetch for better performance
+      router.prefetch(`/dashboard/sessions/${sessionId}`);
+      router.push(`/dashboard/sessions/${sessionId}`);
     } catch (error) {
       console.error("Failed to create session:", error);
       const errorMessage =

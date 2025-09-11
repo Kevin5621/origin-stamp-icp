@@ -228,9 +228,20 @@ export const SessionRecordPage: React.FC = () => {
 
   useEffect(() => {
     if (sessionId) {
-      loadSessionDetails();
-      checkS3Configuration();
-      loadVerification(); // Load verification on mount
+      // Load all data in parallel for better performance
+      const loadAllData = async () => {
+        try {
+          await Promise.all([
+            loadSessionDetails(),
+            checkS3Configuration(),
+            loadVerification(),
+          ]);
+        } catch (error) {
+          console.error("Failed to load session data:", error);
+        }
+      };
+
+      loadAllData();
     }
   }, [sessionId, loadSessionDetails, loadVerification]);
 
@@ -241,14 +252,15 @@ export const SessionRecordPage: React.FC = () => {
     };
   }, [stopVerificationPolling]);
 
-  const checkS3Configuration = async () => {
+  const checkS3Configuration = useCallback(async () => {
     try {
       // Since isS3Configured method doesn't exist, we'll assume it's configured
+      // This is a non-blocking operation
       setS3Configured(true);
     } catch {
       setS3Configured(false);
     }
-  };
+  }, []);
 
   const handleUploadFiles = async () => {
     if (!sessionId || selectedFiles.length === 0) return;

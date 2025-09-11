@@ -205,7 +205,7 @@ export const CollectionPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="container mx-auto py-6">
-        <div className="flex items-center justify-center py-12">
+        <div className="flex items-center justify-center py-16">
           <LoadingSpinner variant="infinite" size="md" />
           <span className="text-muted-foreground ml-2">
             Loading collection...
