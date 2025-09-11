@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 
 interface UserProfile {
   username: string;
@@ -152,12 +153,10 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                 Location
               </label>
               {editingProfile ? (
-                <Input
+                <LocationAutocomplete
                   value={profileForm.location}
-                  onChange={(e) =>
-                    onProfileFormChange("location", e.target.value)
-                  }
-                  placeholder="City, Country"
+                  onChange={(value) => onProfileFormChange("location", value)}
+                  placeholder="Search for your location..."
                   className="h-11 sm:h-12"
                 />
               ) : (

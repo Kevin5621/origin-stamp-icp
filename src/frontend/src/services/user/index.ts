@@ -11,3 +11,5 @@ export type {
   ProfileUpdateResult,
   UserProfile,
 } from "./profileService";
+export { locationService } from "./locationService";
+export type { LocationOption, LocationSearchParams } from "./locationService";
