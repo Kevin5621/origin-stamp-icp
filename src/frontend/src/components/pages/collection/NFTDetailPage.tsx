@@ -22,6 +22,7 @@ import {
   Award,
   Eye,
   Heart,
+  TrendingUp,
 } from "lucide-react";
 import Image from "next/image";
 import { useToastContext } from "@/contexts/ToastContext";
@@ -407,120 +408,101 @@ export const NFTDetailPage: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Authentication Details */}
+          {/* Key Metrics Grid - Fixed Layout */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Award className="mr-2 h-5 w-5" />
-                Authentication Details
+                <TrendingUp className="mr-2 h-5 w-5" />
+                Key Metrics
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-muted-foreground text-sm font-medium">
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-1 text-sm font-medium">
                     Verification Score
                   </p>
-                  <p className="text-lg font-bold text-green-600">
+                  <p className="text-2xl font-bold text-green-600">
                     {nftData.metadata.verificationScore}%
                   </p>
                 </div>
-                <div>
-                  <p className="text-muted-foreground text-sm font-medium">
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-1 text-sm font-medium">
                     Authenticity Rating
                   </p>
-                  <p className="text-lg font-bold text-blue-600">
+                  <p className="text-2xl font-bold text-blue-600">
                     {nftData.metadata.authenticityRating}%
                   </p>
                 </div>
-                <div>
-                  <p className="text-muted-foreground text-sm font-medium">
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-1 text-sm font-medium">
                     Provenance Score
                   </p>
-                  <p className="text-lg font-bold text-purple-600">
+                  <p className="text-2xl font-bold text-purple-600">
                     {nftData.metadata.provenanceScore}%
                   </p>
                 </div>
-                <div>
-                  <p className="text-muted-foreground text-sm font-medium">
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-1 text-sm font-medium">
                     Community Trust
                   </p>
-                  <p className="text-lg font-bold text-orange-600">
+                  <p className="text-2xl font-bold text-orange-600">
                     {nftData.metadata.communityTrust}%
                   </p>
-                </div>
-              </div>
-
-              <div className="border-t pt-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Blockchain:</span>
-                    <span className="font-medium">
-                      {nftData.metadata.blockchain}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Standard:</span>
-                    <span className="font-medium">
-                      {nftData.metadata.tokenStandard}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Created:</span>
-                    <span className="font-medium">
-                      {new Date(nftData.stats.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Session Info */}
-          {nftData.metadata.sessionId && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Session Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
+          {/* Blockchain Details */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Award className="mr-2 h-5 w-5" />
+                Blockchain Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Blockchain:</span>
+                  <span className="font-medium">
+                    {nftData.metadata.blockchain}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Standard:</span>
+                  <span className="font-medium">
+                    {nftData.metadata.tokenStandard}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Created:</span>
+                  <span className="font-medium">
+                    {new Date(nftData.stats.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                {nftData.metadata.sessionId && (
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Session ID:</span>
                     <span className="font-mono text-xs">
-                      {nftData.metadata.sessionId}
+                      {nftData.metadata.sessionId.slice(0, 8)}...
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Issue Date:</span>
-                    <span className="font-medium">
-                      {new Date(
-                        nftData.metadata.issueDate,
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Expiry Date:</span>
-                    <span className="font-medium">
-                      {new Date(
-                        nftData.metadata.expiryDate,
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* AI Verification Section */}
+          {/* AI Verification Section - Dropdown Style */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">AI Verification</h3>
-            <div className="grid gap-4">
+            <div className="space-y-3">
               <VerificationContainer
                 verification={nftData.verification.preview_verification || null}
                 verificationType="preview"
                 loading={isLoadingVerification}
                 onViewDetails={() => {
-                  // TODO: Implement detailed verification view
                   console.log("View preview verification details");
                 }}
               />
@@ -529,7 +511,6 @@ export const NFTDetailPage: React.FC = () => {
                 verificationType="final"
                 loading={isLoadingVerification}
                 onViewDetails={() => {
-                  // TODO: Implement detailed verification view
                   console.log("View final verification details");
                 }}
               />

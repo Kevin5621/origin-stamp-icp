@@ -174,14 +174,8 @@ export const nftCertificateService = {
         throw new Error("Backend canister not initialized");
       }
 
-      // 🚨 CRITICAL FIX: Get actual caller identity for consistent ownership
+      // Get actual caller identity for consistent ownership
       const actualCallerIdentity = await backendActor.debug_caller_identity();
-      console.log(
-        `[NFTCertificateService] 🔍 Actual caller identity: ${actualCallerIdentity}`,
-      );
-      console.log(
-        `[NFTCertificateService] 📋 Requested user principal: ${userPrincipal}`,
-      );
 
       // Use actual caller identity instead of userPrincipal for consistent ownership
       const { Principal } = await import("@dfinity/principal");
@@ -189,25 +183,17 @@ export const nftCertificateService = {
 
       try {
         principal = Principal.fromText(actualCallerIdentity);
-        console.log(
-          `[NFTCertificateService] ✅ Using actual caller principal: ${principal.toText()}`,
-        );
       } catch (error) {
         console.error("Failed to parse actual caller identity:", error);
         throw new Error("Invalid caller identity from backend");
       }
 
-      // 🚨 CRITICAL FIX: Use empty array [] instead of null for subaccount
+      // Use empty array for subaccount to match Candid type requirements
       const recipient = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         owner: principal as any, // Type assertion needed for Candid compatibility
-        subaccount: [] as [] | [number[]], // Empty array for no subaccount
+        subaccount: [] as [] | [number[]],
       };
-
-      console.log(`[NFTCertificateService] 🎯 Minting NFT with recipient:`, {
-        owner: principal.toText(),
-        subaccount: "empty array []",
-      });
 
       const result = await backendActor.mint_nft_from_session(
         sessionId,
@@ -218,15 +204,8 @@ export const nftCertificateService = {
 
       if ("Ok" in result) {
         const tokenId = result.Ok.toString();
-        console.log(
-          `[NFTCertificateService] 🎉 NFT minted successfully! Token ID: ${tokenId}`,
-        );
         return tokenId;
       } else {
-        console.error(
-          `[NFTCertificateService] ❌ NFT minting failed:`,
-          result.Err,
-        );
         throw new Error(result.Err);
       }
     } catch (error) {

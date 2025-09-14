@@ -8,7 +8,10 @@ import {
   Filter,
   Share,
   DollarSign,
-  Settings,
+  TrendingUp,
+  TrendingDown,
+  PieChart,
+  ShoppingBag,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,24 +64,15 @@ export const CollectionPage: React.FC = () => {
   useEffect(() => {
     const loadCollectionData = async () => {
       if (!user?.principal || !user?.username) {
-        console.log("[CollectionPage] 🚨 Missing user data:", {
-          principal: user?.principal,
-          username: user?.username,
-        });
         setIsLoading(false);
         return;
       }
 
       try {
         setIsLoading(true);
-        console.log("[CollectionPage] 🔍 Loading collection data for user:", {
-          principal: user.principal,
-          username: user.username,
-        });
 
-        // Note: CollectionService now internally handles caller identity verification
         const [owned, created, favorites, stats] = await Promise.all([
-          CollectionService.getUserCollection(user.principal), // This will use actual caller identity internally
+          CollectionService.getUserCollection(user.principal),
           CollectionService.getUserCreatedNFTs(user.username),
           CollectionService.getUserFavorites(user.username),
           CollectionService.getCollectionStats(user.principal, user.username),
@@ -88,8 +82,6 @@ export const CollectionPage: React.FC = () => {
         setCreatedNFTs(created);
         setFavoriteNFTs(favorites);
         setCollectionStats(stats);
-
-        console.log("[CollectionPage] ✅ Collection data loaded successfully");
       } catch (error) {
         console.error("Failed to load collection data:", error);
         showError("Failed to load collection data");
@@ -150,6 +142,22 @@ export const CollectionPage: React.FC = () => {
       difference: difference.toFixed(1),
       percentage,
       isPositive: difference >= 0,
+    };
+  };
+
+  // Pricing information helper - only show real data
+  const getPricingInfo = (nft: NFTCollectionItem) => {
+    const purchasePrice = nft.ownership.purchasePrice || "0 ICP";
+    const currentValue = nft.ownership.currentValue || "0 ICP";
+    const gainLoss = calculateGainLoss(purchasePrice, currentValue);
+
+    return {
+      purchasePrice,
+      currentValue,
+      gainLoss,
+      isListed: nft.listing?.isListed || false,
+      listPrice: nft.listing?.price || null,
+      isCreated: nft.ownership.isCreator || false,
     };
   };
 
@@ -369,10 +377,7 @@ export const CollectionPage: React.FC = () => {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {myCollection.map((nft) => {
-                const gainLoss = calculateGainLoss(
-                  nft.ownership.purchasePrice || "0 ICP",
-                  nft.ownership.currentValue || "0 ICP",
-                );
+                const pricingInfo = getPricingInfo(nft);
 
                 return (
                   <Card
@@ -452,52 +457,107 @@ export const CollectionPage: React.FC = () => {
                           </p>
                         </div>
 
-                        {/* Price Information */}
-                        <div className="space-y-1">
-                          {nft.listing?.isListed ? (
-                            <div className="flex items-center justify-between">
-                              <span className="text-muted-foreground text-xs">
-                                Listed Price:
-                              </span>
-                              <span className="text-sm font-bold text-green-600">
-                                {nft.listing.price}
-                              </span>
+                        {/* Simplified Price Information */}
+                        <div className="space-y-2">
+                          {/* Listing Status - Show if listed */}
+                          {pricingInfo.isListed && (
+                            <div className="rounded-md border border-green-200 bg-green-50 p-2 dark:border-green-800 dark:bg-green-900/20">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1">
+                                  <ShoppingBag className="h-3 w-3 text-green-600" />
+                                  <span className="text-xs font-medium text-green-800 dark:text-green-200">
+                                    Listed for Sale
+                                  </span>
+                                </div>
+                                <span className="text-sm font-bold text-green-600">
+                                  {pricingInfo.listPrice}
+                                </span>
+                              </div>
                             </div>
-                          ) : (
-                            <>
-                              <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground text-xs">
-                                  Purchase Price:
-                                </span>
-                                <span className="text-sm font-medium">
-                                  {nft.ownership.purchasePrice || "0 ICP"}
-                                </span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground text-xs">
-                                  Current Value:
-                                </span>
-                                <span className="text-primary text-sm font-bold">
-                                  {nft.ownership.currentValue || "0 ICP"}
-                                </span>
-                              </div>
-                            </>
                           )}
-                          <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs">
-                              Gain/Loss:
-                            </span>
-                            <span
-                              className={`text-sm font-medium ${
-                                gainLoss.isPositive
-                                  ? "text-green-600"
-                                  : "text-red-600"
+
+                          {/* Creator Status - Show if created by user */}
+                          {pricingInfo.isCreated && (
+                            <div className="rounded-md border border-purple-200 bg-purple-50 p-2 dark:border-purple-800 dark:bg-purple-900/20">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1">
+                                  <PieChart className="h-3 w-3 text-purple-600" />
+                                  <span className="text-xs font-medium text-purple-800 dark:text-purple-200">
+                                    Your Creation
+                                  </span>
+                                </div>
+                                <span className="text-xs text-purple-600">
+                                  {pricingInfo.isListed
+                                    ? "Listed"
+                                    : "Not for sale"}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Purchase Price and Current Value - Always show for non-created NFTs */}
+                          {!pricingInfo.isCreated && (
+                            <div className="space-y-1">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1">
+                                  <DollarSign className="h-3 w-3 text-blue-600" />
+                                  <span className="text-muted-foreground text-xs">
+                                    Purchase Price:
+                                  </span>
+                                </div>
+                                <span className="text-sm font-medium">
+                                  {pricingInfo.purchasePrice}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1">
+                                  <TrendingUp className="h-3 w-3 text-green-600" />
+                                  <span className="text-muted-foreground text-xs">
+                                    Current Value:
+                                  </span>
+                                </div>
+                                <span className="text-primary text-sm font-bold">
+                                  {pricingInfo.currentValue}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Performance Indicator - Show for non-created NFTs */}
+                          {!pricingInfo.isCreated && (
+                            <div
+                              className={`rounded-md border p-2 ${
+                                pricingInfo.gainLoss.isPositive
+                                  ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20"
+                                  : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20"
                               }`}
                             >
-                              {gainLoss.isPositive ? "+" : ""}
-                              {gainLoss.difference} ICP ({gainLoss.percentage}%)
-                            </span>
-                          </div>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1">
+                                  {pricingInfo.gainLoss.isPositive ? (
+                                    <TrendingUp className="h-3 w-3 text-green-600" />
+                                  ) : (
+                                    <TrendingDown className="h-3 w-3 text-red-600" />
+                                  )}
+                                  <span className="text-xs font-medium">
+                                    Portfolio Impact:
+                                  </span>
+                                </div>
+                                <span
+                                  className={`text-sm font-semibold ${
+                                    pricingInfo.gainLoss.isPositive
+                                      ? "text-green-600"
+                                      : "text-red-600"
+                                  }`}
+                                >
+                                  {pricingInfo.gainLoss.isPositive ? "+" : ""}
+                                  {pricingInfo.gainLoss.difference} ICP (
+                                  {pricingInfo.gainLoss.percentage}%)
+                                </span>
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         {/* Meta Info */}
@@ -529,7 +589,7 @@ export const CollectionPage: React.FC = () => {
                             onClick={() => handleSetPrice(nft)}
                           >
                             <DollarSign className="mr-1 h-3 w-3" />
-                            {nft.listing?.isListed
+                            {pricingInfo.isListed
                               ? "Manage Listing"
                               : "Set Price"}
                           </Button>
@@ -562,16 +622,20 @@ export const CollectionPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {createdNFTs.map((nft) => (
-                <Card key={nft.id} className="overflow-hidden">
+                <Card
+                  key={nft.id}
+                  className="group cursor-pointer overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+                  onClick={() => handleViewDetails(nft)}
+                >
                   <div className="from-primary/20 to-secondary/20 relative flex aspect-square items-center justify-center overflow-hidden bg-gradient-to-br">
                     {nft.imageUrl ? (
                       <Image
                         src={nft.imageUrl}
                         alt={nft.title}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-200 group-hover:scale-105"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = "none";
@@ -583,40 +647,33 @@ export const CollectionPage: React.FC = () => {
                       className={`text-primary h-16 w-16 ${nft.imageUrl ? "hidden" : ""}`}
                     />
 
+                    {/* Hover overlay with View button */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="border-0 bg-white/90 text-black hover:bg-white"
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        View
+                      </Button>
+                    </div>
+
                     {/* Creator badge */}
                     <div className="absolute top-2 right-2">
                       <Badge className="bg-purple-500 text-xs text-white">
-                        Created by You
+                        Created
                       </Badge>
                     </div>
                   </div>
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <h3 className="text-foreground font-semibold">
+                  <CardContent className="p-3">
+                    <div className="space-y-1">
+                      <h3 className="text-foreground truncate text-sm font-semibold">
                         {nft.title}
                       </h3>
-                      <p className="text-muted-foreground text-sm">
-                        Your original creation
+                      <p className="text-muted-foreground text-xs">
+                        Your creation
                       </p>
-                      <p className="text-primary text-lg font-bold">
-                        {nft.ownership.currentValue || "Not Listed"}
-                      </p>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          className="flex-1"
-                          onClick={() => handleViewDetails(nft)}
-                        >
-                          View Details
-                        </Button>
-                        <Button
-                          className="flex-1"
-                          onClick={() => handleSetPrice(nft)}
-                        >
-                          <Settings className="mr-1 h-3 w-3" />
-                          Manage
-                        </Button>
-                      </div>
                     </div>
                   </CardContent>
                 </Card>

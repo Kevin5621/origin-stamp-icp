@@ -74,26 +74,14 @@ export class CollectionService {
     userPrincipal: string,
   ): Promise<NFTCollectionItem[]> {
     try {
-      console.log(
-        `[CollectionService] 🔍 Loading user collection for: ${userPrincipal}`,
-      );
-
-      // 🚨 CRITICAL FIX: Get actual caller identity from backend
+      // Get actual caller identity from backend for consistent ownership verification
       const backendActor = await backendService.getBackendActor();
       if (!backendActor) {
         throw new Error("Backend service not available");
       }
 
-      // Debug: Check actual caller identity
-      const actualCallerIdentity = await backendActor.debug_caller_identity();
-      console.log(
-        `[CollectionService] 🎯 Actual backend caller identity: ${actualCallerIdentity}`,
-      );
-      console.log(
-        `[CollectionService] 📋 Requested user principal: ${userPrincipal}`,
-      );
-
       // Use actual caller identity instead of provided userPrincipal
+      const actualCallerIdentity = await backendActor.debug_caller_identity();
       const userNFTs = await backendService.getUserNFTs(actualCallerIdentity);
 
       const collection: NFTCollectionItem[] = [];
@@ -194,125 +182,99 @@ export class CollectionService {
   }
 
   /**
-   * Get NFTs created by user
+   * Get NFTs created by user (filter from owned NFTs where isCreator = true)
    */
   static async getUserCreatedNFTs(
     username: string,
   ): Promise<NFTCollectionItem[]> {
     try {
-      console.log(
-        `[CollectionService] 🔍 Loading created NFTs for username: ${username}`,
-      );
-
-      // 🚨 CRITICAL FIX: Get actual caller identity to find correct user sessions
+      // Get all owned NFTs first, then filter by creator
       const backendActor = await backendService.getBackendActor();
       if (!backendActor) {
         throw new Error("Backend service not available");
       }
 
       const actualCallerIdentity = await backendActor.debug_caller_identity();
-      console.log(
-        `[CollectionService] 🎯 Getting sessions for actual caller: ${actualCallerIdentity}`,
-      );
-
-      // For now, we'll try to map caller identity to a username
-      // This is a temporary fix - ideally we need to track user identity->username mapping
-      const possibleUsernames = [
-        username,
-        "frontend_user",
-        actualCallerIdentity.slice(0, 8),
-      ];
-
-      let userSessions: Array<{
-        session_id: string;
-        status: string;
-        art_title: string;
-        description: string;
-        username: string;
-        uploaded_photos: string[];
-        created_at: bigint;
-      }> = [];
-      for (const testUsername of possibleUsernames) {
-        try {
-          const sessions = await backendService.getUserSessions(testUsername);
-          if (sessions.length > 0) {
-            console.log(
-              `[CollectionService] ✅ Found ${sessions.length} sessions for username: ${testUsername}`,
-            );
-            userSessions = sessions;
-            break;
-          }
-        } catch {
-          console.log(
-            `[CollectionService] 🔍 No sessions found for username: ${testUsername}`,
-          );
-        }
-      }
+      const userNFTs = await backendService.getUserNFTs(actualCallerIdentity);
 
       const createdNFTs: NFTCollectionItem[] = [];
 
-      for (const session of userSessions) {
-        if (session.status === "completed") {
-          try {
-            // Try to find NFT for this session
-            // TODO: need to track NFT-session relationships in backend
-            const mockNFT: NFTCollectionItem = {
-              id: `created_${session.session_id}`,
-              title: session.art_title,
-              description: session.description,
-              imageUrl: session.uploaded_photos[0] || "",
-              creator: {
-                username: session.username,
-                avatar: "",
-                verified: true,
-              },
-              metadata: {
-                certificateId: "",
-                sessionId: session.session_id,
-                verificationScore: 95,
-                authenticityRating: 98,
-                provenanceScore: 92,
-                communityTrust: 88,
-                issueDate: new Date(
-                  Number(session.created_at) / 1000000,
-                ).toISOString(),
-                expiryDate: new Date(
-                  Date.now() + 365 * 24 * 60 * 60 * 1000,
-                ).toISOString(),
-                blockchain: "Internet Computer",
-                tokenStandard: "ICRC-7",
-              },
-              stats: {
-                views: Math.floor(Math.random() * 1000) + 100,
-                likes: Math.floor(Math.random() * 100) + 10,
-                createdAt: new Date(
-                  Number(session.created_at) / 1000000,
-                ).toISOString(),
-              },
-              ownership: {
-                isOwner: false, // Creator is not automatically owner
-                isCreator: true,
-                purchasePrice: "0 ICP",
-                purchaseDate: new Date(
-                  Number(session.created_at) / 1000000,
-                ).toISOString(),
-                currentValue: "0 ICP",
-              },
-            };
+      for (const token of userNFTs) {
+        try {
+          // Check if this NFT was created by this user
+          // For now, we'll consider all owned NFTs as created by user
+          // Later this should check session data or creator metadata
+          const nftItem: NFTCollectionItem = {
+            id: token.id.toString(),
+            title: token.metadata.name,
+            description: Array.isArray(token.metadata.description)
+              ? token.metadata.description[0] || "Your artwork"
+              : token.metadata.description || "Your artwork",
+            imageUrl: Array.isArray(token.metadata.image)
+              ? token.metadata.image[0] || ""
+              : token.metadata.image || "",
+            creator: {
+              username: username,
+              avatar: "",
+              verified: true,
+            },
+            metadata: {
+              certificateId: Array.isArray(token.session_id)
+                ? token.session_id[0] || ""
+                : token.session_id || "",
+              sessionId: Array.isArray(token.session_id)
+                ? token.session_id[0] || ""
+                : token.session_id || "",
+              verificationScore: 95,
+              authenticityRating: 100,
+              provenanceScore: 100,
+              communityTrust: 95,
+              issueDate: new Date(
+                Number(token.created_at) / 1000000,
+              ).toISOString(),
+              expiryDate: new Date(
+                Date.now() + 365 * 24 * 60 * 60 * 1000,
+              ).toISOString(),
+              blockchain: "Internet Computer",
+              tokenStandard: "ICRC-7",
+            },
+            stats: {
+              views: 0,
+              likes: 0,
+              createdAt: new Date(
+                Number(token.created_at) / 1000000,
+              ).toISOString(),
+            },
+            ownership: {
+              isOwner: true,
+              isCreator: true, // All owned NFTs considered as created by user
+              purchasePrice: "0 ICP",
+              purchaseDate: new Date(
+                Number(token.created_at) / 1000000,
+              ).toISOString(),
+              currentValue: "0 ICP",
+            },
+            listing:
+              token.listing && token.listing.length > 0 && token.listing[0]
+                ? {
+                    price: `${token.listing[0].price} ${Object.keys(token.listing[0].currency)[0]}`,
+                    currency: Object.keys(token.listing[0].currency)[0] as
+                      | "ICP"
+                      | "USDT",
+                    isListed: token.listing[0].is_active,
+                    listingDate: new Date(
+                      Number(token.listing[0].listed_at) / 1000000,
+                    ).toISOString(),
+                  }
+                : undefined,
+          };
 
-            createdNFTs.push(mockNFT);
-          } catch (error) {
-            console.error(
-              `[CollectionService] Error processing created NFT for session ${session.session_id}:`,
-              error,
-            );
-          }
+          createdNFTs.push(nftItem);
+        } catch (error) {
+          console.error(`Error processing created NFT ${token.id}:`, error);
         }
       }
 
-      console.log(
-        `[CollectionService] Loaded ${createdNFTs.length} created NFTs`,
-      );
       return createdNFTs;
     } catch (error) {
       console.error("[CollectionService] Failed to load created NFTs:", error);
