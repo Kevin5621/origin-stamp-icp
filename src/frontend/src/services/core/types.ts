@@ -138,6 +138,30 @@ export interface BackendActor {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     principal: any,
   ) => Promise<import("../../../../declarations/backend/backend.did").Token[]>;
+  // NFT Listing methods
+  list_nft: (
+    token_id: bigint,
+    price: string,
+    currency: import("../../../../declarations/backend/backend.did").Currency,
+  ) => Promise<
+    import("../../../../declarations/backend/backend.did").ListingResult
+  >;
+  delist_nft: (
+    token_id: bigint,
+  ) => Promise<
+    import("../../../../declarations/backend/backend.did").DelistingResult
+  >;
+  get_active_listings: () => Promise<
+    import("../../../../declarations/backend/backend.did").NFTListing[]
+  >;
+  get_token_listing: (
+    token_id: bigint,
+  ) => Promise<
+    [] | [import("../../../../declarations/backend/backend.did").NFTListing]
+  >;
+  // Debug functions
+  debug_token_ownership: (token_id: bigint) => Promise<string>;
+  debug_caller_identity: () => Promise<string>;
   // Dashboard methods
   get_user_dashboard_metrics: (
     username: string,

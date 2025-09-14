@@ -1,7 +1,7 @@
 use crate::modules::physical_art;
 use crate::types::{
-    Account, CollectionMetadata, Token, TokenAttribute, TokenMetadata, TransferRequest,
-    TransferResponse,
+    Account, CollectionMetadata, Currency, DelistingResult, ListingResult, NFTListing, Token,
+    TokenAttribute, TokenMetadata, TransferRequest, TransferResponse,
 };
 use serde_json;
 use sha2::{Digest, Sha256};
@@ -294,6 +294,7 @@ pub fn mint_nft_from_session(
         metadata,
         created_at: current_time,
         session_id: Some(session_id),
+        listing: None, // NFTs are not listed by default
     };
 
     TOKENS.with(|tokens| {
@@ -550,6 +551,7 @@ pub fn mint_certificate_nft(certificate_id: String, recipient: Account) -> Resul
         metadata,
         created_at: current_time,
         session_id: Some(certificate.session_id.clone()),
+        listing: None, // NFTs are not listed by default
     };
 
     // 13. Store token
@@ -617,4 +619,252 @@ fn generate_token_hash(token_id: u64, session_id: &str, timestamp: u64) -> Strin
     hasher.update(session_id.as_bytes());
     hasher.update(timestamp.to_be_bytes());
     format!("{:x}", hasher.finalize())
+}
+
+// =============================================================================
+// NFT LISTING FUNCTIONS
+// =============================================================================
+
+/// List an NFT for sale
+#[ic_cdk::update]
+pub fn list_nft(token_id: u64, price: String, currency: Currency) -> ListingResult {
+    let caller = ic_cdk::api::caller();
+
+    // Validate price format (should be a valid decimal string)
+    if price.is_empty() {
+        return ListingResult {
+            success: false,
+            message: "Price cannot be empty".to_string(),
+            listing_id: None,
+        };
+    }
+
+    // Try to parse price to validate it's a valid number
+    match price.parse::<f64>() {
+        Ok(parsed_price) => {
+            if parsed_price <= 0.0 {
+                return ListingResult {
+                    success: false,
+                    message: "Price must be greater than 0".to_string(),
+                    listing_id: None,
+                };
+            }
+        }
+        Err(_) => {
+            return ListingResult {
+                success: false,
+                message: "Invalid price format".to_string(),
+                listing_id: None,
+            };
+        }
+    }
+
+    TOKENS.with(|tokens| {
+        let mut tokens_map = tokens.borrow_mut();
+
+        match tokens_map.get_mut(&token_id) {
+            Some(token) => {
+                // Verify the caller owns the token
+                // For basic ownership, we check if the caller's principal matches the token owner's principal
+                // and the subaccount is None or empty (both represent basic ownership without subaccounts)
+                let is_owner = token.owner.owner == caller
+                    && (token.owner.subaccount.is_none()
+                        || token
+                            .owner
+                            .subaccount
+                            .as_ref()
+                            .is_none_or(|sub| sub.is_empty()));
+
+                if !is_owner {
+                    return ListingResult {
+                        success: false,
+                        message: "Unauthorized: You do not own this NFT".to_string(),
+                        listing_id: None,
+                    };
+                }
+
+                // Check if token is already listed
+                if let Some(existing_listing) = &token.listing {
+                    if existing_listing.is_active {
+                        return ListingResult {
+                            success: false,
+                            message: "NFT is already listed for sale".to_string(),
+                            listing_id: None,
+                        };
+                    }
+                }
+
+                // Create new listing
+                let current_time = ic_cdk::api::time();
+                let listing = NFTListing {
+                    token_id,
+                    seller: token.owner.clone(),
+                    price: price.clone(),
+                    currency,
+                    listed_at: current_time,
+                    is_active: true,
+                };
+
+                token.listing = Some(listing);
+
+                // Log the listing action for audit
+                ic_cdk::println!(
+                    "NFT Listed: token_id={}, seller={}, price={}, timestamp={}",
+                    token_id,
+                    caller.to_text(),
+                    price,
+                    current_time
+                );
+
+                ListingResult {
+                    success: true,
+                    message: "NFT successfully listed for sale".to_string(),
+                    listing_id: Some(token_id),
+                }
+            }
+            None => ListingResult {
+                success: false,
+                message: "NFT not found".to_string(),
+                listing_id: None,
+            },
+        }
+    })
+}
+
+/// Remove an NFT from sale
+#[ic_cdk::update]
+pub fn delist_nft(token_id: u64) -> DelistingResult {
+    let caller = ic_cdk::api::caller();
+
+    TOKENS.with(|tokens| {
+        let mut tokens_map = tokens.borrow_mut();
+
+        match tokens_map.get_mut(&token_id) {
+            Some(token) => {
+                // Verify the caller owns the token
+                // For basic ownership, we check if the caller's principal matches the token owner's principal
+                // and the subaccount is None or empty (both represent basic ownership without subaccounts)
+                let is_owner = token.owner.owner == caller
+                    && (token.owner.subaccount.is_none()
+                        || token
+                            .owner
+                            .subaccount
+                            .as_ref()
+                            .is_none_or(|sub| sub.is_empty()));
+
+                if !is_owner {
+                    return DelistingResult {
+                        success: false,
+                        message: "Unauthorized: You do not own this NFT".to_string(),
+                    };
+                }
+
+                // Check if token is actually listed
+                match &token.listing {
+                    Some(listing) if listing.is_active => {
+                        // Remove the listing
+                        token.listing = None;
+
+                        // Log the delisting action for audit
+                        ic_cdk::println!(
+                            "NFT Delisted: token_id={}, owner={}, timestamp={}",
+                            token_id,
+                            caller.to_text(),
+                            ic_cdk::api::time()
+                        );
+
+                        DelistingResult {
+                            success: true,
+                            message: "NFT successfully removed from sale".to_string(),
+                        }
+                    }
+                    _ => DelistingResult {
+                        success: false,
+                        message: "NFT is not currently listed for sale".to_string(),
+                    },
+                }
+            }
+            None => DelistingResult {
+                success: false,
+                message: "NFT not found".to_string(),
+            },
+        }
+    })
+}
+
+/// Get all active listings
+#[ic_cdk::query]
+pub fn get_active_listings() -> Vec<NFTListing> {
+    TOKENS.with(|tokens| {
+        tokens
+            .borrow()
+            .values()
+            .filter_map(|token| {
+                if let Some(listing) = &token.listing {
+                    if listing.is_active {
+                        Some(listing.clone())
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
+            .collect()
+    })
+}
+
+/// Get listing for a specific token
+#[ic_cdk::query]
+pub fn get_token_listing(token_id: u64) -> Option<NFTListing> {
+    TOKENS.with(|tokens| {
+        tokens.borrow().get(&token_id).and_then(|token| {
+            if let Some(listing) = &token.listing {
+                if listing.is_active {
+                    Some(listing.clone())
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+    })
+}
+
+/// Debug function to check token ownership details
+#[ic_cdk::query]
+pub fn debug_token_ownership(token_id: u64) -> String {
+    let caller = ic_cdk::api::caller();
+
+    TOKENS.with(|tokens| match tokens.borrow().get(&token_id) {
+        Some(token) => {
+            let caller_text = caller.to_text();
+            let owner_text = token.owner.owner.to_text();
+            let subaccount_info = match &token.owner.subaccount {
+                Some(sub) => format!("Some({sub:?})"),
+                None => "None".to_string(),
+            };
+
+            let is_owner = token.owner.owner == caller
+                && (token.owner.subaccount.is_none()
+                    || token
+                        .owner
+                        .subaccount
+                        .as_ref()
+                        .is_none_or(|sub| sub.is_empty()));
+
+            format!(
+                "Token ID: {token_id}, Caller: {caller_text}, Owner: {owner_text}, Subaccount: {subaccount_info}, Is Owner: {is_owner}"
+            )
+        }
+        None => format!("Token {token_id} not found"),
+    })
+}
+
+/// Debug function to get the current caller's identity
+#[ic_cdk::query]
+pub fn debug_caller_identity() -> String {
+    let caller = ic_cdk::api::caller();
+    caller.to_text()
 }

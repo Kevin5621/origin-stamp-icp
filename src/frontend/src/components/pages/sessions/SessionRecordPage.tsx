@@ -329,11 +329,18 @@ export const SessionRecordPage: React.FC = () => {
     setMintingResult(null);
 
     try {
+      console.log(
+        `[SessionRecordPage] 🎯 Starting NFT minting for session: ${session.session_id}`,
+      );
+      console.log(
+        `[SessionRecordPage] 📋 User principal from context: ${user.principal}`,
+      );
       showSuccess("Starting NFT minting process...");
 
+      // Note: mintNFTFromSession now internally uses actual caller identity for consistency
       const tokenId = await nftCertificateService.mintNFTFromSession(
         session.session_id,
-        user.principal,
+        user.principal, // This parameter will be replaced with actual caller identity in the service
         [],
       );
 

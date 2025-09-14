@@ -174,49 +174,59 @@ export const nftCertificateService = {
         throw new Error("Backend canister not initialized");
       }
 
-      // Convert string principal to Principal object
+      // 🚨 CRITICAL FIX: Get actual caller identity for consistent ownership
+      const actualCallerIdentity = await backendActor.debug_caller_identity();
+      console.log(
+        `[NFTCertificateService] 🔍 Actual caller identity: ${actualCallerIdentity}`,
+      );
+      console.log(
+        `[NFTCertificateService] 📋 Requested user principal: ${userPrincipal}`,
+      );
+
+      // Use actual caller identity instead of userPrincipal for consistent ownership
       const { Principal } = await import("@dfinity/principal");
       let principal;
 
       try {
-        principal = Principal.fromText(userPrincipal);
-      } catch {
-        console.warn(
-          `Invalid principal format: ${userPrincipal}, generating new one...`,
+        principal = Principal.fromText(actualCallerIdentity);
+        console.log(
+          `[NFTCertificateService] ✅ Using actual caller principal: ${principal.toText()}`,
         );
-        // Generate a valid principal from the invalid one
-        const encoder = new TextEncoder();
-        const data = encoder.encode(userPrincipal + "originstamp_SALT_2025");
-        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-        // Take first 8 bytes and create valid Principal
-        const bytes = new Uint8Array(8);
-        for (let i = 0; i < 8; i++) {
-          bytes[i] = hashArray[i] || 0;
-        }
-
-        principal = Principal.fromUint8Array(bytes);
-        console.log(`Generated new valid principal: ${principal.toText()}`);
+      } catch (error) {
+        console.error("Failed to parse actual caller identity:", error);
+        throw new Error("Invalid caller identity from backend");
       }
 
+      // 🚨 CRITICAL FIX: Use empty array [] instead of null for subaccount
       const recipient = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        owner: principal as any,
-        subaccount: [] as [] | [number[]],
+        owner: principal as any, // Type assertion needed for Candid compatibility
+        subaccount: [] as [] | [number[]], // Empty array for no subaccount
       };
+
+      console.log(`[NFTCertificateService] 🎯 Minting NFT with recipient:`, {
+        owner: principal.toText(),
+        subaccount: "empty array []",
+      });
 
       const result = await backendActor.mint_nft_from_session(
         sessionId,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        recipient as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        metadata as any,
+        recipient as any, // Type assertion needed for Candid compatibility
+        metadata,
       );
 
       if ("Ok" in result) {
-        return result.Ok.toString();
+        const tokenId = result.Ok.toString();
+        console.log(
+          `[NFTCertificateService] 🎉 NFT minted successfully! Token ID: ${tokenId}`,
+        );
+        return tokenId;
       } else {
+        console.error(
+          `[NFTCertificateService] ❌ NFT minting failed:`,
+          result.Err,
+        );
         throw new Error(result.Err);
       }
     } catch (error) {

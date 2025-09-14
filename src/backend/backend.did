@@ -87,10 +87,17 @@ type CreateCertificateRequest = record {
   description : text;
   creation_tools : vec text;
 };
+type Currency = variant { ICP; USDT };
 type DashboardMetrics = record {
   total_sessions : nat64;
   total_users : nat64;
   total_certificates : nat64;
+};
+type DelistingResult = record { message : text; success : bool };
+type ListingResult = record {
+  message : text;
+  success : bool;
+  listing_id : opt nat64;
 };
 type LoginResult = record {
   username : opt text;
@@ -98,6 +105,14 @@ type LoginResult = record {
   success : bool;
 };
 type NFTGenerationResult = record { nft_id : text; token_uri : text };
+type NFTListing = record {
+  token_id : nat64;
+  seller : Account;
+  currency : Currency;
+  is_active : bool;
+  price : text;
+  listed_at : nat64;
+};
 type PhysicalArtSession = record {
   status : text;
   updated_at : nat64;
@@ -135,6 +150,7 @@ type SubscriptionLimits = record {
 };
 type Token = record {
   id : nat64;
+  listing : opt NFTListing;
   session_id : opt text;
   owner : Account;
   metadata : TokenMetadata;
@@ -230,10 +246,14 @@ service : () -> {
   create_coupon : (text, CouponType, nat32, nat64) -> (Result);
   create_physical_art_session : (text, text, text) -> (Result_1);
   create_verification_request : (text, vec text) -> (Result_1);
+  debug_caller_identity : () -> (text) query;
+  debug_token_ownership : (nat64) -> (text) query;
   delete_verification_asset : (text, text) -> (Result);
+  delist_nft : (nat64) -> (DelistingResult);
   generate_certificate : (CreateCertificateRequest) -> (Result_2);
   generate_nft_for_certificate : (text) -> (Result_3);
   generate_upload_url : (text, UploadFileData) -> (Result_1);
+  get_active_listings : () -> (vec NFTListing) query;
   get_all_subscriptions_debug : () -> (vec record { text; CouponType }) query;
   get_all_users : () -> (vec text) query;
   get_available_coupons : () -> (vec Coupon) query;
@@ -253,6 +273,7 @@ service : () -> {
   get_session_verifications : (text) -> (vec AIVerificationResult) query;
   get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   get_token_details : (nat64) -> (opt Token) query;
+  get_token_listing : (nat64) -> (opt NFTListing) query;
   get_user_activity_timeline : (text, nat64) -> (vec UserActivity) query;
   get_user_avatar : (text) -> (opt text) query;
   get_user_certificates : (text) -> (vec Certificate) query;
@@ -282,6 +303,7 @@ service : () -> {
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
   initialize_demo_coupons : () -> (Result);
   initialize_user_subscription : (text) -> (Result);
+  list_nft : (nat64, text, Currency) -> (ListingResult);
   login : (text, text) -> (LoginResult);
   manual_verification_override : (
       text,

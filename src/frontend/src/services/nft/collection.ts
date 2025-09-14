@@ -75,11 +75,26 @@ export class CollectionService {
   ): Promise<NFTCollectionItem[]> {
     try {
       console.log(
-        `[CollectionService] Loading user collection for: ${userPrincipal}`,
+        `[CollectionService] 🔍 Loading user collection for: ${userPrincipal}`,
       );
 
-      // Get user's NFTs from backend
-      const userNFTs = await backendService.getUserNFTs(userPrincipal);
+      // 🚨 CRITICAL FIX: Get actual caller identity from backend
+      const backendActor = await backendService.getBackendActor();
+      if (!backendActor) {
+        throw new Error("Backend service not available");
+      }
+
+      // Debug: Check actual caller identity
+      const actualCallerIdentity = await backendActor.debug_caller_identity();
+      console.log(
+        `[CollectionService] 🎯 Actual backend caller identity: ${actualCallerIdentity}`,
+      );
+      console.log(
+        `[CollectionService] 📋 Requested user principal: ${userPrincipal}`,
+      );
+
+      // Use actual caller identity instead of provided userPrincipal
+      const userNFTs = await backendService.getUserNFTs(actualCallerIdentity);
 
       const collection: NFTCollectionItem[] = [];
 
@@ -141,6 +156,19 @@ export class CollectionService {
               ).toISOString(),
               currentValue: "0 ICP", // Will be updated with market data
             },
+            listing:
+              token.listing && token.listing.length > 0 && token.listing[0]
+                ? {
+                    price: `${token.listing[0].price} ${Object.keys(token.listing[0].currency)[0]}`,
+                    currency: Object.keys(token.listing[0].currency)[0] as
+                      | "ICP"
+                      | "USDT",
+                    isListed: token.listing[0].is_active,
+                    listingDate: new Date(
+                      Number(token.listing[0].listed_at) / 1000000,
+                    ).toISOString(),
+                  }
+                : undefined,
           };
 
           collection.push(nftItem);
@@ -172,10 +200,54 @@ export class CollectionService {
     username: string,
   ): Promise<NFTCollectionItem[]> {
     try {
-      console.log(`[CollectionService] Loading created NFTs for: ${username}`);
+      console.log(
+        `[CollectionService] 🔍 Loading created NFTs for username: ${username}`,
+      );
 
-      // Get user's sessions
-      const userSessions = await backendService.getUserSessions(username);
+      // 🚨 CRITICAL FIX: Get actual caller identity to find correct user sessions
+      const backendActor = await backendService.getBackendActor();
+      if (!backendActor) {
+        throw new Error("Backend service not available");
+      }
+
+      const actualCallerIdentity = await backendActor.debug_caller_identity();
+      console.log(
+        `[CollectionService] 🎯 Getting sessions for actual caller: ${actualCallerIdentity}`,
+      );
+
+      // For now, we'll try to map caller identity to a username
+      // This is a temporary fix - ideally we need to track user identity->username mapping
+      const possibleUsernames = [
+        username,
+        "frontend_user",
+        actualCallerIdentity.slice(0, 8),
+      ];
+
+      let userSessions: Array<{
+        session_id: string;
+        status: string;
+        art_title: string;
+        description: string;
+        username: string;
+        uploaded_photos: string[];
+        created_at: bigint;
+      }> = [];
+      for (const testUsername of possibleUsernames) {
+        try {
+          const sessions = await backendService.getUserSessions(testUsername);
+          if (sessions.length > 0) {
+            console.log(
+              `[CollectionService] ✅ Found ${sessions.length} sessions for username: ${testUsername}`,
+            );
+            userSessions = sessions;
+            break;
+          }
+        } catch {
+          console.log(
+            `[CollectionService] 🔍 No sessions found for username: ${testUsername}`,
+          );
+        }
+      }
 
       const createdNFTs: NFTCollectionItem[] = [];
 
@@ -183,7 +255,7 @@ export class CollectionService {
         if (session.status === "completed") {
           try {
             // Try to find NFT for this session
-            // TODO need to track NFT-session relationships
+            // TODO: need to track NFT-session relationships in backend
             const mockNFT: NFTCollectionItem = {
               id: `created_${session.session_id}`,
               title: session.art_title,
@@ -255,7 +327,7 @@ export class CollectionService {
     try {
       console.log(`[CollectionService] Loading favorites for: ${username}`);
 
-      // TODO needs to be implemented in backend
+      // TODO: needs to be implemented in backend - using empty array for now
       const favorites: FavoriteItem[] = [];
 
       console.log(`[CollectionService] Loaded ${favorites.length} favorites`);
@@ -274,8 +346,19 @@ export class CollectionService {
     username: string,
   ): Promise<CollectionStats> {
     try {
+      // 🚨 CRITICAL FIX: Get actual caller identity for consistent data
+      const backendActor = await backendService.getBackendActor();
+      if (!backendActor) {
+        throw new Error("Backend service not available");
+      }
+
+      const actualCallerIdentity = await backendActor.debug_caller_identity();
+      console.log(
+        `[CollectionService] 📊 Calculating stats for actual caller: ${actualCallerIdentity}`,
+      );
+
       const [ownedNFTs, createdNFTs, favorites] = await Promise.all([
-        this.getUserCollection(userPrincipal),
+        this.getUserCollection(actualCallerIdentity), // Use actual caller identity
         this.getUserCreatedNFTs(username),
         this.getUserFavorites(username),
       ]);
@@ -329,14 +412,94 @@ export class CollectionService {
   ): Promise<boolean> {
     try {
       console.log(
-        `[CollectionService] Setting price for NFT ${nftId}: ${price} ${currency}`,
+        `[CollectionService] 🎯 STARTING setNFTPrice for NFT ${nftId}: ${price} ${currency}`,
       );
 
-      // would call backend to update NFT listing price
-      // TODO
-      return true;
+      // Get backend actor
+      const backendActor = await backendService.getBackendActor();
+      if (!backendActor) {
+        throw new Error("Backend service not available");
+      }
+
+      // Debug: Check ownership BEFORE doing anything else
+      console.log(
+        `[CollectionService] 🔍 DEBUGGING ownership for NFT ${nftId}...`,
+      );
+      try {
+        const callerIdentity = await backendActor.debug_caller_identity();
+        const ownershipInfo = await backendActor.debug_token_ownership(
+          BigInt(nftId),
+        );
+
+        console.log("[CollectionService] 🔍 CRITICAL DEBUG INFO:");
+        console.log("  📱 Frontend Caller Identity:", callerIdentity);
+        console.log("  🎯 Token Ownership Info:", ownershipInfo);
+        console.log(
+          "  💡 This should now match - both should be the same identity!",
+        );
+      } catch (debugError) {
+        console.error("[CollectionService] ❌ Debug error:", debugError);
+      }
+
+      // Convert currency string to backend enum format
+      const backendCurrency =
+        currency === "ICP" ? { ICP: null } : { USDT: null };
+
+      console.log(`[CollectionService] 📞 Calling backend list_nft...`);
+
+      // Call backend to list the NFT
+      const result = await backendActor.list_nft(
+        BigInt(nftId),
+        price,
+        backendCurrency,
+      );
+
+      if (result.success) {
+        console.log(
+          `[CollectionService] Successfully listed NFT ${nftId} for ${price} ${currency}`,
+        );
+        return true;
+      } else {
+        console.error(
+          `[CollectionService] Failed to list NFT ${nftId}:`,
+          result.message,
+        );
+        throw new Error(result.message);
+      }
     } catch (error) {
       console.error("[CollectionService] Failed to set NFT price:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Remove NFT from sale (delist)
+   */
+  static async delistNFT(nftId: string): Promise<boolean> {
+    try {
+      console.log(`[CollectionService] Delisting NFT ${nftId}`);
+
+      // Get backend actor
+      const backendActor = await backendService.getBackendActor();
+      if (!backendActor) {
+        throw new Error("Backend service not available");
+      }
+
+      // Call backend to delist the NFT
+      const result = await backendActor.delist_nft(BigInt(nftId));
+
+      if (result.success) {
+        console.log(`[CollectionService] Successfully delisted NFT ${nftId}`);
+        return true;
+      } else {
+        console.error(
+          `[CollectionService] Failed to delist NFT ${nftId}:`,
+          result.message,
+        );
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error("[CollectionService] Failed to delist NFT:", error);
       throw error;
     }
   }
@@ -354,7 +517,7 @@ export class CollectionService {
       );
 
       // would call backend to add to favorites
-      // TODO
+      // For now, just return success as favorites aren't implemented yet
       return true;
     } catch (error) {
       console.error("[CollectionService] Failed to add to favorites:", error);
@@ -375,7 +538,7 @@ export class CollectionService {
       );
 
       // would call backend to remove from favorites
-      // TODO
+      // For now, just return success as favorites aren't implemented yet
       return true;
     } catch (error) {
       console.error(

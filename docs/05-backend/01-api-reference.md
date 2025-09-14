@@ -754,13 +754,18 @@ Mint NFT baru dari physical art session.
 **Parameters:**
 
 - `session_id` - ID session physical art
-- `recipient` - Akun penerima NFT
+- `recipient` - Akun penerima NFT (Note: Ownership automatically assigned to caller)
 - `additional_attributes` - Atribut tambahan untuk NFT
 
 **Returns:**
 
 - `Ok(token_id)` - Token ID yang baru di-mint
 - `Err(message)` - Error message jika gagal
+
+**Authorization:**
+
+- The NFT ownership is automatically assigned to the caller (session creator)
+- This ensures that the person creating the NFT automatically owns it for listing purposes
 
 **Example:**
 
@@ -970,4 +975,175 @@ dfx canister call backend icrc7_transfer '(vec {
 
 # Get metadata for specific tokens
 dfx canister call backend icrc7_token_metadata '(vec { 1; 2; 3 })'
+```
+
+---
+
+## NFT Marketplace Functions
+
+### Data Structures for Marketplace
+
+#### Currency
+
+```rust
+pub enum Currency {
+    ICP,
+    USDT,
+}
+```
+
+#### NFTListing
+
+```rust
+pub struct NFTListing {
+    pub price: String,
+    pub currency: Currency,
+    pub seller: Principal,
+    pub listed_at: u64,
+}
+```
+
+#### ListingResult
+
+```rust
+pub struct ListingResult {
+    pub success: bool,
+    pub message: String,
+    pub listing_id: Option<u64>,
+}
+```
+
+#### DelistingResult
+
+```rust
+pub struct DelistingResult {
+    pub success: bool,
+    pub message: String,
+}
+```
+
+### list_nft
+
+**Type**: Update function  
+**Signature**: `list_nft(token_id: u64, price: String, currency: Currency) -> ListingResult`
+
+List an NFT for sale in the marketplace.
+
+**Parameters:**
+
+- `token_id` - ID of the NFT to list
+- `price` - Price as string (e.g., "10.5" for 10.5 tokens)
+- `currency` - Currency variant (ICP or USDT)
+
+**Returns:**
+
+- `ListingResult` with success status, message, and optional listing ID
+
+**Authorization:**
+
+- Only the NFT owner can list their NFT
+- Price must be a valid positive number
+
+**Example:**
+
+```bash
+# List NFT for 10.5 ICP
+dfx canister call backend list_nft '(1, "10.5", variant { ICP })'
+
+# List NFT for 100 USDT
+dfx canister call backend list_nft '(2, "100", variant { USDT })'
+```
+
+---
+
+### delist_nft
+
+**Type**: Update function  
+**Signature**: `delist_nft(token_id: u64) -> DelistingResult`
+
+Remove an NFT from marketplace listing.
+
+**Parameters:**
+
+- `token_id` - ID of the NFT to delist
+
+**Returns:**
+
+- `DelistingResult` with success status and message
+
+**Authorization:**
+
+- Only the NFT owner can delist their NFT
+- NFT must be currently listed for sale
+
+**Example:**
+
+```bash
+# Delist NFT
+dfx canister call backend delist_nft '(1)'
+```
+
+---
+
+### get_active_listings
+
+**Type**: Query function  
+**Signature**: `get_active_listings() -> Vec<(u64, NFTListing)>`
+
+Get all currently active NFT listings.
+
+**Returns:**
+
+- Vector of tuples containing token ID and listing details
+
+**Example:**
+
+```bash
+# Get all active listings
+dfx canister call backend get_active_listings '()'
+```
+
+---
+
+### get_token_listing
+
+**Type**: Query function  
+**Signature**: `get_token_listing(token_id: u64) -> Option<NFTListing>`
+
+Get listing details for a specific NFT.
+
+**Parameters:**
+
+- `token_id` - ID of the NFT
+
+**Returns:**
+
+- `Some(NFTListing)` if the NFT is listed
+- `None` if the NFT is not listed
+
+**Example:**
+
+```bash
+# Get listing for specific NFT
+dfx canister call backend get_token_listing '(1)'
+```
+
+---
+
+## Marketplace Usage Examples
+
+```bash
+# Complete marketplace workflow
+
+# 1. List an NFT for sale
+dfx canister call backend list_nft '(1, "15.25", variant { ICP })'
+
+# 2. Check all active listings
+dfx canister call backend get_active_listings '()'
+
+# 3. Check specific NFT listing
+dfx canister call backend get_token_listing '(1)'
+
+# 4. Delist the NFT
+dfx canister call backend delist_nft '(1)'
 ```

@@ -22,12 +22,29 @@ pub struct TokenMetadata {
 }
 
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub enum Currency {
+    ICP,
+    USDT,
+}
+
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub struct NFTListing {
+    pub token_id: u64,
+    pub seller: Account,
+    pub price: String, // Stored as decimal string for precision
+    pub currency: Currency,
+    pub listed_at: u64,
+    pub is_active: bool,
+}
+
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
 pub struct Token {
     pub id: u64,
     pub owner: Account,
     pub metadata: TokenMetadata,
     pub created_at: u64,
     pub session_id: Option<String>,
+    pub listing: Option<NFTListing>,
 }
 
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
@@ -58,4 +75,17 @@ pub struct CollectionMetadata {
 pub struct NFTGenerationResult {
     pub nft_id: String,
     pub token_uri: String,
+}
+
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub struct ListingResult {
+    pub success: bool,
+    pub message: String,
+    pub listing_id: Option<u64>,
+}
+
+#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+pub struct DelistingResult {
+    pub success: bool,
+    pub message: String,
 }

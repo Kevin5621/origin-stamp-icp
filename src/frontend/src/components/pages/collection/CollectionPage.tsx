@@ -61,15 +61,24 @@ export const CollectionPage: React.FC = () => {
   useEffect(() => {
     const loadCollectionData = async () => {
       if (!user?.principal || !user?.username) {
+        console.log("[CollectionPage] 🚨 Missing user data:", {
+          principal: user?.principal,
+          username: user?.username,
+        });
         setIsLoading(false);
         return;
       }
 
       try {
         setIsLoading(true);
+        console.log("[CollectionPage] 🔍 Loading collection data for user:", {
+          principal: user.principal,
+          username: user.username,
+        });
 
+        // Note: CollectionService now internally handles caller identity verification
         const [owned, created, favorites, stats] = await Promise.all([
-          CollectionService.getUserCollection(user.principal),
+          CollectionService.getUserCollection(user.principal), // This will use actual caller identity internally
           CollectionService.getUserCreatedNFTs(user.username),
           CollectionService.getUserFavorites(user.username),
           CollectionService.getCollectionStats(user.principal, user.username),
@@ -79,6 +88,8 @@ export const CollectionPage: React.FC = () => {
         setCreatedNFTs(created);
         setFavoriteNFTs(favorites);
         setCollectionStats(stats);
+
+        console.log("[CollectionPage] ✅ Collection data loaded successfully");
       } catch (error) {
         console.error("Failed to load collection data:", error);
         showError("Failed to load collection data");
@@ -181,6 +192,35 @@ export const CollectionPage: React.FC = () => {
     } catch (error) {
       console.error("Failed to set price:", error);
       showError("Failed to set price");
+    } finally {
+      setIsSettingPrice(false);
+    }
+  };
+
+  const handleDelistNFT = async () => {
+    if (!selectedNFT) {
+      showError("No NFT selected");
+      return;
+    }
+
+    try {
+      setIsSettingPrice(true);
+      await CollectionService.delistNFT(selectedNFT.id);
+      showSuccess("NFT successfully removed from sale");
+      setPriceDialogOpen(false);
+
+      // Refresh collection data
+      if (user?.principal && user?.username) {
+        const [owned, stats] = await Promise.all([
+          CollectionService.getUserCollection(user.principal),
+          CollectionService.getCollectionStats(user.principal, user.username),
+        ]);
+        setMyCollection(owned);
+        setCollectionStats(stats);
+      }
+    } catch (error) {
+      console.error("Failed to delist NFT:", error);
+      showError("Failed to remove NFT from sale");
     } finally {
       setIsSettingPrice(false);
     }
@@ -414,22 +454,35 @@ export const CollectionPage: React.FC = () => {
 
                         {/* Price Information */}
                         <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs">
-                              Purchase Price:
-                            </span>
-                            <span className="text-sm font-medium">
-                              {nft.ownership.purchasePrice || "0 ICP"}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs">
-                              Current Value:
-                            </span>
-                            <span className="text-primary text-sm font-bold">
-                              {nft.ownership.currentValue || "0 ICP"}
-                            </span>
-                          </div>
+                          {nft.listing?.isListed ? (
+                            <div className="flex items-center justify-between">
+                              <span className="text-muted-foreground text-xs">
+                                Listed Price:
+                              </span>
+                              <span className="text-sm font-bold text-green-600">
+                                {nft.listing.price}
+                              </span>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="flex items-center justify-between">
+                                <span className="text-muted-foreground text-xs">
+                                  Purchase Price:
+                                </span>
+                                <span className="text-sm font-medium">
+                                  {nft.ownership.purchasePrice || "0 ICP"}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-muted-foreground text-xs">
+                                  Current Value:
+                                </span>
+                                <span className="text-primary text-sm font-bold">
+                                  {nft.ownership.currentValue || "0 ICP"}
+                                </span>
+                              </div>
+                            </>
+                          )}
                           <div className="flex items-center justify-between">
                             <span className="text-muted-foreground text-xs">
                               Gain/Loss:
@@ -476,7 +529,9 @@ export const CollectionPage: React.FC = () => {
                             onClick={() => handleSetPrice(nft)}
                           >
                             <DollarSign className="mr-1 h-3 w-3" />
-                            Set Price
+                            {nft.listing?.isListed
+                              ? "Manage Listing"
+                              : "Set Price"}
                           </Button>
                         </div>
                       </div>
@@ -650,7 +705,11 @@ export const CollectionPage: React.FC = () => {
       <Dialog open={priceDialogOpen} onOpenChange={setPriceDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Set NFT Price</DialogTitle>
+            <DialogTitle>
+              {selectedNFT?.listing?.isListed
+                ? "Update NFT Price"
+                : "Set NFT Price"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -686,6 +745,27 @@ export const CollectionPage: React.FC = () => {
               >
                 Cancel
               </Button>
+              {selectedNFT?.listing?.isListed && (
+                <Button
+                  variant="destructive"
+                  className="flex-1"
+                  onClick={handleDelistNFT}
+                  disabled={isSettingPrice}
+                >
+                  {isSettingPrice ? (
+                    <>
+                      <LoadingSpinner
+                        variant="infinite"
+                        size="sm"
+                        className="mr-2"
+                      />
+                      Delisting...
+                    </>
+                  ) : (
+                    "Delist"
+                  )}
+                </Button>
+              )}
               <Button
                 className="flex-1"
                 onClick={handleSavePrice}
@@ -700,8 +780,10 @@ export const CollectionPage: React.FC = () => {
                     />
                     Setting...
                   </>
+                ) : selectedNFT?.listing?.isListed ? (
+                  "Update Price"
                 ) : (
-                  "Set Price"
+                  "List for Sale"
                 )}
               </Button>
             </div>
