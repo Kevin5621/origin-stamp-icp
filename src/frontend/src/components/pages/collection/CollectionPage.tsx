@@ -9,7 +9,6 @@ import {
   Share,
   DollarSign,
   TrendingUp,
-  TrendingDown,
   PieChart,
   ShoppingBag,
 } from "lucide-react";
@@ -519,41 +518,6 @@ export const CollectionPage: React.FC = () => {
                                 </div>
                                 <span className="text-primary text-sm font-bold">
                                   {pricingInfo.currentValue}
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Performance Indicator - Show for non-created NFTs */}
-                          {!pricingInfo.isCreated && (
-                            <div
-                              className={`rounded-md border p-2 ${
-                                pricingInfo.gainLoss.isPositive
-                                  ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20"
-                                  : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20"
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-1">
-                                  {pricingInfo.gainLoss.isPositive ? (
-                                    <TrendingUp className="h-3 w-3 text-green-600" />
-                                  ) : (
-                                    <TrendingDown className="h-3 w-3 text-red-600" />
-                                  )}
-                                  <span className="text-xs font-medium">
-                                    Portfolio Impact:
-                                  </span>
-                                </div>
-                                <span
-                                  className={`text-sm font-semibold ${
-                                    pricingInfo.gainLoss.isPositive
-                                      ? "text-green-600"
-                                      : "text-red-600"
-                                  }`}
-                                >
-                                  {pricingInfo.gainLoss.isPositive ? "+" : ""}
-                                  {pricingInfo.gainLoss.difference} ICP (
-                                  {pricingInfo.gainLoss.percentage}%)
                                 </span>
                               </div>
                             </div>
