@@ -7,7 +7,7 @@ import type { NextRequest } from "next/server";
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Check if user is authenticated via cookies
   const isAuthenticated =
     request.cookies.has("auth-user") ||
@@ -22,6 +22,7 @@ export function middleware(request: NextRequest) {
     pathname.startsWith(route),
   );
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+  const isRootPath = pathname === "/";
 
   // Redirect unauthenticated users from protected routes to login
   if (isProtectedRoute && !isAuthenticated) {
@@ -35,11 +36,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  // Handle root path - let client-side AuthRedirect component handle the logic
+  // This allows for better UX with loading states
+  if (isRootPath) {
+    return NextResponse.next();
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
+    "/",
     "/dashboard/:path*",
     "/profile/:path*",
     "/settings/:path*",
