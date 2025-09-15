@@ -137,6 +137,46 @@ export const backendService = {
     return result;
   },
 
+  // ===== MARKETPLACE METHODS =====
+  getMarketplaceFeaturedCollections: async () => {
+    const cacheKey = "marketplace_featured_collections";
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const backendActor = await getBackendActor();
+    if (!backendActor) throw new Error("Backend not available");
+
+    const result = await backendActor.get_marketplace_featured_collections();
+    setCachedData(cacheKey, result, CACHE_TTL.STATS);
+    return result;
+  },
+
+  getTrendingCreators: async (limit: bigint) => {
+    const cacheKey = `trending_creators_${limit}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const backendActor = await getBackendActor();
+    if (!backendActor) throw new Error("Backend not available");
+
+    const result = await backendActor.get_trending_creators(limit);
+    setCachedData(cacheKey, result, CACHE_TTL.STATS);
+    return result;
+  },
+
+  getMarketplaceBanner: async () => {
+    const cacheKey = "marketplace_banner";
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const backendActor = await getBackendActor();
+    if (!backendActor) throw new Error("Backend not available");
+
+    const result = await backendActor.get_marketplace_banner();
+    setCachedData(cacheKey, result, CACHE_TTL.STATS);
+    return result;
+  },
+
   // ===== UTILITY METHODS =====
   isAvailable: isBackendAvailable,
   getCanisterId: getBackendCanisterId,

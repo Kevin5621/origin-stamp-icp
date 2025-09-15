@@ -104,6 +104,22 @@ type LoginResult = record {
   message : text;
   success : bool;
 };
+type MarketplaceBanner = record {
+  title : text;
+  background_image : opt text;
+  description : text;
+  cta_link : text;
+  cta_text : text;
+};
+type MarketplaceFeaturedCollection = record {
+  sample_artwork_url : opt text;
+  floor_price : opt text;
+  verified : bool;
+  price_change_24h : float64;
+  creator_username : text;
+  creator_avatar : opt text;
+  total_listed_artworks : nat64;
+};
 type NFTGenerationResult = record { nft_id : text; token_uri : text };
 type NFTListing = record {
   token_id : nat64;
@@ -171,6 +187,13 @@ type TransferRequest = record {
   created_at_time : opt nat64;
 };
 type TransferResponse = record { result : Result_4; token_id : nat64 };
+type TrendingCreator = record {
+  verified : bool;
+  username : text;
+  joined_date : nat64;
+  avatar_url : opt text;
+  total_artworks : nat64;
+};
 type UpdateProfileRequest = record {
   bio : opt text;
   email : opt text;
@@ -262,6 +285,10 @@ service : () -> {
   get_certificate_for_nft_minting : (text) -> (opt Certificate) query;
   get_certificate_nft_metadata : (text) -> (opt text) query;
   get_dashboard_metrics : () -> (DashboardMetrics) query;
+  get_marketplace_banner : () -> (opt MarketplaceBanner) query;
+  get_marketplace_featured_collections : () -> (
+      vec MarketplaceFeaturedCollection,
+    ) query;
   get_nft_metadata : (text) -> (opt text) query;
   get_pending_verifications : () -> (vec AIVerificationResult) query;
   get_recent_sessions : (nat64) -> (vec PhysicalArtSession) query;
@@ -274,6 +301,7 @@ service : () -> {
   get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   get_token_details : (nat64) -> (opt Token) query;
   get_token_listing : (nat64) -> (opt NFTListing) query;
+  get_trending_creators : (nat64) -> (vec TrendingCreator) query;
   get_user_activity_timeline : (text, nat64) -> (vec UserActivity) query;
   get_user_avatar : (text) -> (opt text) query;
   get_user_certificates : (text) -> (vec Certificate) query;

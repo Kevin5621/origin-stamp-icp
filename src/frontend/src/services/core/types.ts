@@ -211,6 +211,20 @@ export interface BackendActor {
   ) => Promise<
     import("../../../../declarations/backend/backend.did").Certificate[]
   >;
+
+  // Marketplace methods
+  get_marketplace_featured_collections: () => Promise<
+    import("../../../../declarations/backend/backend.did").MarketplaceFeaturedCollection[]
+  >;
+  get_trending_creators: (
+    limit: bigint,
+  ) => Promise<
+    import("../../../../declarations/backend/backend.did").TrendingCreator[]
+  >;
+  get_marketplace_banner: () => Promise<
+    | []
+    | [import("../../../../declarations/backend/backend.did").MarketplaceBanner]
+  >;
 }
 
 // Marketplace types

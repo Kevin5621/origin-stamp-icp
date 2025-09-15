@@ -16,10 +16,11 @@ pub use modules::nft::mint_certificate_nft;
 pub use types::{
     AIVerificationAsset, AIVerificationResult, Account, Certificate, ChartDataPoint,
     CollectionMetadata, CreateCertificateRequest, Currency, DelistingResult, ListingResult,
-    LoginResult, NFTGenerationResult, NFTListing, PhysicalArtSession, ProfileUpdateResult,
-    S3Config, Token, TokenMetadata, TransferRequest, TransferResponse, UpdateProfileRequest,
-    UploadFileData, User, UserActivity, UserChartData, UserDashboardData, UserDashboardMetrics,
-    UserPerformanceStats, VerificationResult, VerificationStatus, VerificationUpdateRequest,
+    LoginResult, MarketplaceBanner, MarketplaceFeaturedCollection, NFTGenerationResult, NFTListing,
+    PhysicalArtSession, ProfileUpdateResult, S3Config, Token, TokenMetadata, TransferRequest,
+    TransferResponse, TrendingCreator, UpdateProfileRequest, UploadFileData, User, UserActivity,
+    UserChartData, UserDashboardData, UserDashboardMetrics, UserPerformanceStats,
+    VerificationResult, VerificationStatus, VerificationUpdateRequest,
 };
 
 // Dashboard metrics structure
@@ -32,6 +33,7 @@ pub struct DashboardMetrics {
 
 // Re-export all public functions from modules for easier access
 pub use modules::certificates::*;
+pub use modules::marketplace::*;
 pub use modules::nft::*;
 pub use modules::physical_art::*;
 pub use modules::s3::*;

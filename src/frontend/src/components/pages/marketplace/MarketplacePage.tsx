@@ -1,6 +1,7 @@
 import React from "react";
 import { HeroBanner } from "./components/HeroBanner";
 import { FeaturedCollections } from "./components/FeaturedCollections";
+import { TrendingCreators } from "./components/TrendingCreators";
 
 export const MarketplacePage: React.FC = () => {
   return (
@@ -10,6 +11,9 @@ export const MarketplacePage: React.FC = () => {
 
       {/* Featured Collections */}
       <FeaturedCollections />
+
+      {/* Trending Creators */}
+      <TrendingCreators />
     </div>
   );
 };

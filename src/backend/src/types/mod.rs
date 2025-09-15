@@ -1,5 +1,6 @@
 // Re-export types from submodules
 mod certificate;
+mod marketplace;
 mod nft;
 mod physical_art;
 mod s3;
@@ -7,6 +8,7 @@ mod user;
 mod verification;
 
 pub use certificate::*;
+pub use marketplace::*;
 pub use nft::*;
 pub use physical_art::*;
 pub use s3::*;
