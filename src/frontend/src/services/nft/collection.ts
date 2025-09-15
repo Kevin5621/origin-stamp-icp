@@ -74,15 +74,11 @@ export class CollectionService {
     userPrincipal: string,
   ): Promise<NFTCollectionItem[]> {
     try {
-      // Get actual caller identity from backend for consistent ownership verification
-      const backendActor = await backendService.getBackendActor();
-      if (!backendActor) {
-        throw new Error("Backend service not available");
-      }
-
-      // Use actual caller identity instead of provided userPrincipal
-      const actualCallerIdentity = await backendActor.debug_caller_identity();
-      const userNFTs = await backendService.getUserNFTs(actualCallerIdentity);
+      // Use the provided userPrincipal directly for consistent ownership
+      console.log(
+        `[getUserCollection] Getting NFTs for principal: ${userPrincipal}`,
+      );
+      const userNFTs = await backendService.getUserNFTs(userPrincipal);
 
       const collection: NFTCollectionItem[] = [];
 
@@ -115,10 +111,10 @@ export class CollectionService {
               sessionId: Array.isArray(token.session_id)
                 ? token.session_id[0] || ""
                 : "",
-              verificationScore: 95,
-              authenticityRating: 98,
-              provenanceScore: 92,
-              communityTrust: 88,
+              verificationScore: 0, // Will be populated from actual verification data
+              authenticityRating: 0, // Will be populated from actual verification data
+              provenanceScore: 0, // Will be populated from actual verification data
+              communityTrust: 0, // Will be populated from actual verification data
               issueDate: new Date(
                 Number(token.created_at) / 1000000,
               ).toISOString(),
@@ -129,8 +125,8 @@ export class CollectionService {
               tokenStandard: "ICRC-7",
             },
             stats: {
-              views: Math.floor(Math.random() * 1000) + 100,
-              likes: Math.floor(Math.random() * 100) + 10,
+              views: 0, // Will be populated from actual analytics
+              likes: 0, // Will be populated from actual analytics
               createdAt: new Date(
                 Number(token.created_at) / 1000000,
               ).toISOString(),
@@ -188,14 +184,18 @@ export class CollectionService {
     username: string,
   ): Promise<NFTCollectionItem[]> {
     try {
-      // Get all owned NFTs first, then filter by creator
-      const backendActor = await backendService.getBackendActor();
-      if (!backendActor) {
-        throw new Error("Backend service not available");
+      // Get user's principal from auth service to ensure proper ownership
+      const { AuthService } = await import("../auth");
+      const userPrincipal = await AuthService.getCurrentUserPrincipal();
+
+      if (!userPrincipal) {
+        throw new Error("User not authenticated");
       }
 
-      const actualCallerIdentity = await backendActor.debug_caller_identity();
-      const userNFTs = await backendService.getUserNFTs(actualCallerIdentity);
+      console.log(
+        `[getUserCreatedNFTs] Getting created NFTs for principal: ${userPrincipal.toText()}`,
+      );
+      const userNFTs = await backendService.getUserNFTs(userPrincipal.toText());
 
       const createdNFTs: NFTCollectionItem[] = [];
 
@@ -308,19 +308,12 @@ export class CollectionService {
     username: string,
   ): Promise<CollectionStats> {
     try {
-      // 🚨 CRITICAL FIX: Get actual caller identity for consistent data
-      const backendActor = await backendService.getBackendActor();
-      if (!backendActor) {
-        throw new Error("Backend service not available");
-      }
-
-      const actualCallerIdentity = await backendActor.debug_caller_identity();
       console.log(
-        `[CollectionService] 📊 Calculating stats for actual caller: ${actualCallerIdentity}`,
+        `[CollectionService] 📊 Calculating stats for principal: ${userPrincipal}`,
       );
 
       const [ownedNFTs, createdNFTs, favorites] = await Promise.all([
-        this.getUserCollection(actualCallerIdentity), // Use actual caller identity
+        this.getUserCollection(userPrincipal), // Use provided user principal
         this.getUserCreatedNFTs(username),
         this.getUserFavorites(username),
       ]);

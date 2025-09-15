@@ -174,18 +174,19 @@ export const nftCertificateService = {
         throw new Error("Backend canister not initialized");
       }
 
-      // Get actual caller identity for consistent ownership
-      const actualCallerIdentity = await backendActor.debug_caller_identity();
+      // Use the provided userPrincipal directly for consistent ownership
+      console.log(
+        `[mintNFTFromSession] Using user principal: ${userPrincipal}`,
+      );
 
-      // Use actual caller identity instead of userPrincipal for consistent ownership
       const { Principal } = await import("@dfinity/principal");
       let principal;
 
       try {
-        principal = Principal.fromText(actualCallerIdentity);
+        principal = Principal.fromText(userPrincipal);
       } catch (error) {
-        console.error("Failed to parse actual caller identity:", error);
-        throw new Error("Invalid caller identity from backend");
+        console.error("Failed to parse user principal:", error);
+        throw new Error("Invalid user principal format");
       }
 
       // Use empty array for subaccount to match Candid type requirements
@@ -194,6 +195,10 @@ export const nftCertificateService = {
         owner: principal as any, // Type assertion needed for Candid compatibility
         subaccount: [] as [] | [number[]],
       };
+
+      console.log(
+        `[mintNFTFromSession] Minting NFT for principal: ${userPrincipal}`,
+      );
 
       const result = await backendActor.mint_nft_from_session(
         sessionId,
@@ -204,6 +209,9 @@ export const nftCertificateService = {
 
       if ("Ok" in result) {
         const tokenId = result.Ok.toString();
+        console.log(
+          `[mintNFTFromSession] NFT minted successfully with ID: ${tokenId}`,
+        );
         return tokenId;
       } else {
         throw new Error(result.Err);

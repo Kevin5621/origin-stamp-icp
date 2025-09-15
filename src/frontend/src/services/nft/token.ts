@@ -87,24 +87,9 @@ export const nftTokenService = {
 
       try {
         principal = Principal.fromText(userPrincipal);
-      } catch {
-        console.warn(
-          `Invalid principal format: ${userPrincipal}, generating new one...`,
-        );
-        // Generate a valid principal from the invalid one
-        const encoder = new TextEncoder();
-        const data = encoder.encode(userPrincipal + "originstamp_SALT_2025");
-        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-        // Take first 8 bytes and create valid Principal
-        const bytes = new Uint8Array(8);
-        for (let i = 0; i < 8; i++) {
-          bytes[i] = hashArray[i] || 0;
-        }
-
-        principal = Principal.fromUint8Array(bytes);
-        console.log(`Generated new valid principal: ${principal.toText()}`);
+      } catch (error) {
+        console.error(`Invalid principal format: ${userPrincipal}`, error);
+        throw new Error(`Invalid principal format: ${userPrincipal}`);
       }
 
       const result = await backendActor.get_user_nfts(principal);

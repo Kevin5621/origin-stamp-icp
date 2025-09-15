@@ -64,31 +64,9 @@ export const dashboardStatsService = {
         return [];
       }
 
-      // Mock data for now until we have more backend methods
-      const mockCreators: CreatorStats[] = [
-        {
-          username: "Kerafuru",
-          certificateCount: 47,
-          sessionCount: 23,
-          hasSubscription: true,
-          subscriptionType: "Premium",
-        },
-        {
-          username: "Darmau",
-          certificateCount: 32,
-          sessionCount: 18,
-          hasSubscription: true,
-          subscriptionType: "Basic",
-        },
-        {
-          username: "Arziki",
-          certificateCount: 28,
-          sessionCount: 15,
-          hasSubscription: false,
-        },
-      ];
-
-      return mockCreators.slice(0, 8);
+      // Return empty array for now - will be populated with real data from backend
+      // when we implement proper creator statistics
+      return [];
     } catch (error) {
       console.error("Failed to fetch top creators:", error);
       return [];

@@ -111,8 +111,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (username: string) => {
     const generateUsernamePrincipal = async () => {
       try {
+        // Use user-specific salt to ensure unique principals per user
+        const userSpecificSalt = `originstamp_user_${username}_SALT_2025`;
         const encoder = new TextEncoder();
-        const data = encoder.encode(username + "originstamp_SALT_2025");
+        const data = encoder.encode(username + userSpecificSalt);
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
 

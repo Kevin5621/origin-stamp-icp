@@ -229,8 +229,11 @@ export class AuthService {
   }): Promise<Principal> {
     try {
       const userId = userData.username || userData.email || "username_user";
-      const salt = this.getOrCreateSalt();
-      const secureHash = await this.generateSecureHash(userId + salt);
+      // Use user-specific salt to ensure unique principals per user
+      const userSpecificSalt = `originstamp_user_${userId}_SALT_2025`;
+      const secureHash = await this.generateSecureHash(
+        userId + userSpecificSalt,
+      );
       const principalText = await this.convertHashToValidPrincipal(
         secureHash.toString(16),
       );
