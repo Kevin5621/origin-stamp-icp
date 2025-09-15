@@ -175,9 +175,6 @@ export const nftCertificateService = {
       }
 
       // Use the provided userPrincipal directly for consistent ownership
-      console.log(
-        `[mintNFTFromSession] Using user principal: ${userPrincipal}`,
-      );
 
       const { Principal } = await import("@dfinity/principal");
       let principal;
@@ -196,10 +193,6 @@ export const nftCertificateService = {
         subaccount: [] as [] | [number[]],
       };
 
-      console.log(
-        `[mintNFTFromSession] Minting NFT for principal: ${userPrincipal}`,
-      );
-
       const result = await backendActor.mint_nft_from_session(
         sessionId,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -209,9 +202,6 @@ export const nftCertificateService = {
 
       if ("Ok" in result) {
         const tokenId = result.Ok.toString();
-        console.log(
-          `[mintNFTFromSession] NFT minted successfully with ID: ${tokenId}`,
-        );
         return tokenId;
       } else {
         throw new Error(result.Err);

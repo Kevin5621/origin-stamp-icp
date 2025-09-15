@@ -323,13 +323,18 @@ pub fn get_session_nfts(session_id: String) -> Vec<Token> {
     })
 }
 
-// Get all NFTs owned by a user (by principal)
+/**
+ * Get all NFTs owned by a specific principal
+ *
+ * This function allows querying NFTs for any principal, enabling the frontend
+ * to fetch user collections using the authenticated user's principal rather
+ * than relying on the anonymous caller identity from ic_cdk::api::caller().
+ *
+ * @param owner - The principal of the user whose NFTs to retrieve
+ * @returns Vector of Token objects owned by the specified principal
+ */
 #[ic_cdk::query]
 pub fn get_user_nfts(owner: candid::Principal) -> Vec<Token> {
-    // Allow querying NFTs for the specified owner
-    // This enables the frontend to query NFTs using the correct user principal
-    // rather than relying on the anonymous caller identity
-
     TOKENS.with(|tokens| {
         tokens
             .borrow()
@@ -629,7 +634,17 @@ fn generate_token_hash(token_id: u64, session_id: &str, timestamp: u64) -> Strin
 // NFT LISTING FUNCTIONS
 // =============================================================================
 
-/// List an NFT for sale
+/**
+ * List an NFT for sale on the marketplace
+ *
+ * This function creates a listing for an NFT with the specified price and currency.
+ * The frontend is responsible for ensuring only the NFT owner can list their assets.
+ *
+ * @param token_id - The unique identifier of the NFT to list
+ * @param price - The asking price as a string (e.g., "10.5")
+ * @param currency - The currency type (ICP or USDT)
+ * @returns ListingResult indicating success or failure with details
+ */
 #[ic_cdk::update]
 pub fn list_nft(token_id: u64, price: String, currency: Currency) -> ListingResult {
     // Validate price format (should be a valid decimal string)
@@ -695,14 +710,6 @@ pub fn list_nft(token_id: u64, price: String, currency: Currency) -> ListingResu
 
                 token.listing = Some(listing);
 
-                // Log the listing action for audit
-                ic_cdk::println!(
-                    "NFT Listed: token_id={}, price={}, timestamp={}",
-                    token_id,
-                    price,
-                    current_time
-                );
-
                 ListingResult {
                     success: true,
                     message: "NFT successfully listed for sale".to_string(),
@@ -718,7 +725,15 @@ pub fn list_nft(token_id: u64, price: String, currency: Currency) -> ListingResu
     })
 }
 
-/// Remove an NFT from sale
+/**
+ * Remove an NFT from sale (delist)
+ *
+ * This function removes an active listing for an NFT, making it no longer available
+ * for purchase on the marketplace. The frontend ensures only the NFT owner can delist.
+ *
+ * @param token_id - The unique identifier of the NFT to delist
+ * @returns DelistingResult indicating success or failure with details
+ */
 #[ic_cdk::update]
 pub fn delist_nft(token_id: u64) -> DelistingResult {
     TOKENS.with(|tokens| {
@@ -735,13 +750,6 @@ pub fn delist_nft(token_id: u64) -> DelistingResult {
                     Some(listing) if listing.is_active => {
                         // Remove the listing
                         token.listing = None;
-
-                        // Log the delisting action for audit
-                        ic_cdk::println!(
-                            "NFT Delisted: token_id={}, timestamp={}",
-                            token_id,
-                            ic_cdk::api::time()
-                        );
 
                         DelistingResult {
                             success: true,
