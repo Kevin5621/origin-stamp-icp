@@ -269,6 +269,7 @@ service : () -> {
   create_coupon : (text, CouponType, nat32, nat64) -> (Result);
   create_physical_art_session : (text, text, text) -> (Result_1);
   create_verification_request : (text, vec text) -> (Result_1);
+  debug_all_nft_ownership : () -> (vec text) query;
   debug_caller_identity : () -> (text) query;
   debug_token_ownership : (nat64) -> (text) query;
   delete_verification_asset : (text, text) -> (Result);
