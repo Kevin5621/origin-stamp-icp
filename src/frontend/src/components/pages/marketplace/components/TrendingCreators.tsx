@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { CheckCircle, Users, Calendar, TrendingUp } from "lucide-react";
+import { Users, Calendar, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   MarketplaceService,
   type TrendingCreator,
 } from "@/services/marketplace";
+import { useProfilePicture } from "@/hooks/useProfilePicture";
 
 export const TrendingCreators: React.FC = () => {
   const [creators, setCreators] = useState<TrendingCreator[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { profilePicture } = useProfilePicture();
 
   useEffect(() => {
     const loadTrendingCreators = async () => {
@@ -51,8 +53,16 @@ export const TrendingCreators: React.FC = () => {
     }
   };
 
-  const getAvatarFallback = (username: string) => {
-    return username.charAt(0).toUpperCase();
+  const getAvatarFallback = (creator: TrendingCreator) => {
+    const name = creator.displayName || creator.username;
+    console.log("getAvatarFallback - creator:", creator);
+    console.log("getAvatarFallback - name:", name, "type:", typeof name);
+    // Ensure name is a string and has at least one character
+    if (typeof name === "string" && name.length > 0) {
+      return name.charAt(0).toUpperCase();
+    }
+    // Fallback to 'U' if name is not a valid string
+    return "U";
   };
 
   if (isLoading) {
@@ -151,34 +161,15 @@ export const TrendingCreators: React.FC = () => {
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
                 {/* Avatar */}
-                <div className="relative">
-                  {creator.avatarUrl ? (
-                    <Image
-                      src={creator.avatarUrl}
-                      alt={creator.username}
-                      width={40}
-                      height={40}
-                      className="h-10 w-10 rounded-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = "none";
-                        target.nextElementSibling?.classList.remove("hidden");
-                      }}
-                    />
-                  ) : null}
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 font-semibold text-white ${
-                      creator.avatarUrl ? "hidden" : ""
-                    }`}
-                  >
-                    {getAvatarFallback(creator.username)}
-                  </div>
-                  {creator.verified && (
-                    <div className="absolute -top-1 -right-1">
-                      <CheckCircle className="h-4 w-4 rounded-full bg-white text-blue-400" />
-                    </div>
-                  )}
-                </div>
+                <Avatar className="h-10 w-10">
+                  <AvatarImage
+                    src={creator.avatarUrl || profilePicture}
+                    alt={creator.displayName || creator.username}
+                  />
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 font-semibold text-white">
+                    {getAvatarFallback(creator)}
+                  </AvatarFallback>
+                </Avatar>
 
                 {/* Creator Info */}
                 <div className="min-w-0 flex-1">

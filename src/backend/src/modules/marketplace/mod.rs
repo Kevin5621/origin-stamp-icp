@@ -91,8 +91,12 @@ pub fn get_trending_creators(limit: u64) -> Vec<TrendingCreator> {
                 let user_nfts = get_user_nfts(principal);
                 let artwork_count = user_nfts.len() as u64;
 
+                // Use display_name if available, otherwise fall back to username
+                let display_name = user_profile.display_name.or(Some(username.clone()));
+
                 trending_creators.push(TrendingCreator {
                     username: username.clone(),
+                    display_name,
                     avatar_url: user_profile.avatar_url,
                     joined_date: user_info.1, // creation timestamp
                     total_artworks: artwork_count,

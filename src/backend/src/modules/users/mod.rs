@@ -136,7 +136,7 @@ pub fn register_user(username: String, password: String) -> LoginResult {
                 updated_at: current_time,
                 avatar_url: Some(avatar_url),
                 subscription_tier: "Free".to_string(),
-                display_name: None,
+                display_name: Some(username.clone()),
                 email: None,
                 bio: None,
                 location: None,

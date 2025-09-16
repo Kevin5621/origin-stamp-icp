@@ -16,6 +16,7 @@ pub struct MarketplaceFeaturedCollection {
 #[derive(CandidType, Deserialize, Clone, Debug)]
 pub struct TrendingCreator {
     pub username: String,
+    pub display_name: Option<String>,
     pub avatar_url: Option<String>,
     pub joined_date: u64,
     pub total_artworks: u64,

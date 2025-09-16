@@ -192,6 +192,7 @@ type TrendingCreator = record {
   username : text;
   joined_date : nat64;
   avatar_url : opt text;
+  display_name : opt text;
   total_artworks : nat64;
 };
 type UpdateProfileRequest = record {

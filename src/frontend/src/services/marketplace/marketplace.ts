@@ -19,11 +19,11 @@ export interface FeaturedCollection {
 
 export interface TrendingCreator {
   username: string;
+  displayName?: string;
   avatarUrl?: string;
   joinedDate: number;
   totalArtworks: number;
   verified: boolean;
-  displayName?: string;
 }
 
 export interface MarketplaceBanner {
@@ -51,12 +51,24 @@ export class MarketplaceService {
       return collections.map((collection, index) => ({
         id: `collection-${index}`,
         creatorUsername: collection.creator_username,
-        creatorAvatar: collection.creator_avatar?.[0] || undefined,
+        creatorAvatar: Array.isArray(collection.creator_avatar)
+          ? collection.creator_avatar.length > 0
+            ? collection.creator_avatar[0]
+            : undefined
+          : collection.creator_avatar || undefined,
         totalListedArtworks: Number(collection.total_listed_artworks),
-        floorPrice: collection.floor_price?.[0] || undefined,
+        floorPrice: Array.isArray(collection.floor_price)
+          ? collection.floor_price.length > 0
+            ? collection.floor_price[0]
+            : undefined
+          : collection.floor_price || undefined,
         priceChange24h: collection.price_change_24h,
         verified: collection.verified,
-        sampleArtworkUrl: collection.sample_artwork_url?.[0] || undefined,
+        sampleArtworkUrl: Array.isArray(collection.sample_artwork_url)
+          ? collection.sample_artwork_url.length > 0
+            ? collection.sample_artwork_url[0]
+            : undefined
+          : collection.sample_artwork_url || undefined,
         name: `${collection.creator_username}'s Collection`,
       }));
     } catch (error) {
@@ -80,14 +92,37 @@ export class MarketplaceService {
         return [];
       }
 
-      return creators.map((creator) => ({
-        username: creator.username,
-        avatarUrl: creator.avatar_url?.[0] || undefined,
-        joinedDate: Number(creator.joined_date),
-        totalArtworks: Number(creator.total_artworks),
-        verified: creator.verified,
-        displayName: creator.username, // Can be enhanced with actual display name
-      }));
+      return creators.map((creator) => {
+        // Handle display_name - if it's an empty array or undefined, use username as fallback
+        let displayName = creator.username; // Default fallback to username
+        if (
+          Array.isArray(creator.display_name) &&
+          creator.display_name.length > 0
+        ) {
+          displayName = creator.display_name[0];
+        } else if (
+          typeof creator.display_name === "string" &&
+          creator.display_name.trim().length > 0
+        ) {
+          displayName = creator.display_name;
+        }
+
+        const mappedCreator = {
+          username: creator.username,
+          displayName: displayName,
+          avatarUrl: Array.isArray(creator.avatar_url)
+            ? creator.avatar_url.length > 0
+              ? creator.avatar_url[0]
+              : undefined
+            : creator.avatar_url || undefined,
+          joinedDate: Number(creator.joined_date),
+          totalArtworks: Number(creator.total_artworks),
+          verified: creator.verified,
+        };
+
+        console.log("Final mapped creator:", mappedCreator);
+        return mappedCreator;
+      });
     } catch (error) {
       console.error("Failed to fetch trending creators:", error);
       return [];
