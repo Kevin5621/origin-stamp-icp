@@ -144,7 +144,10 @@ export const backendService = {
     const cached = getCachedData(cacheKey);
     if (cached) return cached;
 
-    const result = await activityService.getUserActivityTimeline(username, limit);
+    const result = await activityService.getUserActivityTimeline(
+      username,
+      limit,
+    );
     setCachedData(cacheKey, result, CACHE_TTL.USER_INFO);
     return result;
   },

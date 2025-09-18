@@ -165,8 +165,10 @@ export const ProfilePage: React.FC = () => {
 
     try {
       // Get real dashboard data from backend
-      const dashboardData = await profileService.getUserDashboardData(user.username);
-      
+      const dashboardData = await profileService.getUserDashboardData(
+        user.username,
+      );
+
       if (dashboardData && dashboardData.metrics) {
         const metrics = dashboardData.metrics;
         setUserStats({
@@ -203,7 +205,7 @@ export const ProfilePage: React.FC = () => {
       // Get real activity data from backend
       const activities = await profileService.getUserActivityTimeline(
         user.username,
-        10
+        10,
       );
 
       // Set activities (empty array if no data)

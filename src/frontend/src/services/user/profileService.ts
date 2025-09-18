@@ -267,19 +267,21 @@ class ProfileService {
    */
   async getUserActivityTimeline(
     username: string,
-    limit: number = 20
-  ): Promise<Array<{
-    id: string;
-    type: "session" | "nft" | "achievement" | "collection";
-    title: string;
-    description: string;
-    timestamp: string;
-    metadata?: {
-      session_id?: string;
-      nft_id?: string;
-      achievement_type?: string;
-    };
-  }>> {
+    limit: number = 20,
+  ): Promise<
+    Array<{
+      id: string;
+      type: "session" | "nft" | "achievement" | "collection";
+      title: string;
+      description: string;
+      timestamp: string;
+      metadata?: {
+        session_id?: string;
+        nft_id?: string;
+        achievement_type?: string;
+      };
+    }>
+  > {
     try {
       return await activityService.getRecentActivities(username, limit);
     } catch (error) {

@@ -57,7 +57,7 @@ class ActivityService {
    */
   async getUserActivityTimeline(
     username: string,
-    limit: number = 20
+    limit: number = 20,
   ): Promise<UserActivity[]> {
     try {
       await initializeBackend();
@@ -69,7 +69,7 @@ class ActivityService {
 
       const result = await backendActor.get_user_activity_timeline(
         username,
-        BigInt(limit)
+        BigInt(limit),
       );
 
       return result;
@@ -82,7 +82,9 @@ class ActivityService {
   /**
    * Get user dashboard data (includes recent activities)
    */
-  async getUserDashboardData(username: string): Promise<UserDashboardData | null> {
+  async getUserDashboardData(
+    username: string,
+  ): Promise<UserDashboardData | null> {
     try {
       await initializeBackend();
       const backendActor = await getBackendActor();
@@ -92,7 +94,7 @@ class ActivityService {
       }
 
       const result = await backendActor.get_user_dashboard_data(username);
-      
+
       if (result.length === 0) {
         return null;
       }
@@ -107,7 +109,9 @@ class ActivityService {
   /**
    * Get user dashboard metrics
    */
-  async getUserDashboardMetrics(username: string): Promise<UserDashboardMetrics | null> {
+  async getUserDashboardMetrics(
+    username: string,
+  ): Promise<UserDashboardMetrics | null> {
     try {
       await initializeBackend();
       const backendActor = await getBackendActor();
@@ -117,7 +121,7 @@ class ActivityService {
       }
 
       const result = await backendActor.get_user_dashboard_metrics(username);
-      
+
       if (result.length === 0) {
         return null;
       }
@@ -132,7 +136,9 @@ class ActivityService {
   /**
    * Get user performance stats
    */
-  async getUserPerformanceStats(username: string): Promise<UserPerformanceStats | null> {
+  async getUserPerformanceStats(
+    username: string,
+  ): Promise<UserPerformanceStats | null> {
     try {
       await initializeBackend();
       const backendActor = await getBackendActor();
@@ -142,7 +148,7 @@ class ActivityService {
       }
 
       const result = await backendActor.get_user_performance_stats(username);
-      
+
       if (result.length === 0) {
         return null;
       }
@@ -159,7 +165,7 @@ class ActivityService {
    */
   async getUserChartData(
     username: string,
-    period: string = "30d"
+    period: string = "30d",
   ): Promise<UserChartData | null> {
     try {
       await initializeBackend();
@@ -170,7 +176,7 @@ class ActivityService {
       }
 
       const result = await backendActor.get_user_chart_data(username, period);
-      
+
       if (result.length === 0) {
         return null;
       }
@@ -248,22 +254,24 @@ class ActivityService {
    */
   async getRecentActivities(
     username: string,
-    limit: number = 10
-  ): Promise<Array<{
-    id: string;
-    type: "session" | "nft" | "achievement" | "collection";
-    title: string;
-    description: string;
-    timestamp: string;
-    metadata?: {
-      session_id?: string;
-      nft_id?: string;
-      achievement_type?: string;
-    };
-  }>> {
+    limit: number = 10,
+  ): Promise<
+    Array<{
+      id: string;
+      type: "session" | "nft" | "achievement" | "collection";
+      title: string;
+      description: string;
+      timestamp: string;
+      metadata?: {
+        session_id?: string;
+        nft_id?: string;
+        achievement_type?: string;
+      };
+    }>
+  > {
     try {
       const activities = await this.getUserActivityTimeline(username, limit);
-      return activities.map(activity => this.convertToActivityItem(activity));
+      return activities.map((activity) => this.convertToActivityItem(activity));
     } catch (error) {
       console.error("Failed to get recent activities:", error);
       return [];
