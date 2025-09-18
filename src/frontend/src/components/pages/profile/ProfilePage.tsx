@@ -131,14 +131,14 @@ export const ProfilePage: React.FC = () => {
         // Could not load profile from backend
       }
 
-      // If no profile found, create default profile
+      // If no profile found, create minimal default profile
       if (!loadedProfile) {
         loadedProfile = {
           username: user.username,
           display_name: user.username, // Default to username for now
           email: user.email || "",
-          bio: "Passionate digital artist exploring the intersection of technology and creativity.",
-          location: "San Francisco, CA",
+          bio: "",
+          location: "",
           profile_picture: user.picture || "",
           created_at: BigInt(Date.now() * 1000000),
           updated_at: BigInt(Date.now() * 1000000),
@@ -164,16 +164,28 @@ export const ProfilePage: React.FC = () => {
     if (!user?.username) return;
 
     try {
-      // Using mock data for now - backend integration ready for implementation
-      const mockStats: UserStats = {
-        art_sessions: 12,
-        nfts_owned: 5,
-        certificates: 8,
-        days_active: 45,
-      };
-
-      setUserStats(mockStats);
-    } catch {
+      // Get real dashboard data from backend
+      const dashboardData = await profileService.getUserDashboardData(user.username);
+      
+      if (dashboardData && dashboardData.metrics) {
+        const metrics = dashboardData.metrics;
+        setUserStats({
+          art_sessions: Number(metrics.total_sessions),
+          nfts_owned: Number(metrics.nfts_owned),
+          certificates: Number(metrics.certificates_created),
+          days_active: Math.floor(Number(metrics.total_sessions) * 0.8), // Estimate based on sessions
+        });
+      } else {
+        // No data available - set to zero
+        setUserStats({
+          art_sessions: 0,
+          nfts_owned: 0,
+          certificates: 0,
+          days_active: 0,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load user stats:", error);
       setUserStats({
         art_sessions: 0,
         nfts_owned: 0,
@@ -188,41 +200,16 @@ export const ProfilePage: React.FC = () => {
     if (!user?.username) return;
 
     try {
-      // Using mock data for now - backend integration ready for implementation
-      const mockActivities: ActivityItem[] = [
-        {
-          id: "session-1",
-          type: "session",
-          title: "Started new art session",
-          description:
-            "Digital Portrait Series - exploring new techniques with digital brushes and color theory",
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-          metadata: { session_id: "sess_123" },
-        },
-        {
-          id: "nft-1",
-          type: "nft",
-          title: "NFT Certificate Generated",
-          description:
-            "Abstract Digital Painting #123 - your artwork has been verified and minted as an NFT",
-          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-          metadata: { nft_id: "nft_456" },
-        },
-        {
-          id: "achievement-1",
-          type: "achievement",
-          title: "First Week Complete!",
-          description:
-            "Congratulations on completing your first week of consistent art creation",
-          timestamp: new Date(
-            Date.now() - 7 * 24 * 60 * 60 * 1000,
-          ).toISOString(), // 1 week ago
-          metadata: { achievement_type: "weekly_streak" },
-        },
-      ];
+      // Get real activity data from backend
+      const activities = await profileService.getUserActivityTimeline(
+        user.username,
+        10
+      );
 
-      setRecentActivity(mockActivities);
-    } catch {
+      // Set activities (empty array if no data)
+      setRecentActivity(activities || []);
+    } catch (error) {
+      console.error("Failed to load recent activity:", error);
       setRecentActivity([]);
     }
   }, [user?.username]);

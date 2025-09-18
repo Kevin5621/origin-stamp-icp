@@ -13,6 +13,7 @@ import { subscriptionManagementService } from "./subscription";
 import { nftCertificateService, nftTokenService } from "./nft";
 import { aiVerificationService } from "./verification";
 import { dashboardStatsService } from "./dashboard";
+import { activityService } from "./user/activityService";
 import {
   getBackendActor,
   isBackendAvailable,
@@ -137,6 +138,44 @@ export const backendService = {
     return result;
   },
 
+  // ===== USER ACTIVITY METHODS =====
+  getUserActivityTimeline: async (username: string, limit: number = 20) => {
+    const cacheKey = `user_activity_${username}_${limit}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const result = await activityService.getUserActivityTimeline(username, limit);
+    setCachedData(cacheKey, result, CACHE_TTL.USER_INFO);
+    return result;
+  },
+  getUserDashboardData: async (username: string) => {
+    const cacheKey = `user_dashboard_${username}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const result = await activityService.getUserDashboardData(username);
+    setCachedData(cacheKey, result, CACHE_TTL.USER_INFO);
+    return result;
+  },
+  getUserPerformanceStats: async (username: string) => {
+    const cacheKey = `user_performance_${username}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const result = await activityService.getUserPerformanceStats(username);
+    setCachedData(cacheKey, result, CACHE_TTL.USER_INFO);
+    return result;
+  },
+  getUserChartData: async (username: string, period: string = "30d") => {
+    const cacheKey = `user_chart_${username}_${period}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const result = await activityService.getUserChartData(username, period);
+    setCachedData(cacheKey, result, CACHE_TTL.USER_INFO);
+    return result;
+  },
+
   // ===== MARKETPLACE METHODS =====
   getMarketplaceFeaturedCollections: async () => {
     const cacheKey = "marketplace_featured_collections";
@@ -208,6 +247,7 @@ export const backendService = {
     },
     verification: aiVerificationService,
     dashboard: dashboardStatsService,
+    activity: activityService,
   },
 };
 

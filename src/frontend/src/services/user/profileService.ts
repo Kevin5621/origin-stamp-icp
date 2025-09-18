@@ -4,6 +4,7 @@
  */
 
 import { backendService } from "../backendService";
+import { activityService } from "./activityService";
 
 export interface UpdateProfileRequest {
   display_name?: string;
@@ -257,6 +258,58 @@ class ProfileService {
       isValid: errors.length === 0,
       errors,
     };
+  }
+
+  // ===== ACTIVITY METHODS =====
+
+  /**
+   * Get user activity timeline
+   */
+  async getUserActivityTimeline(
+    username: string,
+    limit: number = 20
+  ): Promise<Array<{
+    id: string;
+    type: "session" | "nft" | "achievement" | "collection";
+    title: string;
+    description: string;
+    timestamp: string;
+    metadata?: {
+      session_id?: string;
+      nft_id?: string;
+      achievement_type?: string;
+    };
+  }>> {
+    try {
+      return await activityService.getRecentActivities(username, limit);
+    } catch (error) {
+      console.error("Failed to get user activity timeline:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Get user dashboard data
+   */
+  async getUserDashboardData(username: string) {
+    try {
+      return await activityService.getUserDashboardData(username);
+    } catch (error) {
+      console.error("Failed to get user dashboard data:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Get user performance stats
+   */
+  async getUserPerformanceStats(username: string) {
+    try {
+      return await activityService.getUserPerformanceStats(username);
+    } catch (error) {
+      console.error("Failed to get user performance stats:", error);
+      return null;
+    }
   }
 }
 

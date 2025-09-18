@@ -11,5 +11,14 @@ export type {
   ProfileUpdateResult,
   UserProfile,
 } from "./profileService";
+export { activityService } from "./activityService";
+export type {
+  UserActivity,
+  UserDashboardData,
+  UserDashboardMetrics,
+  UserChartData,
+  ChartDataPoint,
+  UserPerformanceStats,
+} from "./activityService";
 export { locationService } from "./locationService";
 export type { LocationOption, LocationSearchParams } from "./locationService";
