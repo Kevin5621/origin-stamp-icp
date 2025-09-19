@@ -226,6 +226,16 @@ export const SessionRecordPage: React.FC = () => {
     }
   }, [sessionId, router]);
 
+  const checkS3Configuration = useCallback(async () => {
+    try {
+      // Since isS3Configured method doesn't exist, we'll assume it's configured
+      // This is a non-blocking operation
+      setS3Configured(true);
+    } catch {
+      setS3Configured(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (sessionId) {
       // Load all data in parallel for better performance
@@ -243,7 +253,7 @@ export const SessionRecordPage: React.FC = () => {
 
       loadAllData();
     }
-  }, [sessionId, loadSessionDetails, loadVerification]);
+  }, [sessionId, loadSessionDetails, loadVerification, checkS3Configuration]);
 
   // Cleanup polling on unmount
   useEffect(() => {
@@ -251,16 +261,6 @@ export const SessionRecordPage: React.FC = () => {
       stopVerificationPolling();
     };
   }, [stopVerificationPolling]);
-
-  const checkS3Configuration = useCallback(async () => {
-    try {
-      // Since isS3Configured method doesn't exist, we'll assume it's configured
-      // This is a non-blocking operation
-      setS3Configured(true);
-    } catch {
-      setS3Configured(false);
-    }
-  }, []);
 
   const handleUploadFiles = async () => {
     if (!sessionId || selectedFiles.length === 0) return;

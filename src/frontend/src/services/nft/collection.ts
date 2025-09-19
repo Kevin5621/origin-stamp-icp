@@ -416,6 +416,7 @@ export class CollectionService {
     try {
       // would call backend to add to favorites
       // For now, just return success as favorites aren't implemented yet
+      console.log(`Adding NFT ${nftId} to favorites for user ${username}`);
       return true;
     } catch (error) {
       console.error("[CollectionService] Failed to add to favorites:", error);
@@ -433,6 +434,7 @@ export class CollectionService {
     try {
       // would call backend to remove from favorites
       // For now, just return success as favorites aren't implemented yet
+      console.log(`Removing NFT ${nftId} from favorites for user ${username}`);
       return true;
     } catch (error) {
       console.error(

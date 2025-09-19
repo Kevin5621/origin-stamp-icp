@@ -68,7 +68,7 @@ export class EnvironmentService {
           "/home/kevin/Documents/origin-stamp-icp/.dfx/local/canisters/frontend/assetstorage.did",
         replicaHost:
           this.getEnvVar("DFX_REPLICA_HOST", "NEXT_PUBLIC_DFX_REPLICA_HOST") ||
-          "127.0.0.1",
+          this.getDefaultReplicaHost(),
         replicaPort: parseInt(
           this.getEnvVar("DFX_REPLICA_PORT", "NEXT_PUBLIC_DFX_REPLICA_PORT") ||
             "4943",
@@ -118,6 +118,25 @@ export class EnvironmentService {
           (this.getEnvVar("NODE_ENV") || "development") === "production",
       },
     };
+  }
+
+  /**
+   * Get the default replica host based on environment
+   */
+  private getDefaultReplicaHost(): string {
+    // Check if we're in browser environment
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+
+      // If accessing from non-localhost, use current hostname for VM support
+      if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+        console.log(`🔄 Using hostname for replica: ${hostname}`);
+        return hostname;
+      }
+    }
+
+    // Default to localhost
+    return "127.0.0.1";
   }
 
   private getEnvVar(...keys: string[]): string | undefined {
@@ -312,10 +331,10 @@ export class EnvironmentService {
   private isDevelopmentClientId(clientId: string): boolean {
     // Check for common development patterns
     const regexPatterns = [
-      /^[0-9]+-example/,
-      /^[0-9]+-dev/,
-      /^[0-9]+-test/,
-      /^[0-9]+-demo/,
+      /^\d+-example/,
+      /^\d+-dev/,
+      /^\d+-test/,
+      /^\d+-demo/,
     ];
 
     // Check regex patterns
