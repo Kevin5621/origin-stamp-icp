@@ -25,11 +25,19 @@ import { Menu, User, LogOut, Settings } from "lucide-react";
 import Image from "next/image";
 
 export function NavigationHeader() {
-  const { user, logout } = useAuth();
+  const { user, logout, currentWallet, disconnectWallet } = useAuth();
   const { profilePicture } = useProfilePicture();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Disconnect wallet if connected
+    if (currentWallet) {
+      try {
+        await disconnectWallet();
+      } catch (error) {
+        console.error("Failed to disconnect wallet:", error);
+      }
+    }
     logout();
   };
 
@@ -110,12 +118,30 @@ export function NavigationHeader() {
                       <p className="text-foreground font-medium">
                         {user.username}
                       </p>
-                      <p className="text-muted-foreground text-xs">
-                        Connected to Internet Computer
-                      </p>
+                      {currentWallet ? (
+                        <p className="text-muted-foreground text-xs">
+                          Connected via {currentWallet.name}
+                        </p>
+                      ) : (
+                        <p className="text-muted-foreground text-xs">
+                          Connected to Internet Computer
+                        </p>
+                      )}
                     </div>
                   </div>
                   <DropdownMenuSeparator />
+                  {currentWallet && (
+                    <>
+                      <div className="px-2 py-1">
+                        <p className="text-xs text-muted-foreground font-medium">Wallet</p>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className="text-sm">{currentWallet.name}</span>
+                        </div>
+                      </div>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />

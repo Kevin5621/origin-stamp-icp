@@ -5,10 +5,35 @@ use crate::types::{
 use std::cell::RefCell;
 use std::collections::HashMap;
 
+// Enhanced user management with principal support
 thread_local! {
     static USERS: RefCell<HashMap<String, User>> = RefCell::new(HashMap::new());
     static RATE_LIMITER: RefCell<HashMap<String, (u32, u64)>> = RefCell::new(HashMap::new());
     static USERNAME_CACHE: RefCell<HashMap<String, bool>> = RefCell::new(HashMap::new());
+    // New: Principal to username mapping for wallet integration
+    static PRINCIPAL_MAPPINGS: RefCell<HashMap<String, String>> = RefCell::new(HashMap::new());
+    // New: User wallet preferences and settings
+    static USER_WALLET_SETTINGS: RefCell<HashMap<String, WalletUserSettings>> = RefCell::new(HashMap::new());
+}
+
+// Wallet user settings structure
+#[derive(Clone, Debug)]
+struct WalletUserSettings {
+    preferred_wallet: Option<String>,
+    linked_principals: Vec<String>,
+    wallet_permissions: HashMap<String, bool>,
+    last_wallet_activity: u64,
+}
+
+impl Default for WalletUserSettings {
+    fn default() -> Self {
+        Self {
+            preferred_wallet: None,
+            linked_principals: Vec::new(),
+            wallet_permissions: HashMap::new(),
+            last_wallet_activity: 0,
+        }
+    }
 }
 
 fn simple_hash(password: &str) -> String {
@@ -406,6 +431,300 @@ pub fn get_user_activity_timeline(username: String, limit: u64) -> Vec<UserActiv
 
     activities
 }
+
+// ===== ENHANCED WALLET INTEGRATION FUNCTIONS =====
+
+/**
+ * Link a principal to an existing user account
+ * Enables multi-wallet support for single user account
+ */
+#[ic_cdk::update]
+pub fn link_principal_to_user(
+    username: String,
+    password: String,
+    principal: String,
+    wallet_type: String,
+) -> Result<bool, String> {
+    // Validate input
+    if username.is_empty() || password.is_empty() || principal.is_empty() {
+        return Err("Username, password, and principal cannot be empty".to_string());
+    }
+
+    // Verify user credentials
+    USERS.with(|users| {
+        let users_map = users.borrow();
+        match users_map.get(&username) {
+            Some(user) => {
+                let password_hash = simple_hash(&password);
+                if user.password_hash != password_hash {
+                    return Err("Invalid password".to_string());
+                }
+            }
+            None => return Err("User not found".to_string()),
+        }
+        Ok(())
+    })?;
+
+    // Check if principal is already linked to another user
+    PRINCIPAL_MAPPINGS.with(|mappings| {
+        let mappings_map = mappings.borrow();
+        if let Some(existing_user) = mappings_map.get(&principal) {
+            if existing_user != &username {
+                return Err("Principal is already linked to another user".to_string());
+            }
+        }
+        Ok(())
+    })?;
+
+    // Link principal to user
+    PRINCIPAL_MAPPINGS.with(|mappings| {
+        let mut mappings_map = mappings.borrow_mut();
+        mappings_map.insert(principal.clone(), username.clone());
+    });
+
+    // Update user wallet settings
+    USER_WALLET_SETTINGS.with(|settings| {
+        let mut settings_map = settings.borrow_mut();
+        let user_settings = settings_map.entry(username.clone()).or_default();
+        
+        if !user_settings.linked_principals.contains(&principal) {
+            user_settings.linked_principals.push(principal);
+        }
+        
+        user_settings.preferred_wallet = Some(wallet_type);
+        user_settings.last_wallet_activity = ic_cdk::api::time();
+    });
+
+    Ok(true)
+}
+
+/**
+ * Get user by principal
+ * Supports wallet-based authentication
+ */
+#[ic_cdk::query]
+pub fn get_user_by_principal(principal: String) -> Option<(String, u64)> {
+    // Find username by principal
+    let username = PRINCIPAL_MAPPINGS.with(|mappings| {
+        mappings.borrow().get(&principal).cloned()
+    })?;
+
+    // Get user info
+    get_user_info(username)
+}
+
+/**
+ * Verify principal ownership for secure operations
+ */
+#[ic_cdk::query]
+pub fn verify_principal_ownership(principal: String, username: String) -> bool {
+    PRINCIPAL_MAPPINGS.with(|mappings| {
+        mappings
+            .borrow()
+            .get(&principal)
+            .map(|mapped_user| mapped_user == &username)
+            .unwrap_or(false)
+    })
+}
+
+/**
+ * Get all linked principals for a user
+ */
+#[ic_cdk::query]
+pub fn get_user_principals(username: String) -> Vec<String> {
+    USER_WALLET_SETTINGS.with(|settings| {
+        settings
+            .borrow()
+            .get(&username)
+            .map(|user_settings| user_settings.linked_principals.clone())
+            .unwrap_or_default()
+    })
+}
+
+/**
+ * Update user wallet preferences
+ */
+#[ic_cdk::update]
+pub fn update_wallet_preferences(
+    username: String,
+    password: String,
+    preferred_wallet: Option<String>,
+    permissions: Vec<(String, bool)>,
+) -> Result<bool, String> {
+    // Verify user credentials
+    USERS.with(|users| {
+        let users_map = users.borrow();
+        match users_map.get(&username) {
+            Some(user) => {
+                let password_hash = simple_hash(&password);
+                if user.password_hash != password_hash {
+                    return Err("Invalid password".to_string());
+                }
+            }
+            None => return Err("User not found".to_string()),
+        }
+        Ok(())
+    })?;
+
+    // Update wallet settings
+    USER_WALLET_SETTINGS.with(|settings| {
+        let mut settings_map = settings.borrow_mut();
+        let user_settings = settings_map.entry(username).or_default();
+        
+        if let Some(wallet) = preferred_wallet {
+            user_settings.preferred_wallet = Some(wallet);
+        }
+        
+        for (permission, value) in permissions {
+            user_settings.wallet_permissions.insert(permission, value);
+        }
+        
+        user_settings.last_wallet_activity = ic_cdk::api::time();
+    });
+
+    Ok(true)
+}
+
+/**
+ * Get user wallet settings
+ */
+#[ic_cdk::query]
+pub fn get_user_wallet_settings(username: String) -> Option<(Option<String>, Vec<String>, u64)> {
+    USER_WALLET_SETTINGS.with(|settings| {
+        settings.borrow().get(&username).map(|user_settings| {
+            (
+                user_settings.preferred_wallet.clone(),
+                user_settings.linked_principals.clone(),
+                user_settings.last_wallet_activity,
+            )
+        })
+    })
+}
+
+/**
+ * Remove principal link from user account
+ */
+#[ic_cdk::update]
+pub fn unlink_principal_from_user(
+    username: String,
+    password: String,
+    principal: String,
+) -> Result<bool, String> {
+    // Verify user credentials
+    USERS.with(|users| {
+        let users_map = users.borrow();
+        match users_map.get(&username) {
+            Some(user) => {
+                let password_hash = simple_hash(&password);
+                if user.password_hash != password_hash {
+                    return Err("Invalid password".to_string());
+                }
+            }
+            None => return Err("User not found".to_string()),
+        }
+        Ok(())
+    })?;
+
+    // Remove principal mapping
+    PRINCIPAL_MAPPINGS.with(|mappings| {
+        let mut mappings_map = mappings.borrow_mut();
+        mappings_map.remove(&principal);
+    });
+
+    // Update user wallet settings
+    USER_WALLET_SETTINGS.with(|settings| {
+        let mut settings_map = settings.borrow_mut();
+        if let Some(user_settings) = settings_map.get_mut(&username) {
+            user_settings.linked_principals.retain(|p| p != &principal);
+            user_settings.last_wallet_activity = ic_cdk::api::time();
+        }
+    });
+
+    Ok(true)
+}
+
+/**
+ * Create user with principal (for wallet-first registration)
+ */
+#[ic_cdk::update]
+pub fn create_user_with_principal(
+    username: String,
+    password: String,
+    principal: String,
+    wallet_type: String,
+) -> LoginResult {
+    // Check if principal is already linked
+    let existing_user = PRINCIPAL_MAPPINGS.with(|mappings| {
+        mappings.borrow().get(&principal).cloned()
+    });
+
+    if let Some(existing_username) = existing_user {
+        return LoginResult {
+            success: false,
+            message: format!("Principal already linked to user: {}", existing_username),
+            username: None,
+        };
+    }
+
+    // Create user normally
+    let result = register_user(username.clone(), password);
+    
+    if result.success {
+        // Link principal to new user
+        PRINCIPAL_MAPPINGS.with(|mappings| {
+            let mut mappings_map = mappings.borrow_mut();
+            mappings_map.insert(principal.clone(), username.clone());
+        });
+
+        // Setup wallet settings
+        USER_WALLET_SETTINGS.with(|settings| {
+            let mut settings_map = settings.borrow_mut();
+            let mut user_settings = WalletUserSettings::default();
+            user_settings.linked_principals.push(principal);
+            user_settings.preferred_wallet = Some(wallet_type);
+            user_settings.last_wallet_activity = ic_cdk::api::time();
+            settings_map.insert(username, user_settings);
+        });
+    }
+
+    result
+}
+
+/**
+ * Authenticate user with principal (wallet-based login)
+ */
+#[ic_cdk::query]
+pub fn authenticate_with_principal(principal: String) -> LoginResult {
+    // Find username by principal
+    let username = PRINCIPAL_MAPPINGS.with(|mappings| {
+        mappings.borrow().get(&principal).cloned()
+    });
+
+    match username {
+        Some(user) => {
+            // Update last activity
+            USER_WALLET_SETTINGS.with(|settings| {
+                let mut settings_map = settings.borrow_mut();
+                if let Some(user_settings) = settings_map.get_mut(&user) {
+                    user_settings.last_wallet_activity = ic_cdk::api::time();
+                }
+            });
+
+            LoginResult {
+                success: true,
+                message: "Authentication successful".to_string(),
+                username: Some(user),
+            }
+        }
+        None => LoginResult {
+            success: false,
+            message: "Principal not linked to any user account".to_string(),
+            username: None,
+        },
+    }
+}
+
+// Helper functions
 
 #[ic_cdk::query]
 pub fn get_user_performance_stats(username: String) -> Option<UserPerformanceStats> {

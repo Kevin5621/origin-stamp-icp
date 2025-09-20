@@ -40,7 +40,7 @@ export const SubscriptionPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const planParam = searchParams.get("plan");
+    const planParam = searchParams?.get("plan");
     if (planParam) {
       // Handle plan selection if needed
       console.log("Selected plan:", planParam);

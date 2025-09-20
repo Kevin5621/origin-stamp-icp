@@ -74,7 +74,7 @@ export const NFTDetailPage: React.FC = () => {
   const [isLoadingVerification, setIsLoadingVerification] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
-  const nftId = params.nftId as string;
+  const nftId = params?.nftId as string;
 
   const loadVerificationData = useCallback(async (sessionId: string) => {
     if (!sessionId) return null;

@@ -107,7 +107,7 @@ export const SessionRecordPage: React.FC = () => {
   const [verificationPolling, setVerificationPolling] =
     useState<NodeJS.Timeout | null>(null);
 
-  const sessionId = params.sessionId as string;
+  const sessionId = params?.sessionId as string;
 
   // Verification handlers (define early)
   const loadVerification = useCallback(

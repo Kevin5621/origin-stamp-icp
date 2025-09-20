@@ -55,7 +55,7 @@ export const MainLayout: React.FC<MainLayoutProps> = memo(
       useState(false);
 
     // Memoize page title to prevent recalculation
-    const pageTitle = useMemo(() => getPageTitle(pathname), [pathname]);
+    const pageTitle = useMemo(() => getPageTitle(pathname || "/"), [pathname]);
 
     // Memoize document title update
     const updateDocumentTitle = useCallback(() => {
@@ -78,7 +78,7 @@ export const MainLayout: React.FC<MainLayoutProps> = memo(
     return (
       <SidebarProvider>
         <div className={layoutClasses}>
-          <MemoizedCustomerSidebar activeSection={pathname} />
+          <MemoizedCustomerSidebar activeSection={pathname || "/"} />
 
           <SidebarInset className="flex min-w-0 flex-1 flex-col">
             <MemoizedCustomerHeader />

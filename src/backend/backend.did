@@ -265,10 +265,12 @@ type VerificationUpdateRequest = record {
   verification_id : text;
 };
 service : () -> {
+  authenticate_with_principal : (text) -> (LoginResult) query;
   check_username_availability : (text) -> (bool) query;
   configure_s3 : (S3Config) -> (bool);
   create_coupon : (text, CouponType, nat32, nat64) -> (Result);
   create_physical_art_session : (text, text, text) -> (Result_1);
+  create_user_with_principal : (text, text, text, text) -> (LoginResult);
   create_verification_request : (text, vec text) -> (Result_1);
   debug_all_nft_ownership : () -> (vec text) query;
   debug_caller_identity : () -> (text) query;
@@ -306,6 +308,7 @@ service : () -> {
   get_trending_creators : (nat64) -> (vec TrendingCreator) query;
   get_user_activity_timeline : (text, nat64) -> (vec UserActivity) query;
   get_user_avatar : (text) -> (opt text) query;
+  get_user_by_principal : (text) -> (opt record { text; nat64 }) query;
   get_user_certificates : (text) -> (vec Certificate) query;
   get_user_chart_data : (text, text) -> (opt UserChartData) query;
   get_user_count : () -> (nat64) query;
@@ -314,10 +317,14 @@ service : () -> {
   get_user_info : (text) -> (opt record { text; nat64 }) query;
   get_user_nfts : (principal) -> (vec Token) query;
   get_user_performance_stats : (text) -> (opt UserPerformanceStats) query;
+  get_user_principals : (text) -> (vec text) query;
   get_user_profile : (text) -> (opt User) query;
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
   get_user_subscription : (text) -> (opt CouponType) query;
   get_user_subscription_debug : (text) -> (opt CouponType) query;
+  get_user_wallet_settings : (text) -> (
+      opt record { opt text; vec text; nat64 },
+    ) query;
   get_verification_result : (text) -> (opt AIVerificationResult) query;
   get_verification_stats : () -> (nat64, nat64, nat64, nat64) query;
   icrc7_balance_of : (vec Account) -> (vec nat64) query;
@@ -333,6 +340,7 @@ service : () -> {
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
   initialize_demo_coupons : () -> (Result);
   initialize_user_subscription : (text) -> (Result);
+  link_principal_to_user : (text, text, text, text) -> (Result);
   list_nft : (nat64, text, Currency) -> (ListingResult);
   login : (text, text) -> (LoginResult);
   manual_verification_override : (
@@ -350,6 +358,7 @@ service : () -> {
   remove_photo_from_session : (text, text) -> (Result);
   set_s3_config : (S3Config) -> (bool);
   set_user_subscription : (text, CouponType) -> (Result);
+  unlink_principal_from_user : (text, text, text) -> (Result);
   update_certificate_nft_info : (text, text, text) -> (Result);
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
       Result,
@@ -363,6 +372,13 @@ service : () -> {
   update_user_subscription : (text, CouponType) -> (Result);
   update_username : (text, text, text) -> (LoginResult);
   update_verification_result : (VerificationUpdateRequest) -> (Result);
+  update_wallet_preferences : (
+      text,
+      text,
+      opt text,
+      vec record { text; bool },
+    ) -> (Result);
   upload_photo_to_session : (text, text) -> (Result);
   verify_certificate : (text) -> (Result_6);
+  verify_principal_ownership : (text, text) -> (bool) query;
 }

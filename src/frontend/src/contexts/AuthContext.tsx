@@ -6,10 +6,13 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
 } from "react";
 import { AuthClient } from "@dfinity/auth-client";
 import { User } from "../types/auth";
 import { config } from "../lib/config";
+import { OriginStampWalletManager } from "../services/wallet/manager";
+import { WalletType, WalletInfo } from "../services/wallet/types";
 
 interface AuthContextType {
   user: User | null;
@@ -26,6 +29,11 @@ interface AuthContextType {
   logout: () => Promise<void>;
   updateUser: (updatedUser: User) => void;
   authClient: AuthClient | null;
+  // Wallet functionality
+  currentWallet: WalletInfo | null;
+  connectWallet: (walletType: WalletType) => Promise<void>;
+  disconnectWallet: () => Promise<void>;
+  availableWallets: WalletType[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,6 +46,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authClient, setAuthClient] = useState<AuthClient | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentWallet, setCurrentWallet] = useState<WalletInfo | null>(null);
+  const [availableWallets, setAvailableWallets] = useState<WalletType[]>([]);
+  
+  // Initialize wallet manager
+  const walletManager = new OriginStampWalletManager();
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -298,7 +311,74 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const value: AuthContextType = {
+  // Wallet functions
+  const connectWallet = async (walletType: WalletType) => {
+    try {
+      console.log("AuthContext - connectWallet started for:", walletType);
+      await walletManager.connect(walletType);
+      const walletInfo = walletManager.getCurrentWalletInfo();
+      console.log("AuthContext - wallet connected, info:", walletInfo);
+      setCurrentWallet(walletInfo);
+      
+      // If wallet connected successfully and has principal, and user is not authenticated yet
+      if (walletInfo?.principal && !user) {
+        // Try to authenticate with principal
+        loginWithInternetIdentity(walletInfo.principal);
+      }
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+      throw error;
+    }
+  };
+
+  const disconnectWallet = async () => {
+    try {
+      await walletManager.disconnect();
+      setCurrentWallet(null);
+    } catch (error) {
+      console.error("Failed to disconnect wallet:", error);
+      throw error;
+    }
+  };
+
+  // Load available wallets on mount
+  useEffect(() => {
+    const loadWallets = async () => {
+      const available: WalletType[] = [];
+      for (const walletType of Object.values(WalletType)) {
+        if (await walletManager.isWalletAvailable(walletType)) {
+          available.push(walletType);
+        }
+      }
+      setAvailableWallets(available);
+      
+      // Check if there's a current wallet
+      const currentWalletInfo = walletManager.getCurrentWalletInfo();
+      setCurrentWallet(currentWalletInfo);
+    };
+    
+    loadWallets();
+  }, []);
+
+  // Auto-connect wallet if user is authenticated with ICP but wallet not connected
+  useEffect(() => {
+    const autoConnectWallet = async () => {
+      if (user?.loginMethod === "icp" && user?.principal && !currentWallet?.isConnected) {
+        console.log("User authenticated with ICP but wallet not connected, auto-connecting...");
+        try {
+          await connectWallet(WalletType.INTERNET_IDENTITY);
+        } catch (error) {
+          console.warn("Failed to auto-connect wallet:", error);
+        }
+      }
+    };
+    
+    if (user) {
+      autoConnectWallet();
+    }
+  }, [user, currentWallet]);
+
+  const value: AuthContextType = useMemo(() => ({
     user,
     isAuthenticated: !!user,
     isLoading,
@@ -308,7 +388,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     updateUser,
     authClient,
-  };
+    currentWallet,
+    connectWallet,
+    disconnectWallet,
+    availableWallets,
+  }), [user, isLoading, authClient, currentWallet, availableWallets, connectWallet, disconnectWallet, login, loginWithInternetIdentity, loginWithGoogle, logout, updateUser]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
