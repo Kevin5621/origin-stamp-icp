@@ -72,7 +72,7 @@ export class EnvironmentService {
           this.getDefaultReplicaHost(),
         replicaPort: parseInt(
           this.getEnvVar("DFX_REPLICA_PORT", "NEXT_PUBLIC_DFX_REPLICA_PORT") ||
-            "4943",
+            "8080",
         ),
       },
       canisters: {
@@ -80,13 +80,13 @@ export class EnvironmentService {
           this.getEnvVar(
             "CANISTER_ID_BACKEND",
             "NEXT_PUBLIC_CANISTER_ID_BACKEND",
-          ) || "bkyz2-fmaaa-aaaaa-qaaaq-cai",
+          ) || "uxrrr-q7777-77774-qaaaq-cai",
         frontend:
           this.getEnvVar(
             "CANISTER_ID_FRONTEND",
             "NEXT_PUBLIC_CANISTER_ID_FRONTEND",
-          ) || "bd3sg-teaaa-aaaaa-qaaba-cai",
-        primary: this.getEnvVar("CANISTER_ID") || "bd3sg-teaaa-aaaaa-qaaba-cai",
+          ) || "u6s2n-gx777-77774-qaaba-cai",
+        primary: this.getEnvVar("CANISTER_ID") || "u6s2n-gx777-77774-qaaba-cai",
         icpLedger: this.getICPLedgerCanisterIdForNetwork(),
       },
       auth: {

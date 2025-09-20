@@ -323,6 +323,7 @@ export const SessionsPage: React.FC = () => {
                         src={session.uploaded_photos[0]}
                         alt={session.art_title}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                         className="object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
@@ -441,6 +442,7 @@ export const SessionsPage: React.FC = () => {
                           src={session.uploaded_photos[0]}
                           alt={session.art_title}
                           fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                           className="object-cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
@@ -545,6 +547,7 @@ export const SessionsPage: React.FC = () => {
                           src={session.uploaded_photos[0]}
                           alt={session.art_title}
                           fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                           className="object-cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
@@ -652,6 +655,7 @@ export const SessionsPage: React.FC = () => {
                           src={session.uploaded_photos[0]}
                           alt={session.art_title}
                           fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                           className="object-cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;

@@ -32,19 +32,8 @@ export const ResourcePreloader: React.FC<ResourcePreloaderProps> = ({
       document.head.appendChild(link);
     });
 
-    // Preload critical fonts
-    const fontPreloads = [
-      "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap",
-      "https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap",
-    ];
-
-    fontPreloads.forEach((fontUrl) => {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "style";
-      link.href = fontUrl;
-      document.head.appendChild(link);
-    });
+    // Font preloading is handled by Next.js font optimization
+    // No need to manually preload fonts
 
     // Cleanup function
     return () => {
@@ -56,13 +45,7 @@ export const ResourcePreloader: React.FC<ResourcePreloaderProps> = ({
         }
       });
 
-      // Remove preloaded fonts
-      fontPreloads.forEach((fontUrl) => {
-        const existingLink = document.querySelector(`link[href="${fontUrl}"]`);
-        if (existingLink) {
-          document.head.removeChild(existingLink);
-        }
-      });
+      // Font cleanup not needed as Next.js handles font optimization
     };
   }, [preloadRoutes, preloadImages, router]);
 

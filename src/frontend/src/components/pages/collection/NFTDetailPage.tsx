@@ -330,6 +330,7 @@ export const NFTDetailPage: React.FC = () => {
                     src={nftData.imageUrl}
                     alt={nftData.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                     className="object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;

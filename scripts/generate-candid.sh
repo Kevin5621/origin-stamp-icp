@@ -42,8 +42,11 @@ else
   canister_names=$(jq -r '.canisters | keys[]' dfx.json)
   
   for canister in $canister_names; do
-    # Only generate candid for canisters that have a candid field (i.e., not assets canisters)
-    if jq -e ".canisters.\"$canister\".candid" dfx.json > /dev/null 2>&1; then
+    # Only generate candid for canisters that have a candid field and are not remote
+    has_candid=$(jq -e ".canisters.\"$canister\".candid" dfx.json > /dev/null 2>&1 && echo "true" || echo "false")
+    is_remote=$(jq -e ".canisters.\"$canister\".remote" dfx.json > /dev/null 2>&1 && echo "true" || echo "false")
+    
+    if [ "$has_candid" = "true" ] && [ "$is_remote" = "false" ]; then
       generate_candid_for_canister "$canister"
     fi
   done
@@ -56,9 +59,12 @@ if [ "$1" != "" ]; then
     dfx generate "$1"
   fi
 else
-  # Generate declarations for all canisters that have a candid file
+  # Generate declarations for all canisters that have a candid file and are not remote
   for canister in $canister_names; do
-    if jq -e ".canisters.\"$canister\".candid" dfx.json > /dev/null 2>&1; then
+    has_candid=$(jq -e ".canisters.\"$canister\".candid" dfx.json > /dev/null 2>&1 && echo "true" || echo "false")
+    is_remote=$(jq -e ".canisters.\"$canister\".remote" dfx.json > /dev/null 2>&1 && echo "true" || echo "false")
+    
+    if [ "$has_candid" = "true" ] && [ "$is_remote" = "false" ]; then
       dfx generate "$canister"
     fi
   done

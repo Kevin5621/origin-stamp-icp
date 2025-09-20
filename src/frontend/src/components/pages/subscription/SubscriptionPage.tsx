@@ -197,6 +197,7 @@ export const SubscriptionPage: React.FC = () => {
                   src={planImages[plan.tier as keyof typeof planImages]}
                   alt={`${plan.name} plan`}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className={`object-cover transition-opacity duration-300 ${
                     isCurrentPlan
                       ? "opacity-40 group-hover:opacity-60"

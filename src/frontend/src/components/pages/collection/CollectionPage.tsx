@@ -390,6 +390,7 @@ export const CollectionPage: React.FC = () => {
                           src={nft.imageUrl}
                           alt={nft.title}
                           fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                           className="object-cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
@@ -599,6 +600,7 @@ export const CollectionPage: React.FC = () => {
                         src={nft.imageUrl}
                         alt={nft.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                         className="object-cover transition-transform duration-200 group-hover:scale-105"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
@@ -673,6 +675,7 @@ export const CollectionPage: React.FC = () => {
                         src={fav.imageUrl}
                         alt={fav.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                         className="object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;

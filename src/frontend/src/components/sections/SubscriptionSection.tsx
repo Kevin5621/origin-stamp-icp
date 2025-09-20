@@ -77,6 +77,7 @@ export function SubscriptionSection() {
                   src={planImages[plan.tier as keyof typeof planImages]}
                   alt={`${plan.name} plan`}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover opacity-30 transition-opacity duration-300 group-hover:opacity-70"
                 />
                 <div className="bg-background/80 group-hover:bg-background/60 absolute inset-0 transition-colors duration-300" />
