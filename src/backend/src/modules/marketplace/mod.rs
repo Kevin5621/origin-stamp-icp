@@ -1,5 +1,5 @@
-use crate::modules::nft::{get_active_listings, get_token_details, get_user_nfts};
-use crate::modules::users::{get_all_users, get_user_info, get_user_profile};
+use crate::modules::nft::{get_active_listings, get_token_details};
+use crate::modules::users::{get_all_users, get_user_info, get_user_profile, get_user_principals};
 use crate::types::{MarketplaceBanner, MarketplaceFeaturedCollection, TrendingCreator};
 use std::collections::HashMap;
 
@@ -86,10 +86,8 @@ pub fn get_trending_creators(limit: u64) -> Vec<TrendingCreator> {
     for username in all_users {
         if let Some(user_info) = get_user_info(username.clone()) {
             if let Some(user_profile) = get_user_profile(username.clone()) {
-                // Get user's NFT count as artwork count
-                let principal = ic_cdk::caller(); // This is a placeholder - in real implementation, we'd need user's principal
-                let user_nfts = get_user_nfts(principal);
-                let artwork_count = user_nfts.len() as u64;
+                // Get real artwork count from user's NFTs
+                let artwork_count = get_user_real_artwork_count(&username);
 
                 // Use display_name if available, otherwise fall back to username
                 let display_name = user_profile.display_name.or(Some(username.clone()));
@@ -115,6 +113,29 @@ pub fn get_trending_creators(limit: u64) -> Vec<TrendingCreator> {
 
     // Return limited results
     trending_creators.into_iter().take(limit as usize).collect()
+}
+
+/// Get real artwork count for a user based on their NFTs
+fn get_user_real_artwork_count(username: &str) -> u64 {
+    // Get user's principals
+    let principals = get_user_principals(username.to_string());
+    
+    if principals.is_empty() {
+        return 0;
+    }
+    
+    // Count NFTs for each principal
+    let mut total_count = 0;
+    for principal_str in principals {
+        // Convert string to Principal
+        if let Ok(principal) = principal_str.parse::<candid::Principal>() {
+            // Get user's NFTs using the principal
+            let user_nfts = crate::modules::nft::get_user_nfts(principal);
+            total_count += user_nfts.len() as u64;
+        }
+    }
+    
+    total_count
 }
 
 /// Get marketplace banner content

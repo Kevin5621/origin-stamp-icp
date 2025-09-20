@@ -195,7 +195,7 @@ pub async fn purchase_nft_with_icp(
         }
         TransferResult::Err(error) => Ok(PurchaseResult {
             success: false,
-            message: format!("Transfer failed: {:?}", error),
+            message: format!("Transfer failed: {error:?}"),
             transaction_id: None,
             nft_transferred: false,
         }),
@@ -286,4 +286,20 @@ pub fn get_account_balance(_account: Account) -> ICPBalance {
         formatted: "10.00 ICP".to_string(),
         decimal: 8,
     }
+}
+
+
+/// Get trading history for a user
+#[ic_cdk::query]
+pub fn get_trading_history(user: String) -> Vec<TradingRecord> {
+    TRADING_HISTORY.with(|history| {
+        history
+            .borrow()
+            .iter()
+            .filter(|(_, record)| {
+                record.buyer.owner.to_string() == user || record.seller.owner.to_string() == user
+            })
+            .map(|(_, record)| record.clone())
+            .collect()
+    })
 }

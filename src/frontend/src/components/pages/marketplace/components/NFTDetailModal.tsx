@@ -20,6 +20,7 @@ import {
   Heart,
   TrendingUp,
   X,
+  ShoppingBag,
 } from "lucide-react";
 import { useToastContext } from "@/contexts/ToastContext";
 import { backendService, verificationService } from "@/services";
@@ -76,6 +77,7 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingVerification, setIsLoadingVerification] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isBuying, setIsBuying] = useState(false);
 
   const loadVerificationData = useCallback(async (sessionId: string) => {
     if (!sessionId) return null;
@@ -226,6 +228,21 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
     showSuccess(isLiked ? "Removed from favorites" : "Added to favorites");
   };
 
+  const handleBuyNFT = async () => {
+    if (!nftData) return;
+    
+    setIsBuying(true);
+    try {
+      // For now, show a message that trading is not available
+      showError("Trading functionality is not yet available. Please check back later.");
+    } catch (error) {
+      console.error("Purchase failed:", error);
+      showError("Purchase failed. Please try again.");
+    } finally {
+      setIsBuying(false);
+    }
+  };
+
   const handleViewOnExplorer = () => {
     if (nftData) {
       window.open(`https://originstamp.ic0.app/nft/${nftData.id}`, "_blank");
@@ -329,6 +346,28 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
                     )}
                   </div>
                 </div>
+              </div>
+
+              {/* Price and Buy Section */}
+              <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-green-800 dark:text-green-200">Price</p>
+                    <p className="text-2xl font-bold text-green-600">1.00 ICP</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-green-600">Available</p>
+                    <p className="text-sm font-medium text-green-800 dark:text-green-200">1 of 1</p>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full bg-green-600 hover:bg-green-700 text-white"
+                  onClick={handleBuyNFT}
+                  disabled={isBuying}
+                >
+                  <ShoppingBag className="mr-2 h-4 w-4" />
+                  {isBuying ? "Processing..." : "Buy Now"}
+                </Button>
               </div>
 
               {/* Actions */}

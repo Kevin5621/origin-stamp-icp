@@ -167,33 +167,61 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   };
 
-  const loginWithInternetIdentity = (principal: string) => {
-    // For development, use the actual username from backend
-    const username =
-      principal ===
-      "k7dkk-yqqef-devfi-ytwff-4s5c2-msb7s-dwqos-3eyor-4i27h-af4bb-rqe"
-        ? "user1758366242"
-        : `User ${principal.slice(0, 8)}...`;
+  const loginWithInternetIdentity = async (principal: string) => {
+    try {
+      // Call backend to authenticate and auto-create user if needed
+      const { backendService } = await import("../services/backendService");
+      const result = await backendService.authenticateWithPrincipal(principal);
+      
+      if (result.success && result.username && result.username.length > 0) {
+        const userData = {
+          username: result.username[0]!,
+          loginTime: new Date().toLocaleString(),
+          principal,
+          loginMethod: "icp" as const,
+        };
 
-    const userData = {
-      username,
-      loginTime: new Date().toLocaleString(),
-      principal,
-      loginMethod: "icp" as const,
-    };
+        console.log("AuthContext - loginWithInternetIdentity:", {
+          principal,
+          username: result.username,
+          userData,
+          message: result.message,
+        });
 
-    console.log("AuthContext - loginWithInternetIdentity:", {
-      principal,
-      username,
-      userData,
-    });
+        setUser(userData);
+        localStorage.setItem("auth-user", JSON.stringify(userData));
+        localStorage.setItem("originstamp_user_principal", principal);
 
-    setUser(userData);
-    localStorage.setItem("auth-user", JSON.stringify(userData));
-    localStorage.setItem("originstamp_user_principal", principal);
-
-    document.cookie = `auth-user=${JSON.stringify(userData)}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
-    document.cookie = `originstamp_user_principal=${principal}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
+        document.cookie = `auth-user=${JSON.stringify(userData)}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
+        document.cookie = `originstamp_user_principal=${principal}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
+      } else {
+        console.error("Login failed:", result.message);
+        // Fallback to local login
+        const username = `User ${principal.slice(0, 8)}...`;
+        const userData = {
+          username,
+          loginTime: new Date().toLocaleString(),
+          principal,
+          loginMethod: "icp" as const,
+        };
+        setUser(userData);
+        localStorage.setItem("auth-user", JSON.stringify(userData));
+        localStorage.setItem("originstamp_user_principal", principal);
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      // Fallback to local login
+      const username = `User ${principal.slice(0, 8)}...`;
+      const userData = {
+        username,
+        loginTime: new Date().toLocaleString(),
+        principal,
+        loginMethod: "icp" as const,
+      };
+      setUser(userData);
+      localStorage.setItem("auth-user", JSON.stringify(userData));
+      localStorage.setItem("originstamp_user_principal", principal);
+    }
   };
 
   const loginWithGoogle = (userInfo: {

@@ -297,7 +297,7 @@ type VerificationUpdateRequest = record {
 };
 service : () -> {
   add_mock_icp_balance : (Account, nat64) -> (Result);
-  authenticate_with_principal : (text) -> (LoginResult) query;
+  authenticate_with_principal : (text) -> (LoginResult);
   check_username_availability : (text) -> (bool) query;
   configure_s3 : (S3Config) -> (bool);
   create_coupon : (text, CouponType, nat32, nat64) -> (Result);
@@ -340,6 +340,7 @@ service : () -> {
   get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   get_token_details : (nat64) -> (opt Token) query;
   get_token_listing : (nat64) -> (opt NFTListing) query;
+  get_trading_history : (text) -> (vec TradingRecord) query;
   get_trading_stats : () -> (nat64, nat64, nat64) query;
   get_trending_creators : (nat64) -> (vec TrendingCreator) query;
   get_user_activity_timeline : (text, nat64) -> (vec UserActivity) query;

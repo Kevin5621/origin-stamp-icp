@@ -209,6 +209,21 @@ export const backendService = {
     verification: aiVerificationService,
     dashboard: dashboardStatsService,
   },
+  
+  // Direct backend methods
+  async authenticateWithPrincipal(principal: string) {
+    try {
+      const actor = await getBackendActor();
+      if (!actor) {
+        throw new Error("Backend actor not available");
+      }
+      const result = await actor.authenticate_with_principal(principal);
+      return result;
+    } catch (error) {
+      console.error("Error authenticating with principal:", error);
+      throw error;
+    }
+  },
 };
 
 /**

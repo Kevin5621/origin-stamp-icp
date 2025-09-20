@@ -9,6 +9,7 @@ import type { LoginResult } from "../../../../declarations/backend/backend.did";
 export interface BackendActor {
   register_user: (username: string, password: string) => Promise<LoginResult>;
   login: (username: string, password: string) => Promise<LoginResult>;
+  authenticate_with_principal: (principal: string) => Promise<LoginResult>;
   get_certificate_count: () => Promise<bigint>;
   get_user_count: () => Promise<bigint>;
   get_user_avatar: (username: string) => Promise<[] | [string]>;
@@ -225,6 +226,7 @@ export interface BackendActor {
     | []
     | [import("../../../../declarations/backend/backend.did").MarketplaceBanner]
   >;
+  
 }
 
 // Marketplace types

@@ -680,7 +680,7 @@ pub fn create_user_with_principal(
 /**
  * Authenticate user with principal (wallet-based login)
  */
-#[ic_cdk::query]
+#[ic_cdk::update]
 pub fn authenticate_with_principal(principal: String) -> LoginResult {
     // Find username by principal
     let username = PRINCIPAL_MAPPINGS.with(|mappings| mappings.borrow().get(&principal).cloned());
@@ -701,11 +701,13 @@ pub fn authenticate_with_principal(principal: String) -> LoginResult {
                 username: Some(user),
             }
         }
-        None => LoginResult {
-            success: false,
-            message: "Principal not linked to any user account".to_string(),
-            username: None,
-        },
+        None => {
+            LoginResult {
+                success: false,
+                message: "Principal not linked to any user account. Please register first.".to_string(),
+                username: None,
+            }
+        }
     }
 }
 
