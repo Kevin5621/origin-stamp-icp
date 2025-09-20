@@ -4,9 +4,6 @@
  */
 
 import { InternetIdentityConnector } from "./connectors/internetIdentity";
-import { PlugWalletConnector } from "./connectors/plug";
-import { StoicWalletConnector } from "./connectors/stoic";
-import { NFIDWalletConnector } from "./connectors/nfid";
 import {
   WalletType,
   WalletConnector,
@@ -31,11 +28,14 @@ class LocalWalletStorage implements WalletStorage {
 
   async storeSession(session: WalletSession): Promise<void> {
     try {
-      localStorage.setItem(this.sessionKey, JSON.stringify({
-        ...session,
-        connectedAt: session.connectedAt.toISOString(),
-        lastActivity: session.lastActivity.toISOString(),
-      }));
+      localStorage.setItem(
+        this.sessionKey,
+        JSON.stringify({
+          ...session,
+          connectedAt: session.connectedAt.toISOString(),
+          lastActivity: session.lastActivity.toISOString(),
+        }),
+      );
     } catch (error) {
       console.error("Failed to store wallet session:", error);
     }
@@ -66,7 +66,10 @@ class LocalWalletStorage implements WalletStorage {
     }
   }
 
-  async storePreferences(type: WalletType, preferences: Record<string, unknown>): Promise<void> {
+  async storePreferences(
+    type: WalletType,
+    preferences: Record<string, unknown>,
+  ): Promise<void> {
     try {
       const allPrefs = this.getAllPreferences();
       allPrefs[type] = preferences;
@@ -76,7 +79,9 @@ class LocalWalletStorage implements WalletStorage {
     }
   }
 
-  async getPreferences(type: WalletType): Promise<Record<string, unknown> | null> {
+  async getPreferences(
+    type: WalletType,
+  ): Promise<Record<string, unknown> | null> {
     try {
       const allPrefs = this.getAllPreferences();
       return allPrefs[type] || null;
@@ -102,7 +107,10 @@ class LocalWalletStorage implements WalletStorage {
  */
 export class OriginStampWalletManager implements WalletManager {
   private readonly wallets = new Map<WalletType, WalletConnector>();
-  private readonly eventListeners = new Map<WalletEventType, Array<(event: WalletEvent) => void>>();
+  private readonly eventListeners = new Map<
+    WalletEventType,
+    Array<(event: WalletEvent) => void>
+  >();
   private readonly storage: WalletStorage;
   private currentWallet: WalletConnector | null = null;
   private currentSession: WalletSession | null = null;
@@ -115,22 +123,14 @@ export class OriginStampWalletManager implements WalletManager {
 
   /**
    * Initialize all supported wallet connectors
+   * Production: Only Internet Identity for security and reliability
    */
   private initializeWallets(): void {
-    // Internet Identity - existing users
-    this.wallets.set(WalletType.INTERNET_IDENTITY, new InternetIdentityConnector());
-    
-    // Plug wallet - most popular extension
-    this.wallets.set(WalletType.PLUG, new PlugWalletConnector([
-      // Add canister IDs to whitelist as needed
-      process.env.NEXT_PUBLIC_BACKEND_CANISTER_ID,
-    ].filter(Boolean) as string[]));
-    
-    // Stoic wallet - web-based option
-    this.wallets.set(WalletType.STOIC, new StoicWalletConnector());
-    
-    // NFID - modern identity solution
-    this.wallets.set(WalletType.NFID, new NFIDWalletConnector());
+    // Internet Identity - DFINITY's official solution (production-ready)
+    this.wallets.set(
+      WalletType.INTERNET_IDENTITY,
+      new InternetIdentityConnector(),
+    );
   }
 
   /**
@@ -230,7 +230,9 @@ export class OriginStampWalletManager implements WalletManager {
   /**
    * Get account ID from wallet if supported
    */
-  private async getAccountId(wallet: WalletConnector): Promise<string | undefined> {
+  private async getAccountId(
+    wallet: WalletConnector,
+  ): Promise<string | undefined> {
     try {
       return await wallet.getAccountId?.();
     } catch {
@@ -251,7 +253,10 @@ export class OriginStampWalletManager implements WalletManager {
           availableWallets.push(wallet);
         }
       } catch (error) {
-        console.warn(`Error checking wallet availability for ${wallet.info.name}:`, error);
+        console.warn(
+          `Error checking wallet availability for ${wallet.info.name}:`,
+          error,
+        );
       }
     }
 
@@ -268,9 +273,12 @@ export class OriginStampWalletManager implements WalletManager {
   /**
    * Connect to specific wallet
    */
-  public async connect(type: WalletType, config?: WalletConnectionConfig): Promise<WalletConnectionResult> {
+  public async connect(
+    type: WalletType,
+    config?: WalletConnectionConfig,
+  ): Promise<WalletConnectionResult> {
     const wallet = this.wallets.get(type);
-    
+
     if (!wallet) {
       throw this.createWalletError(
         WalletErrorType.NOT_INSTALLED,
@@ -285,7 +293,7 @@ export class OriginStampWalletManager implements WalletManager {
 
     try {
       const result = await wallet.connect(config);
-      
+
       // Store wallet preference
       await this.storage.storePreferences(type, {
         lastConnected: new Date().toISOString(),
@@ -343,21 +351,9 @@ export class OriginStampWalletManager implements WalletManager {
         return true;
       }
 
-      // For browser extension wallets, check if extension is installed
-      if (walletType === WalletType.PLUG) {
-        return typeof window !== 'undefined' && 
-               typeof (window as unknown as { ic?: { plug?: unknown } }).ic?.plug !== 'undefined';
-      }
-
-      // For Stoic and NFID, check if their APIs are available
-      if (walletType === WalletType.STOIC || walletType === WalletType.NFID) {
-        // Currently returning false as these are placeholder implementations
-        return false;
-      }
-
+      // Only Internet Identity is supported in production
       return false;
     } catch (error) {
-      console.warn(`Failed to check availability for ${walletType}:`, error);
       return false;
     }
   }
@@ -379,7 +375,10 @@ export class OriginStampWalletManager implements WalletManager {
   /**
    * Subscribe to wallet manager events
    */
-  public on(event: WalletEventType, callback: (event: WalletEvent) => void): void {
+  public on(
+    event: WalletEventType,
+    callback: (event: WalletEvent) => void,
+  ): void {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, []);
     }
@@ -389,7 +388,10 @@ export class OriginStampWalletManager implements WalletManager {
   /**
    * Unsubscribe from wallet manager events
    */
-  public off(event: WalletEventType, callback: (event: WalletEvent) => void): void {
+  public off(
+    event: WalletEventType,
+    callback: (event: WalletEvent) => void,
+  ): void {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       const index = listeners.indexOf(callback);
@@ -465,7 +467,9 @@ export class OriginStampWalletManager implements WalletManager {
   /**
    * Get wallet preferences
    */
-  public async getWalletPreferences(type: WalletType): Promise<Record<string, unknown> | null> {
+  public async getWalletPreferences(
+    type: WalletType,
+  ): Promise<Record<string, unknown> | null> {
     return await this.storage.getPreferences(type);
   }
 
@@ -504,7 +508,10 @@ export class OriginStampWalletManager implements WalletManager {
   /**
    * Create wallet error with context
    */
-  private createWalletError(type: WalletErrorType, message: string): WalletError {
+  private createWalletError(
+    type: WalletErrorType,
+    message: string,
+  ): WalletError {
     const error = new Error(message) as WalletError;
     Object.assign(error, {
       type,

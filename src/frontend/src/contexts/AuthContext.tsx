@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentWallet, setCurrentWallet] = useState<WalletInfo | null>(null);
   const [availableWallets, setAvailableWallets] = useState<WalletType[]>([]);
-  
+
   // Initialize wallet manager
   const walletManager = new OriginStampWalletManager();
 
@@ -314,12 +314,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Wallet functions
   const connectWallet = async (walletType: WalletType) => {
     try {
-      console.log("AuthContext - connectWallet started for:", walletType);
       await walletManager.connect(walletType);
       const walletInfo = walletManager.getCurrentWalletInfo();
-      console.log("AuthContext - wallet connected, info:", walletInfo);
       setCurrentWallet(walletInfo);
-      
+
       // If wallet connected successfully and has principal, and user is not authenticated yet
       if (walletInfo?.principal && !user) {
         // Try to authenticate with principal
@@ -351,48 +349,67 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       }
       setAvailableWallets(available);
-      
+
       // Check if there's a current wallet
       const currentWalletInfo = walletManager.getCurrentWalletInfo();
       setCurrentWallet(currentWalletInfo);
     };
-    
+
     loadWallets();
   }, []);
 
   // Auto-connect wallet if user is authenticated with ICP but wallet not connected
   useEffect(() => {
     const autoConnectWallet = async () => {
-      if (user?.loginMethod === "icp" && user?.principal && !currentWallet?.isConnected) {
-        console.log("User authenticated with ICP but wallet not connected, auto-connecting...");
+      if (
+        user?.loginMethod === "icp" &&
+        user?.principal &&
+        !currentWallet?.isConnected
+      ) {
         try {
           await connectWallet(WalletType.INTERNET_IDENTITY);
         } catch (error) {
-          console.warn("Failed to auto-connect wallet:", error);
+          // Silently handle auto-connect errors
         }
       }
     };
-    
+
     if (user) {
       autoConnectWallet();
     }
   }, [user, currentWallet]);
 
-  const value: AuthContextType = useMemo(() => ({
-    user,
-    isAuthenticated: !!user,
-    isLoading,
-    login,
-    loginWithInternetIdentity,
-    loginWithGoogle,
-    logout,
-    updateUser,
-    authClient,
-    currentWallet,
-    connectWallet,
-    disconnectWallet,
-    availableWallets,
-  }), [user, isLoading, authClient, currentWallet, availableWallets, connectWallet, disconnectWallet, login, loginWithInternetIdentity, loginWithGoogle, logout, updateUser]);
+  const value: AuthContextType = useMemo(
+    () => ({
+      user,
+      isAuthenticated: !!user,
+      isLoading,
+      login,
+      loginWithInternetIdentity,
+      loginWithGoogle,
+      logout,
+      updateUser,
+      authClient,
+      currentWallet,
+      connectWallet,
+      disconnectWallet,
+      availableWallets,
+    }),
+    [
+      user,
+      isLoading,
+      authClient,
+      currentWallet,
+      availableWallets,
+      connectWallet,
+      disconnectWallet,
+      login,
+      loginWithInternetIdentity,
+      loginWithGoogle,
+      logout,
+      updateUser,
+    ],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

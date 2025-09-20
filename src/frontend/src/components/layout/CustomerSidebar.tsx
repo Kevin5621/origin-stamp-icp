@@ -106,33 +106,35 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
     console.log("CustomerSidebar - renderWalletSection:", {
       user: !!user,
       currentWallet,
-      isConnected: currentWallet?.isConnected
+      isConnected: currentWallet?.isConnected,
     });
 
     if (user && currentWallet && currentWallet.isConnected) {
       return (
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="text-muted-foreground flex items-center justify-between text-xs">
             <span>Wallet Connected</span>
             <CheckCircle className="h-3 w-3 text-green-500" />
           </div>
-          <div className="flex items-center space-x-2 rounded-lg bg-muted/50 p-2">
-            <WalletCards className="h-4 w-4 text-muted-foreground" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{currentWallet.name}</p>
-              <p className="text-xs text-muted-foreground">Ready for trading</p>
+          <div className="bg-muted/50 flex items-center space-x-2 rounded-lg p-2">
+            <WalletCards className="text-muted-foreground h-4 w-4" />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">
+                {currentWallet.name}
+              </p>
+              <p className="text-muted-foreground text-xs">Ready for trading</p>
             </div>
           </div>
           {/* Balance Section */}
-          <div className="rounded-lg bg-primary/5 border border-primary/20 p-2">
+          <div className="bg-primary/5 border-primary/20 rounded-lg border p-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">ICP Balance</span>
+              <span className="text-muted-foreground text-xs">ICP Balance</span>
               <div className="text-right">
-                <p className="text-sm font-mono font-medium">
-                  {isBalanceLoading ? '...' : `${formattedBalance} ICP`}
+                <p className="font-mono text-sm font-medium">
+                  {isBalanceLoading ? "..." : `${formattedBalance} ICP`}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  {isBalanceLoading ? 'Loading...' : 'Available'}
+                <p className="text-muted-foreground text-xs">
+                  {isBalanceLoading ? "Loading..." : "Available"}
                 </p>
               </div>
             </div>
@@ -144,14 +146,14 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
     if (user && (!currentWallet || !currentWallet.isConnected)) {
       return (
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="text-muted-foreground flex items-center justify-between text-xs">
             <span>Wallet Status</span>
-            <div className="h-2 w-2 bg-yellow-500 rounded-full"></div>
+            <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
           </div>
-          <p className="text-xs text-muted-foreground mb-2">
+          <p className="text-muted-foreground mb-2 text-xs">
             Connect your wallet to start trading NFTs
           </p>
-          <Button 
+          <Button
             onClick={() => setIsLoginModalOpen(true)}
             className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
           >
@@ -163,7 +165,7 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
     }
 
     return (
-      <Button 
+      <Button
         onClick={() => setIsLoginModalOpen(true)}
         className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
       >
@@ -280,10 +282,8 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
       </SidebarContent>
 
       <SidebarFooter className="border-border border-t">
-        <div className="p-4">
-          {renderWalletSection()}
-        </div>
-        
+        <div className="p-4">{renderWalletSection()}</div>
+
         {/* Login Modal */}
         <LoginModal
           isOpen={isLoginModalOpen}

@@ -133,9 +133,11 @@ export function NavigationHeader() {
                   {currentWallet && (
                     <>
                       <div className="px-2 py-1">
-                        <p className="text-xs text-muted-foreground font-medium">Wallet</p>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <p className="text-muted-foreground text-xs font-medium">
+                          Wallet
+                        </p>
+                        <div className="mt-1 flex items-center space-x-2">
+                          <div className="h-2 w-2 rounded-full bg-green-500"></div>
                           <span className="text-sm">{currentWallet.name}</span>
                         </div>
                       </div>

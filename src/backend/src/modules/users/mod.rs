@@ -18,6 +18,7 @@ thread_local! {
 
 // Wallet user settings structure
 #[derive(Clone, Debug)]
+#[derive(Default)]
 struct WalletUserSettings {
     preferred_wallet: Option<String>,
     linked_principals: Vec<String>,
@@ -25,16 +26,6 @@ struct WalletUserSettings {
     last_wallet_activity: u64,
 }
 
-impl Default for WalletUserSettings {
-    fn default() -> Self {
-        Self {
-            preferred_wallet: None,
-            linked_principals: Vec::new(),
-            wallet_permissions: HashMap::new(),
-            last_wallet_activity: 0,
-        }
-    }
-}
 
 fn simple_hash(password: &str) -> String {
     let char_sum: u32 = password.chars().map(|c| c as u32).sum::<u32>();
@@ -486,11 +477,11 @@ pub fn link_principal_to_user(
     USER_WALLET_SETTINGS.with(|settings| {
         let mut settings_map = settings.borrow_mut();
         let user_settings = settings_map.entry(username.clone()).or_default();
-        
+
         if !user_settings.linked_principals.contains(&principal) {
             user_settings.linked_principals.push(principal);
         }
-        
+
         user_settings.preferred_wallet = Some(wallet_type);
         user_settings.last_wallet_activity = ic_cdk::api::time();
     });
@@ -505,9 +496,8 @@ pub fn link_principal_to_user(
 #[ic_cdk::query]
 pub fn get_user_by_principal(principal: String) -> Option<(String, u64)> {
     // Find username by principal
-    let username = PRINCIPAL_MAPPINGS.with(|mappings| {
-        mappings.borrow().get(&principal).cloned()
-    })?;
+    let username =
+        PRINCIPAL_MAPPINGS.with(|mappings| mappings.borrow().get(&principal).cloned())?;
 
     // Get user info
     get_user_info(username)
@@ -570,15 +560,15 @@ pub fn update_wallet_preferences(
     USER_WALLET_SETTINGS.with(|settings| {
         let mut settings_map = settings.borrow_mut();
         let user_settings = settings_map.entry(username).or_default();
-        
+
         if let Some(wallet) = preferred_wallet {
             user_settings.preferred_wallet = Some(wallet);
         }
-        
+
         for (permission, value) in permissions {
             user_settings.wallet_permissions.insert(permission, value);
         }
-        
+
         user_settings.last_wallet_activity = ic_cdk::api::time();
     });
 
@@ -654,21 +644,20 @@ pub fn create_user_with_principal(
     wallet_type: String,
 ) -> LoginResult {
     // Check if principal is already linked
-    let existing_user = PRINCIPAL_MAPPINGS.with(|mappings| {
-        mappings.borrow().get(&principal).cloned()
-    });
+    let existing_user =
+        PRINCIPAL_MAPPINGS.with(|mappings| mappings.borrow().get(&principal).cloned());
 
     if let Some(existing_username) = existing_user {
         return LoginResult {
             success: false,
-            message: format!("Principal already linked to user: {}", existing_username),
+            message: format!("Principal already linked to user: {existing_username}"),
             username: None,
         };
     }
 
     // Create user normally
     let result = register_user(username.clone(), password);
-    
+
     if result.success {
         // Link principal to new user
         PRINCIPAL_MAPPINGS.with(|mappings| {
@@ -696,9 +685,7 @@ pub fn create_user_with_principal(
 #[ic_cdk::query]
 pub fn authenticate_with_principal(principal: String) -> LoginResult {
     // Find username by principal
-    let username = PRINCIPAL_MAPPINGS.with(|mappings| {
-        mappings.borrow().get(&principal).cloned()
-    });
+    let username = PRINCIPAL_MAPPINGS.with(|mappings| mappings.borrow().get(&principal).cloned());
 
     match username {
         Some(user) => {

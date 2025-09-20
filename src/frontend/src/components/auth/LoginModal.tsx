@@ -26,7 +26,8 @@ interface LoginModalProps {
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  const { login, loginWithInternetIdentity, loginWithGoogle, connectWallet } = useAuth();
+  const { login, loginWithInternetIdentity, loginWithGoogle, connectWallet } =
+    useAuth();
   const { success, error, warning } = useToastContext();
   const [showCustomLogin, setShowCustomLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,18 +82,21 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           const identity = authClient.getIdentity();
           const principal = identity.getPrincipal().toString();
           loginWithInternetIdentity(principal);
-          
+
           // Automatically connect to Internet Identity wallet
           try {
             if (connectWallet) {
               await connectWallet(WalletType.INTERNET_IDENTITY);
               // Small delay to ensure state updates
-              await new Promise(resolve => setTimeout(resolve, 100));
+              await new Promise((resolve) => setTimeout(resolve, 100));
             }
           } catch (walletError) {
-            console.warn("Failed to connect wallet, but login succeeded:", walletError);
+            console.warn(
+              "Failed to connect wallet, but login succeeded:",
+              walletError,
+            );
           }
-          
+
           handleAuthSuccess(principal, true);
           resolve();
         },

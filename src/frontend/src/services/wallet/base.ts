@@ -24,12 +24,18 @@ import {
  * Event emitter for wallet operations
  */
 class WalletEventEmitter {
-  private readonly listeners = new Map<WalletEventType, Array<(event: WalletEvent) => void>>();
+  private readonly listeners = new Map<
+    WalletEventType,
+    Array<(event: WalletEvent) => void>
+  >();
 
   /**
    * Subscribe to wallet events
    */
-  public on(event: WalletEventType, callback: (event: WalletEvent) => void): void {
+  public on(
+    event: WalletEventType,
+    callback: (event: WalletEvent) => void,
+  ): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
@@ -39,7 +45,10 @@ class WalletEventEmitter {
   /**
    * Unsubscribe from wallet events
    */
-  public off(event: WalletEventType, callback: (event: WalletEvent) => void): void {
+  public off(
+    event: WalletEventType,
+    callback: (event: WalletEvent) => void,
+  ): void {
     const eventListeners = this.listeners.get(event);
     if (eventListeners) {
       const index = eventListeners.indexOf(callback);
@@ -70,8 +79,12 @@ class WalletEventEmitter {
  * Abstract base class for wallet connector implementations
  * Provides common functionality and enforces interface compliance
  */
-export abstract class BaseWalletConnector extends WalletEventEmitter implements WalletConnector {
-  protected _connectionState: WalletConnectionState = WalletConnectionState.DISCONNECTED;
+export abstract class BaseWalletConnector
+  extends WalletEventEmitter
+  implements WalletConnector
+{
+  protected _connectionState: WalletConnectionState =
+    WalletConnectionState.DISCONNECTED;
   protected _principal: Principal | null = null;
   protected _identity: Identity | null = null;
   protected _isInitialized = false;
@@ -115,7 +128,9 @@ export abstract class BaseWalletConnector extends WalletEventEmitter implements 
   /**
    * Connect to wallet with error handling and state management
    */
-  public async connect(config?: WalletConnectionConfig): Promise<WalletConnectionResult> {
+  public async connect(
+    config?: WalletConnectionConfig,
+  ): Promise<WalletConnectionResult> {
     try {
       this.setConnectionState(WalletConnectionState.CONNECTING);
 
@@ -176,13 +191,18 @@ export abstract class BaseWalletConnector extends WalletEventEmitter implements 
    * Check if currently connected
    */
   public isConnected(): boolean {
-    return this._connectionState === WalletConnectionState.CONNECTED && this._principal !== null;
+    return (
+      this._connectionState === WalletConnectionState.CONNECTED &&
+      this._principal !== null
+    );
   }
 
   /**
    * Sign transaction with state management
    */
-  public async signTransaction(request: TransactionRequest): Promise<TransactionResult> {
+  public async signTransaction(
+    request: TransactionRequest,
+  ): Promise<TransactionResult> {
     if (!this.isConnected()) {
       throw this.createWalletError(
         WalletErrorType.CONNECTION_FAILED,
@@ -217,7 +237,9 @@ export abstract class BaseWalletConnector extends WalletEventEmitter implements 
   /**
    * Wallet-specific connection implementation - must be implemented by subclasses
    */
-  protected abstract performConnect(config?: WalletConnectionConfig): Promise<WalletConnectionResult>;
+  protected abstract performConnect(
+    config?: WalletConnectionConfig,
+  ): Promise<WalletConnectionResult>;
 
   /**
    * Wallet-specific disconnection implementation - must be implemented by subclasses
@@ -227,25 +249,25 @@ export abstract class BaseWalletConnector extends WalletEventEmitter implements 
   /**
    * Wallet-specific transaction signing - must be implemented by subclasses
    */
-  protected abstract performSignTransaction(request: TransactionRequest): Promise<TransactionResult>;
+  protected abstract performSignTransaction(
+    request: TransactionRequest,
+  ): Promise<TransactionResult>;
 
   /**
    * Set connection state and handle transitions
    */
   protected setConnectionState(state: WalletConnectionState): void {
-    const previousState = this._connectionState;
     this._connectionState = state;
-
-    // Log state transitions for debugging
-    if (previousState !== state) {
-      console.debug(`Wallet ${this.info.name} state: ${previousState} -> ${state}`);
-    }
   }
 
   /**
    * Create standardized wallet error
    */
-  protected createWalletError(type: WalletErrorType, message: string, context?: Record<string, unknown>): WalletError {
+  protected createWalletError(
+    type: WalletErrorType,
+    message: string,
+    context?: Record<string, unknown>,
+  ): WalletError {
     const error = new Error(message) as WalletError;
     Object.assign(error, {
       type,
@@ -258,7 +280,10 @@ export abstract class BaseWalletConnector extends WalletEventEmitter implements 
   /**
    * Emit wallet event with standard metadata
    */
-  protected emitEvent(type: WalletEventType, data?: { principal?: Principal; data?: Record<string, unknown> }): void {
+  protected emitEvent(
+    type: WalletEventType,
+    data?: { principal?: Principal; data?: Record<string, unknown> },
+  ): void {
     const event: WalletEvent = {
       type,
       walletType: this.info.type,
@@ -319,15 +344,20 @@ export abstract class BaseWalletConnector extends WalletEventEmitter implements 
   /**
    * Create timeout promise for connection operations
    */
-  protected createTimeoutPromise<T>(promise: Promise<T>, timeoutMs: number = 30000): Promise<T> {
+  protected createTimeoutPromise<T>(
+    promise: Promise<T>,
+    timeoutMs: number = 30000,
+  ): Promise<T> {
     return Promise.race([
       promise,
       new Promise<T>((_, reject) => {
         setTimeout(() => {
-          reject(this.createWalletError(
-            WalletErrorType.CONNECTION_FAILED,
-            `Operation timed out after ${timeoutMs}ms`,
-          ));
+          reject(
+            this.createWalletError(
+              WalletErrorType.CONNECTION_FAILED,
+              `Operation timed out after ${timeoutMs}ms`,
+            ),
+          );
         }, timeoutMs);
       }),
     ]);

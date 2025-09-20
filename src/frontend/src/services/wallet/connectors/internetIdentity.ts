@@ -31,7 +31,8 @@ export class InternetIdentityConnector extends BaseWalletConnector {
     type: WalletType.INTERNET_IDENTITY,
     name: "Internet Identity",
     isConnected: false, // Will be updated dynamically
-    description: "DFINITY's decentralized identity solution - secure, private, and easy to use",
+    description:
+      "DFINITY's decentralized identity solution - secure, private, and easy to use",
     icon: "/ii-logo.svg",
     isExtensionBased: false,
     supportsSignTransaction: true,
@@ -95,7 +96,9 @@ export class InternetIdentityConnector extends BaseWalletConnector {
   /**
    * Connect to Internet Identity
    */
-  protected async performConnect(config?: WalletConnectionConfig): Promise<WalletConnectionResult> {
+  protected async performConnect(
+    config?: WalletConnectionConfig,
+  ): Promise<WalletConnectionResult> {
     await this.initializeIfNeeded();
 
     if (!this.authClient) {
@@ -108,7 +111,7 @@ export class InternetIdentityConnector extends BaseWalletConnector {
     try {
       // Check if already authenticated
       const isAuthenticated = await this.authClient.isAuthenticated();
-      
+
       if (isAuthenticated) {
         return this.createConnectionResult();
       }
@@ -123,7 +126,7 @@ export class InternetIdentityConnector extends BaseWalletConnector {
           "User cancelled Internet Identity authentication",
         );
       }
-      
+
       throw this.createWalletError(
         WalletErrorType.CONNECTION_FAILED,
         "Internet Identity connection failed",
@@ -135,7 +138,9 @@ export class InternetIdentityConnector extends BaseWalletConnector {
   /**
    * Perform Internet Identity authentication
    */
-  private async performAuthentication(config?: WalletConnectionConfig): Promise<void> {
+  private async performAuthentication(
+    config?: WalletConnectionConfig,
+  ): Promise<void> {
     if (!this.authClient) {
       throw new Error("Auth client not initialized");
     }
@@ -143,14 +148,19 @@ export class InternetIdentityConnector extends BaseWalletConnector {
     return new Promise((resolve, reject) => {
       this.authClient!.login({
         identityProvider: this.identityProvider,
-        windowOpenerFeatures: "toolbar=0,location=0,menubar=0,width=500,height=500,left=100,top=100",
+        windowOpenerFeatures:
+          "toolbar=0,location=0,menubar=0,width=500,height=500,left=100,top=100",
         onSuccess: () => {
           resolve();
         },
         onError: (error) => {
-          reject(new Error(`Internet Identity authentication failed: ${error}`));
+          reject(
+            new Error(`Internet Identity authentication failed: ${error}`),
+          );
         },
-        maxTimeToLive: config?.timeout ? BigInt(config.timeout * 1000000) : undefined,
+        maxTimeToLive: config?.timeout
+          ? BigInt(config.timeout * 1000000)
+          : undefined,
       });
     });
   }
@@ -202,7 +212,9 @@ export class InternetIdentityConnector extends BaseWalletConnector {
    * Note: Internet Identity doesn't directly support transaction signing
    * This implementation uses the identity to create an agent for canister calls
    */
-  protected async performSignTransaction(request: TransactionRequest): Promise<TransactionResult> {
+  protected async performSignTransaction(
+    request: TransactionRequest,
+  ): Promise<TransactionResult> {
     this.validateTransactionRequest(request);
 
     if (!this._identity) {
@@ -217,7 +229,7 @@ export class InternetIdentityConnector extends BaseWalletConnector {
       // Instead, we use the identity to create authenticated canister calls
       // This is a simplified implementation - real transaction signing would need
       // proper integration with the canister actor
-      
+
       return {
         success: true,
         transactionId: `ii_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
@@ -262,19 +274,19 @@ export class InternetIdentityConnector extends BaseWalletConnector {
 
     try {
       const isAuthenticated = await this.authClient.isAuthenticated();
-      
+
       if (isAuthenticated) {
         // Update internal state with fresh identity
         const identity = this.authClient.getIdentity();
         const principal = identity.getPrincipal();
-        
+
         if (this.validatePrincipal(principal)) {
           this._identity = identity;
           this._principal = principal;
           return true;
         }
       }
-      
+
       return false;
     } catch (error) {
       console.error("Internet Identity refresh failed:", error);

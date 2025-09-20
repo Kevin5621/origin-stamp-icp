@@ -8,12 +8,10 @@ import { Identity } from "@dfinity/agent";
 
 /**
  * Supported wallet types in the OriginStamp ecosystem
+ * Production-ready: Only Internet Identity for security and reliability
  */
 export enum WalletType {
   INTERNET_IDENTITY = "internet_identity",
-  PLUG = "plug",
-  STOIC = "stoic",
-  NFID = "nfid",
 }
 
 /**
@@ -246,7 +244,10 @@ export interface WalletManager {
   /**
    * Connect to specific wallet
    */
-  connect(type: WalletType, config?: WalletConnectionConfig): Promise<WalletConnectionResult>;
+  connect(
+    type: WalletType,
+    config?: WalletConnectionConfig,
+  ): Promise<WalletConnectionResult>;
 
   /**
    * Disconnect from current wallet
@@ -301,7 +302,10 @@ export interface WalletStorage {
   /**
    * Store wallet preferences
    */
-  storePreferences(type: WalletType, preferences: Record<string, unknown>): Promise<void>;
+  storePreferences(
+    type: WalletType,
+    preferences: Record<string, unknown>,
+  ): Promise<void>;
 
   /**
    * Get wallet preferences
