@@ -1,6 +1,7 @@
 // Main entry point for the backend canister
 
 // Required imports
+use candid::Principal;
 use ic_cdk::export_candid;
 
 // Module declarations
@@ -33,6 +34,7 @@ pub struct DashboardMetrics {
 
 // Re-export all public functions from modules for easier access
 pub use modules::certificates::*;
+pub use modules::icp_ledger::*;
 pub use modules::marketplace::*;
 pub use modules::nft::*;
 pub use modules::physical_art::*;

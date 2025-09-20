@@ -102,11 +102,22 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
   };
 
   const renderWalletSection = () => {
-    // Debug logging
+    // Enhanced debug logging
     console.log("CustomerSidebar - renderWalletSection:", {
       user: !!user,
       currentWallet,
       isConnected: currentWallet?.isConnected,
+      principal: currentWallet?.principal,
+      walletType: currentWallet?.type,
+      username: user?.username,
+    });
+
+    // Debug ICP balance
+    console.log("ICP Balance Debug:", {
+      formattedBalance,
+      isBalanceLoading,
+      currentSubscription,
+      currentPlan,
     });
 
     if (user && currentWallet && currentWallet.isConnected) {

@@ -144,9 +144,9 @@ export const nftCertificateService = {
       );
 
       if ("Ok" in result) {
-        return result.Ok.toString();
+        return (result as unknown as { Ok: bigint }).Ok.toString();
       } else {
-        throw new Error(result.Err);
+        throw new Error((result as unknown as { Err: string }).Err);
       }
     } catch (error) {
       console.error("Failed to mint certificate NFT:", error);
@@ -201,10 +201,10 @@ export const nftCertificateService = {
       );
 
       if ("Ok" in result) {
-        const tokenId = result.Ok.toString();
+        const tokenId = (result as unknown as { Ok: bigint }).Ok.toString();
         return tokenId;
       } else {
-        throw new Error(result.Err);
+        throw new Error((result as unknown as { Err: string }).Err);
       }
     } catch (error) {
       console.error("Failed to mint NFT from session:", error);

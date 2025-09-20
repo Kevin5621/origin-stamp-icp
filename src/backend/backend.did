@@ -94,6 +94,7 @@ type DashboardMetrics = record {
   total_certificates : nat64;
 };
 type DelistingResult = record { message : text; success : bool };
+type ICPBalance = record { e8s : nat64; formatted : text; decimal : nat8 };
 type ListingResult = record {
   message : text;
   success : bool;
@@ -144,13 +145,22 @@ type ProfileUpdateResult = record {
   updated_fields : vec text;
   success : bool;
 };
+type PurchaseResult = record {
+  transaction_id : opt nat64;
+  nft_transferred : bool;
+  message : text;
+  success : bool;
+};
 type Result = variant { Ok : bool; Err : text };
 type Result_1 = variant { Ok : text; Err : text };
 type Result_2 = variant { Ok : Certificate; Err : text };
 type Result_3 = variant { Ok : NFTGenerationResult; Err : text };
-type Result_4 = variant { Ok; Err : text };
-type Result_5 = variant { Ok : nat64; Err : text };
-type Result_6 = variant { Ok : VerificationResult; Err : text };
+type Result_4 = variant { Ok : ICPBalance; Err : text };
+type Result_5 = variant { Ok; Err : text };
+type Result_6 = variant { Ok : nat64; Err : text };
+type Result_7 = variant { Ok : PurchaseResult; Err : text };
+type Result_8 = variant { Ok : TransferResult; Err : text };
+type Result_9 = variant { Ok : VerificationResult; Err : text };
 type S3Config = record {
   region : text;
   endpoint : opt text;
@@ -179,6 +189,26 @@ type TokenMetadata = record {
   attributes : vec TokenAttribute;
   image : opt text;
 };
+type TradingRecord = record {
+  transaction_id : nat64;
+  status : text;
+  token_id : nat64;
+  seller : Account;
+  currency : text;
+  timestamp : nat64;
+  buyer : Account;
+  price : nat64;
+};
+type TransferError = variant {
+  GenericError : record { message : text; error_code : nat64 };
+  TemporarilyUnavailable;
+  BadBurn : record { min_burn_amount : nat64 };
+  Duplicate : record { duplicate_of : nat64 };
+  BadFee : record { expected_fee : nat64 };
+  CreatedInFuture : record { ledger_time : nat64 };
+  TooOld;
+  InsufficientFunds : record { balance : nat64 };
+};
 type TransferRequest = record {
   to : Account;
   token_id : nat64;
@@ -186,7 +216,8 @@ type TransferRequest = record {
   memo : opt blob;
   created_at_time : opt nat64;
 };
-type TransferResponse = record { result : Result_4; token_id : nat64 };
+type TransferResponse = record { result : Result_5; token_id : nat64 };
+type TransferResult = variant { Ok : nat64; Err : TransferError };
 type TrendingCreator = record {
   verified : bool;
   username : text;
@@ -265,6 +296,7 @@ type VerificationUpdateRequest = record {
   verification_id : text;
 };
 service : () -> {
+  add_mock_icp_balance : (Account, nat64) -> (Result);
   authenticate_with_principal : (text) -> (LoginResult) query;
   check_username_availability : (text) -> (bool) query;
   configure_s3 : (S3Config) -> (bool);
@@ -280,8 +312,10 @@ service : () -> {
   generate_certificate : (CreateCertificateRequest) -> (Result_2);
   generate_nft_for_certificate : (text) -> (Result_3);
   generate_upload_url : (text, UploadFileData) -> (Result_1);
+  get_account_balance : (Account) -> (ICPBalance) query;
   get_active_listings : () -> (vec NFTListing) query;
   get_all_subscriptions_debug : () -> (vec record { text; CouponType }) query;
+  get_all_trading_history : () -> (vec TradingRecord) query;
   get_all_users : () -> (vec text) query;
   get_available_coupons : () -> (vec Coupon) query;
   get_certificate_by_id : (text) -> (opt Certificate) query;
@@ -289,6 +323,7 @@ service : () -> {
   get_certificate_for_nft_minting : (text) -> (opt Certificate) query;
   get_certificate_nft_metadata : (text) -> (opt text) query;
   get_dashboard_metrics : () -> (DashboardMetrics) query;
+  get_icp_balance : (Account) -> (Result_4) query;
   get_marketplace_banner : () -> (opt MarketplaceBanner) query;
   get_marketplace_featured_collections : () -> (
       vec MarketplaceFeaturedCollection,
@@ -305,6 +340,7 @@ service : () -> {
   get_subscription_limits : (text) -> (opt SubscriptionLimits) query;
   get_token_details : (nat64) -> (opt Token) query;
   get_token_listing : (nat64) -> (opt NFTListing) query;
+  get_trading_stats : () -> (nat64, nat64, nat64) query;
   get_trending_creators : (nat64) -> (vec TrendingCreator) query;
   get_user_activity_timeline : (text, nat64) -> (vec UserActivity) query;
   get_user_avatar : (text) -> (opt text) query;
@@ -322,6 +358,7 @@ service : () -> {
   get_user_sessions : (text) -> (vec PhysicalArtSession) query;
   get_user_subscription : (text) -> (opt CouponType) query;
   get_user_subscription_debug : (text) -> (opt CouponType) query;
+  get_user_trading_history : (principal) -> (vec TradingRecord) query;
   get_user_wallet_settings : (text) -> (
       opt record { opt text; vec text; nat64 },
     ) query;
@@ -339,7 +376,9 @@ service : () -> {
   icrc7_total_supply : () -> (nat64) query;
   icrc7_transfer : (vec TransferRequest) -> (vec TransferResponse);
   initialize_demo_coupons : () -> (Result);
+  initialize_trading_system : () -> (Result);
   initialize_user_subscription : (text) -> (Result);
+  is_icp_ledger_available : () -> (bool) query;
   link_principal_to_user : (text, text, text, text) -> (Result);
   list_nft : (nat64, text, Currency) -> (ListingResult);
   login : (text, text) -> (LoginResult);
@@ -349,15 +388,17 @@ service : () -> {
       text,
       opt float64,
     ) -> (Result);
-  mint_certificate_nft : (text, Account) -> (Result_5);
+  mint_certificate_nft : (text, Account) -> (Result_6);
   mint_nft_from_session : (text, Account, vec record { text; text }) -> (
-      Result_5,
+      Result_6,
     );
+  purchase_nft_with_icp : (nat64, Account, nat64) -> (Result_7);
   redeem_coupon : (text, text) -> (Result);
   register_user : (text, text) -> (LoginResult);
   remove_photo_from_session : (text, text) -> (Result);
   set_s3_config : (S3Config) -> (bool);
   set_user_subscription : (text, CouponType) -> (Result);
+  transfer_icp : (Account, nat64, opt blob) -> (Result_8);
   unlink_principal_from_user : (text, text, text) -> (Result);
   update_certificate_nft_info : (text, text, text) -> (Result);
   update_collection_metadata : (text, opt text, opt text, opt nat64) -> (
@@ -379,6 +420,6 @@ service : () -> {
       vec record { text; bool },
     ) -> (Result);
   upload_photo_to_session : (text, text) -> (Result);
-  verify_certificate : (text) -> (Result_6);
+  verify_certificate : (text) -> (Result_9);
   verify_principal_ownership : (text, text) -> (bool) query;
 }

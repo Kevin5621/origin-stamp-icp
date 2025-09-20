@@ -148,7 +148,14 @@ export class ICPLedgerService {
    */
   public async isLedgerAvailable(): Promise<boolean> {
     try {
+      console.log("ICPLedgerService - Checking ledger availability...");
+      console.log(
+        "ICPLedgerService - Ledger canister ID:",
+        this.ledgerCanisterId,
+      );
+
       const agent = await this.initializeAgent();
+      console.log("ICPLedgerService - Agent initialized");
 
       // Create a test query to check if ledger is responding
       const { LedgerCanister } = await import("@dfinity/ledger-icp");
@@ -157,10 +164,14 @@ export class ICPLedgerService {
         canisterId: Principal.fromText(this.ledgerCanisterId),
       });
 
+      console.log("ICPLedgerService - Testing ledger call...");
       // Try to get transaction fee as a health check
       await ledger.transactionFee();
+
+      console.log("ICPLedgerService - Ledger is available!");
       return true;
-    } catch {
+    } catch (error) {
+      console.warn("ICPLedgerService - Ledger not available:", error);
       return false;
     }
   }
