@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -10,7 +10,10 @@ import {
   CreditCard,
   Crown,
   Sparkles,
+  WalletCards,
+  CheckCircle,
 } from "lucide-react";
+import { useICPBalance } from "@/hooks/useICPBalance";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +32,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { IntelligentPreloader } from "@/components/common/IntelligentPreloader";
+import { LoginModal } from "@/components/auth/LoginModal";
 
 interface CustomerSidebarProps {
   activeSection: string;
@@ -37,8 +41,10 @@ interface CustomerSidebarProps {
 export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
   activeSection,
 }) => {
-  const { user } = useAuth();
+  const { user, currentWallet } = useAuth();
+  const { formattedBalance, isLoading: isBalanceLoading } = useICPBalance();
   const { currentSubscription, currentPlan, isLoading } = useSubscription();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const mainMenuItems = [
     { id: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -93,6 +99,78 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
     }
 
     return null;
+  };
+
+  const renderWalletSection = () => {
+    // Debug logging
+    console.log("CustomerSidebar - renderWalletSection:", {
+      user: !!user,
+      currentWallet,
+      isConnected: currentWallet?.isConnected
+    });
+
+    if (user && currentWallet && currentWallet.isConnected) {
+      return (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Wallet Connected</span>
+            <CheckCircle className="h-3 w-3 text-green-500" />
+          </div>
+          <div className="flex items-center space-x-2 rounded-lg bg-muted/50 p-2">
+            <WalletCards className="h-4 w-4 text-muted-foreground" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{currentWallet.name}</p>
+              <p className="text-xs text-muted-foreground">Ready for trading</p>
+            </div>
+          </div>
+          {/* Balance Section */}
+          <div className="rounded-lg bg-primary/5 border border-primary/20 p-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">ICP Balance</span>
+              <div className="text-right">
+                <p className="text-sm font-mono font-medium">
+                  {isBalanceLoading ? '...' : `${formattedBalance} ICP`}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {isBalanceLoading ? 'Loading...' : 'Available'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (user && (!currentWallet || !currentWallet.isConnected)) {
+      return (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Wallet Status</span>
+            <div className="h-2 w-2 bg-yellow-500 rounded-full"></div>
+          </div>
+          <p className="text-xs text-muted-foreground mb-2">
+            Connect your wallet to start trading NFTs
+          </p>
+          <Button 
+            onClick={() => setIsLoginModalOpen(true)}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
+          >
+            <Wallet className="mr-2 h-4 w-4" />
+            Connect Wallet
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <Button 
+        onClick={() => setIsLoginModalOpen(true)}
+        className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
+      >
+        <Wallet className="mr-2 h-4 w-4" />
+        Connect Wallet
+      </Button>
+    );
   };
 
   return (
@@ -203,11 +281,14 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
 
       <SidebarFooter className="border-border border-t">
         <div className="p-4">
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 w-full">
-            <Wallet className="mr-2 h-4 w-4" />
-            Connect Wallet
-          </Button>
+          {renderWalletSection()}
         </div>
+        
+        {/* Login Modal */}
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+        />
       </SidebarFooter>
     </Sidebar>
   );
