@@ -122,7 +122,6 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
               <p className="truncate text-sm font-medium">
                 {currentWallet.name}
               </p>
-              <p className="text-muted-foreground text-xs">Ready for trading</p>
             </div>
           </div>
           {/* Balance Section */}

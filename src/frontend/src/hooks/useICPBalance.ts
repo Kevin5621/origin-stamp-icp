@@ -1,11 +1,21 @@
-import { useState, useEffect } from "react";
+/**
+ * Hook for fetching real ICP balance from ICP Ledger
+ * Production-ready implementation with proper error handling
+ * No dummy data, no random values
+ */
+
+import { useState, useEffect, useCallback } from "react";
+import { Principal } from "@dfinity/principal";
+import { icpLedgerService, ICPBalance } from "../services/icp/ledger";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface BalanceInfo {
-  balance: bigint | null;
+  balance: ICPBalance | null;
   formattedBalance: string;
   isLoading: boolean;
   error: string | null;
+  refetch: () => Promise<void>;
+  ledgerAvailable: boolean;
 }
 
 /**
@@ -13,72 +23,97 @@ interface BalanceInfo {
  */
 export const useICPBalance = (): BalanceInfo => {
   const { currentWallet } = useAuth();
-  const [balance, setBalance] = useState<bigint | null>(null);
+  const [balance, setBalance] = useState<ICPBalance | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ledgerAvailable, setLedgerAvailable] = useState(false);
 
-  // Format balance from e8s (smallest ICP unit) to ICP
-  const formatBalance = (balanceE8s: bigint | null): string => {
-    if (balanceE8s === null) return "--";
-
-    // Convert from e8s to ICP (1 ICP = 100,000,000 e8s)
-    const icp = Number(balanceE8s) / 100_000_000;
-
-    // Format with appropriate decimal places
-    if (icp >= 1) {
-      return icp.toFixed(2);
-    } else if (icp >= 0.01) {
-      return icp.toFixed(4);
-    } else {
-      return icp.toFixed(8);
+  /**
+   * Fetch balance for the authenticated user's principal
+   */
+  const fetchBalance = useCallback(async (): Promise<void> => {
+    // Only fetch if wallet is connected and has principal
+    if (!currentWallet?.isConnected || !currentWallet.principal) {
+      setBalance(null);
+      setError(null);
+      setIsLoading(false);
+      return;
     }
-  };
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      if (!currentWallet?.isConnected || !currentWallet.principal) {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Check if ledger is available first
+      const isAvailable = await icpLedgerService.isLedgerAvailable();
+      setLedgerAvailable(isAvailable);
+
+      if (!isAvailable) {
+        setError("ICP Ledger is not available in this environment");
         setBalance(null);
-        setError(null);
         return;
       }
 
-      setIsLoading(true);
-      setError(null);
+      // Parse principal from wallet info
+      const principal = Principal.fromText(currentWallet.principal);
 
+      // Fetch real balance from ICP Ledger
+      const balanceResult = await icpLedgerService.getBalance(principal);
+      setBalance(balanceResult);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to fetch ICP balance";
+      setError(errorMessage);
+      setBalance(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentWallet?.isConnected, currentWallet?.principal]);
+
+  /**
+   * Check ledger availability on mount
+   */
+  useEffect(() => {
+    const checkLedgerAvailability = async () => {
       try {
-        // TODO: Implement real ICP Ledger call
-        // For now, simulate balance fetch
-        console.log("Fetching balance for principal:", currentWallet.principal);
-
-        // Simulated balance for development
-        setTimeout(() => {
-          const mockBalance = BigInt(Math.floor(Math.random() * 1000000000)); // Random balance in e8s
-          setBalance(mockBalance);
-          setIsLoading(false);
-        }, 1000);
-      } catch (err) {
-        console.error("Failed to fetch ICP balance:", err);
-        setError("Failed to fetch balance");
-        setIsLoading(false);
+        const isAvailable = await icpLedgerService.isLedgerAvailable();
+        setLedgerAvailable(isAvailable);
+      } catch {
+        setLedgerAvailable(false);
       }
     };
 
+    checkLedgerAvailability();
+  }, []);
+
+  /**
+   * Fetch balance when wallet connection changes
+   */
+  useEffect(() => {
     fetchBalance();
+  }, [fetchBalance]);
 
-    // Refresh balance every 30 seconds when wallet is connected
-    const interval = currentWallet?.isConnected
-      ? setInterval(fetchBalance, 30000)
-      : null;
+  /**
+   * Auto-refresh balance every 30 seconds if wallet is connected
+   */
+  useEffect(() => {
+    if (!currentWallet?.isConnected) {
+      return;
+    }
 
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [currentWallet?.isConnected, currentWallet?.principal]);
+    const interval = setInterval(() => {
+      fetchBalance();
+    }, 30_000); // Refresh every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [currentWallet?.isConnected, fetchBalance]);
 
   return {
     balance,
-    formattedBalance: formatBalance(balance),
+    formattedBalance: balance?.formatted || "--",
     isLoading,
     error,
+    refetch: fetchBalance,
+    ledgerAvailable,
   };
 };

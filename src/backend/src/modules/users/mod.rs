@@ -17,15 +17,13 @@ thread_local! {
 }
 
 // Wallet user settings structure
-#[derive(Clone, Debug)]
-#[derive(Default)]
+#[derive(Clone, Debug, Default)]
 struct WalletUserSettings {
     preferred_wallet: Option<String>,
     linked_principals: Vec<String>,
     wallet_permissions: HashMap<String, bool>,
     last_wallet_activity: u64,
 }
-
 
 fn simple_hash(password: &str) -> String {
     let char_sum: u32 = password.chars().map(|c| c as u32).sum::<u32>();

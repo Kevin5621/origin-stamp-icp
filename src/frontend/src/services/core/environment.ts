@@ -16,6 +16,7 @@ export interface EnvironmentConfig {
     backend: string;
     frontend: string;
     primary: string;
+    icpLedger: string;
   };
   auth: {
     googleClientId: string;
@@ -86,6 +87,7 @@ export class EnvironmentService {
             "NEXT_PUBLIC_CANISTER_ID_FRONTEND",
           ) || "bd3sg-teaaa-aaaaa-qaaba-cai",
         primary: this.getEnvVar("CANISTER_ID") || "bd3sg-teaaa-aaaaa-qaaba-cai",
+        icpLedger: this.getICPLedgerCanisterIdForNetwork(),
       },
       auth: {
         googleClientId:
@@ -147,6 +149,30 @@ export class EnvironmentService {
       }
     }
     return undefined;
+  }
+
+  /**
+   * Get ICP Ledger canister ID based on network
+   */
+  private getICPLedgerCanisterIdForNetwork(): string {
+    const network =
+      this.getEnvVar("DFX_NETWORK", "NEXT_PUBLIC_DFX_NETWORK") || "local";
+
+    // Return correct ICP Ledger canister ID based on network
+    switch (network) {
+      case "ic":
+      case "mainnet":
+        // Mainnet ICP Ledger
+        return "rrkah-fqaaa-aaaaa-aaaaq-cai";
+      case "local":
+      case "testnet":
+      default:
+        // Local testnet ICP Ledger (will use mock for local development)
+        return (
+          this.getEnvVar("NEXT_PUBLIC_ICP_LEDGER_CANISTER_ID") ||
+          "rrkah-fqaaa-aaaaa-aaaaq-cai"
+        );
+    }
   }
 
   private logConfiguration(): void {
@@ -249,6 +275,13 @@ export class EnvironmentService {
    */
   public isLocalNetwork(): boolean {
     return this.config.dfx.network === "local";
+  }
+
+  /**
+   * Get ICP Ledger canister ID
+   */
+  public getICPLedgerCanisterId(): string {
+    return this.config.canisters.icpLedger;
   }
 
   /**
