@@ -160,6 +160,12 @@ export interface BackendActor {
   ) => Promise<
     [] | [import("../../../../declarations/backend/backend.did").NFTListing]
   >;
+  // Trading methods
+  purchase_nft_with_icp: (
+    token_id: bigint,
+    buyer: import("../../../../declarations/backend/backend.did").Account,
+    price: bigint,
+  ) => Promise<import("../../../../declarations/backend/backend.did").Result_7>;
   // Debug functions
   debug_token_ownership: (token_id: bigint) => Promise<string>;
   debug_caller_identity: () => Promise<string>;

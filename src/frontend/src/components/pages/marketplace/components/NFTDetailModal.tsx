@@ -19,13 +19,13 @@ import {
   Eye,
   Heart,
   TrendingUp,
-  X,
   ShoppingBag,
 } from "lucide-react";
 import { useToastContext } from "@/contexts/ToastContext";
-import { backendService, verificationService } from "@/services";
+import { backendService, verificationService, TradingService } from "@/services";
 import { VerificationContainer } from "@/components/verification/VerificationContainer";
 import { type VerificationResult } from "@/types/verification";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NFTData {
   id: string;
@@ -72,6 +72,7 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
   onClose,
 }) => {
   const { success: showSuccess, error: showError } = useToastContext();
+  const { user } = useAuth();
 
   const [nftData, setNftData] = useState<NFTData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -229,12 +230,47 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
   };
 
   const handleBuyNFT = async () => {
-    if (!nftData) return;
+    if (!nftData || !user?.principal) {
+      showError("Please connect your wallet to purchase NFTs");
+      return;
+    }
     
     setIsBuying(true);
     try {
-      // For now, show a message that trading is not available
-      showError("Trading functionality is not yet available. Please check back later.");
+      // Check if NFT is listed for sale
+      const listing = await TradingService.getNFTListing(nftData.id);
+      
+      if (!listing.isListed) {
+        showError("This NFT is not currently for sale");
+        return;
+      }
+
+      // Check wallet balance
+      const balanceCheck = await TradingService.checkSufficientBalance(
+        "1.00", // Default price for now
+        "ICP",
+        user.principal
+      );
+
+      if (!balanceCheck.sufficient) {
+        showError(`Insufficient balance. Required: ${balanceCheck.requiredAmount}, Available: ${balanceCheck.currentBalance}`);
+        return;
+      }
+
+      // Purchase NFT
+      const purchaseResult = await TradingService.purchaseNFT({
+        nftId: nftData.id,
+        price: "1.00",
+        currency: "ICP",
+        buyerPrincipal: user.principal,
+      });
+
+      if (purchaseResult.success) {
+        showSuccess(`Successfully purchased ${nftData.title}! Transaction ID: ${purchaseResult.transactionId}`);
+        onClose(); // Close modal after successful purchase
+      } else {
+        showError(purchaseResult.message);
+      }
     } catch (error) {
       console.error("Purchase failed:", error);
       showError("Purchase failed. Please try again.");
@@ -253,13 +289,10 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto" showCloseButton={true}>
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <span>{nftData?.title || "NFT Details"}</span>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
+          <DialogTitle>
+            {nftData?.title || "NFT Details"}
           </DialogTitle>
         </DialogHeader>
 
@@ -305,6 +338,32 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
 
             {/* NFT Details */}
             <div className="space-y-6">
+              {/* Price and Buy Section - Moved to top for prominence */}
+              <div className="rounded-lg border-2 border-green-200 bg-green-50 p-6 dark:border-green-800 dark:bg-green-900/20">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-green-800 dark:text-green-200">Price</p>
+                    <p className="text-3xl font-bold text-green-600">1.00 ICP</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-green-600">Available</p>
+                    <p className="text-sm font-medium text-green-800 dark:text-green-200">1 of 1</p>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full bg-green-600 hover:bg-green-700 text-white text-lg py-3 h-auto"
+                  onClick={handleBuyNFT}
+                  disabled={isBuying}
+                  size="lg"
+                >
+                  <ShoppingBag className="mr-2 h-5 w-5" />
+                  {isBuying ? "Processing..." : "Buy Now - 1.00 ICP"}
+                </Button>
+                <p className="text-xs text-green-600 text-center mt-2">
+                  Secure payment with ICP • Instant ownership transfer
+                </p>
+              </div>
+
               {/* Header Actions */}
               <div className="flex items-center space-x-2">
                 <Button variant="outline" size="sm" onClick={handleCopyTokenId}>
@@ -346,28 +405,6 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
                     )}
                   </div>
                 </div>
-              </div>
-
-              {/* Price and Buy Section */}
-              <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
-                <div className="mb-3 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-green-800 dark:text-green-200">Price</p>
-                    <p className="text-2xl font-bold text-green-600">1.00 ICP</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-green-600">Available</p>
-                    <p className="text-sm font-medium text-green-800 dark:text-green-200">1 of 1</p>
-                  </div>
-                </div>
-                <Button 
-                  className="w-full bg-green-600 hover:bg-green-700 text-white"
-                  onClick={handleBuyNFT}
-                  disabled={isBuying}
-                >
-                  <ShoppingBag className="mr-2 h-4 w-4" />
-                  {isBuying ? "Processing..." : "Buy Now"}
-                </Button>
               </div>
 
               {/* Actions */}

@@ -32,6 +32,8 @@ export * from "./dashboard";
 // Marketplace services
 export * from "./marketplace";
 
+// Trading services
+export * from "./trading";
 
 // Legacy services (to be removed)
 export * from "./backendService";

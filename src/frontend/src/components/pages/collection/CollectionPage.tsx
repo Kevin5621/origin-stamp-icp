@@ -32,6 +32,7 @@ import {
   NFTCollectionItem,
   CollectionStats,
   FavoriteItem,
+  TradingService,
 } from "@/services";
 
 export const CollectionPage: React.FC = () => {
@@ -179,22 +180,29 @@ export const CollectionPage: React.FC = () => {
 
     try {
       setIsSettingPrice(true);
-      await CollectionService.setNFTPrice(
+      
+      // Use TradingService to list NFT
+      const result = await TradingService.listNFT(
         selectedNFT.id,
         listingPrice,
         listingCurrency,
       );
-      showSuccess(`Price set to ${listingPrice} ${listingCurrency}`);
-      setPriceDialogOpen(false);
+      
+      if (result.success) {
+        showSuccess(result.message);
+        setPriceDialogOpen(false);
 
-      // Refresh collection data
-      if (user?.principal && user?.username) {
-        const [owned, stats] = await Promise.all([
-          CollectionService.getUserCollection(user.principal),
-          CollectionService.getCollectionStats(user.principal, user.username),
-        ]);
-        setMyCollection(owned);
-        setCollectionStats(stats);
+        // Refresh collection data
+        if (user?.principal && user?.username) {
+          const [owned, stats] = await Promise.all([
+            CollectionService.getUserCollection(user.principal),
+            CollectionService.getCollectionStats(user.principal, user.username),
+          ]);
+          setMyCollection(owned);
+          setCollectionStats(stats);
+        }
+      } else {
+        showError(result.message);
       }
     } catch (error) {
       console.error("Failed to set price:", error);
@@ -212,18 +220,25 @@ export const CollectionPage: React.FC = () => {
 
     try {
       setIsSettingPrice(true);
-      await CollectionService.delistNFT(selectedNFT.id);
-      showSuccess("NFT successfully removed from sale");
-      setPriceDialogOpen(false);
+      
+      // Use TradingService to delist NFT
+      const result = await TradingService.delistNFT(selectedNFT.id);
+      
+      if (result.success) {
+        showSuccess(result.message);
+        setPriceDialogOpen(false);
 
-      // Refresh collection data
-      if (user?.principal && user?.username) {
-        const [owned, stats] = await Promise.all([
-          CollectionService.getUserCollection(user.principal),
-          CollectionService.getCollectionStats(user.principal, user.username),
-        ]);
-        setMyCollection(owned);
-        setCollectionStats(stats);
+        // Refresh collection data
+        if (user?.principal && user?.username) {
+          const [owned, stats] = await Promise.all([
+            CollectionService.getUserCollection(user.principal),
+            CollectionService.getCollectionStats(user.principal, user.username),
+          ]);
+          setMyCollection(owned);
+          setCollectionStats(stats);
+        }
+      } else {
+        showError(result.message);
       }
     } catch (error) {
       console.error("Failed to delist NFT:", error);

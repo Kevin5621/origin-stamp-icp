@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { CheckCircle, TrendingUp, TrendingDown, Package } from "lucide-react";
+import { CheckCircle, TrendingUp, TrendingDown, Package, ShoppingBag } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import {
   MarketplaceService,
   type FeaturedCollection,
 } from "@/services/marketplace";
 import { NFTDetailModal } from "./NFTDetailModal";
+import { useToastContext } from "@/contexts/ToastContext";
+import { TradingService } from "@/services";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const FeaturedCollections: React.FC = () => {
+  const { error: showError } = useToastContext();
+  const { user } = useAuth();
   const [collections, setCollections] = useState<FeaturedCollection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedNFTId, setSelectedNFTId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hoveredCollection, setHoveredCollection] = useState<string | null>(null);
 
   useEffect(() => {
     const loadFeaturedCollections = async () => {
@@ -34,11 +41,52 @@ export const FeaturedCollections: React.FC = () => {
     loadFeaturedCollections();
   }, []);
 
-  const handleCollectionClick = () => {
-    // For now, open modal with a placeholder NFT ID
-    // In a real implementation, you would navigate to the collection or select a specific NFT
-    setSelectedNFTId("1"); // Placeholder - replace with actual NFT selection logic
-    setIsModalOpen(true);
+  const handleCollectionClick = async (collection: FeaturedCollection) => {
+    try {
+      // Get the first NFT from the collection to show in modal
+      // In a real implementation, you would get the actual NFT ID from the collection
+      if (collection.sampleArtworkUrl) {
+        // For now, we'll use a placeholder ID, but in real implementation
+        // you would get the actual NFT ID from the collection data
+        setSelectedNFTId(collection.id.toString());
+        setIsModalOpen(true);
+      } else {
+        showError("No artwork available for this collection");
+      }
+    } catch (error) {
+      console.error("Failed to open collection:", error);
+      showError("Failed to open collection");
+    }
+  };
+
+  const handleBuyClick = async (collection: FeaturedCollection, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent triggering collection click
+    
+    if (!user?.principal) {
+      showError("Please connect your wallet to purchase NFTs");
+      return;
+    }
+    
+    try {
+      // Check wallet balance
+      const balanceCheck = await TradingService.checkSufficientBalance(
+        "1.00", // Default price for now
+        "ICP",
+        user.principal
+      );
+
+      if (!balanceCheck.sufficient) {
+        showError(`Insufficient balance. Required: ${balanceCheck.requiredAmount}, Available: ${balanceCheck.currentBalance}`);
+        return;
+      }
+
+      // For now, show a message that trading is not available
+      // In real implementation, this would integrate with wallet and collection services
+      showError("Trading functionality is not yet available. Please check back later.");
+    } catch (error) {
+      console.error("Failed to buy NFT:", error);
+      showError("Failed to buy NFT");
+    }
   };
 
   const handleCloseModal = () => {
@@ -161,7 +209,9 @@ export const FeaturedCollections: React.FC = () => {
           <Card
             key={collection.id}
             className="group border-border/50 hover:border-border cursor-pointer overflow-hidden transition-all duration-200 hover:shadow-xl"
-            onClick={() => handleCollectionClick()}
+            onClick={() => handleCollectionClick(collection)}
+            onMouseEnter={() => setHoveredCollection(collection.id.toString())}
+            onMouseLeave={() => setHoveredCollection(null)}
           >
             <CardContent className="p-0">
               {/* Collection Image */}
@@ -190,6 +240,19 @@ export const FeaturedCollections: React.FC = () => {
                     <CheckCircle className="mx-auto h-5 w-5 text-blue-400" />
                   )}
                 </div>
+
+                {/* Hover Overlay with Buy Button */}
+                {hoveredCollection === collection.id.toString() && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    <Button
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      onClick={(e) => handleBuyClick(collection, e)}
+                    >
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      Buy Now
+                    </Button>
+                  </div>
+                )}
               </div>
 
               {/* Collection Info */}
