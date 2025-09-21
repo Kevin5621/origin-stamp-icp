@@ -3,6 +3,30 @@
 set -e  # Exit on error
 set -o pipefail  # Catch errors in piped commands
 
+# Function to cleanup DFX processes
+cleanup_dfx() {
+    echo "🧹 Cleaning up DFX processes..."
+    dfx stop || true
+    pkill -f dfx || true
+    pkill -f pocket-ic || true
+    
+    # Kill any processes using port 8080
+    lsof -ti:8080 | xargs kill -9 2>/dev/null || true
+    
+    sleep 2
+}
+
+# Function to check if DFX is running
+check_dfx() {
+    dfx ping > /dev/null 2>&1
+}
+
+# Cleanup on script start
+cleanup_dfx
+
+# Trap to cleanup on script exit
+trap 'echo "🛑 Script interrupted. Cleaning up..."; cleanup_dfx; exit 1' INT TERM
+
 # Check if NVM is installed, if not install it
 if ! command -v nvm &> /dev/null; then
     echo "🔧 Installing NVM (Node Version Manager)..."
@@ -39,8 +63,12 @@ popd > /dev/null
 
 # Cleanup old dfx local network state
 echo "🧹 Cleaning up old DFX network state..."
-rm -rf .dfx/network/local/pid
-rm -rf .dfx/network/local/pocket-ic-pid
+cleanup_dfx
+
+# Remove all DFX state
+rm -rf .dfx
+rm -rf ~/.local/share/dfx/network/local
+rm -rf ~/.cache/dfx/network/local
 
 # Install dfx if not present
 if ! command -v dfx &> /dev/null; then
@@ -59,8 +87,30 @@ fi
 
 # Restart local DFX network
 echo "🚀 Starting DFX local network..."
-dfx stop || true
-dfx start --host 127.0.0.1:8080 --background
+cleanup_dfx
+
+# Start DFX with clean state and proper error handling
+echo "🔄 Initializing DFX network..."
+dfx start --host 127.0.0.1:8080 --clean --background
+
+# Wait for DFX to be ready
+echo "⏳ Waiting for DFX to be ready..."
+for i in {1..30}; do
+    if check_dfx; then
+        echo "✅ DFX is ready!"
+        break
+    fi
+    echo "⏳ Waiting for DFX... (attempt $i/30)"
+    sleep 2
+done
+
+# Final check
+if ! check_dfx; then
+    echo "❌ Failed to start DFX. Trying alternative approach..."
+    cleanup_dfx
+    dfx start --host 127.0.0.1:8080 --clean
+    sleep 5
+fi
 
 # Setup and deploy identity
 echo "👤 Setting up DFX identity..."
@@ -69,6 +119,14 @@ dfx identity use staging
 
 # Deploy the project
 echo "🚀 Deploying canisters..."
+# Ensure DFX is still running before deployment
+if ! check_dfx; then
+    echo "❌ DFX is not running. Restarting..."
+    cleanup_dfx
+    dfx start --host 127.0.0.1:8080 --clean --background
+    sleep 5
+fi
+
 dfx deploy
 
 # Setup S3 configuration
