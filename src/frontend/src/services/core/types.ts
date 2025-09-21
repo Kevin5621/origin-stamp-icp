@@ -232,7 +232,6 @@ export interface BackendActor {
     | []
     | [import("../../../../declarations/backend/backend.did").MarketplaceBanner]
   >;
-  
 }
 
 // Marketplace types

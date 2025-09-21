@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { CheckCircle, TrendingUp, TrendingDown, Package, ShoppingBag } from "lucide-react";
+import {
+  CheckCircle,
+  TrendingUp,
+  TrendingDown,
+  Package,
+  ShoppingBag,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -21,7 +27,9 @@ export const FeaturedCollections: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedNFTId, setSelectedNFTId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hoveredCollection, setHoveredCollection] = useState<string | null>(null);
+  const [hoveredCollection, setHoveredCollection] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     const loadFeaturedCollections = async () => {
@@ -59,30 +67,37 @@ export const FeaturedCollections: React.FC = () => {
     }
   };
 
-  const handleBuyClick = async (collection: FeaturedCollection, event: React.MouseEvent) => {
+  const handleBuyClick = async (
+    collection: FeaturedCollection,
+    event: React.MouseEvent,
+  ) => {
     event.stopPropagation(); // Prevent triggering collection click
-    
+
     if (!user?.principal) {
       showError("Please connect your wallet to purchase NFTs");
       return;
     }
-    
+
     try {
       // Check wallet balance
       const balanceCheck = await TradingService.checkSufficientBalance(
         "1.00", // Default price for now
         "ICP",
-        user.principal
+        user.principal,
       );
 
       if (!balanceCheck.sufficient) {
-        showError(`Insufficient balance. Required: ${balanceCheck.requiredAmount}, Available: ${balanceCheck.currentBalance}`);
+        showError(
+          `Insufficient balance. Required: ${balanceCheck.requiredAmount}, Available: ${balanceCheck.currentBalance}`,
+        );
         return;
       }
 
       // For now, show a message that trading is not available
       // In real implementation, this would integrate with wallet and collection services
-      showError("Trading functionality is not yet available. Please check back later.");
+      showError(
+        "Trading functionality is not yet available. Please check back later.",
+      );
     } catch (error) {
       console.error("Failed to buy NFT:", error);
       showError("Failed to buy NFT");
@@ -245,7 +260,7 @@ export const FeaturedCollections: React.FC = () => {
                 {hoveredCollection === collection.id.toString() && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                     <Button
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className="bg-green-600 text-white hover:bg-green-700"
                       onClick={(e) => handleBuyClick(collection, e)}
                     >
                       <ShoppingBag className="mr-2 h-4 w-4" />

@@ -210,7 +210,7 @@ export const backendService = {
     verification: aiVerificationService,
     dashboard: dashboardStatsService,
   },
-  
+
   // Direct backend methods
   async authenticateWithPrincipal(principal: string): Promise<LoginResult> {
     try {

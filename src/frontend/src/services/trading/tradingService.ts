@@ -35,7 +35,9 @@ export class TradingService {
   /**
    * Get current wallet balance and connection status
    */
-  static async getWalletBalance(userPrincipal?: string): Promise<WalletBalance> {
+  static async getWalletBalance(
+    userPrincipal?: string,
+  ): Promise<WalletBalance> {
     try {
       if (!userPrincipal) {
         return {
@@ -51,7 +53,7 @@ export class TradingService {
 
       // Get ICP balance
       const icpBalance = await icpLedgerService.getBalance(
-        Principal.fromText(userPrincipal)
+        Principal.fromText(userPrincipal),
       );
 
       return {
@@ -79,11 +81,15 @@ export class TradingService {
   static async checkSufficientBalance(
     price: string,
     currency: "ICP" | "USDT",
-    userPrincipal?: string
-  ): Promise<{ sufficient: boolean; currentBalance: string; requiredAmount: string }> {
+    userPrincipal?: string,
+  ): Promise<{
+    sufficient: boolean;
+    currentBalance: string;
+    requiredAmount: string;
+  }> {
     try {
       const walletBalance = await this.getWalletBalance(userPrincipal);
-      
+
       if (!walletBalance.isConnected) {
         return {
           sufficient: false,
@@ -131,9 +137,9 @@ export class TradingService {
       const balanceCheck = await this.checkSufficientBalance(
         request.price,
         request.currency,
-        request.buyerPrincipal
+        request.buyerPrincipal,
       );
-      
+
       if (!balanceCheck.sufficient) {
         return {
           success: false,
@@ -162,11 +168,11 @@ export class TradingService {
         owner: Principal.fromText(request.buyerPrincipal) as any,
         subaccount: [],
       };
-      
+
       const result = await backendActor.purchase_nft_with_icp(
         BigInt(request.nftId),
         buyerAccount,
-        BigInt(Math.floor(parseFloat(request.price) * 100_000_000)) // Convert to e8s
+        BigInt(Math.floor(parseFloat(request.price) * 100_000_000)), // Convert to e8s
       );
 
       if ("Ok" in result) {
@@ -216,7 +222,7 @@ export class TradingService {
       }
 
       const listing = await backendActor.get_token_listing(BigInt(nftId));
-      
+
       if (listing && listing.length > 0 && listing[0]) {
         const tokenListing = listing[0];
         return {
@@ -240,11 +246,15 @@ export class TradingService {
   static async listNFT(
     nftId: string,
     price: string,
-    currency: "ICP" | "USDT"
+    currency: "ICP" | "USDT",
   ): Promise<{ success: boolean; message: string }> {
     try {
-      const result = await CollectionService.setNFTPrice(nftId, price, currency);
-      
+      const result = await CollectionService.setNFTPrice(
+        nftId,
+        price,
+        currency,
+      );
+
       if (result) {
         return {
           success: true,
@@ -268,10 +278,12 @@ export class TradingService {
   /**
    * Delist NFT from sale
    */
-  static async delistNFT(nftId: string): Promise<{ success: boolean; message: string }> {
+  static async delistNFT(
+    nftId: string,
+  ): Promise<{ success: boolean; message: string }> {
     try {
       const result = await CollectionService.delistNFT(nftId);
-      
+
       if (result) {
         return {
           success: true,

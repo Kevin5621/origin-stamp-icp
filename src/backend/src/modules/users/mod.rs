@@ -701,13 +701,11 @@ pub fn authenticate_with_principal(principal: String) -> LoginResult {
                 username: Some(user),
             }
         }
-        None => {
-            LoginResult {
-                success: false,
-                message: "Principal not linked to any user account. Please register first.".to_string(),
-                username: None,
-            }
-        }
+        None => LoginResult {
+            success: false,
+            message: "Principal not linked to any user account. Please register first.".to_string(),
+            username: None,
+        },
     }
 }
 

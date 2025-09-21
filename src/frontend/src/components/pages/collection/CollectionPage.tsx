@@ -180,14 +180,14 @@ export const CollectionPage: React.FC = () => {
 
     try {
       setIsSettingPrice(true);
-      
+
       // Use TradingService to list NFT
       const result = await TradingService.listNFT(
         selectedNFT.id,
         listingPrice,
         listingCurrency,
       );
-      
+
       if (result.success) {
         showSuccess(result.message);
         setPriceDialogOpen(false);
@@ -220,10 +220,10 @@ export const CollectionPage: React.FC = () => {
 
     try {
       setIsSettingPrice(true);
-      
+
       // Use TradingService to delist NFT
       const result = await TradingService.delistNFT(selectedNFT.id);
-      
+
       if (result.success) {
         showSuccess(result.message);
         setPriceDialogOpen(false);

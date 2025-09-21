@@ -173,7 +173,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Call backend to authenticate and auto-create user if needed
       const { backendService } = await import("../services/backendService");
       const result = await backendService.authenticateWithPrincipal(principal);
-      
+
       if (result.success && result.username && result.username.length > 0) {
         const userData = {
           username: result.username[0]!,
@@ -225,57 +225,60 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const loginWithGoogle = useCallback((userInfo: {
-    id: string;
-    name: string;
-    email: string;
-    picture: string;
-  }) => {
-    const generateGooglePrincipal = async () => {
-      try {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(
-          userInfo.id + "originstamp_GOOGLE_SALT_2025",
-        );
-        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
+  const loginWithGoogle = useCallback(
+    (userInfo: {
+      id: string;
+      name: string;
+      email: string;
+      picture: string;
+    }) => {
+      const generateGooglePrincipal = async () => {
+        try {
+          const encoder = new TextEncoder();
+          const data = encoder.encode(
+            userInfo.id + "originstamp_GOOGLE_SALT_2025",
+          );
+          const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          const hashHex = hashArray
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
 
-        const principalText = hashHex.slice(0, 16);
-        return principalText;
-      } catch (error) {
-        console.error("Failed to generate principal for Google user:", error);
-        return null;
-      }
-    };
+          const principalText = hashHex.slice(0, 16);
+          return principalText;
+        } catch (error) {
+          console.error("Failed to generate principal for Google user:", error);
+          return null;
+        }
+      };
 
-    generateGooglePrincipal().then((principal) => {
-      if (principal) {
-        const userData = {
-          username: userInfo.name,
-          loginTime: new Date().toLocaleString(),
-          email: userInfo.email,
-          picture: userInfo.picture,
-          principal,
-          loginMethod: "google" as const,
-        };
+      generateGooglePrincipal().then((principal) => {
+        if (principal) {
+          const userData = {
+            username: userInfo.name,
+            loginTime: new Date().toLocaleString(),
+            email: userInfo.email,
+            picture: userInfo.picture,
+            principal,
+            loginMethod: "google" as const,
+          };
 
-        setUser(userData);
-        localStorage.setItem("auth-user", JSON.stringify(userData));
-        localStorage.setItem("originstamp_user_principal", principal);
+          setUser(userData);
+          localStorage.setItem("auth-user", JSON.stringify(userData));
+          localStorage.setItem("originstamp_user_principal", principal);
 
-        document.cookie = `auth-user=${JSON.stringify(userData)}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
-        document.cookie = `originstamp_user_principal=${principal}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
-      } else {
-        console.error(
-          "Failed to generate principal for Google user:",
-          userInfo.name,
-        );
-      }
-    });
-  }, []);
+          document.cookie = `auth-user=${JSON.stringify(userData)}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
+          document.cookie = `originstamp_user_principal=${principal}; path=/; max-age=${config.security.cookieMaxAge}; ${config.security.cookieSecure ? "secure;" : ""} samesite=${config.security.cookieSameSite}`;
+        } else {
+          console.error(
+            "Failed to generate principal for Google user:",
+            userInfo.name,
+          );
+        }
+      });
+    },
+    [],
+  );
 
   const logout = useCallback(async () => {
     if (authClient && user?.loginMethod === "icp") {
@@ -355,22 +358,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   // Wallet functions
-  const connectWallet = useCallback(async (walletType: WalletType) => {
-    try {
-      await walletManager.connect(walletType);
-      const walletInfo = walletManager.getCurrentWalletInfo();
-      setCurrentWallet(walletInfo);
+  const connectWallet = useCallback(
+    async (walletType: WalletType) => {
+      try {
+        await walletManager.connect(walletType);
+        const walletInfo = walletManager.getCurrentWalletInfo();
+        setCurrentWallet(walletInfo);
 
-      // If wallet connected successfully and has principal, and user is not authenticated yet
-      if (walletInfo?.principal && !user) {
-        // Try to authenticate with principal
-        loginWithInternetIdentity(walletInfo.principal);
+        // If wallet connected successfully and has principal, and user is not authenticated yet
+        if (walletInfo?.principal && !user) {
+          // Try to authenticate with principal
+          loginWithInternetIdentity(walletInfo.principal);
+        }
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+        throw error;
       }
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
-      throw error;
-    }
-  }, [walletManager, user, loginWithInternetIdentity]);
+    },
+    [walletManager, user, loginWithInternetIdentity],
+  );
 
   const disconnectWallet = useCallback(async () => {
     try {

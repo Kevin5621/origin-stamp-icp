@@ -1,5 +1,5 @@
 use crate::modules::nft::{get_active_listings, get_token_details};
-use crate::modules::users::{get_all_users, get_user_info, get_user_profile, get_user_principals};
+use crate::modules::users::{get_all_users, get_user_info, get_user_principals, get_user_profile};
 use crate::types::{MarketplaceBanner, MarketplaceFeaturedCollection, TrendingCreator};
 use std::collections::HashMap;
 
@@ -119,11 +119,11 @@ pub fn get_trending_creators(limit: u64) -> Vec<TrendingCreator> {
 fn get_user_real_artwork_count(username: &str) -> u64 {
     // Get user's principals
     let principals = get_user_principals(username.to_string());
-    
+
     if principals.is_empty() {
         return 0;
     }
-    
+
     // Count NFTs for each principal
     let mut total_count = 0;
     for principal_str in principals {
@@ -134,7 +134,7 @@ fn get_user_real_artwork_count(username: &str) -> u64 {
             total_count += user_nfts.len() as u64;
         }
     }
-    
+
     total_count
 }
 

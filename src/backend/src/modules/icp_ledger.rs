@@ -288,7 +288,6 @@ pub fn get_account_balance(_account: Account) -> ICPBalance {
     }
 }
 
-
 /// Get trading history for a user
 #[ic_cdk::query]
 pub fn get_trading_history(user: String) -> Vec<TradingRecord> {
