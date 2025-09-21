@@ -10,7 +10,7 @@ export interface User {
 export interface LoginResult {
   success: boolean;
   message: string;
-  username?: string[];
+  username?: string;
 }
 
 export interface GoogleUser {

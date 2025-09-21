@@ -18,6 +18,7 @@ import {
   isBackendAvailable,
   getBackendCanisterId,
 } from "./core";
+import type { LoginResult } from "../../../declarations/backend/backend.did";
 
 // Simple in-memory cache for frequently accessed data
 const cache = new Map<
@@ -211,7 +212,7 @@ export const backendService = {
   },
   
   // Direct backend methods
-  async authenticateWithPrincipal(principal: string) {
+  async authenticateWithPrincipal(principal: string): Promise<LoginResult> {
     try {
       const actor = await getBackendActor();
       if (!actor) {

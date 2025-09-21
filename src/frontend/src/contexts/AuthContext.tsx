@@ -7,6 +7,7 @@ import React, {
   useEffect,
   ReactNode,
   useMemo,
+  useCallback,
 } from "react";
 import { AuthClient } from "@dfinity/auth-client";
 import { User } from "../types/auth";
@@ -50,7 +51,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [availableWallets, setAvailableWallets] = useState<WalletType[]>([]);
 
   // Initialize wallet manager
-  const walletManager = new OriginStampWalletManager();
+  const walletManager = useMemo(() => new OriginStampWalletManager(), []);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -121,7 +122,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initAuthClient();
   }, []);
 
-  const login = (username: string) => {
+  const login = useCallback((username: string) => {
     const generateUsernamePrincipal = async () => {
       try {
         // Use user-specific salt to ensure unique principals per user
@@ -165,9 +166,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.error("Failed to generate principal for username:", username);
       }
     });
-  };
+  }, []);
 
-  const loginWithInternetIdentity = async (principal: string) => {
+  const loginWithInternetIdentity = useCallback(async (principal: string) => {
     try {
       // Call backend to authenticate and auto-create user if needed
       const { backendService } = await import("../services/backendService");
@@ -222,9 +223,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem("auth-user", JSON.stringify(userData));
       localStorage.setItem("originstamp_user_principal", principal);
     }
-  };
+  }, []);
 
-  const loginWithGoogle = (userInfo: {
+  const loginWithGoogle = useCallback((userInfo: {
     id: string;
     name: string;
     email: string;
@@ -274,9 +275,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         );
       }
     });
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     if (authClient && user?.loginMethod === "icp") {
       await authClient.logout();
     }
@@ -288,7 +289,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       "auth-user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     document.cookie =
       "originstamp_user_principal=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  };
+  }, [authClient, user?.loginMethod]);
 
   const regeneratePrincipalForExistingUser = (username: string) => {
     const generateUsernamePrincipal = async () => {
@@ -344,17 +345,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   };
 
-  const updateUser = (updatedUser: User) => {
+  const updateUser = useCallback((updatedUser: User) => {
     setUser(updatedUser);
     localStorage.setItem("auth-user", JSON.stringify(updatedUser));
 
     if (updatedUser.principal) {
       localStorage.setItem("originstamp_user_principal", updatedUser.principal);
     }
-  };
+  }, []);
 
   // Wallet functions
-  const connectWallet = async (walletType: WalletType) => {
+  const connectWallet = useCallback(async (walletType: WalletType) => {
     try {
       await walletManager.connect(walletType);
       const walletInfo = walletManager.getCurrentWalletInfo();
@@ -369,9 +370,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error("Failed to connect wallet:", error);
       throw error;
     }
-  };
+  }, [walletManager, user, loginWithInternetIdentity]);
 
-  const disconnectWallet = async () => {
+  const disconnectWallet = useCallback(async () => {
     try {
       await walletManager.disconnect();
       setCurrentWallet(null);
@@ -379,7 +380,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error("Failed to disconnect wallet:", error);
       throw error;
     }
-  };
+  }, [walletManager]);
 
   // Load available wallets on mount
   useEffect(() => {
@@ -398,7 +399,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     loadWallets();
-  }, []);
+  }, [walletManager]);
 
   // Auto-connect wallet if user is authenticated with ICP but wallet not connected
   useEffect(() => {
@@ -410,7 +411,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       ) {
         try {
           await connectWallet(WalletType.INTERNET_IDENTITY);
-        } catch (error) {
+        } catch {
           // Silently handle auto-connect errors
         }
       }
@@ -419,7 +420,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (user) {
       autoConnectWallet();
     }
-  }, [user, currentWallet]);
+  }, [user, currentWallet, connectWallet]);
 
   const value: AuthContextType = useMemo(
     () => ({
