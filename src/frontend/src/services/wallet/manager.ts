@@ -353,7 +353,7 @@ export class OriginStampWalletManager implements WalletManager {
 
       // Only Internet Identity is supported in production
       return false;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

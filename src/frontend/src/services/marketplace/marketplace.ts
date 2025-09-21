@@ -187,7 +187,7 @@ export class MarketplaceService {
       }
 
       // Get listing details
-      const listing = await backendService.getTokenListing(BigInt(tokenIdNumber));
+      const listing = await backendService.getTokenListing(tokenId);
       
       return {
         id: tokenId,

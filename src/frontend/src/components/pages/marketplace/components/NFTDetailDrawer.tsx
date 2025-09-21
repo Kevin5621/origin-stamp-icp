@@ -5,7 +5,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +23,6 @@ import {
   Copy,
   AlertTriangle,
   ShoppingCart,
-  DollarSign,
 } from "lucide-react";
 import { useToastContext } from "@/contexts/ToastContext";
 import { backendService } from "@/services";
@@ -275,7 +273,7 @@ export const NFTDetailDrawer: React.FC<NFTDetailDrawerProps> = ({
       setIsLoading(false);
       setIsCheckingListing(false);
     }
-  }, [nftId, showError, onClose, loadVerificationData]);
+  }, [nftId, showError, onClose, loadVerificationData, collectionPrice, collectionCurrency]);
 
   useEffect(() => {
     if (isOpen && nftId) {

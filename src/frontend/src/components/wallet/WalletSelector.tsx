@@ -6,6 +6,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, WifiOff, Wifi } from "lucide-react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -51,7 +52,7 @@ export const WalletSelector: React.FC<WalletSelectorProps> = ({
         // Check if already connected
         const currentWallet = walletManager.getCurrentWalletInfo();
         setIsConnected(currentWallet?.isConnected ?? false);
-      } catch (error) {
+      } catch {
         onError("Failed to check wallet availability");
       } finally {
         setCheckingAvailability(false);
@@ -59,7 +60,7 @@ export const WalletSelector: React.FC<WalletSelectorProps> = ({
     };
 
     checkWalletStatus();
-  }, [onError]);
+  }, [onError, walletManager]);
 
   const handleWalletClick = async () => {
     if (disabled || isLoading || !isAvailable) {
@@ -75,7 +76,7 @@ export const WalletSelector: React.FC<WalletSelectorProps> = ({
           onWalletConnected(walletInfo);
         }
       }
-    } catch (error) {
+    } catch {
       onError("Failed to select Internet Identity");
     }
   };
@@ -134,9 +135,11 @@ export const WalletSelector: React.FC<WalletSelectorProps> = ({
       >
         <div className="flex items-center space-x-3">
           <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
-            <img
+            <Image
               src="/ii-logo.svg"
               alt="Internet Identity"
+              width={24}
+              height={24}
               className="h-6 w-6"
             />
           </div>

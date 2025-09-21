@@ -91,7 +91,7 @@ export const CollectionPage: React.FC = () => {
 
   useEffect(() => {
     loadCollectionData();
-  }, [user, showError]);
+  }, [user, showError, loadCollectionData]);
 
   // Listen for storage changes to refresh collection when NFT is purchased
   useEffect(() => {
@@ -106,7 +106,7 @@ export const CollectionPage: React.FC = () => {
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, [user]);
+  }, [user, loadCollectionData]);
 
   const getRarityBadge = (verificationScore: number) => {
     if (verificationScore >= 95) {

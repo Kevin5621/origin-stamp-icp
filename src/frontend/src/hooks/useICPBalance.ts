@@ -104,7 +104,7 @@ export const useICPBalance = (): BalanceInfo => {
     } finally {
       setIsLoading(false);
     }
-  }, [currentWallet?.isConnected, currentWallet?.principal]);
+  }, [currentWallet?.isConnected, currentWallet?.principal, currentWallet]);
 
   /**
    * Check ledger availability on mount
