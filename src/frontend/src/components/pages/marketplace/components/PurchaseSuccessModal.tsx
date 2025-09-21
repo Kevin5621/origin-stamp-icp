@@ -69,7 +69,7 @@ export const PurchaseSuccessModal: React.FC<PurchaseSuccessModalProps> = ({
           {/* NFT Details */}
           <div className="rounded-lg border p-4">
             <h3 className="font-semibold text-lg">{collectionName}</h3>
-            <p className="text-sm text-muted-foreground">NFT ID: {nftId}</p>
+            <p className="text-sm text-muted-foreground">Token ID: {nftId}</p>
             <div className="flex justify-between items-center mt-2">
               <span className="text-sm text-muted-foreground">Price Paid:</span>
               <span className="font-semibold">

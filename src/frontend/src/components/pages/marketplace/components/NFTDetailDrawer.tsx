@@ -39,6 +39,8 @@ interface NFTDetailDrawerProps {
   onClose: () => void;
   nftId: string | null;
   onBuyClick?: (nftId: string) => void;
+  collectionPrice?: string;
+  collectionCurrency?: string;
 }
 
 interface NFTData {
@@ -85,6 +87,8 @@ export const NFTDetailDrawer: React.FC<NFTDetailDrawerProps> = ({
   onClose,
   nftId,
   onBuyClick,
+  collectionPrice,
+  collectionCurrency = "ICP",
 }) => {
   const { success: showSuccess, error: showError } = useToastContext();
   const { user } = useAuth();
@@ -116,6 +120,7 @@ export const NFTDetailDrawer: React.FC<NFTDetailDrawerProps> = ({
       // Validate nftId is a valid number for BigInt
       const nftIdNumber = parseInt(nftId);
       if (isNaN(nftIdNumber) || nftIdNumber <= 0) {
+        console.error("Invalid NFT ID:", nftId);
         throw new Error("Invalid NFT ID");
       }
 
@@ -252,8 +257,8 @@ export const NFTDetailDrawer: React.FC<NFTDetailDrawerProps> = ({
           },
           listing: {
             isListed: listing.isListed,
-            price: listing.price,
-            currency: listing.currency,
+            price: collectionPrice || listing.price || "0",
+            currency: collectionCurrency || listing.currency || "ICP",
             seller: listing.seller,
           },
         };

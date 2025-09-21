@@ -50,8 +50,77 @@ export const FeaturedCollections: React.FC = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const data = await MarketplaceService.getFeaturedCollections();
-        setCollections(data);
+        
+        // Get active listings directly from backend
+        const { getBackendActor } = await import("@/services/core/backend");
+        const backendActor = await getBackendActor();
+        
+        if (!backendActor) {
+          throw new Error("Backend not initialized");
+        }
+        
+        const listings = await backendActor.get_active_listings();
+        
+        // Take first 4 listings and get their details
+        const featuredListings = listings.slice(0, 4);
+        const collections = await Promise.all(
+          featuredListings.map(async (listing) => {
+            try {
+              const nftDetails = await MarketplaceService.getIndividualNFT(listing.token_id.toString());
+              
+              const tokenId = listing.token_id.toString();
+              
+              if (nftDetails) {
+                return {
+                  id: `nft-${tokenId}`,
+                  creatorUsername: nftDetails.creator || "Unknown Artist",
+                  creatorAvatar: undefined,
+                  totalListedArtworks: 1,
+                  floorPrice: nftDetails.price,
+                  priceChange24h: 0.0,
+                  verified: true,
+                  sampleArtworkUrl: nftDetails.image,
+                  name: nftDetails.title,
+                  tokenId: tokenId,
+                  nftTitle: nftDetails.title,
+                };
+              } else {
+                // Fallback if NFT details not found
+                return {
+                  id: `nft-${tokenId}`,
+                  creatorUsername: "Unknown Artist",
+                  creatorAvatar: undefined,
+                  totalListedArtworks: 1,
+                  floorPrice: listing.price,
+                  priceChange24h: 0.0,
+                  verified: true,
+                  sampleArtworkUrl: undefined,
+                  name: `NFT #${tokenId}`,
+                  tokenId: tokenId,
+                  nftTitle: `NFT #${tokenId}`,
+                };
+              }
+            } catch (error) {
+              console.error(`Failed to get details for NFT ${listing.token_id}:`, error);
+              const tokenId = listing.token_id.toString();
+              return {
+                id: `nft-${tokenId}`,
+                creatorUsername: "Unknown Artist",
+                creatorAvatar: undefined,
+                totalListedArtworks: 1,
+                floorPrice: listing.price,
+                priceChange24h: 0.0,
+                verified: true,
+                sampleArtworkUrl: undefined,
+                name: `NFT #${tokenId}`,
+                tokenId: tokenId,
+                nftTitle: `NFT #${tokenId}`,
+              };
+            }
+          })
+        );
+        
+        setCollections(collections);
       } catch (err) {
         console.error("Failed to load featured collections:", err);
         setError("Failed to load featured collections");
@@ -65,27 +134,16 @@ export const FeaturedCollections: React.FC = () => {
 
   const handleCollectionClick = async (collection: FeaturedCollection) => {
     try {
-      // Get the first NFT from the collection to show in modal
-      // In a real implementation, you would get the actual NFT ID from the collection
-      if (collection.sampleArtworkUrl) {
-        // Use the collection index + 1 as NFT ID (since we have NFTs with IDs 1, 2, 3, 4, 5)
-        const collectionIndex = parseInt(collection.id.replace('collection-', ''));
-        const nftId = (collectionIndex + 1).toString();
-        
-        // Validate that nftId is a valid number
-        if (isNaN(collectionIndex) || nftId === 'NaN') {
-          showError("Invalid collection ID");
-          return;
-        }
-        
-        setSelectedNFTId(nftId);
+      if (collection.sampleArtworkUrl && collection.tokenId) {
+        // Use the actual tokenId from the collection
+        setSelectedNFTId(collection.tokenId);
         setIsDrawerOpen(true);
       } else {
-        showError("No artwork available for this collection");
+        showError("No artwork available for this NFT");
       }
     } catch (error) {
-      console.error("Failed to open collection:", error);
-      showError("Failed to open collection");
+      console.error("Failed to open NFT:", error);
+      showError("Failed to open NFT");
     }
   };
 
@@ -115,15 +173,13 @@ export const FeaturedCollections: React.FC = () => {
         return;
       }
 
-      // Get the NFT ID for this collection
-      const collectionIndex = parseInt(collection.id.replace('collection-', ''));
-      const nftId = (collectionIndex + 1).toString();
-      
-      // Validate that nftId is a valid number
-      if (isNaN(collectionIndex) || nftId === 'NaN') {
-        showError("Invalid collection ID");
+      // Use the actual tokenId from the collection
+      if (!collection.tokenId) {
+        showError("Invalid NFT ID");
         return;
       }
+      
+      const nftId = collection.tokenId;
       
       // Check if NFT is listed for sale
       const listing = await TradingService.getNFTListing(nftId);
@@ -207,11 +263,10 @@ export const FeaturedCollections: React.FC = () => {
 
   const handleDrawerBuyClick = async (nftId: string) => {
     // Find the collection for this NFT ID
-    const collectionIndex = parseInt(nftId) - 1;
-    const collection = collections.find(c => c.id === `collection-${collectionIndex}`);
+    const collection = collections.find(c => c.tokenId === nftId);
     
     if (!collection) {
-      showError("Collection not found");
+      showError("NFT not found");
       return;
     }
 
@@ -245,6 +300,13 @@ export const FeaturedCollections: React.FC = () => {
   const formatPriceChange = (change: number) => {
     if (change === 0) return "0%";
     return `${change > 0 ? "+" : ""}${change.toFixed(1)}%`;
+  };
+
+  const formatPrice = (price: string | undefined) => {
+    if (!price) return "No listings";
+    const numPrice = parseFloat(price);
+    if (isNaN(numPrice)) return "No listings";
+    return `${numPrice.toFixed(2)} ICP`;
   };
 
   if (isLoading) {
@@ -387,9 +449,16 @@ export const FeaturedCollections: React.FC = () => {
 
               {/* Collection Info */}
               <div className="p-5">
+                {/* NFT Title */}
+                <div className="mb-3">
+                  <h4 className="text-foreground text-lg font-bold line-clamp-2">
+                    {collection.nftTitle || collection.name}
+                  </h4>
+                </div>
+                
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-foreground text-lg font-semibold">
-                    {collection.floorPrice || "No listings"}
+                    {formatPrice(collection.floorPrice)}
                   </span>
                   <div className="flex items-center gap-2">
                     {getChangeIcon(collection.priceChange24h)}
@@ -437,6 +506,8 @@ export const FeaturedCollections: React.FC = () => {
         onClose={handleCloseDrawer}
         nftId={selectedNFTId}
         onBuyClick={handleDrawerBuyClick}
+        collectionPrice={selectedNFTId ? collections.find(c => c.tokenId === selectedNFTId)?.floorPrice : undefined}
+        collectionCurrency="ICP"
       />
 
       {/* Purchase Confirmation Modal */}

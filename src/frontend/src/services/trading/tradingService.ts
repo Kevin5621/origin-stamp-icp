@@ -251,14 +251,16 @@ export class TradingService {
     seller?: string;
   }> {
     try {
-      const backendActor = await backendService.getBackendActor();
-      if (!backendActor) {
-        return { isListed: false };
-      }
-
       // Validate nftId is a valid number for BigInt
       const nftIdNumber = parseInt(nftId);
       if (isNaN(nftIdNumber) || nftIdNumber <= 0) {
+        console.error("Invalid nftId for listing:", nftId);
+        return { isListed: false };
+      }
+
+      const backendActor = await backendService.getBackendActor();
+      if (!backendActor) {
+        console.error("Backend actor not available for listing check");
         return { isListed: false };
       }
       
@@ -286,7 +288,8 @@ export class TradingService {
       }
 
       return { isListed: false };
-    } catch {
+    } catch (error) {
+      console.error("Failed to get NFT listing:", error);
       return { isListed: false };
     }
   }

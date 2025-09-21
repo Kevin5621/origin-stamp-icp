@@ -15,6 +15,8 @@ export interface FeaturedCollection {
   verified: boolean;
   sampleArtworkUrl?: string;
   name: string; // Display name for the collection
+  tokenId?: string; // Individual NFT token ID
+  nftTitle?: string; // NFT title from metadata
 }
 
 export interface TrendingCreator {
@@ -151,6 +153,57 @@ export class MarketplaceService {
       };
     } catch (error) {
       console.error("Failed to fetch marketplace banner:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Get individual NFT details for marketplace display
+   * @param tokenId Token ID
+   * @returns Promise with NFT details
+   */
+  static async getIndividualNFT(tokenId: string): Promise<{
+    id: string;
+    title: string;
+    description?: string;
+    image?: string;
+    price?: string;
+    currency?: string;
+    creator?: string;
+  } | null> {
+    try {
+      // Validate tokenId is a valid number
+      const tokenIdNumber = parseInt(tokenId);
+      if (isNaN(tokenIdNumber) || tokenIdNumber <= 0) {
+        console.error("Invalid tokenId:", tokenId);
+        return null;
+      }
+
+      const tokenDetails = await backendService.getTokenDetails(BigInt(tokenIdNumber));
+      
+      if (!tokenDetails) {
+        console.error("Token details not found for ID:", tokenId);
+        return null;
+      }
+
+      // Get listing details
+      const listing = await backendService.getTokenListing(BigInt(tokenIdNumber));
+      
+      return {
+        id: tokenId,
+        title: tokenDetails.metadata.name,
+        description: Array.isArray(tokenDetails.metadata.description) 
+          ? tokenDetails.metadata.description[0] 
+          : tokenDetails.metadata.description,
+        image: Array.isArray(tokenDetails.metadata.image)
+          ? tokenDetails.metadata.image[0]
+          : tokenDetails.metadata.image,
+        price: listing?.price,
+        currency: listing?.currency === "ICP" ? "ICP" : "USDT",
+        creator: tokenDetails.metadata.attributes.find(attr => attr.trait_type === "artist")?.value,
+      };
+    } catch (error) {
+      console.error("Failed to get individual NFT:", error);
       return null;
     }
   }

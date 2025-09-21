@@ -13,6 +13,7 @@ import { subscriptionManagementService } from "./subscription";
 import { nftCertificateService, nftTokenService } from "./nft";
 import { aiVerificationService } from "./verification";
 import { dashboardStatsService } from "./dashboard";
+import { TradingService } from "./trading";
 import {
   getBackendActor,
   isBackendAvailable,
@@ -110,6 +111,7 @@ export const backendService = {
   mintNFTFromSession: nftCertificateService.mintNFTFromSession,
   getTokenDetails: nftTokenService.getTokenDetails,
   getUserNFTs: nftTokenService.getUserNFTs,
+  getTokenListing: TradingService.getNFTListing,
 
   // ===== VERIFICATION METHODS =====
   createVerificationRequest: aiVerificationService.createVerificationRequest,
