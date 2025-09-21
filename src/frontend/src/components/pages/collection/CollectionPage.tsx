@@ -61,37 +61,52 @@ export const CollectionPage: React.FC = () => {
   const [isSettingPrice, setIsSettingPrice] = useState(false);
 
   // Load collection data
+  const loadCollectionData = async () => {
+    if (!user?.principal || !user?.username) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const [owned, created, favorites, stats] = await Promise.all([
+        CollectionService.getUserCollection(user.principal),
+        CollectionService.getUserCreatedNFTs(user.username),
+        CollectionService.getUserFavorites(user.username),
+        CollectionService.getCollectionStats(user.principal, user.username),
+      ]);
+
+      setMyCollection(owned);
+      setCreatedNFTs(created);
+      setFavoriteNFTs(favorites);
+      setCollectionStats(stats);
+    } catch (error) {
+      console.error("Failed to load collection data:", error);
+      showError("Failed to load collection data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadCollectionData = async () => {
-      if (!user?.principal || !user?.username) {
-        setIsLoading(false);
-        return;
-      }
+    loadCollectionData();
+  }, [user, showError]);
 
-      try {
-        setIsLoading(true);
-
-        const [owned, created, favorites, stats] = await Promise.all([
-          CollectionService.getUserCollection(user.principal),
-          CollectionService.getUserCreatedNFTs(user.username),
-          CollectionService.getUserFavorites(user.username),
-          CollectionService.getCollectionStats(user.principal, user.username),
-        ]);
-
-        setMyCollection(owned);
-        setCreatedNFTs(created);
-        setFavoriteNFTs(favorites);
-        setCollectionStats(stats);
-      } catch (error) {
-        console.error("Failed to load collection data:", error);
-        showError("Failed to load collection data");
-      } finally {
-        setIsLoading(false);
+  // Listen for storage changes to refresh collection when NFT is purchased
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'nft_purchased' && e.newValue === 'true') {
+        // Refresh collection data when NFT is purchased
+        loadCollectionData();
+        // Clear the flag
+        localStorage.removeItem('nft_purchased');
       }
     };
 
-    loadCollectionData();
-  }, [user, showError]);
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [user]);
 
   const getRarityBadge = (verificationScore: number) => {
     if (verificationScore >= 95) {

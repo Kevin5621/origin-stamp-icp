@@ -141,15 +141,10 @@ export class TradingService {
    */
   static async purchaseNFT(request: PurchaseRequest): Promise<PurchaseResult> {
     try {
-      console.log("💳 [TradingService] Starting purchase process...");
-      console.log("💳 [TradingService] Purchase request:", request);
-      
       // Check if user is connected
       const walletBalance = await this.getWalletBalance(request.buyerPrincipal);
-      console.log("💳 [TradingService] Wallet balance:", walletBalance);
       
       if (!walletBalance.isConnected) {
-        console.log("❌ [TradingService] Wallet not connected");
         return {
           success: false,
           message: "Wallet not connected. Please connect your wallet first.",
@@ -160,16 +155,13 @@ export class TradingService {
       }
 
       // Check sufficient balance
-      console.log("💳 [TradingService] Checking sufficient balance...");
       const balanceCheck = await this.checkSufficientBalance(
         request.price,
         request.currency,
         request.buyerPrincipal,
       );
-      console.log("💳 [TradingService] Balance check result:", balanceCheck);
 
       if (!balanceCheck.sufficient) {
-        console.log("❌ [TradingService] Insufficient balance");
         return {
           success: false,
           message: `Insufficient balance. Required: ${balanceCheck.requiredAmount}, Available: ${balanceCheck.currentBalance}`,
@@ -180,10 +172,8 @@ export class TradingService {
       }
 
       // Get backend actor
-      console.log("💳 [TradingService] Getting backend actor...");
       const backendActor = await backendService.getBackendActor();
       if (!backendActor) {
-        console.log("❌ [TradingService] Backend actor not available");
         return {
           success: false,
           message: "Backend service not available",
@@ -192,21 +182,17 @@ export class TradingService {
           currency: request.currency,
         };
       }
-      console.log("✅ [TradingService] Backend actor available");
 
       // Call backend purchase function
-      console.log("💳 [TradingService] Preparing buyer account...");
       const buyerAccount: Account = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         owner: Principal.fromText(request.buyerPrincipal) as any,
         subaccount: [],
       };
-      console.log("💳 [TradingService] Buyer account:", buyerAccount);
 
       // Validate nftId is a valid number for BigInt
       const nftIdNumber = parseInt(request.nftId);
       if (isNaN(nftIdNumber) || nftIdNumber <= 0) {
-        console.log("❌ [TradingService] Invalid NFT ID:", request.nftId);
         return {
           success: false,
           message: "Invalid NFT ID",
@@ -217,24 +203,15 @@ export class TradingService {
       }
 
       const priceInE8s = BigInt(Math.floor(parseFloat(request.price) * 100_000_000));
-      console.log("💳 [TradingService] Purchase parameters:", {
-        nftId: nftIdNumber,
-        price: request.price,
-        priceInE8s: priceInE8s.toString(),
-        buyerPrincipal: request.buyerPrincipal,
-      });
 
-      console.log("💳 [TradingService] Calling backend purchase_nft_with_icp...");
       const result = await backendActor.purchase_nft_with_icp(
         BigInt(nftIdNumber),
         buyerAccount,
         priceInE8s,
       );
-      console.log("💳 [TradingService] Backend purchase result:", result);
 
       if ("Ok" in result) {
         const purchaseResult = result.Ok;
-        console.log("✅ [TradingService] Purchase successful:", purchaseResult);
         return {
           success: purchaseResult.success,
           transactionId: purchaseResult.transaction_id?.toString() || "unknown",
@@ -244,7 +221,6 @@ export class TradingService {
           currency: request.currency,
         };
       } else {
-        console.log("❌ [TradingService] Purchase failed with error:", result.Err);
         return {
           success: false,
           message: `Purchase failed: ${result.Err}`,
@@ -275,28 +251,21 @@ export class TradingService {
     seller?: string;
   }> {
     try {
-      console.log("📋 [TradingService] Getting listing for NFT ID:", nftId);
-      
       const backendActor = await backendService.getBackendActor();
       if (!backendActor) {
-        console.log("❌ [TradingService] Backend actor not available");
         return { isListed: false };
       }
 
       // Validate nftId is a valid number for BigInt
       const nftIdNumber = parseInt(nftId);
       if (isNaN(nftIdNumber) || nftIdNumber <= 0) {
-        console.error("❌ [TradingService] Invalid NFT ID:", nftId);
         return { isListed: false };
       }
       
-      console.log("📋 [TradingService] Calling backend get_token_listing with BigInt:", nftIdNumber);
       const listing = await backendActor.get_token_listing(BigInt(nftIdNumber));
-      console.log("📋 [TradingService] Raw listing result:", listing);
 
       if (listing && listing.length > 0 && listing[0]) {
         const tokenListing = listing[0];
-        console.log("📋 [TradingService] Token listing details:", tokenListing);
         
         // Parse currency properly
         let currency = "ICP";
@@ -308,21 +277,16 @@ export class TradingService {
           }
         }
         
-        const result = {
+        return {
           isListed: tokenListing.is_active,
           price: tokenListing.price,
           currency: currency,
           seller: tokenListing.seller.owner.toString(),
         };
-        
-        console.log("📋 [TradingService] Parsed listing result:", result);
-        return result;
       }
 
-      console.log("📋 [TradingService] No listing found for NFT ID:", nftId);
       return { isListed: false };
-    } catch (error) {
-      console.error("[TradingService] Failed to get NFT listing:", error);
+    } catch {
       return { isListed: false };
     }
   }

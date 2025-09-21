@@ -34,13 +34,11 @@ export const PurchaseSuccessModal: React.FC<PurchaseSuccessModalProps> = ({
 
   const handleViewCollection = () => {
     onClose();
-    router.push("/dashboard/collections");
+    router.push("/dashboard/collection");
   };
 
   const handleViewTransaction = () => {
     // In a real implementation, this would link to a blockchain explorer
-    console.log("View transaction:", transactionId);
-    // For now, just show an alert
     alert(`Transaction ID: ${transactionId}\n\nIn a real implementation, this would link to a blockchain explorer.`);
   };
 
@@ -48,7 +46,7 @@ export const PurchaseSuccessModal: React.FC<PurchaseSuccessModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-green-600">
+          <DialogTitle className="flex items-center gap-2 text-primary">
             <CheckCircle className="h-5 w-5" />
             Purchase Successful!
           </DialogTitle>
@@ -61,9 +59,9 @@ export const PurchaseSuccessModal: React.FC<PurchaseSuccessModalProps> = ({
           {/* Success Animation */}
           <div className="flex justify-center">
             <div className="relative">
-              <CheckCircle className="h-16 w-16 text-green-500" />
+              <CheckCircle className="h-16 w-16 text-primary" />
               <div className="absolute inset-0 animate-ping">
-                <CheckCircle className="h-16 w-16 text-green-500 opacity-20" />
+                <CheckCircle className="h-16 w-16 text-primary opacity-20" />
               </div>
             </div>
           </div>
@@ -90,17 +88,6 @@ export const PurchaseSuccessModal: React.FC<PurchaseSuccessModalProps> = ({
             </div>
           </div>
 
-          {/* Next Steps */}
-          <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4">
-            <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
-              What's Next?
-            </h4>
-            <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-              <li>• Your NFT is now in your collection</li>
-              <li>• You can view it in the Collections page</li>
-              <li>• The item has been automatically delisted from the marketplace</li>
-            </ul>
-          </div>
         </div>
 
         <DialogFooter className="gap-2">
@@ -114,7 +101,7 @@ export const PurchaseSuccessModal: React.FC<PurchaseSuccessModalProps> = ({
           </Button>
           <Button
             onClick={handleViewCollection}
-            className="flex-1 bg-blue-600 hover:bg-blue-700"
+            className="flex-1"
           >
             <Eye className="h-4 w-4 mr-2" />
             View Collection

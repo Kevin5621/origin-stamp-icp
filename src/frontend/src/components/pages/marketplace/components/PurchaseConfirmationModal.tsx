@@ -72,9 +72,9 @@ export const PurchaseConfirmationModal: React.FC<PurchaseConfirmationModalProps>
           </div>
 
           {/* Warning */}
-          <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800">
-            <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
-            <div className="text-sm text-yellow-800 dark:text-yellow-200">
+          <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+            <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-destructive-foreground">
               <p className="font-medium">Important:</p>
               <p>This purchase is final and cannot be undone. Make sure you want to proceed.</p>
             </div>

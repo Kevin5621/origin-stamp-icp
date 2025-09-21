@@ -69,7 +69,7 @@ export class MarketplaceService {
             ? collection.sample_artwork_url[0]
             : undefined
           : collection.sample_artwork_url || undefined,
-        name: `${collection.creator_username}'s Collection`,
+        name: `Collection ${index + 1}`,
       }));
     } catch (error) {
       console.error("Failed to fetch featured collections:", error);

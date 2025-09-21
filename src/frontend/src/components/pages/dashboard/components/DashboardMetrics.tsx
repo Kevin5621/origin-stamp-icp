@@ -1,5 +1,5 @@
 import React from "react";
-import { Palette, Award, TrendingUp, Package } from "lucide-react";
+import { Award, TrendingUp, Package } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { UserDashboardMetrics } from "@/types/dashboard";
 
@@ -13,13 +13,6 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
   loading = false,
 }) => {
   const dashboardCards = [
-    {
-      title: "My Art Sessions",
-      value: metrics.total_sessions.toString(),
-      description: `${metrics.active_sessions} active sessions`,
-      trend: { value: metrics.active_sessions, isPositive: true },
-      icon: Palette,
-    },
     {
       title: "My Certificates",
       value: metrics.certificates_created.toString(),
@@ -45,7 +38,7 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
 
   if (loading) {
     return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 4 }).map((_, index) => (
           <Card key={index} className="border-border bg-card border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -63,7 +56,7 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {dashboardCards.map((card) => {
         const Icon = card.icon;
         return (

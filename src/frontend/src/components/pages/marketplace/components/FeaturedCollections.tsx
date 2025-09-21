@@ -14,7 +14,7 @@ import {
   MarketplaceService,
   type FeaturedCollection,
 } from "@/services/marketplace";
-import { NFTDetailModal } from "./NFTDetailModal";
+import { NFTDetailDrawer } from "./NFTDetailDrawer";
 import { PurchaseConfirmationModal } from "./PurchaseConfirmationModal";
 import { PurchaseSuccessModal } from "./PurchaseSuccessModal";
 import { useToastContext } from "@/contexts/ToastContext";
@@ -28,7 +28,7 @@ export const FeaturedCollections: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedNFTId, setSelectedNFTId] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [hoveredCollection, setHoveredCollection] = useState<string | null>(
     null,
   );
@@ -79,7 +79,7 @@ export const FeaturedCollections: React.FC = () => {
         }
         
         setSelectedNFTId(nftId);
-        setIsModalOpen(true);
+        setIsDrawerOpen(true);
       } else {
         showError("No artwork available for this collection");
       }
@@ -94,28 +94,21 @@ export const FeaturedCollections: React.FC = () => {
     event: React.MouseEvent,
   ) => {
     event.stopPropagation(); // Prevent triggering collection click
-    console.log("🛒 [BUY CLICK] Starting purchase process...");
-    console.log("🛒 [BUY CLICK] Collection:", collection);
-    console.log("🛒 [BUY CLICK] User:", user);
 
     if (!user?.principal) {
-      console.log("❌ [BUY CLICK] No user principal");
       showError("Please connect your wallet to purchase NFTs");
       return;
     }
 
     try {
-      console.log("💰 [BUY CLICK] Checking wallet balance...");
       // Check wallet balance
       const balanceCheck = await TradingService.checkSufficientBalance(
         "1.00", // Default price for now
         "ICP",
         user.principal,
       );
-      console.log("💰 [BUY CLICK] Balance check result:", balanceCheck);
 
       if (!balanceCheck.sufficient) {
-        console.log("❌ [BUY CLICK] Insufficient balance");
         showError(
           `Insufficient balance. Required: ${balanceCheck.requiredAmount}, Available: ${balanceCheck.currentBalance}`,
         );
@@ -126,24 +119,16 @@ export const FeaturedCollections: React.FC = () => {
       const collectionIndex = parseInt(collection.id.replace('collection-', ''));
       const nftId = (collectionIndex + 1).toString();
       
-      console.log("🆔 [BUY CLICK] Collection ID:", collection.id);
-      console.log("🆔 [BUY CLICK] Collection Index:", collectionIndex);
-      console.log("🆔 [BUY CLICK] Generated NFT ID:", nftId);
-      
       // Validate that nftId is a valid number
       if (isNaN(collectionIndex) || nftId === 'NaN') {
-        console.log("❌ [BUY CLICK] Invalid collection ID");
         showError("Invalid collection ID");
         return;
       }
       
-      console.log("📋 [BUY CLICK] Checking NFT listing...");
       // Check if NFT is listed for sale
       const listing = await TradingService.getNFTListing(nftId);
-      console.log("📋 [BUY CLICK] Listing result:", listing);
       
       if (!listing.isListed) {
-        console.log("❌ [BUY CLICK] NFT not listed for sale");
         showError("This NFT is not currently for sale");
         return;
       }
@@ -157,8 +142,7 @@ export const FeaturedCollections: React.FC = () => {
       });
       setIsPurchaseConfirmationOpen(true);
       
-    } catch (error) {
-      console.error("❌ [BUY CLICK] Purchase error:", error);
+    } catch {
       showError("Failed to prepare purchase");
     }
   };
@@ -168,14 +152,6 @@ export const FeaturedCollections: React.FC = () => {
 
     setIsPurchasing(true);
     try {
-      console.log("💳 [CONFIRM PURCHASE] Starting purchase...");
-      console.log("💳 [CONFIRM PURCHASE] Purchase parameters:", {
-        nftId: purchaseData.nftId,
-        buyerPrincipal: user.principal,
-        price: purchaseData.price,
-        currency: purchaseData.currency,
-      });
-
       // Purchase the NFT
       const purchaseResult = await TradingService.purchaseNFT({
         nftId: purchaseData.nftId,
@@ -183,11 +159,8 @@ export const FeaturedCollections: React.FC = () => {
         price: purchaseData.price,
         currency: purchaseData.currency as "ICP" | "USDT",
       });
-      console.log("💳 [CONFIRM PURCHASE] Purchase result:", purchaseResult);
 
       if (purchaseResult.success) {
-        console.log("✅ [CONFIRM PURCHASE] Purchase successful!");
-        
         // Update purchase data with transaction ID
         setPurchaseData(prev => prev ? {
           ...prev,
@@ -202,13 +175,14 @@ export const FeaturedCollections: React.FC = () => {
         const updatedCollections = await MarketplaceService.getFeaturedCollections();
         setCollections(updatedCollections);
         
+        // Signal to collection page that NFT was purchased
+        localStorage.setItem('nft_purchased', 'true');
+        
       } else {
-        console.log("❌ [CONFIRM PURCHASE] Purchase failed:", purchaseResult.message);
         showError(purchaseResult.message);
         setIsPurchaseConfirmationOpen(false);
       }
-    } catch (error) {
-      console.error("❌ [CONFIRM PURCHASE] Purchase error:", error);
+    } catch {
       showError("Failed to complete purchase");
       setIsPurchaseConfirmationOpen(false);
     } finally {
@@ -216,8 +190,8 @@ export const FeaturedCollections: React.FC = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
     setSelectedNFTId(null);
   };
 
@@ -229,6 +203,25 @@ export const FeaturedCollections: React.FC = () => {
   const handleClosePurchaseSuccess = () => {
     setIsPurchaseSuccessOpen(false);
     setPurchaseData(null);
+  };
+
+  const handleDrawerBuyClick = async (nftId: string) => {
+    // Find the collection for this NFT ID
+    const collectionIndex = parseInt(nftId) - 1;
+    const collection = collections.find(c => c.id === `collection-${collectionIndex}`);
+    
+    if (!collection) {
+      showError("Collection not found");
+      return;
+    }
+
+    // Use the same buy logic as the collection buy button
+    // Create a mock event object that matches the expected interface
+    const mockEvent = {
+      stopPropagation: () => {},
+    } as React.MouseEvent;
+    
+    await handleBuyClick(collection, mockEvent);
   };
 
   const getChangeIcon = (changeType: number) => {
@@ -438,11 +431,12 @@ export const FeaturedCollections: React.FC = () => {
         ))}
       </div>
 
-      {/* NFT Detail Modal */}
-      <NFTDetailModal
-        isOpen={isModalOpen}
+      {/* NFT Detail Drawer */}
+      <NFTDetailDrawer
+        isOpen={isDrawerOpen}
+        onClose={handleCloseDrawer}
         nftId={selectedNFTId}
-        onClose={handleCloseModal}
+        onBuyClick={handleDrawerBuyClick}
       />
 
       {/* Purchase Confirmation Modal */}
