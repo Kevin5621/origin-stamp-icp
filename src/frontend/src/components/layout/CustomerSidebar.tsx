@@ -141,7 +141,7 @@ export const CustomerSidebar: React.FC<CustomerSidebarProps> = ({
               <span className="text-muted-foreground text-xs">ICP Balance</span>
               <div className="text-right">
                 <p className="font-mono text-sm font-medium">
-                  {isBalanceLoading ? "..." : `${formattedBalance} ICP`}
+                  {isBalanceLoading ? "..." : formattedBalance}
                 </p>
                 <p className="text-muted-foreground text-xs">
                   {isBalanceLoading ? "Loading..." : "Available"}

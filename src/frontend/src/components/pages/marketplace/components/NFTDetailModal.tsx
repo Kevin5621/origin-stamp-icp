@@ -104,8 +104,14 @@ export const NFTDetailModal: React.FC<NFTDetailModalProps> = ({
 
     setIsLoading(true);
     try {
+      // Validate nftId is a valid number for BigInt
+      const nftIdNumber = parseInt(nftId);
+      if (isNaN(nftIdNumber) || nftIdNumber <= 0) {
+        throw new Error("Invalid NFT ID");
+      }
+
       // Get token details from backend
-      const tokenDetails = await backendService.getTokenDetails(BigInt(nftId));
+      const tokenDetails = await backendService.getTokenDetails(BigInt(nftIdNumber));
 
       if (tokenDetails) {
         const token = tokenDetails;

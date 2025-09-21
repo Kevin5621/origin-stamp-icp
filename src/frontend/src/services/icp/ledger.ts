@@ -154,6 +154,12 @@ export class ICPLedgerService {
         this.ledgerCanisterId,
       );
 
+      // For local development with mock ledger, return false to use mock balance
+      if (this.ledgerCanisterId === "local-mock-ledger") {
+        console.log("ICPLedgerService - Using local mock ledger, returning false");
+        return false;
+      }
+
       const agent = await this.initializeAgent();
       console.log("ICPLedgerService - Agent initialized");
 

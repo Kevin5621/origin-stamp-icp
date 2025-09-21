@@ -167,11 +167,11 @@ export class EnvironmentService {
       case "local":
       case "testnet":
       default:
-        // For local development, use mock balance from backend
-        // In production, this would be the real ICP Ledger canister ID
+        // For local development, return a placeholder since we use mock balance
+        // The actual ledger service will handle this gracefully
         return (
           this.getEnvVar("NEXT_PUBLIC_ICP_LEDGER_CANISTER_ID") ||
-          "rrkah-fqaaa-aaaaa-aaaaq-cai" // Mainnet ICP Ledger
+          "local-mock-ledger" // Placeholder for local development
         );
     }
   }

@@ -15,6 +15,8 @@ import {
   type FeaturedCollection,
 } from "@/services/marketplace";
 import { NFTDetailModal } from "./NFTDetailModal";
+import { PurchaseConfirmationModal } from "./PurchaseConfirmationModal";
+import { PurchaseSuccessModal } from "./PurchaseSuccessModal";
 import { useToastContext } from "@/contexts/ToastContext";
 import { TradingService } from "@/services";
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,6 +32,18 @@ export const FeaturedCollections: React.FC = () => {
   const [hoveredCollection, setHoveredCollection] = useState<string | null>(
     null,
   );
+  
+  // Purchase flow states
+  const [isPurchaseConfirmationOpen, setIsPurchaseConfirmationOpen] = useState(false);
+  const [isPurchaseSuccessOpen, setIsPurchaseSuccessOpen] = useState(false);
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const [purchaseData, setPurchaseData] = useState<{
+    collection: FeaturedCollection | null;
+    nftId: string;
+    price: string;
+    currency: string;
+    transactionId?: string;
+  } | null>(null);
 
   useEffect(() => {
     const loadFeaturedCollections = async () => {
@@ -54,9 +68,17 @@ export const FeaturedCollections: React.FC = () => {
       // Get the first NFT from the collection to show in modal
       // In a real implementation, you would get the actual NFT ID from the collection
       if (collection.sampleArtworkUrl) {
-        // For now, we'll use a placeholder ID, but in real implementation
-        // you would get the actual NFT ID from the collection data
-        setSelectedNFTId(collection.id.toString());
+        // Use the collection index + 1 as NFT ID (since we have NFTs with IDs 1, 2, 3, 4, 5)
+        const collectionIndex = parseInt(collection.id.replace('collection-', ''));
+        const nftId = (collectionIndex + 1).toString();
+        
+        // Validate that nftId is a valid number
+        if (isNaN(collectionIndex) || nftId === 'NaN') {
+          showError("Invalid collection ID");
+          return;
+        }
+        
+        setSelectedNFTId(nftId);
         setIsModalOpen(true);
       } else {
         showError("No artwork available for this collection");
@@ -72,41 +94,141 @@ export const FeaturedCollections: React.FC = () => {
     event: React.MouseEvent,
   ) => {
     event.stopPropagation(); // Prevent triggering collection click
+    console.log("🛒 [BUY CLICK] Starting purchase process...");
+    console.log("🛒 [BUY CLICK] Collection:", collection);
+    console.log("🛒 [BUY CLICK] User:", user);
 
     if (!user?.principal) {
+      console.log("❌ [BUY CLICK] No user principal");
       showError("Please connect your wallet to purchase NFTs");
       return;
     }
 
     try {
+      console.log("💰 [BUY CLICK] Checking wallet balance...");
       // Check wallet balance
       const balanceCheck = await TradingService.checkSufficientBalance(
         "1.00", // Default price for now
         "ICP",
         user.principal,
       );
+      console.log("💰 [BUY CLICK] Balance check result:", balanceCheck);
 
       if (!balanceCheck.sufficient) {
+        console.log("❌ [BUY CLICK] Insufficient balance");
         showError(
           `Insufficient balance. Required: ${balanceCheck.requiredAmount}, Available: ${balanceCheck.currentBalance}`,
         );
         return;
       }
 
-      // For now, show a message that trading is not available
-      // In real implementation, this would integrate with wallet and collection services
-      showError(
-        "Trading functionality is not yet available. Please check back later.",
-      );
+      // Get the NFT ID for this collection
+      const collectionIndex = parseInt(collection.id.replace('collection-', ''));
+      const nftId = (collectionIndex + 1).toString();
+      
+      console.log("🆔 [BUY CLICK] Collection ID:", collection.id);
+      console.log("🆔 [BUY CLICK] Collection Index:", collectionIndex);
+      console.log("🆔 [BUY CLICK] Generated NFT ID:", nftId);
+      
+      // Validate that nftId is a valid number
+      if (isNaN(collectionIndex) || nftId === 'NaN') {
+        console.log("❌ [BUY CLICK] Invalid collection ID");
+        showError("Invalid collection ID");
+        return;
+      }
+      
+      console.log("📋 [BUY CLICK] Checking NFT listing...");
+      // Check if NFT is listed for sale
+      const listing = await TradingService.getNFTListing(nftId);
+      console.log("📋 [BUY CLICK] Listing result:", listing);
+      
+      if (!listing.isListed) {
+        console.log("❌ [BUY CLICK] NFT not listed for sale");
+        showError("This NFT is not currently for sale");
+        return;
+      }
+
+      // Store purchase data and show confirmation modal
+      setPurchaseData({
+        collection,
+        nftId,
+        price: listing.price || "0",
+        currency: (listing.currency === "ICP" || listing.currency === "USDT") ? listing.currency : "ICP",
+      });
+      setIsPurchaseConfirmationOpen(true);
+      
     } catch (error) {
-      console.error("Failed to buy NFT:", error);
-      showError("Failed to buy NFT");
+      console.error("❌ [BUY CLICK] Purchase error:", error);
+      showError("Failed to prepare purchase");
+    }
+  };
+
+  const handleConfirmPurchase = async () => {
+    if (!purchaseData || !user?.principal) return;
+
+    setIsPurchasing(true);
+    try {
+      console.log("💳 [CONFIRM PURCHASE] Starting purchase...");
+      console.log("💳 [CONFIRM PURCHASE] Purchase parameters:", {
+        nftId: purchaseData.nftId,
+        buyerPrincipal: user.principal,
+        price: purchaseData.price,
+        currency: purchaseData.currency,
+      });
+
+      // Purchase the NFT
+      const purchaseResult = await TradingService.purchaseNFT({
+        nftId: purchaseData.nftId,
+        buyerPrincipal: user.principal,
+        price: purchaseData.price,
+        currency: purchaseData.currency as "ICP" | "USDT",
+      });
+      console.log("💳 [CONFIRM PURCHASE] Purchase result:", purchaseResult);
+
+      if (purchaseResult.success) {
+        console.log("✅ [CONFIRM PURCHASE] Purchase successful!");
+        
+        // Update purchase data with transaction ID
+        setPurchaseData(prev => prev ? {
+          ...prev,
+          transactionId: purchaseResult.transactionId
+        } : null);
+        
+        // Close confirmation modal and show success modal
+        setIsPurchaseConfirmationOpen(false);
+        setIsPurchaseSuccessOpen(true);
+        
+        // Refresh collections data to reflect the purchase
+        const updatedCollections = await MarketplaceService.getFeaturedCollections();
+        setCollections(updatedCollections);
+        
+      } else {
+        console.log("❌ [CONFIRM PURCHASE] Purchase failed:", purchaseResult.message);
+        showError(purchaseResult.message);
+        setIsPurchaseConfirmationOpen(false);
+      }
+    } catch (error) {
+      console.error("❌ [CONFIRM PURCHASE] Purchase error:", error);
+      showError("Failed to complete purchase");
+      setIsPurchaseConfirmationOpen(false);
+    } finally {
+      setIsPurchasing(false);
     }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedNFTId(null);
+  };
+
+  const handleClosePurchaseConfirmation = () => {
+    setIsPurchaseConfirmationOpen(false);
+    setPurchaseData(null);
+  };
+
+  const handleClosePurchaseSuccess = () => {
+    setIsPurchaseSuccessOpen(false);
+    setPurchaseData(null);
   };
 
   const getChangeIcon = (changeType: number) => {
@@ -322,6 +444,33 @@ export const FeaturedCollections: React.FC = () => {
         nftId={selectedNFTId}
         onClose={handleCloseModal}
       />
+
+      {/* Purchase Confirmation Modal */}
+      {purchaseData && (
+        <PurchaseConfirmationModal
+          isOpen={isPurchaseConfirmationOpen}
+          onClose={handleClosePurchaseConfirmation}
+          onConfirm={handleConfirmPurchase}
+          nftId={purchaseData.nftId}
+          price={purchaseData.price}
+          currency={purchaseData.currency}
+          collectionName={purchaseData.collection?.name || "Unknown Collection"}
+          isLoading={isPurchasing}
+        />
+      )}
+
+      {/* Purchase Success Modal */}
+      {purchaseData && (
+        <PurchaseSuccessModal
+          isOpen={isPurchaseSuccessOpen}
+          onClose={handleClosePurchaseSuccess}
+          nftId={purchaseData.nftId}
+          price={purchaseData.price}
+          currency={purchaseData.currency}
+          collectionName={purchaseData.collection?.name || "Unknown Collection"}
+          transactionId={purchaseData.transactionId || "unknown"}
+        />
+      )}
     </div>
   );
 };
