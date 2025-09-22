@@ -196,7 +196,7 @@ export const TrendingSidebar: React.FC<TrendingSidebarProps> = ({
               {trendingCollections.map((collection) => (
                 <div
                   key={collection.id}
-                  className="hover:bg-muted/30 group border-border/50 flex cursor-pointer items-center justify-between border-b p-3 transition-colors last:border-b-0"
+                  className="hover:bg-muted/30 border-border/50 group flex cursor-pointer items-center justify-between border-b p-3 transition-colors last:border-b-0"
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-3">
                     <div className="flex-shrink-0">

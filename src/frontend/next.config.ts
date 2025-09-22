@@ -1,26 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Performance optimizations
   experimental: {
     optimizePackageImports: [
       "lucide-react",
       "@radix-ui/react-icons",
       "recharts",
     ],
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
-      },
-    },
   },
 
-  // Bundle optimization
   webpack: (config, { dev, isServer }) => {
-    // Optimize bundle splitting
     if (!dev && !isServer) {
       config.optimization.splitChunks = {
         chunks: "all",
@@ -49,7 +38,6 @@ const nextConfig: NextConfig = {
   },
 
   env: {
-    // Backend Configuration
     CANISTER_ID_BACKEND: process.env.CANISTER_ID_BACKEND,
     CANISTER_ID_FRONTEND: process.env.CANISTER_ID_FRONTEND,
     CANISTER_ID: process.env.CANISTER_ID,
@@ -59,11 +47,7 @@ const nextConfig: NextConfig = {
     DFX_REPLICA_PORT: process.env.DFX_REPLICA_PORT,
     CANISTER_CANDID_PATH_BACKEND: process.env.CANISTER_CANDID_PATH_BACKEND,
     CANISTER_CANDID_PATH: process.env.CANISTER_CANDID_PATH,
-
-    // Google OAuth Configuration
     VITE_GOOGLE_CLIENT_ID: process.env.VITE_GOOGLE_CLIENT_ID,
-
-    // S3 Configuration
     S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
     S3_SECRET_KEY: process.env.S3_SECRET_KEY,
     S3_REGION: process.env.S3_REGION,
@@ -107,6 +91,18 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization, X-Requested-With",
+          },
+          {
             key: "X-Frame-Options",
             value: "DENY",
           },
@@ -130,7 +126,6 @@ const nextConfig: NextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains",
           },
-          // Performance headers
           {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",

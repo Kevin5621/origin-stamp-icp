@@ -52,11 +52,11 @@ export function HeroSection() {
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 container mx-auto px-6 text-center">
+      <div className="container relative z-10 mx-auto px-6 text-center">
         <div className="mx-auto max-w-5xl space-y-12">
           <div className="space-y-6">
             <h1
-              className="text-4xl leading-tight font-light text-white drop-shadow-lg md:text-6xl lg:text-7xl xl:text-8xl"
+              className="text-4xl font-light leading-tight text-white drop-shadow-lg md:text-6xl lg:text-7xl xl:text-8xl"
               style={{
                 opacity: showContent ? 1 : 0,
                 transform: showContent ? "translateY(0)" : "translateY(20px)",

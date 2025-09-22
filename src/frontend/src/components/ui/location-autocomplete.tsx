@@ -228,7 +228,7 @@ export const LocationInput: React.FC<LocationAutocompleteProps> = ({
   return (
     <div className="relative">
       <div className="relative">
-        <MapPin className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+        <MapPin className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
         <Input
           type="text"
           value={value}
@@ -239,7 +239,7 @@ export const LocationInput: React.FC<LocationAutocompleteProps> = ({
           onFocus={() => value.length >= 2 && setShowSuggestions(true)}
         />
         {loading && (
-          <Loader2 className="text-muted-foreground absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 animate-spin" />
+          <Loader2 className="text-muted-foreground absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin" />
         )}
       </div>
 

@@ -31,7 +31,7 @@ export const CustomerHeader: React.FC = () => {
             <Bell className="h-4 w-4" />
             <Badge
               variant="destructive"
-              className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+              className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs"
             >
               2
             </Badge>

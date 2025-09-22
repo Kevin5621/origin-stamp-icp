@@ -424,12 +424,12 @@ export const CollectionPage: React.FC = () => {
                       </div>
 
                       {/* Status badge */}
-                      <div className="absolute top-2 right-2">
+                      <div className="absolute right-2 top-2">
                         {getStatusBadge(nft)}
                       </div>
 
                       {/* Rarity badge */}
-                      <div className="absolute top-2 left-2">
+                      <div className="absolute left-2 top-2">
                         {getRarityBadge(nft.metadata.verificationScore)}
                       </div>
                     </div>
@@ -624,7 +624,7 @@ export const CollectionPage: React.FC = () => {
                     </div>
 
                     {/* Creator badge */}
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute right-2 top-2">
                       <Badge className="bg-purple-500 text-xs text-white">
                         Created
                       </Badge>
@@ -684,7 +684,7 @@ export const CollectionPage: React.FC = () => {
                     <Heart
                       className={`text-muted-foreground h-16 w-16 ${fav.imageUrl ? "hidden" : ""}`}
                     />
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute right-2 top-2">
                       <Button size="icon" variant="ghost" className="h-8 w-8">
                         <Heart className="h-4 w-4 fill-red-500 text-red-500" />
                       </Button>
@@ -748,7 +748,7 @@ export const CollectionPage: React.FC = () => {
               <Label htmlFor="currency">Currency</Label>
               <select
                 id="currency"
-                className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 value={listingCurrency}
                 onChange={(e) =>
                   setListingCurrency(e.target.value as "ICP" | "USDT")

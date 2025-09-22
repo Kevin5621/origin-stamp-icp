@@ -45,7 +45,7 @@ const Toast: React.FC<ToastProps> = ({ id, type, message, onRemove }) => {
   return (
     <div
       className={cn(
-        "animate-in slide-in-from-right-full flex max-w-[400px] min-w-[300px] items-center justify-between rounded-lg border p-4 shadow-lg duration-300",
+        "animate-in slide-in-from-right-full flex min-w-[300px] max-w-[400px] items-center justify-between rounded-lg border p-4 shadow-lg duration-300",
         getToastStyles(),
       )}
     >

@@ -54,7 +54,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
   return (
     <div className="space-y-8">
       <Card>
-        <CardHeader className="px-6 pt-6 pb-4">
+        <CardHeader className="px-6 pb-4 pt-6">
           <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-2">
               <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
@@ -219,7 +219,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
       </Card>
 
       <Card>
-        <CardHeader className="px-6 pt-6 pb-4">
+        <CardHeader className="px-6 pb-4 pt-6">
           <div className="space-y-2">
             <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
               <div className="bg-primary/10 rounded-lg p-2">

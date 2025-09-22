@@ -281,12 +281,12 @@ export default function SortableImageUpload({
                     />
 
                     {/* Upload order badge */}
-                    <div className="bg-primary text-primary-foreground absolute top-2 left-2 flex size-6 items-center justify-center rounded-full text-xs font-bold">
+                    <div className="bg-primary text-primary-foreground absolute left-2 top-2 flex size-6 items-center justify-center rounded-full text-xs font-bold">
                       {index + 1}
                     </div>
 
                     {/* Drag handle */}
-                    <SortableItemHandle className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
+                    <SortableItemHandle className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
                       <Button
                         variant="secondary"
                         size="icon"
@@ -301,7 +301,7 @@ export default function SortableImageUpload({
                       onClick={() => removeImage(image.id)}
                       variant="destructive"
                       size="icon"
-                      className="absolute right-2 bottom-2 size-6 opacity-0 transition-opacity group-hover:opacity-100"
+                      className="absolute bottom-2 right-2 size-6 opacity-0 transition-opacity group-hover:opacity-100"
                     >
                       <XIcon className="size-3" />
                     </Button>

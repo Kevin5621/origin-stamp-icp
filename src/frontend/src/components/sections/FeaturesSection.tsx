@@ -80,7 +80,7 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="group border-border hover:border-primary/50 relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
+              className="border-border hover:border-primary/50 group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
             >
               {/* Background Image */}
               <div className="absolute inset-0">
@@ -108,7 +108,7 @@ export function FeaturesSection() {
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-foreground text-2xl leading-tight font-semibold">
+                  <h3 className="text-foreground text-2xl font-semibold leading-tight">
                     {feature.title}
                   </h3>
                   <p className="text-muted-foreground text-base leading-relaxed">

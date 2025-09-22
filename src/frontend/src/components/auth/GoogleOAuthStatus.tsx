@@ -61,7 +61,7 @@ export const GoogleOAuthStatus: React.FC<GoogleOAuthStatusProps> = ({
   const hasWarnings = envStatus.warnings.length > 0;
 
   return (
-    <div className={`fixed right-4 bottom-4 z-50 max-w-sm ${className}`}>
+    <div className={`fixed bottom-4 right-4 z-50 max-w-sm ${className}`}>
       <div className="bg-background border-border rounded-lg border p-4 shadow-lg">
         <h3 className="text-foreground mb-2 text-sm font-semibold">
           Google OAuth Status

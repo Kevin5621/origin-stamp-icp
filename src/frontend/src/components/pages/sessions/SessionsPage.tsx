@@ -336,7 +336,7 @@ export const SessionsPage: React.FC = () => {
                     >
                       <Camera className="text-muted-foreground h-12 w-12" />
                     </div>
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute right-2 top-2">
                       {getStatusIcon(session.status)}
                     </div>
                   </div>
@@ -345,7 +345,7 @@ export const SessionsPage: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
-                          <h3 className="text-foreground text-sm leading-tight font-semibold">
+                          <h3 className="text-foreground text-sm font-semibold leading-tight">
                             {session.art_title}
                           </h3>
                           <p className="text-muted-foreground text-xs">
@@ -456,7 +456,7 @@ export const SessionsPage: React.FC = () => {
                       >
                         <Camera className="text-muted-foreground h-12 w-12" />
                       </div>
-                      <div className="absolute top-2 right-2">
+                      <div className="absolute right-2 top-2">
                         {getStatusIcon(session.status)}
                       </div>
                     </div>
@@ -464,7 +464,7 @@ export const SessionsPage: React.FC = () => {
                       <div className="space-y-3">
                         <div className="flex items-start justify-between">
                           <div className="space-y-1">
-                            <h3 className="text-foreground text-sm leading-tight font-semibold">
+                            <h3 className="text-foreground text-sm font-semibold leading-tight">
                               {session.art_title}
                             </h3>
                             <p className="text-muted-foreground text-xs">
@@ -560,7 +560,7 @@ export const SessionsPage: React.FC = () => {
                       >
                         <CheckCircle className="h-12 w-12 text-green-500" />
                       </div>
-                      <div className="absolute top-2 right-2">
+                      <div className="absolute right-2 top-2">
                         {getStatusIcon(session.status)}
                       </div>
                     </div>
@@ -568,7 +568,7 @@ export const SessionsPage: React.FC = () => {
                       <div className="space-y-3">
                         <div className="flex items-start justify-between">
                           <div className="space-y-1">
-                            <h3 className="text-foreground text-sm leading-tight font-semibold">
+                            <h3 className="text-foreground text-sm font-semibold leading-tight">
                               {session.art_title}
                             </h3>
                             <p className="text-muted-foreground text-xs">
@@ -667,7 +667,7 @@ export const SessionsPage: React.FC = () => {
                       >
                         <Calendar className="text-muted-foreground h-12 w-12" />
                       </div>
-                      <div className="absolute top-2 right-2">
+                      <div className="absolute right-2 top-2">
                         {getStatusIcon(session.status)}
                       </div>
                     </div>
@@ -675,7 +675,7 @@ export const SessionsPage: React.FC = () => {
                       <div className="space-y-3">
                         <div className="flex items-start justify-between">
                           <div className="space-y-1">
-                            <h3 className="text-foreground text-sm leading-tight font-semibold">
+                            <h3 className="text-foreground text-sm font-semibold leading-tight">
                               {session.art_title}
                             </h3>
                             <p className="text-muted-foreground text-xs">

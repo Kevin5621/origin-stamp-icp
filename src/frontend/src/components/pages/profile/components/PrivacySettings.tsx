@@ -55,7 +55,7 @@ export const PrivacySettingsCard: React.FC<PrivacySettingsProps> = ({
 
   return (
     <Card>
-      <CardHeader className="px-6 pt-6 pb-4">
+      <CardHeader className="px-6 pb-4 pt-6">
         <div className="space-y-2">
           <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
             <div className="bg-primary/10 rounded-lg p-2">

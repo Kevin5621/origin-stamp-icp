@@ -36,7 +36,7 @@ export function NavigationHeader() {
   return (
     <header className="bg-background/90 border-border sticky top-0 z-50 border-b shadow-sm backdrop-blur-lg">
       <div className="container mx-auto px-6">
-        <div className="flex h-18 items-center justify-between">
+        <div className="h-18 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="group flex items-center space-x-3">
             <Image

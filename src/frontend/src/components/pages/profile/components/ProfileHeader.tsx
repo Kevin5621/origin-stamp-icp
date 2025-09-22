@@ -103,7 +103,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 {user?.username?.charAt(0).toUpperCase() || "U"}
               </AvatarFallback>
             </Avatar>
-            <div className="absolute -right-1 -bottom-1 flex gap-1 sm:-right-2 sm:-bottom-2 sm:gap-2">
+            <div className="absolute -bottom-1 -right-1 flex gap-1 sm:-bottom-2 sm:-right-2 sm:gap-2">
               <Button
                 size="icon"
                 variant="outline"

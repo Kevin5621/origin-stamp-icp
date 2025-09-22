@@ -217,7 +217,7 @@ export const VerificationContainer: React.FC<VerificationContainerProps> = ({
           {/* Score Breakdown */}
           {Object.keys(verification.breakdown).length > 0 && (
             <div className="space-y-2">
-              <h4 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+              <h4 className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
                 Score Breakdown
               </h4>
               <div className="grid grid-cols-2 gap-2 text-xs">
@@ -252,7 +252,7 @@ export const VerificationContainer: React.FC<VerificationContainerProps> = ({
           {/* Notes */}
           {verification.notes.length > 0 && (
             <div className="space-y-1">
-              <h4 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+              <h4 className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
                 Analysis Notes
               </h4>
               <div className="space-y-1">

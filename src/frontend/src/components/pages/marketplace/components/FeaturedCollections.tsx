@@ -160,7 +160,7 @@ export const FeaturedCollections: React.FC = () => {
         {collections.map((collection) => (
           <Card
             key={collection.id}
-            className="group border-border/50 hover:border-border cursor-pointer overflow-hidden transition-all duration-200 hover:shadow-xl"
+            className="border-border/50 hover:border-border group cursor-pointer overflow-hidden transition-all duration-200 hover:shadow-xl"
             onClick={() => handleCollectionClick()}
           >
             <CardContent className="p-0">

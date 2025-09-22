@@ -61,7 +61,7 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({
         <CardFooter>
           <div className="flex w-full items-start gap-2 text-sm">
             <div className="grid gap-2">
-              <div className="flex items-center gap-2 leading-none font-medium">
+              <div className="flex items-center gap-2 font-medium leading-none">
                 <div className="bg-muted h-4 w-32 animate-pulse rounded" />
                 <TrendingUp className="h-4 w-4" />
               </div>
@@ -143,7 +143,7 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
-            <div className="flex items-center gap-2 leading-none font-medium">
+            <div className="flex items-center gap-2 font-medium leading-none">
               {hasData ? (
                 <>
                   Portfolio growing steadily <TrendingUp className="h-4 w-4" />

@@ -721,7 +721,7 @@ export const SessionRecordPage: React.FC = () => {
                         )}
 
                         {/* Story Number Badge */}
-                        <div className="bg-primary text-primary-foreground absolute top-1 left-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
+                        <div className="bg-primary text-primary-foreground absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
                           {index + 1}
                         </div>
 
